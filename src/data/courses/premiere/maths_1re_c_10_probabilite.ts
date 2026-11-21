@@ -258,7 +258,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
         { name: 'Lois de De Morgan', formula: '\\overline{A \\cap B} = \\overline{A} \\cup \\overline{B}, \\quad \\overline{A \\cup B} = \\overline{A} \\cap \\overline{B}' },
       ],
       workedExample: {
-        title: 'Tester des relations entre événements (Exercice 1 du cours)',
+        title: 'Tester des relations entre événements',
         statement:
           'Soient $A$ et $B$ deux événements quelconques d’un univers $U$. Étudie si les trois égalités suivantes sont toujours vraies : (1) $P(A \\cup B) = P(A) + P(B)$ ; (2) $P(A \\cup \\overline{A}) = 1$ ; (3) $P(\\overline{A \\cap B}) = 1 - P(A \\cap B)$.',
         methodSteps: [
@@ -497,7 +497,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
         { name: 'Décomposition en issues', formula: 'P(\\{e_1; \\dots; e_k\\}) = \\sum_{i=1}^{k} P(\\{e_i\\})' },
       ],
       workedExample: {
-        title: 'Calculer avec un dé truqué (Exercice de fixation p. 4-5)',
+        title: 'Calculer avec un dé truqué',
         statement:
           'On lance un dé truqué tel que $P(\\{1\\})=\\dfrac{1}{16}$, $P(\\{2\\})=\\dfrac{3}{16}$, $P(\\{3\\})=\\dfrac{5}{16}$, $P(\\{4\\})=\\dfrac{2}{16}$, $P(\\{5\\})=\\dfrac{3}{16}$ et $P(\\{6\\})=\\dfrac{2}{16}$. Calcule $P(A)$ pour $A$ : « obtenir un nombre pair », $P(B)$ pour $B$ : « multiple de $3$ », et $P(C)$ pour $C$ : « différent de $6$ ».',
         methodSteps: [
@@ -533,7 +533,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
           stepTheme: 'Formule P(A ∪ B)',
           stepTitle: 'Calculer la probabilité d’une réunion',
           paragraphText:
-            'Dans l’Exercice 2 du cours, $P(A) = 0{,}33$, $P(B) = 0{,}15$ et $P(A \\cap B) = 0{,}09$. La formule générale évite de compter $A \\cap B$ deux fois.',
+            'En pratique, $P(A) = 0{,}33$, $P(B) = 0{,}15$ et $P(A \\cap B) = 0{,}09$. La formule générale évite de compter $A \\cap B$ deux fois.',
           formula: { name: 'Réunion de deux événements', formula: 'P(A \\cup B) = P(A) + P(B) - P(A \\cap B)' },
           exercise: {
             id: 'premiere_c_maths_numerique_l10_probabilite_p03_q2',
@@ -556,7 +556,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
             id: 'premiere_c_maths_numerique_l10_probabilite_p03_q3',
             type: 'mcq',
             prompt:
-              'Avec le dé truqué du cours ($P(\\{1\\})=\\frac{1}{16}, P(\\{2\\})=\\frac{3}{16}, P(\\{3\\})=\\frac{5}{16}, P(\\{4\\})=\\frac{2}{16}, P(\\{5\\})=\\frac{3}{16}, P(\\{6\\})=\\frac{2}{16}$), que vaut $P(B)$ pour $B$ : « multiple de 3 » ?',
+              'Avec un dé truqué tel que ($P(\\{1\\})=\\frac{1}{16}, P(\\{2\\})=\\frac{3}{16}, P(\\{3\\})=\\frac{5}{16}, P(\\{4\\})=\\frac{2}{16}, P(\\{5\\})=\\frac{3}{16}, P(\\{6\\})=\\frac{2}{16}$), que vaut $P(B)$ pour $B$ : « multiple de 3 » ?',
             options: ['$\\dfrac{1}{3}$', '$\\dfrac{7}{16}$', '$\\dfrac{5}{16}$', '$\\dfrac{1}{2}$'],
             correctAnswerIndex: 1,
             explanation: '$B = \\{3; 6\\}$, donc $P(B) = P(\\{3\\}) + P(\\{6\\}) = \\dfrac{5}{16} + \\dfrac{2}{16} = \\dfrac{7}{16}$.',
@@ -590,7 +590,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_maths_numerique_l10_probabilite_p03_q5',
             type: 'mcq',
-            prompt: 'Pourquoi la probabilité d’obtenir un nombre pair avec le dé truqué du cours vaut-elle $\\dfrac{7}{16}$ et non $\\dfrac{1}{2}$ ?',
+            prompt: 'Pourquoi la probabilité d’obtenir un nombre pair avec ce dé truqué vaut-elle $\\dfrac{7}{16}$ et non $\\dfrac{1}{2}$ ?',
             options: [
               'Parce que le dé a $16$ faces',
               'Parce que les faces paires n’ont pas toutes la même probabilité que les faces impaires (pas d’équiprobabilité)',
@@ -641,7 +641,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
           id: 'premiere_c_maths_numerique_l10_probabilite_p03_q3',
           type: 'mcq',
           prompt:
-            'Avec le dé truqué du cours ($P(\\{1\\})=\\frac{1}{16}, P(\\{2\\})=\\frac{3}{16}, P(\\{3\\})=\\frac{5}{16}, P(\\{4\\})=\\frac{2}{16}, P(\\{5\\})=\\frac{3}{16}, P(\\{6\\})=\\frac{2}{16}$), que vaut $P(B)$ pour $B$ : « multiple de 3 » ?',
+            'Avec un dé truqué tel que ($P(\\{1\\})=\\frac{1}{16}, P(\\{2\\})=\\frac{3}{16}, P(\\{3\\})=\\frac{5}{16}, P(\\{4\\})=\\frac{2}{16}, P(\\{5\\})=\\frac{3}{16}, P(\\{6\\})=\\frac{2}{16}$), que vaut $P(B)$ pour $B$ : « multiple de 3 » ?',
           options: ['$\\dfrac{1}{3}$', '$\\dfrac{7}{16}$', '$\\dfrac{5}{16}$', '$\\dfrac{1}{2}$'],
           correctAnswerIndex: 1,
           explanation: '$B = \\{3; 6\\}$, donc $P(B) = P(\\{3\\}) + P(\\{6\\}) = \\dfrac{5}{16} + \\dfrac{2}{16} = \\dfrac{7}{16}$.',
@@ -657,7 +657,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
         {
           id: 'premiere_c_maths_numerique_l10_probabilite_p03_q5',
           type: 'mcq',
-          prompt: 'Pourquoi la probabilité d’obtenir un nombre pair avec le dé truqué du cours vaut-elle $\\dfrac{7}{16}$ et non $\\dfrac{1}{2}$ ?',
+          prompt: 'Pourquoi la probabilité d’obtenir un nombre pair avec ce dé truqué vaut-elle $\\dfrac{7}{16}$ et non $\\dfrac{1}{2}$ ?',
           options: [
             'Parce que le dé a $16$ faces',
             'Parce que les faces paires n’ont pas toutes la même probabilité que les faces impaires (pas d’équiprobabilité)',
@@ -696,7 +696,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
         { name: 'Formule de Laplace', formula: 'P(A) = \\frac{\\text{card}(A)}{\\text{card}(U)}' },
       ],
       workedExample: {
-        title: 'Lancer de deux dés équilibrés (Exercice 4 p. 9-10)',
+        title: 'Lancer de deux dés équilibrés',
         statement:
           'On lance deux fois de suite un dé cubique parfaitement équilibré dont les faces sont numérotées de $1$ à $6$. Détermine la probabilité que les deux nombres obtenus soient supérieurs ou égaux à $4$.',
         methodSteps: [
@@ -893,7 +893,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
       summary:
         'Utiliser les combinaisons Cₙᵖ pour calculer card(U) et card(A) sans lister toutes les issues en extension.',
       conceptExplanation:
-        "Lorsque l'univers est trop grand pour être écrit en extension, la remarque 2 du cours rappelle qu'on utilise directement les **formules de dénombrement** (combinaisons $C_n^p$, arrangements $A_n^p$, $p$-uplets $n^p$).\n\nPour un choix simultané ou « au hasard » d'une délégation de $p$ personnes parmi $n$ :\n- $\\text{card}(U) = C_n^p$ ;\n- Si l'on impose $k$ personnes fixées dans la délégation, il reste à choisir $p - k$ personnes parmi les $n - k$ restantes, soit $C_{n-k}^{p-k}$ choix.",
+        "Lorsque l'univers est trop grand pour être écrit en extension, on utilise directement les **formules de dénombrement** (combinaisons $C_n^p$, arrangements $A_n^p$, $p$-uplets $n^p$).\n\nPour un choix simultané ou « au hasard » d'une délégation de $p$ personnes parmi $n$ :\n- $\\text{card}(U) = C_n^p$ ;\n- Si l'on impose $k$ personnes fixées dans la délégation, il reste à choisir $p - k$ personnes parmi les $n - k$ restantes, soit $C_{n-k}^{p-k}$ choix.",
       keyRule:
         'Quand un événement devient trop long à lister, calcule directement card(U) et card(A) avec les combinaisons Cₙᵖ ou passe par l’événement contraire.',
       formulas: [
@@ -901,7 +901,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
         { name: 'Complémentaire et probabilité', formula: 'P(A) = 1 - \\frac{\\text{card}(\\overline{A})}{\\text{card}(U)}' },
       ],
       workedExample: {
-        title: 'Délégation d’une coopérative et couple Zamblé (Exercice 3 p. 8)',
+        title: 'Délégation d’une coopérative et couple Zamblé',
         statement:
           'Une coopérative compte $7$ hommes et $3$ femmes, dont le couple Zamblé. Elle choisit au hasard une délégation de $4$ membres. (1) Détermine le nombre de délégations possibles. (2) Calcule la probabilité $p_1$ que le couple Zamblé en fasse partie. (3) Calcule la probabilité $p_2$ que Monsieur ou Madame Zamblé fasse partie de la délégation.',
         methodSteps: [
@@ -1096,7 +1096,7 @@ export const MATHS_1RE_C_L10_PROBABILITE: CurriculumChapter = {
         { name: 'Probabilité d’un code à 4 chiffres distincts', formula: 'P = \\frac{1}{4!} = \\frac{1}{24}' },
       ],
       workedExample: {
-        title: 'Loterie de la roue à 8 secteurs (Situation complexe p. 6-7)',
+        title: 'Loterie de la roue à 8 secteurs',
         statement:
           'Une roue de loterie est partagée en $8$ secteurs équitables : $4$ blancs (perte de $2\\,000\\text{ F CFA}$), $3$ noirs (gain de $1\\,000\\text{ F CFA}$) et $1$ rouge (gain de $2\\,000\\text{ F CFA}$). Des élèves affirment qu’un joueur a autant de chance de gagner que de perdre. Ont-ils raison ?',
         methodSteps: [

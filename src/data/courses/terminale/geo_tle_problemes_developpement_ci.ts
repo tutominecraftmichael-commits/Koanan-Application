@@ -628,7 +628,7 @@ export const GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI: CurriculumChapter = {
           "stepTitle": "Population jeune : atout ou frein ?",
           "stepTheme": "Population jeune : atout ou frein ?",
           "stepBadge": "Population jeune : atout ou frein ?",
-          "paragraphText": "Dans la leçon 1, la population jeune est un atout (main-d'œuvre abondante).\nIci, sa croissance trop rapide devient un frein quand elle n'est pas formée, soignée et employée.\nAu BAC, nuance : c'est un atout si on l'éduque et lui donne du travail.",
+          "paragraphText": "D’un côté, la population jeune est un atout (main-d'œuvre abondante).\nIci, sa croissance trop rapide devient un frein quand elle n'est pas formée, soignée et employée.\nAu BAC, nuance : c'est un atout si on l'éduque et lui donne du travail.",
           "konanTip": "Une population nombreuse n'est un atout que si elle est formée et employée.",
           "exercise": {
             "id": "terminale_hg_geographie_l03_problemes_developpement_economique_p03_q4",
@@ -848,7 +848,7 @@ export const GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI: CurriculumChapter = {
           "stepTitle": "Combien reste-t-il de forêt ?",
           "stepTheme": "Combien reste-t-il de forêt ?",
           "stepBadge": "Combien reste-t-il de forêt ?",
-          "paragraphText": "Le couvert forestier est passé de plus de 16 millions d'hectares en 1960 à moins de 3 millions aujourd'hui.\nLe PDF donne aussi « moins de 2 millions » dans le cours : les chiffres varient selon les sources.\nRetiens l'ordre de grandeur : plus des quatre cinquièmes de la forêt ont disparu.",
+          "paragraphText": "Le couvert forestier est passé de plus de 16 millions d'hectares en 1960 à moins de 3 millions aujourd'hui.\nLe PDF donne aussi « moins de 2 millions » : les chiffres varient selon les sources.\nRetiens l'ordre de grandeur : plus des quatre cinquièmes de la forêt ont disparu.",
           "exercise": {
             "id": "terminale_hg_geographie_l03_problemes_developpement_economique_p04_q2",
             "type": "mcq",
@@ -1431,7 +1431,7 @@ export const GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI: CurriculumChapter = {
           "stepTitle": "Le nom exact du CEPICI",
           "stepTheme": "Le nom exact du CEPICI",
           "stepBadge": "Le nom exact du CEPICI",
-          "paragraphText": "Le PDF écrit « Centre pour la Promotion et l'Investissement en Côte-Ivoire ».\nLe nom officiel est : Centre de Promotion des Investissements en Côte d'Ivoire.\nSon rôle : attirer les investisseurs et faciliter la création d'entreprises.",
+          "paragraphText": "Attention à ne pas confondre avec la formulation erronée « Centre pour la Promotion et l'Investissement en Côte-Ivoire ».\nLe nom officiel est : Centre de Promotion des Investissements en Côte d'Ivoire.\nSon rôle : attirer les investisseurs et faciliter la création d'entreprises.",
           "exercise": {
             "id": "terminale_hg_geographie_l03_problemes_developpement_economique_p06_q5",
             "type": "mcq",

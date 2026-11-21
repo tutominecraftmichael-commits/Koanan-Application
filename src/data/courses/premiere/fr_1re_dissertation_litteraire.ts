@@ -1819,7 +1819,7 @@ export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q5",
             "type": "mcq",
-            "prompt": "Selon le cours, dans quel ordre présenter les grandes parties d’un plan ?",
+            "prompt": "Dans quel ordre présenter les grandes parties d’un plan ?",
             "options": [
               "Du plus évident au moins évident, du moins important au plus important",
               "Du plus important au moins important, toujours",
@@ -1968,7 +1968,7 @@ export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q5",
           "type": "mcq",
-          "prompt": "Selon le cours, dans quel ordre présenter les grandes parties d’un plan ?",
+          "prompt": "Dans quel ordre présenter les grandes parties d’un plan ?",
           "options": [
             "Du plus évident au moins évident, du moins important au plus important",
             "Du plus important au moins important, toujours",

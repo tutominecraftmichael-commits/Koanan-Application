@@ -1366,7 +1366,7 @@ export const MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
     'Dérivabilité à gauche/droite, demi-tangentes verticales, dérivation de fonctions composées, dérivabilité d’une bijection réciproque (arctan, arcsin, racines), dérivées successives par récurrence, inégalités des accroissements finis et études complètes (valeur absolue et trigonométrie).',
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l03_derivabilite_etude_fonctions_p01',

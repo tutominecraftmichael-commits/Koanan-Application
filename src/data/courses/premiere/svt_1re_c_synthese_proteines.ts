@@ -1075,7 +1075,7 @@ export const SVT_1RE_C_L06_SYNTHESE_PROTEINES: CurriculumChapter = {
       "order": 5,
       "title": "Évaluation : ocytocine, vasopressine et drépanocytose",
       "summary": "Traduire des séquences, comparer des protéines, trouver une mutation.",
-      "conceptExplanation": "- Ocytocine et vasopressine : brins non codants donnés. Selon la convention du cours, on écrit d’abord le brin codant (complémentaire), puis l’ARNm (complémentaire du brin codant, donc identique au brin non codant avec U).\n- Ocytocine : brin codant ACG ATG TAG GTC TTG ACG GGG GAC CCG ; ARNm UGC UAC AUC CAG AAC UGC CCC CUG GGC ; Cys-Tyr-Ile-Gln-Asn-Cys-Pro-Leu-Gly.\n- Vasopressine : brin codant ACG ATG AAG GTC TTG ACG GGT TCT CCT ; ARNm UGC UAC UUC CAG AAC UGC CCA AGA GGA ; Cys-Tyr-Phe-Gln-Asn-Cys-Pro-Arg-Gly.\n- Les deux hormones ne diffèrent que par 2 acides aminés : le 3e (isoleucine/phénylalanine) et le 8e (leucine/arginine).\n- Drépanocytose : la chaîne β de l’hémoglobine S ne diffère de la normale que par le 6e acide aminé : la valine remplace l’acide glutamique. ARNm possibles : GAA (Glu) devient GUA (Val). Brin transcrit : CTT devient CAT : la 17e base, T, est remplacée par A. Une seule base changée dans l’ADN (mutation) suffit à modifier la protéine et à provoquer la maladie.",
+      "conceptExplanation": "- Ocytocine et vasopressine : brins non codants donnés. Par convention en génétique, on écrit d’abord le brin codant (complémentaire), puis l’ARNm (complémentaire du brin codant, donc identique au brin non codant avec U).\n- Ocytocine : brin codant ACG ATG TAG GTC TTG ACG GGG GAC CCG ; ARNm UGC UAC AUC CAG AAC UGC CCC CUG GGC ; Cys-Tyr-Ile-Gln-Asn-Cys-Pro-Leu-Gly.\n- Vasopressine : brin codant ACG ATG AAG GTC TTG ACG GGT TCT CCT ; ARNm UGC UAC UUC CAG AAC UGC CCA AGA GGA ; Cys-Tyr-Phe-Gln-Asn-Cys-Pro-Arg-Gly.\n- Les deux hormones ne diffèrent que par 2 acides aminés : le 3e (isoleucine/phénylalanine) et le 8e (leucine/arginine).\n- Drépanocytose : la chaîne β de l’hémoglobine S ne diffère de la normale que par le 6e acide aminé : la valine remplace l’acide glutamique. ARNm possibles : GAA (Glu) devient GUA (Val). Brin transcrit : CTT devient CAT : la 17e base, T, est remplacée par A. Une seule base changée dans l’ADN (mutation) suffit à modifier la protéine et à provoquer la maladie.",
       "keyRule": "Brin → ARNm → protéine par le code génétique. Une base changée dans l’ADN (mutation) peut changer un acide aminé et causer une maladie.",
       "formulas": [],
       "workedExample": {
@@ -1111,7 +1111,7 @@ export const SVT_1RE_C_L06_SYNTHESE_PROTEINES: CurriculumChapter = {
           "visualSchema": {
             "type": "custom_svg",
             "title": "Ocytocine et vasopressine",
-            "caption": "Brins non codants donnés ; selon la convention du cours, l’ARNm a la même séquence que le brin non codant (avec U à la place de T).",
+            "caption": "Brins non codants donnés ; par convention, l’ARNm a la même séquence que le brin non codant (avec U à la place de T).",
             "tableData": {
               "headers": [
                 "Position",

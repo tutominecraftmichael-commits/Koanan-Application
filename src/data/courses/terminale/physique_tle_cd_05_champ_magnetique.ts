@@ -1741,7 +1741,7 @@ export const PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE: CurriculumChapter = {
           "stepTitle": "Le relais électromagnétique",
           "stepTheme": "Interrupteur commandé",
           "stepBadge": "Sécurité électrique",
-          "paragraphText": "Le relais électromagnétique est constitué d'un électroaimant qui, lorsqu'il est alimenté par un circuit de commande basse tension (ex. 12 V ou capteur électronique), attire une armature mobile actionnant des contacts pour ouvrir ou fermer un circuit de puissance haute tension (ex. 230 V / 400 V).",
+          "paragraphText": "Le relais électromagnétique est constitué d'un électroaimant qui, lorsqu'il est alimenté par un circuit de commande basse tension, attire une armature mobile actionnant des contacts pour ouvrir ou fermer un circuit de puissance haute tension.",
           "exercise": {
             "id": "terminale_d_physique_l05_champ_magnetique_p06_q4",
             "type": "mcq",

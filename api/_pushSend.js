@@ -6,11 +6,13 @@
 let webpush = null;
 let vapidReady = null;
 
+const APP_VAPID_PUBLIC_KEY = 'BFMUUoknQ9de4CCl1wew4j3SGHtMDBRpk9DhE1vAH3OewLXF8m43FhO26yq1X5eeOZ97jNvbScN_41u10gxy4PY';
+
 async function readyWebPush() {
   if (vapidReady !== null) return vapidReady;
   try {
     webpush = (await import('web-push')).default;
-    const publicKey = String(process.env.VAPID_PUBLIC_KEY || process.env.VITE_VAPID_PUBLIC_KEY || '').trim();
+    const publicKey = String(process.env.VAPID_PUBLIC_KEY || process.env.VITE_VAPID_PUBLIC_KEY || APP_VAPID_PUBLIC_KEY).trim();
     const privateKey = String(process.env.VAPID_PRIVATE_KEY || '').trim();
     const subject = String(process.env.VAPID_SUBJECT || 'mailto:contact@konan-ai.com').trim();
     if (!publicKey || !privateKey) return (vapidReady = false);

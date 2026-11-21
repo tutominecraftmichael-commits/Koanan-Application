@@ -33,7 +33,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Exercice de fixation',
     stepTheme: 'green',
-    stepTitle: 'Calculer l’angle $(\\widehat{\\overrightarrow{BC}, \\overrightarrow{BA}})$ et le rapport $\\frac{AB}{BC}$ (p.2–3)',
+    stepTitle: 'Calculer l’angle $(\\widehat{\\overrightarrow{BC}, \\overrightarrow{BA}})$ et le rapport $\\frac{AB}{BC}$',
     paragraphText:
       'On donne $A(-1 + i\\sqrt{3})$, $B(2)$ et $C(-1 - i\\sqrt{3})$. Pour trouver $\\operatorname{Mes}(\\widehat{\\overrightarrow{BC}, \\overrightarrow{BA}})$ et $\\frac{AB}{BC}$, on calcule le quotient $\\frac{z_A - z_B}{z_C - z_B} = \\frac{-3 + i\\sqrt{3}}{-3 - i\\sqrt{3}}$. En multipliant numérateur et dénominateur par le conjugué $(-3 + i\\sqrt{3})$, on obtient $\\frac{6 - 6i\\sqrt{3}}{12} = \\frac{1}{2} - i\\frac{\\sqrt{3}}{2}$. Son module vaut $1$ (donc $AB = BC$) et son argument principal vaut $-\\frac{\\pi}{3}$.',
     formula: {
@@ -54,7 +54,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Tableau de référence',
     stepTheme: 'violet',
-    stepTitle: 'Caractérisations complexes des ensembles de points (p.3)',
+    stepTitle: 'Caractérisations complexes des ensembles de points',
     paragraphText:
       'Dans le plan complexe muni d’un repère orthonormé direct $(O ; \\vec{e}_1, \\vec{e}_2)$, chaque équation sur le module ou l’argument de $z$ traduit un lieu géométrique classique. Retiens bien la différence entre $\\arg(\\cdot) = \\alpha + k\\pi$ (une **droite** privée d’un point) et $\\arg(\\cdot) = \\alpha + 2k\\pi$ (une **demi-droite** privée de son origine).',
     visualSchema: {
@@ -92,14 +92,14 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Exercice de fixation 2',
     stepTheme: 'green',
-    stepTitle: 'Mettre en facteur dans $|2iz - 3 + 2i| = |z - 2|$ (p.4, corrigé)',
+    stepTitle: 'Mettre en facteur dans $|2iz - 3 + 2i| = |z - 2|$',
     paragraphText:
       'Pour reconnaître un lieu géométrique du type $|az + b| = |cz + d|$, on factorise par le coefficient devant $z$. Ici, $2iz - 3 + 2i = 2i\\left(z + 1 + \\frac{3}{2}i\\right)$ car $2i\\left(1 + \\frac{3}{2}i\\right) = 2i + 3i^2 = -3 + 2i$. En prenant le module : $|2i|\\,\\left|z - \\left(-1 - \\frac{3}{2}i\\right)\\right| = |z - 2|$, soit $2BM = AM$ avec $A(2)$ et $B\\left(-1 - \\frac{3}{2}i\\right)$. Comme $\\frac{MA}{MB} = 2 \\neq 1$, l’ensemble est le cercle de diamètre $[HK]$ où $H = \\operatorname{bar}\\{(A,1),(B,2)\\}$ et $K = \\operatorname{bar}\\{(A,1),(B,-2)\\}$.',
     formula: {
-      name: 'Affixes exactes de H et K (coquille du PDF corrigée)',
+      name: 'Affixes exactes de H et K',
       formula: 'z_H = \\frac{1\\times 2 + 2(-1 - \\frac{3}{2}i)}{3} = -i \\qquad ; \\qquad z_K = \\frac{1\\times 2 - 2(-1 - \\frac{3}{2}i)}{-1} = -4 - 3i',
     },
-    konanTip: 'Attention à la coquille du polycopié p.4 qui indiquait $z_H = -1$ : on a bien $2 + 2(-1 - \\frac{3}{2}i) = -3i$, donc $z_H = \\frac{-3i}{3} = -i$ !',
+    konanTip: 'Vérification du calcul : on a bien $2 + 2(-1 - \\frac{3}{2}i) = -3i$, donc $z_H = \\frac{-3i}{3} = -i$ !',
     exercise: {
       id: 'tc_m_geo_l08_p01_q04',
       type: 'mcq',
@@ -112,9 +112,9 @@ const p01Steps: StructuredLessonStep[] = [
   {
     stepNumber: 5,
     stepKind: 'exemple',
-    stepBadge: 'Renforcement Ex. 3',
+    stepBadge: 'Renforcement',
     stepTheme: 'blue',
-    stepTitle: 'Construire cercle, médiatrice et demi-droite (p.23–24)',
+    stepTitle: 'Construire cercle, médiatrice et demi-droite',
     paragraphText:
       'On cherche trois ensembles classiques dans le plan complexe : (a) $|z - 2i| = 3$ donne $AM = 3$ où $A(2i)$, c’est le cercle de centre $A$ et de rayon $3$ ; (b) $|z - 1 + i| = |z + 1 + 3i|$ s’écrit $|z - (1 - i)| = |z - (-1 - 3i)|$, donc $PM = QM$ : c’est la médiatrice $(\\Delta)$ de $[PQ]$ avec $P(1-i)$ et $Q(-1-3i)$ ; (c) $\\arg(z - 1 - i) \\equiv \\frac{\\pi}{6}\\;[2\\pi]$ donne la demi-droite ouverte $[AP)$ privée de $A(1+i)$, telle que $\\operatorname{Mes}(\\widehat{\\vec{u}, \\overrightarrow{AP}}) = \\frac{\\pi}{6}$.',
     visualSchema: {
@@ -202,7 +202,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Parallélisme & Alignement',
     stepTheme: 'violet',
-    stepTitle: 'Droites parallèles et alignement de trois points (p.5–6)',
+    stepTitle: 'Droites parallèles et alignement de trois points',
     paragraphText:
       'Soient $A, B, C, D$ des points d’affixes respectives $z_A, z_B, z_C, z_D$ ($A \\neq B$, $C \\neq D$). Les droites $(AB)$ et $(CD)$ sont **parallèles** si et seulement si le quotient $\\frac{z_A - z_B}{z_C - z_D}$ appartient à $\\mathbb{R}^*$ (réel non nul, autrement dit sa partie imaginaire est nulle). En particulier, trois points distincts $A, B, C$ sont **alignés** si et seulement si $\\frac{z_A - z_B}{z_C - z_B} \\in \\mathbb{R}^*$.',
     formula: {
@@ -228,7 +228,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Orthogonalité',
     stepTheme: 'violet',
-    stepTitle: 'Droites perpendiculaires via $i\\mathbb{R}^*$ (p.6–7)',
+    stepTitle: 'Droites perpendiculaires via $i\\mathbb{R}^*$',
     paragraphText:
       'Les droites $(AB)$ et $(CD)$ ($A \\neq B$, $C \\neq D$) sont **perpendiculaires** si et seulement si $\\frac{z_A - z_B}{z_C - z_D}$ est un **imaginaire pur non nul**, c’est-à-dire $\\frac{z_A - z_B}{z_C - z_D} \\in i\\mathbb{R}^*$ (partie réelle nulle, argument $\\pm\\frac{\\pi}{2}$ modulo $\\pi$). Dans l’exercice de fixation p.6 avec $A(-3-i)$, $B(-2+4i)$, $C(3-i)$ et $H(-2)$, on trouve $\\frac{z_B - z_C}{z_H - z_A} = \\frac{-5 + 5i}{1 + i} = 5i \\in i\\mathbb{R}^*$, donc $(AH) \\perp (BC)$.',
     formula: {
@@ -249,7 +249,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Cocyclicité',
     stepTheme: 'violet',
-    stepTitle: 'Points cocycliques : le critère du birapport (p.7)',
+    stepTitle: 'Points cocycliques : le critère du birapport',
     paragraphText:
       'Quatre points $A, B, C, D$ deux à deux distincts et **non alignés** sont **cocycliques** (situés sur un même cercle) si et seulement si $(\\widehat{\\overrightarrow{DA}, \\overrightarrow{DB}}) \\equiv (\\widehat{\\overrightarrow{CA}, \\overrightarrow{CB}})\\;[\\pi]$ sans être multiple de $\\pi$, ce qui s’écrit en nombres complexes : le quotient de quotients $\\frac{z_C - z_A}{z_D - z_A} : \\frac{z_C - z_B}{z_D - z_B}$ appartient à $\\mathbb{R}^*$ (avec la condition que trois des points ne soient pas alignés).',
     formula: {
@@ -260,7 +260,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p02_q03',
       type: 'mcq',
-      prompt: 'Pour $A(-2i)$, $B(7-i)$, $C(8+2i)$ et $D(-1+5i)$ (p.7), on trouve $\\frac{z_D-z_A}{z_B-z_A} = i$ et $\\frac{z_D-z_C}{z_B-z_C} = -3i$. Que conclut-on ?',
+      prompt: 'Pour $A(-2i)$, $B(7-i)$, $C(8+2i)$ et $D(-1+5i)$, on trouve $\\frac{z_D-z_A}{z_B-z_A} = i$ et $\\frac{z_D-z_C}{z_B-z_C} = -3i$. Que conclut-on ?',
       options: [
         'Les points $A, B, C, D$ sont alignés',
         'Le rapport vaut $-\\frac{1}{3} \\in \\mathbb{R}^*$ et $A, B, D$ sont non alignés, donc $A, B, C, D$ sont cocycliques',
@@ -276,7 +276,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Triangles particuliers',
     stepTheme: 'violet',
-    stepTitle: 'Reconnaître la nature d’un triangle $ABC$ par $\\frac{z_B - z_A}{z_C - z_A}$ (p.8–10)',
+    stepTitle: 'Reconnaître la nature d’un triangle $ABC$ par $\\frac{z_B - z_A}{z_C - z_A}$',
     paragraphText:
       'Pour caractériser la nature d’un triangle $ABC$ au sommet $A$, on étudie la forme algébrique ou exponentielle du rapport $Z = \\frac{z_C - z_A}{z_B - z_A}$ (ou de son inverse $\\frac{z_B - z_A}{z_C - z_A}$) : l’égalité des longueurs $AB = AC$ correspond à $|Z| = 1$, l’angle droit à $Z \\in i\\mathbb{R}^*$, et l’angle $\\pm\\frac{\\pi}{3}$ à $e^{\\pm i\\frac{\\pi}{3}} = \\frac{1}{2} \\pm i\\frac{\\sqrt{3}}{2}$.',
     visualSchema: {
@@ -314,10 +314,10 @@ const p02Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Résoudre les trois configurations de la page 8–9',
     paragraphText:
-      'Pour vérifier qu’un triangle est rectangle, rectangle isocèle ou équilatéral, on isole le **sommet commun** au signe « $-$ » dans le numérateur et le dénominateur : par exemple en $A$ avec $A(1+i), B(3), C(3+5i)$ (Ex. 1), $\\frac{z_B - z_A}{z_C - z_A} = \\frac{2-i}{2+4i} = -\\frac{1}{2}i \\in i\\mathbb{R}^*$, donc $ABC$ est rectangle en $A$ (mais non isocèle car $|-\\frac{1}{2}i| = \\frac{1}{2} \\neq 1$). En $B$ avec $A(-3+2i), B(-2-3i), C(3-2i)$ (Ex. 2), $\\frac{z_A - z_B}{z_C - z_B} = \\frac{-1+5i}{5+i} = i$, donc $ABC$ est rectangle isocèle en $B$.',
+      'Pour vérifier qu’un triangle est rectangle, rectangle isocèle ou équilatéral, on isole le **sommet commun** au signe « $-$ » dans le numérateur et le dénominateur : par exemple en $A$ avec $A(1+i), B(3), C(3+5i)$, $\\frac{z_B - z_A}{z_C - z_A} = \\frac{2-i}{2+4i} = -\\frac{1}{2}i \\in i\\mathbb{R}^*$, donc $ABC$ est rectangle en $A$ (mais non isocèle car $|-\\frac{1}{2}i| = \\frac{1}{2} \\neq 1$). En $B$ avec $A(-3+2i), B(-2-3i), C(3-2i)$, $\\frac{z_A - z_B}{z_C - z_B} = \\frac{-1+5i}{5+i} = i$, donc $ABC$ est rectangle isocèle en $B$.',
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Triangle ABC rectangle en A (Ex. 1 p.8)',
+      title: 'Triangle ABC rectangle en A',
       caption: 'A(1+i), B(3), C(3+5i) : le quotient vaut −i/2, donc AB ⊥ AC et AC = 2 AB.',
       svgContent: `<svg viewBox="0 0 300 165" width="285" height="156" xmlns="http://www.w3.org/2000/svg">
         <line x1="25" y1="130" x2="275" y2="130" stroke="#94a3b8" stroke-width="1.2"/>
@@ -371,7 +371,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p02_q07',
       type: 'mcq',
-      prompt: 'Dans l’exercice 1 de maison (p.22), on donne $A(2+i)$, $B(2-i)$, $C(5-2i)$ et $D(5+2i)$. Que vaut $\\frac{z_D - z_C}{z_D - z_A} : \\frac{z_B - z_C}{z_B - z_A}$ (p.23) ?',
+      prompt: 'Dans l’exercice 1 de maison, on donne $A(2+i)$, $B(2-i)$, $C(5-2i)$ et $D(5+2i)$. Que vaut $\\frac{z_D - z_C}{z_D - z_A} : \\frac{z_B - z_C}{z_B - z_A}$ ?',
       options: ['$\\frac{4}{5}$', '$-\\frac{4}{5}$', '$-\\frac{4}{5}i$', '$0$'],
       correctAnswerIndex: 1,
       explanation: '$\\frac{z_D - z_C}{z_D - z_A} = \\frac{4i}{3+i}$ et $\\frac{z_B - z_C}{z_B - z_A} = \\frac{-3+i}{-2i}$. Leur quotient vaut $\\frac{4i}{3+i} \\times \\frac{-2i}{-3+i} = \\frac{8}{-(3+i)(3-i)} = \\frac{8}{-10} = -\\frac{4}{5} \\in \\mathbb{R}^*$ : les points $A, B, C, D$ sont cocycliques (ils forment un trapèze isocèle inscrit dans un cercle).',
@@ -385,7 +385,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'definition',
     stepBadge: 'Écriture complexe',
     stepTheme: 'blue',
-    stepTitle: 'Transformation du plan et écriture complexe associée (p.11)',
+    stepTitle: 'Transformation du plan et écriture complexe associée',
     paragraphText:
       'Une **transformation du plan** est une application bijective $f$ du plan dans lui-même qui à tout point $M$ associe $M’$. Dans un repère orthonormé direct $(O ; \\overrightarrow{OI}, \\overrightarrow{OJ})$, l’application bijective $F : \\mathbb{C} \\to \\mathbb{C}$ qui associe à l’affixe $z$ de $M$ l’affixe $z’$ de $M’$ est la transformation complexe associée, et l’expression de $z’$ en fonction de $z$ s’appelle l’**écriture complexe** de $f$.',
     exercise: {
@@ -407,7 +407,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Symétries de base',
     stepTheme: 'violet',
-    stepTitle: 'Symétrie centrale en $O$ et symétries d’axes $(OI)$ et $(OJ)$ (p.11)',
+    stepTitle: 'Symétrie centrale en $O$ et symétries d’axes $(OI)$ et $(OJ)$',
     paragraphText:
       'Dans le repère orthonormé direct $(O, I, J)$ : le symétrique de $M(x + iy)$ par rapport à l’axe des abscisses $(OI)$ est $N(x - iy)$, d’où $z’ = \\bar{z}$ ; le symétrique par rapport à l’origine $O$ est $P(-x - iy)$, d’où $z’ = -z$ ; le symétrique par rapport à l’axe des ordonnées $(OJ)$ est $Q(-x + iy)$, d’où $z’ = -\\bar{z}$.',
     visualSchema: {
@@ -441,7 +441,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Translation & Homothétie',
     stepTheme: 'violet',
-    stepTitle: 'Écritures complexes de la translation et de l’homothétie (p.12)',
+    stepTitle: 'Écritures complexes de la translation et de l’homothétie',
     paragraphText:
       'La translation $t_{\\vec{u}}$ de vecteur $\\vec{u}$ d’affixe $b$ vérifie $\\overrightarrow{MM’} = \\vec{u} \\iff z’ - z = b$, soit **$z’ = z + b$**. L’homothétie $h$ de centre $\\Omega(\\omega)$ et de rapport $k \\in \\mathbb{R}^*$ vérifie $\\overrightarrow{\\Omega M’} = k\\overrightarrow{\\Omega M} \\iff z’ - \\omega = k(z - \\omega)$. Pour $k = -1$, on retrouve la symétrie centrale de centre $\\Omega$ : $z’ - \\omega = -(z - \\omega)$.',
     formula: {
@@ -451,7 +451,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p03_q03',
       type: 'mcq',
-      prompt: 'Quelle est l’écriture complexe de l’homothétie de rapport $-2$ et de centre $\\Omega$ d’affixe $3 - i$ (p.12) ?',
+      prompt: 'Quelle est l’écriture complexe de l’homothétie de rapport $-2$ et de centre $\\Omega$ d’affixe $3 - i$ ?',
       options: [
         '$z’ = -2z + 3 - i$',
         '$z’ = -2z + 9 - 3i$',
@@ -467,7 +467,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Rotation',
     stepTheme: 'violet',
-    stepTitle: 'Écriture complexe d’une rotation de centre $\\Omega(\\omega)$ et d’angle $\\theta$ (p.13)',
+    stepTitle: 'Écriture complexe d’une rotation de centre $\\Omega(\\omega)$ et d’angle $\\theta$',
     paragraphText:
       'La rotation $r$ de centre $\\Omega(\\omega)$ et d’angle orienté de mesure principale $\\theta \\in ]-\\pi ; \\pi]$ fixe $\\Omega$ ($r(\\Omega) = \\Omega$) et transforme tout point $M \\neq \\Omega$ en $M’$ tel que $\\Omega M’ = \\Omega M$ et $\\operatorname{Mes}(\\widehat{\\overrightarrow{\\Omega M}, \\overrightarrow{\\Omega M’}}) = \\theta$, ce qui équivaut à $\\frac{z’ - \\omega}{z - \\omega} = e^{i\\theta}$, soit **$z’ = e^{i\\theta}(z - \\omega) + \\omega$**.',
     formula: {
@@ -477,7 +477,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p03_q04',
       type: 'mcq',
-      prompt: 'Quelle est l’écriture complexe de la rotation $r$ de centre $\\Omega(i\\sqrt{3})$ et d’angle $\\frac{\\pi}{3}$ (p.13) ?',
+      prompt: 'Quelle est l’écriture complexe de la rotation $r$ de centre $\\Omega(i\\sqrt{3})$ et d’angle $\\frac{\\pi}{3}$ ?',
       options: [
         '$z’ = \\left(\\frac{1}{2} + i\\frac{\\sqrt{3}}{2}\\right)z + \\frac{3}{2} + i\\frac{\\sqrt{3}}{2}$',
         '$z’ = \\left(\\frac{1}{2} + i\\frac{\\sqrt{3}}{2}\\right)z + i\\sqrt{3}$',
@@ -493,7 +493,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Tableau complet',
     stepTheme: 'violet',
-    stepTitle: 'Récapitulatif des transformations usuelles et leurs écritures complexes (p.13–14)',
+    stepTitle: 'Récapitulatif des transformations usuelles et leurs écritures complexes',
     paragraphText:
       'Toutes ces écritures découlent de la traduction complexe des vecteurs et des angles : les symétries axiales font intervenir $\\bar{z}$ (ce sont des antidéplacements), tandis que translations, symétries centrales, homothéties et rotations s’écrivent $z’ = az + b$ avec $a \\in \\mathbb{C}^*$ (ce sont toutes des similitudes directes).',
     visualSchema: {
@@ -515,7 +515,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p03_q05',
       type: 'mcq',
-      prompt: 'Quelle est l’écriture complexe de l’homothétie $h$ de centre $\\Omega(-1 - i)$ et de rapport $3$ (p.14) ?',
+      prompt: 'Quelle est l’écriture complexe de l’homothétie $h$ de centre $\\Omega(-1 - i)$ et de rapport $3$ ?',
       options: ['$z’ = 3z - 2 - 2i$', '$z’ = 3z + 2 + 2i$', '$z’ = 3z + 4 + 4i$', '$z’ = -3z + 2 + 2i$'],
       correctAnswerIndex: 1,
       explanation: '$z’ = 3(z - (-1 - i)) + (-1 - i) = 3z + 3 + 3i - 1 - i = 3z + 2 + 2i$.',
@@ -532,7 +532,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p03_q06',
       type: 'mcq',
-      prompt: 'Soit $t$ la translation de vecteur $\\vec{u}(1 - 2i)$ (p.12). Quelle est l’affixe de l’image $A’$ de $A(3 - i)$ par $t$ ?',
+      prompt: 'Soit $t$ la translation de vecteur $\\vec{u}(1 - 2i)$. Quelle est l’affixe de l’image $A’$ de $A(3 - i)$ par $t$ ?',
       options: ['$2 + i$', '$4 - 3i$', '$-2 - i$', '$4 + i$'],
       correctAnswerIndex: 1,
       explanation: '$z_{A’} = z_A + b = (3 - i) + (1 - 2i) = 4 - 3i$.',
@@ -545,7 +545,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'orange',
     stepTitle: 'Antécédent vs image dans $z’ = az + b$',
     paragraphText:
-      'Attention à ne pas remplacer $z$ au lieu de $z’$ lorsqu’on demande l’**antécédent** d’un point ! Par exemple, pour la rotation $r$ d’écriture $z’ = iz + 1 + i$ (Ex. 5 p.26), trouver l’antécédent $D$ de $A(-1 + 3i)$ revient à résoudre $z_A = i z_D + 1 + i$, soit $iz_D = -2 + 2i \\implies z_D = \\frac{-2 + 2i}{i} = 2 + 2i$, alors que l’image de $A$ vaut $i(-1+3i)+1+i = -2$.',
+      'Attention à ne pas remplacer $z$ au lieu de $z’$ lorsqu’on demande l’**antécédent** d’un point ! Par exemple, pour la rotation $r$ d’écriture $z’ = iz + 1 + i$, trouver l’antécédent $D$ de $A(-1 + 3i)$ revient à résoudre $z_A = i z_D + 1 + i$, soit $iz_D = -2 + 2i \\implies z_D = \\frac{-2 + 2i}{i} = 2 + 2i$, alors que l’image de $A$ vaut $i(-1+3i)+1+i = -2$.',
     exercise: {
       id: 'tc_m_geo_l08_p03_q07',
       type: 'mcq',
@@ -563,7 +563,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'definition',
     stepBadge: 'Similitude directe',
     stepTheme: 'blue',
-    stepTitle: 'Écriture complexe d’une similitude plane directe : $z’ = az + b$ (p.15)',
+    stepTitle: 'Écriture complexe d’une similitude plane directe : $z’ = az + b$',
     paragraphText:
       'Dans le plan complexe muni d’un repère orthonormé direct $(O ; \\vec{u}, \\vec{v})$, une **similitude plane directe** est une transformation du plan dont l’écriture complexe est de la forme **$z’ = az + b$** avec **$a \\in \\mathbb{C}^*$** et **$b \\in \\mathbb{C}$**. Si $a = 1$, c’est une translation de vecteur d’affixe $b$ ; si $a \\neq 1$, son unique point invariant (le centre $\\Omega$) vérifie $z = az + b \\iff z_\\Omega = \\frac{b}{1 - a}$, son rapport vaut $k = |a|$ et son angle vaut $\\theta = \\operatorname{Arg}(a)$.',
     formula: {
@@ -573,7 +573,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p04_q01',
       type: 'mcq',
-      prompt: 'Soit $S$ la similitude directe d’écriture complexe $z’ = (1 - i)z + i$ (p.15). Quels sont ses éléments caractéristiques ?',
+      prompt: 'Soit $S$ la similitude directe d’écriture complexe $z’ = (1 - i)z + i$. Quels sont ses éléments caractéristiques ?',
       options: [
         'Centre $A(1)$, rapport $\\sqrt{2}$, angle $-\\frac{\\pi}{4}$',
         'Centre $A(i)$, rapport $\\sqrt{2}$, angle $\\frac{\\pi}{4}$',
@@ -589,7 +589,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Classification complète',
     stepTheme: 'violet',
-    stepTitle: 'Particulariser une similitude $z’ = az + b$ selon la valeur de $a$ (p.16)',
+    stepTitle: 'Particulariser une similitude $z’ = az + b$ selon la valeur de $a$',
     paragraphText:
       'Pour identifier la nature exacte d’une similitude directe $z’ = az + b$ ($a \\in \\mathbb{C}^*$), on examine d’abord si $a$ est réel ou complexe non réel, puis on compare $|a|$ à $1$. Le tableau ci-dessous résume les quatre cas possibles.',
     visualSchema: {
@@ -609,7 +609,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p04_q02',
       type: 'mcq',
-      prompt: 'Quelle est la nature exacte de la similitude $S$ définie par $z’ = \\left(\\frac{1}{2} + i\\frac{\\sqrt{3}}{2}\\right)z + \\frac{1}{2} - i\\frac{\\sqrt{3}}{2}$ (p.16) ?',
+      prompt: 'Quelle est la nature exacte de la similitude $S$ définie par $z’ = \\left(\\frac{1}{2} + i\\frac{\\sqrt{3}}{2}\\right)z + \\frac{1}{2} - i\\frac{\\sqrt{3}}{2}$ ?',
       options: [
         'Une homothétie de rapport $\\frac{1}{2}$',
         'Une rotation de centre $1$ et d’angle $\\frac{\\pi}{3}$',
@@ -625,13 +625,13 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Calcul des éléments',
     stepTheme: 'green',
-    stepTitle: 'Étudier les cas complexes : homothétie négative et similitude propre (p.16–17)',
+    stepTitle: 'Étudier les cas complexes : homothétie négative et similitude propre',
     paragraphText:
       'Pour $z’ = (-1 + i)z + 2$ : $a = -1 + i \\in \\mathbb{C} \\setminus \\mathbb{R}$ et $|a| = \\sqrt{2} \\neq 1$. Son angle vérifie $\\cos\\theta = -\\frac{\\sqrt{2}}{2}$ et $\\sin\\theta = \\frac{\\sqrt{2}}{2}$, donc $\\theta = \\frac{3\\pi}{4}$. L’affixe du centre vaut $z_\\Omega = \\frac{2}{1 - (-1 + i)} = \\frac{2}{2 - i} = \\frac{2(2+i)}{5} = \\frac{4}{5} + \\frac{2}{5}i$. Pour $z’ = 5z + 2i$, $a = 5 \\in \\mathbb{R}^*\\setminus\\{1\\}$ : c’est une homothétie de rapport $5$ et de centre $\\frac{2i}{1-5} = -\\frac{1}{2}i$.',
     exercise: {
       id: 'tc_m_geo_l08_p04_q03',
       type: 'mcq',
-      prompt: 'Quels sont les éléments caractéristiques de la similitude $z’ = (-1 + i)z + 2$ (p.17) ?',
+      prompt: 'Quels sont les éléments caractéristiques de la similitude $z’ = (-1 + i)z + 2$ ?',
       options: [
         'Centre $\\frac{4}{5} + \\frac{2}{5}i$, rapport $\\sqrt{2}$, angle $\\frac{3\\pi}{4}$',
         'Centre $2$, rapport $\\sqrt{2}$, angle $-\\frac{\\pi}{4}$',
@@ -647,7 +647,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Écriture depuis (Ω, k, θ)',
     stepTheme: 'violet',
-    stepTitle: 'Passer des éléments caractéristiques à l’écriture complexe (p.17)',
+    stepTitle: 'Passer des éléments caractéristiques à l’écriture complexe',
     paragraphText:
       'Réciproquement, toute similitude directe $S$ de centre $\\Omega(z_\\Omega)$, de rapport $k > 0$ et d’angle $\\theta$ a pour écriture complexe **$z’ = k e^{i\\theta}(z - z_\\Omega) + z_\\Omega$**. Elle se décompose de manière unique sous forme canonique en $S = r_{(\\Omega,\\theta)} \\circ h_{(\\Omega,k)} = h_{(\\Omega,k)} \\circ r_{(\\Omega,\\theta)}$.',
     formula: {
@@ -657,7 +657,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p04_q04',
       type: 'mcq',
-      prompt: 'Quelle est l’écriture complexe de la similitude directe de centre $A(i)$, de rapport $\\sqrt{2}$ et d’angle $\\frac{\\pi}{4}$ (p.17) ?',
+      prompt: 'Quelle est l’écriture complexe de la similitude directe de centre $A(i)$, de rapport $\\sqrt{2}$ et d’angle $\\frac{\\pi}{4}$ ?',
       options: [
         '$z’ = (1 + i)z + 1$',
         '$z’ = (1 + i)z - 1$',
@@ -673,7 +673,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Deux points et images',
     stepTheme: 'green',
-    stepTitle: 'Déterminer $z’ = az + b$ à partir de $s(A) = C$ et $s(B) = D$ (p.18–19)',
+    stepTitle: 'Déterminer $z’ = az + b$ à partir de $s(A) = C$ et $s(B) = D$',
     paragraphText:
       'Pour tous points $A \\neq B$ et $C \\neq D$, il existe une unique similitude directe $s$ telle que $s(A) = C$ et $s(B) = D$. On résout le système linéaire $\\begin{cases} a z_A + b = z_C \\\\ a z_B + b = z_D \\end{cases}$, dont la soustraction donne aussitôt $a = \\frac{z_C - z_D}{z_A - z_B}$, puis $b = z_C - a z_A$. Avec $A(2), B(2+2i), C(1-3i), D(-4i)$, on trouve $a = \\frac{1+i}{-2i} = -\\frac{1}{2} + \\frac{1}{2}i$ et $b = 2 - 4i$.',
     formula: {
@@ -683,7 +683,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p04_q05',
       type: 'mcq',
-      prompt: 'Soit $S$ la similitude directe de centre $A(-2+i)$ telle que $S(B) = C$ avec $B(1+2i)$ et $C(2-i)$ (p.19–20). Que vaut son coefficient $a$ ?',
+      prompt: 'Soit $S$ la similitude directe de centre $A(-2+i)$ telle que $S(B) = C$ avec $B(1+2i)$ et $C(2-i)$. Que vaut son coefficient $a$ ?',
       options: ['$1 + i$', '$1 - i$', '$-1 + i$', '$2 - i$'],
       correctAnswerIndex: 1,
       explanation: '$S(A)=A$ et $S(B)=C$ donnent $a = \\frac{z_C - z_A}{z_B - z_A} = \\frac{(2 - i) - (-2 + i)}{(1 + 2i) - (-2 + i)} = \\frac{4 - 2i}{3 + i} = \\frac{-4 + 2i}{-3 - i} = 1 - i$.',
@@ -694,7 +694,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Exercice 2 maison',
     stepTheme: 'blue',
-    stepTitle: 'Identifier rapidement $z’ = (1 + i\\sqrt{3})z + 2i\\sqrt{3}$ (p.22)',
+    stepTitle: 'Identifier rapidement $z’ = (1 + i\\sqrt{3})z + 2i\\sqrt{3}$',
     paragraphText:
       'Dans l’exercice 2 p.22, $a = 1 + i\\sqrt{3} = 2\\left(\\frac{1}{2} + i\\frac{\\sqrt{3}}{2}\\right) = 2e^{i\\frac{\\pi}{3}}$. Le rapport est $k = 2$ et l’angle $\\theta = \\frac{\\pi}{3}$. Pour trouver le centre $\\Omega$, on calcule $z_\\Omega = \\frac{2i\\sqrt{3}}{1 - (1 + i\\sqrt{3})} = \\frac{2i\\sqrt{3}}{-i\\sqrt{3}} = -2$. C’est donc la similitude directe de centre $\\Omega(-2)$, de rapport $2$ et d’angle $\\frac{\\pi}{3}$.',
     exercise: {
@@ -736,7 +736,7 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Images de figures',
     stepTheme: 'violet',
-    stepTitle: 'Images de droites, cercles et multiplication des aires par $k^2$ (p.20)',
+    stepTitle: 'Images de droites, cercles et multiplication des aires par $k^2$',
     paragraphText:
       'Toute similitude directe $S$ de rapport $k > 0$ transforme une droite $(AB)$ en la droite $(A’B’)$, une demi-droite $[AB)$ en $[A’B’)$, un segment de longueur $\\ell$ en un segment de longueur $k\\ell$, et un cercle $\\mathcal{C}(A, r)$ en le cercle $\\mathcal{C}(A’, kr)$. De plus, elle multiplie **les distances par $k$** et **les aires par $k^2$**.',
     formula: {
@@ -746,7 +746,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p05_q01',
       type: 'mcq',
-      prompt: 'Soit $S$ d’écriture $z’ = (1 + i)z - 1 - 2i$ (p.20). Sachant que le triangle $OIJ$ a pour aire $\\frac{1}{2}\\;\\text{ua}$, quelle est l’aire de son image par $S$ et quel est le rayon de l’image du cercle $\\mathcal{C}(O, 2)$ ?',
+      prompt: 'Soit $S$ d’écriture $z’ = (1 + i)z - 1 - 2i$. Sachant que le triangle $OIJ$ a pour aire $\\frac{1}{2}\\;\\text{ua}$, quelle est l’aire de son image par $S$ et quel est le rayon de l’image du cercle $\\mathcal{C}(O, 2)$ ?',
       options: [
         'Aire $1\\;\\text{ua}$ et rayon $2\\sqrt{2}$',
         'Aire $\\frac{\\sqrt{2}}{2}\\;\\text{ua}$ et rayon $2\\sqrt{2}$',
@@ -762,12 +762,12 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Situation complexe',
     stepTheme: 'blue',
-    stepTitle: 'Quadrilatère $ABCD$ bordé de triangles rectangles isocèles (p.1 et p.21–22)',
+    stepTitle: 'Quadrilatère $ABCD$ bordé de triangles rectangles isocèles',
     paragraphText:
       'Sur un mur du club de maths, un élève observe un quadrilatère direct $ABCD$ et quatre triangles rectangles isocèles directs $AM_1B, BM_2C, CM_3D, DM_4A$ en $M_1, M_2, M_3, M_4$. Il affirme que $[M_1M_3]$ et $[M_2M_4]$ sont perpendiculaires et de même longueur. On écrit la caractérisation en $M_1$ : $\\frac{z_B - z_1}{z_A - z_1} = i \\iff z_1 = \\frac{z_A(1-i) + z_B(1+i)}{2}$, et de même pour $z_2, z_3, z_4$.',
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Situation complexe : triangles rectangles isocèles sur ABCD (p.21)',
+      title: 'Situation complexe : triangles rectangles isocèles sur ABCD',
       caption: 'Les diagonales reliant les sommets opposés [M₁M₃] et [M₂M₄] vérifient M₁M₃ = M₂M₄ et (M₁M₃) ⊥ (M₂M₄).',
       svgContent: `<svg viewBox="0 0 320 175" width="305" height="166" xmlns="http://www.w3.org/2000/svg">
         <polygon points="120,45 195,50 215,115 95,110" fill="#f1f5f9" stroke="#334155" stroke-width="1.8"/>
@@ -806,9 +806,9 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Fin situation complexe',
     stepTheme: 'green',
-    stepTitle: 'Conclure avec $\\frac{z_4 - z_2}{z_3 - z_1} = -i$ (p.22, coquille corrigée)',
+    stepTitle: 'Conclure avec $\\frac{z_4 - z_2}{z_3 - z_1} = -i$',
     paragraphText:
-      'En formant la différence $z_4 - z_2 = \\frac{(1-i)(z_D - z_B) + (1+i)(z_A - z_C)}{2}$ et $z_3 - z_1 = \\frac{(1-i)(z_C - z_A) + (1+i)(z_D - z_B)}{2}$, puis en multipliant numérateur et dénominateur par $1 + i$, on factorise par $i$ au dénominateur et on obtient $\\frac{z_4 - z_2}{z_3 - z_1} = -i$ (en supposant $M_1 \\neq M_3$). Ainsi $\\left|\\frac{z_4 - z_2}{z_3 - z_1}\\right| = 1 \\implies |z_4 - z_2| = |z_3 - z_1|$ (et non $|z_4-z_2|=|z_4-z_2|$ comme imprimé par coquille p.22), donc $M_2M_4 = M_1M_3$ et $(M_1M_3) \\perp (M_2M_4)$.',
+      'En formant la différence $z_4 - z_2 = \\frac{(1-i)(z_D - z_B) + (1+i)(z_A - z_C)}{2}$ et $z_3 - z_1 = \\frac{(1-i)(z_C - z_A) + (1+i)(z_D - z_B)}{2}$, puis en multipliant numérateur et dénominateur par $1 + i$, on factorise par $i$ au dénominateur et on obtient $\\frac{z_4 - z_2}{z_3 - z_1} = -i$ (en supposant $M_1 \\neq M_3$). Ainsi $\\left|\\frac{z_4 - z_2}{z_3 - z_1}\\right| = 1 \\implies |z_4 - z_2| = |z_3 - z_1|$, donc $M_2M_4 = M_1M_3$ et $(M_1M_3) \\perp (M_2M_4)$.',
     formula: {
       name: 'Théorème de Van Aubel (cas complexe)',
       formula: '\\frac{z_4 - z_2}{z_3 - z_1} = -i \\implies M_2M_4 = M_1M_3 \\;\\text{ et }\\; (M_1M_3) \\perp (M_2M_4)',
@@ -830,15 +830,15 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 4,
     stepKind: 'methode',
-    stepBadge: 'Approfondissement Ex. 4',
+    stepBadge: 'Approfondissement',
     stepTheme: 'green',
-    stepTitle: 'Changement de variable dans $\\mathbb{C}$ et triangle $IAC$ (p.24–25)',
+    stepTitle: 'Changement de variable dans $\\mathbb{C}$ et triangle $IAC$',
     paragraphText:
       'Dans l’exercice 4, on résout d’abord $z^2 - 2z + 2 = 0 \\iff (z-1)^2 = i^2$, d’où $S_{\\mathbb{C}} = \\{1 + i ; 1 - i\\}$ (de module $\\sqrt{2}$ et d’arguments $\\pm\\frac{\\pi}{4}$). En posant $Z = -iz + 3i + 3$, l’équation $(-iz + 3i + 3)^2 - 2(-iz + 3i + 3) + 2 = 0$ équivaut à $Z = 1 + i$ ou $Z = 1 - i$, donnant $z = 2 - 2i$ ou $z = 4 - 2i$. Ensuite, avec $A(1+i), B(1-i), C(2-2i)$ et $I(3)$, on vérifie $IA = IB = IC = \\sqrt{5}$ et $\\frac{z_C - 3}{z_A - 3} = \\frac{-1 - 2i}{-2 + i} = i$, donc $IAC$ est rectangle isocèle en $I$.',
     exercise: {
       id: 'tc_m_geo_l08_p05_q04',
       type: 'mcq',
-      prompt: 'Avec $A(1+i)$, $C(2-2i)$ et $I(3)$, que vaut $\\frac{z_C - 3}{z_A - 3}$ et quelle est la nature du triangle $IAC$ (p.25) ?',
+      prompt: 'Avec $A(1+i)$, $C(2-2i)$ et $I(3)$, que vaut $\\frac{z_C - 3}{z_A - 3}$ et quelle est la nature du triangle $IAC$ ?',
       options: [
         '$i$ : triangle rectangle isocèle en $I$',
         '$-1$ : points alignés',
@@ -852,15 +852,15 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 5,
     stepKind: 'exemple',
-    stepBadge: 'Approfondissement Ex. 5',
+    stepBadge: 'Approfondissement',
     stepTheme: 'blue',
-    stepTitle: 'Construire et prouver un carré par rotation complexe (p.25–26)',
+    stepTitle: 'Construire et prouver un carré par rotation complexe',
     paragraphText:
       'On donne $A(-1 + 3i)$, $B(-2)$, $D(2 + 2i)$ et la rotation $r$ de centre $J(i)$ et d’angle $\\frac{\\pi}{2}$, d’écriture $z’ = iz + 1 + i$. On vérifie $r(A) = B$ et $r(D) = A$. Soit $C$ le symétrique de $A$ par rapport à $J$ : $z_C = 2z_J - z_A = 2i - (-1 + 3i) = 1 - i$. On montre alors que $AB = BC = CD = DA = \\sqrt{10}$ (losange) et que $\\frac{z_B - z_A}{z_C - z_A} = \\frac{1}{2} - \\frac{1}{2}i$ a pour argument $\\frac{\\pi}{4}$, donc $(\\widehat{\\overrightarrow{AB}, \\overrightarrow{AD}}) = 2 \\times \\frac{\\pi}{4} = \\frac{\\pi}{2}$ : $ABCD$ est bien un carré !',
     exercise: {
       id: 'tc_m_geo_l08_p05_q05',
       type: 'mcq',
-      prompt: 'Si $C$ est le symétrique de $A(-1 + 3i)$ par rapport au point $J(i)$, quelle est l’affixe de $C$ (p.26) ?',
+      prompt: 'Si $C$ est le symétrique de $A(-1 + 3i)$ par rapport au point $J(i)$, quelle est l’affixe de $C$ ?',
       options: ['$1 - i$', '$-1 - i$', '$1 + 5i$', '$-2i$'],
       correctAnswerIndex: 0,
       explanation: '$J$ est le milieu de $[AC]$, donc $z_C = 2z_J - z_A = 2i - (-1 + 3i) = 1 - i$.',
@@ -877,7 +877,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l08_p05_q06',
       type: 'mcq',
-      prompt: 'Pour $a = -\\frac{1}{2} + \\frac{1}{2}i$, que vaut le rapport $\\frac{a^3 - a}{a^2 - a}$ et pourquoi le triangle des sommets $a, a^2, a^3$ n’est-il pas équilatéral (p.27) ?',
+      prompt: 'Pour $a = -\\frac{1}{2} + \\frac{1}{2}i$, que vaut le rapport $\\frac{a^3 - a}{a^2 - a}$ et pourquoi le triangle des sommets $a, a^2, a^3$ n’est-il pas équilatéral ?',
       options: [
         'Il vaut $a + 1 = \\frac{1}{2} + \\frac{1}{2}i$, qui n’est égal ni à $e^{i\\frac{\\pi}{3}}$ ni à $e^{-i\\frac{\\pi}{3}}$',
         'Il vaut $a - 1 = -\\frac{3}{2} + \\frac{1}{2}i$',
@@ -961,7 +961,7 @@ export const MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE: CurriculumChapter = {
         { name: 'Quotient complexe', formula: '\\left|\\frac{z_A-z_B}{z_C-z_D}\\right| = \\frac{AB}{CD}, \\qquad \\arg\\left(\\frac{z_A-z_B}{z_C-z_D}\\right) \\equiv (\\widehat{\\overrightarrow{DC},\\overrightarrow{BA}})\\;[2\\pi]' },
       ],
       workedExample: {
-        title: 'Lieu |2iz − 3 + 2i| = |z − 2| (p.4, corrigé)',
+        title: 'Lieu |2iz − 3 + 2i| = |z − 2|',
         statement: 'Déterminer l’ensemble des points $M(z)$.',
         methodSteps: [
           'Factorisation par $2i$ : $2\\left|z - (-1 - \\frac{3}{2}i)\\right| = |z - 2|$, soit $\\frac{MA}{MB} = 2$ avec $A(2)$ et $B(-1-\\frac{3}{2}i)$.',
@@ -985,7 +985,7 @@ export const MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE: CurriculumChapter = {
         { name: 'Configurations usuelles', formula: '(AB)//(CD) \\iff \\frac{z_A-z_B}{z_C-z_D}\\in\\mathbb{R}^* \\quad;\\quad (AB)\\perp(CD) \\iff \\frac{z_A-z_B}{z_C-z_D}\\in i\\mathbb{R}^*' },
       ],
       workedExample: {
-        title: 'Points cocycliques A(−2i), B(7−i), C(8+2i), D(−1+5i) (p.7)',
+        title: 'Points cocycliques A(−2i), B(7−i), C(8+2i), D(−1+5i)',
         statement: 'Démontrer que $A, B, C, D$ sont cocycliques.',
         methodSteps: [
           '$\\frac{z_D - z_A}{z_B - z_A} = \\frac{-1+7i}{7+i} = i \\notin \\mathbb{R}$, donc $A, B, D$ ne sont pas alignés.',
@@ -1009,7 +1009,7 @@ export const MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE: CurriculumChapter = {
         { name: 'Transformations usuelles', formula: 'z’ = z+b \\;\\; ; \\;\\; z’ - \\omega = k(z - \\omega) \\;\\; ; \\;\\; z’ - \\omega = e^{i\\theta}(z - \\omega)' },
       ],
       workedExample: {
-        title: 'Rotation de centre Ω(i√3) et d’angle π/3 (p.13)',
+        title: 'Rotation de centre Ω(i√3) et d’angle π/3',
         statement: 'Trouver son écriture complexe.',
         methodSteps: [
           '$z’ = e^{i\\frac{\\pi}{3}}(z - i\\sqrt{3}) + i\\sqrt{3} = (\\frac{1}{2} + i\\frac{\\sqrt{3}}{2})(z - i\\sqrt{3}) + i\\sqrt{3}$.',
@@ -1033,7 +1033,7 @@ export const MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE: CurriculumChapter = {
         { name: 'Similitude directe', formula: 'z’ = az + b \\;(a \\in \\mathbb{C}^*) \\implies z_\\Omega = \\frac{b}{1-a}, \\; k = |a|, \\; \\theta = \\operatorname{Arg}(a)' },
       ],
       workedExample: {
-        title: 'Similitude définie par A(2) ↦ C(1−3i) et B(2+2i) ↦ D(−4i) (p.18–19)',
+        title: 'Similitude définie par A(2) ↦ C(1−3i) et B(2+2i) ↦ D(−4i)',
         statement: 'Déterminer son écriture et ses éléments caractéristiques.',
         methodSteps: [
           '$a = \\frac{z_C - z_D}{z_A - z_B} = \\frac{1+i}{-2i} = -\\frac{1}{2} + \\frac{1}{2}i$, puis $b = (1-3i) - 2a = 2 - 4i$.',
@@ -1057,7 +1057,7 @@ export const MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE: CurriculumChapter = {
         { name: 'Théorème de Van Aubel', formula: '\\frac{z_4 - z_2}{z_3 - z_1} = -i \\implies M_2M_4 = M_1M_3 \\;\\text{ et }\\; (M_1M_3) \\perp (M_2M_4)' },
       ],
       workedExample: {
-        title: 'Situation complexe : quadrilatère ABCD et M₁, M₂, M₃, M₄ (p.21–22)',
+        title: 'Situation complexe : quadrilatère ABCD et M₁, M₂, M₃, M₄',
         statement: 'Prouver que $M_1M_3 = M_2M_4$ et $(M_1M_3) \\perp (M_2M_4)$.',
         methodSteps: [
           '$z_1 = \\frac{z_A(1-i)+z_B(1+i)}{2}$ et relations analogues pour $z_2, z_3, z_4$.',

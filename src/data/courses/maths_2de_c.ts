@@ -1,5 +1,5 @@
 // ============================================================================
-// MODULE OFFICIEL : MATHÉMATIQUES 2de C — GÉOMÉTRIE (MENA CÔTE D'IVOIRE)
+// MODULE OFFICIEL : MATHÉMATIQUES 2de C — GÉOMÉTRIE
 // Volet : Géométrie | Classe : Seconde C
 // 5 Leçons Officielles :
 //   - Leçon 1 : Vecteurs et points du plan (8H) — format v2, fichier seconde/maths_2dc_vecteurs_points.ts

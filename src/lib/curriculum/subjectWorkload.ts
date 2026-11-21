@@ -33,7 +33,7 @@ export async function computeSubjectWorkloads(
   const grade = canonicalGradeLevel(tryResolveGradeLevel(gradeRaw ?? undefined));
   if (!userId || !grade) return {};
   const withCourse = subjects
-    .map((s) => ({ s, stem: matchSubjectToStemCurriculum(s.name).stemSubjectId as StemSubjectId | undefined }))
+    .map((s) => ({ s, stem: matchSubjectToStemCurriculum(s.name, grade).stemSubjectId as StemSubjectId | undefined }))
     .filter((x): x is { s: Subject; stem: StemSubjectId } => Boolean(x.stem) && shouldLaunchInteractiveTutor(x.s.name, grade));
   if (!withCourse.length) return {};
   await loadCurriculumFor(grade, [...new Set(withCourse.map((x) => x.stem))]);

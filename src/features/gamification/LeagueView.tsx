@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowDown, ArrowUp, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
-import { FallingSnow, FrostOverlay, IceStyles, Snowflake } from './Ice';
+import { FrostOverlay, IceStyles, Snowflake } from './Ice';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 
 /**
@@ -181,7 +181,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
-      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+3 %</b>.</p>
+      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+5 %</b>.</p>
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>
@@ -255,14 +255,13 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
         <IceStyles />
         {board.frozen && (
           <div className="relative overflow-hidden rounded-2xl border-2 border-cyan-300 dark:border-cyan-300/50 bg-gradient-to-br from-cyan-50 to-sky-100 dark:from-cyan-400/10 dark:to-sky-500/10 p-3.5 flex items-start gap-3 text-cyan-950 dark:text-cyan-50">
-            <FallingSnow />
             <span className="relative shrink-0 w-10 h-10 rounded-full bg-white/80 dark:bg-cyan-300/15 border border-cyan-300 dark:border-cyan-300/40 flex items-center justify-center text-cyan-600 dark:text-cyan-200">
               <Snowflake size={24} />
             </span>
             <span className="relative text-sm leading-snug">
               <b className="block text-[15px]">Ta ligue est gelée</b>
               Ta réputation est à {board.reputation} %. Tant qu’elle reste à 80 % ou moins, tes XP <b>ne comptent plus dans le classement</b> et tu ne peux pas monter de division.
-              <span className="block mt-1 font-bold">Pour dégeler : termine tes leçons, chacune te rend <span className="text-cyan-700 dark:text-cyan-200">+3 %</span> de réputation.</span>
+              <span className="block mt-1 font-bold">Pour dégeler : termine tes leçons, chacune te rend <span className="text-cyan-700 dark:text-cyan-200">+5 %</span> de réputation.</span>
             </span>
           </div>
         )}
@@ -321,11 +320,10 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
                 />
                 <span className="min-w-0 flex-1">
                   {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
-                  <span className={`block truncate text-sm ${
-                    row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
-                      : row.tier === 'pro' ? 'gold-shimmer-text font-black'
-                        : 'font-bold text-slate-900 dark:text-white'
-                  }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
+                  <span className={`block truncate text-sm ${row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
+                    : row.tier === 'pro' ? 'gold-shimmer-text font-black'
+                      : 'font-bold text-slate-900 dark:text-white'
+                    }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
                   <span className="block text-[11px] text-slate-500 dark:text-slate-400 truncate">
                     {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
                   </span>

@@ -88,7 +88,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
           "exercise": {
             "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p01_q3",
             "type": "mcq",
-            "prompt": "Combien d'habitants compte aujourd'hui la population mondiale selon le cours ?",
+            "prompt": "Combien d'habitants compte aujourd'hui la population mondiale ?",
             "options": [
               "Environ 2,5 milliards",
               "Environ 23 millions",
@@ -214,7 +214,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
         {
           "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p01_q3",
           "type": "mcq",
-          "prompt": "Combien d'habitants compte aujourd'hui la population mondiale selon le cours ?",
+          "prompt": "Combien d'habitants compte aujourd'hui la population mondiale ?",
           "options": [
             "Environ 2,5 milliards",
             "Environ 23 millions",
@@ -283,7 +283,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
       "order": 2,
       "title": "Une croissance à double vitesse",
       "summary": "Lente dans les pays développés, rapide dans les pays en développement.",
-      "conceptExplanation": "Pays développés : croissance lente. Raisons : coût élevé de la vie et de l'éducation des enfants, émancipation de la femme, changement des mentalités, politiques antinatalistes (contraception, planning familial). Leur transition démographique est achevée : natalité et mortalité sont basses, et la croissance naturelle est très faible.\n\nPays en développement : explosion démographique. Raisons :\n- mortalité en baisse (ex. 8,4 décès pour 1 000 habitants), grâce à l'amélioration du système de santé et des conditions de vie ;\n- natalité toujours élevée (ex. 28,2 naissances pour 1 000 habitants en 2020) ;\n- politiques favorables aux naissances, pratiques culturelles et religieuses qui rejettent la contraception, mariages précoces.\nLeur transition démographique n'est pas encore achevée.\n\nLa transition démographique est le passage d'une natalité et d'une mortalité élevées à une natalité et une mortalité basses.",
+      "conceptExplanation": "Pays développés : croissance lente. Raisons : coût élevé de la vie et de l'éducation des enfants, émancipation de la femme, changement des mentalités, politiques antinatalistes (contraception, planning familial). Leur transition démographique est achevée : natalité et mortalité sont basses, et la croissance naturelle est très faible.\n\nPays en développement : explosion démographique. Raisons :\n- mortalité en baisse, grâce à l'amélioration du système de santé et des conditions de vie ;\n- natalité toujours élevée ;\n- politiques favorables aux naissances, pratiques culturelles et religieuses qui rejettent la contraception, mariages précoces.\nLeur transition démographique n'est pas encore achevée.\n\nLa transition démographique est le passage d'une natalité et d'une mortalité élevées à une natalité et une mortalité basses.",
       "keyRule": "Pays développés : transition achevée, croissance lente. Pays en développement : mortalité en baisse mais natalité élevée, croissance rapide.",
       "formulas": [],
       "workedExample": {
@@ -365,7 +365,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
           "stepTitle": "La mortalité baisse",
           "stepTheme": "La mortalité baisse",
           "stepBadge": "La mortalité baisse",
-          "paragraphText": "Dans les pays en développement, la mortalité baisse (ex. 8,4 ‰) grâce à l'amélioration de la santé et des conditions de vie.",
+          "paragraphText": "Dans les pays en développement, la mortalité baisse grâce à l'amélioration de la santé et des conditions de vie.",
           "exercise": {
             "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p02_q4",
             "type": "mcq",
@@ -386,7 +386,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
           "stepTitle": "La natalité reste forte",
           "stepTheme": "La natalité reste forte",
           "stepBadge": "La natalité reste forte",
-          "paragraphText": "La natalité reste élevée dans les pays en développement (ex. 28,2 ‰ en 2020).",
+          "paragraphText": "La natalité reste élevée dans les pays en développement.",
           "exercise": {
             "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p02_q5",
             "type": "mcq",
@@ -629,7 +629,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
           "exercise": {
             "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p03_q4",
             "type": "mcq",
-            "prompt": "Quelle est l'espérance de vie dans les pays développés selon le cours ?",
+            "prompt": "Quelle est l'espérance de vie dans les pays développés ?",
             "options": [
               "Environ 48 ans",
               "Environ 30 ans",
@@ -747,7 +747,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
         {
           "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p03_q4",
           "type": "mcq",
-          "prompt": "Quelle est l'espérance de vie dans les pays développés selon le cours ?",
+          "prompt": "Quelle est l'espérance de vie dans les pays développés ?",
           "options": [
             "Environ 48 ans",
             "Environ 30 ans",
@@ -826,7 +826,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
           "exercise": {
             "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p04_q1",
             "type": "mcq",
-            "prompt": "Quelle est la densité moyenne de la population mondiale selon le cours ?",
+            "prompt": "Quelle est la densité moyenne de la population mondiale ?",
             "options": [
               "Environ 56 hab./km²",
               "Environ 71 hab./km²",
@@ -968,7 +968,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
         {
           "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p04_q1",
           "type": "mcq",
-          "prompt": "Quelle est la densité moyenne de la population mondiale selon le cours ?",
+          "prompt": "Quelle est la densité moyenne de la population mondiale ?",
           "options": [
             "Environ 56 hab./km²",
             "Environ 71 hab./km²",
@@ -1451,7 +1451,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
           "exercise": {
             "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p06_q6",
             "type": "mcq",
-            "prompt": "Quelle est la principale limite des politiques natalistes selon le cours ?",
+            "prompt": "Quelle est la principale limite des politiques natalistes ?",
             "options": [
               "Le manque d'hôpitaux",
               "La forte mortalité infantile",
@@ -1553,7 +1553,7 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
         {
           "id": "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p06_q6",
           "type": "mcq",
-          "prompt": "Quelle est la principale limite des politiques natalistes selon le cours ?",
+          "prompt": "Quelle est la principale limite des politiques natalistes ?",
           "options": [
             "Le manque d'hôpitaux",
             "La forte mortalité infantile",

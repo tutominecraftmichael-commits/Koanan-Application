@@ -7,10 +7,10 @@ export const SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME: CurriculumChapter = {
   alsoForGrades: ["terminale_c"],
   order: 9,
   title: "Le fonctionnement des organes sexuels chez l'Homme (Cycles ovarien et utérin, régulation neuro-hormonale et contraception)",
-  summary: "Étude complète et approfondie de la physiologie de la reproduction humaine selon le programme officiel de Côte d'Ivoire (SVT Tle D) : fonctionnement cyclique des organes sexuels femelles (cycles ovarien, utérin, hormones ovariennes œstrogènes/progestérone et gonadostimulines hypophysaires FSH/LH), régulation neuro-hormonale de l'axe hypothalamo-hypophysaire chez la femme (rétrocontrôles négatif et positif du pic pré-ovulatoire de LH), régulation neuro-hormonale chez l'homme (cellules de Leydig, testostérone, cellules de Sertoli, inhibine, rétrocontrôle négatif exclusif), et maîtrise de la reproduction par les méthodes contraceptives hormonales (pilules combinées, séquentielles, microdosées et pilule du lendemain).",
+  summary: "Étude complète et approfondie de la physiologie de la reproduction humaine : fonctionnement cyclique des organes sexuels femelles (cycles ovarien, utérin, hormones ovariennes œstrogènes/progestérone et gonadostimulines hypophysaires FSH/LH), régulation neuro-hormonale de l'axe hypothalamo-hypophysaire chez la femme (rétrocontrôles négatif et positif du pic pré-ovulatoire de LH), régulation neuro-hormonale chez l'homme (cellules de Leydig, testostérone, cellules de Sertoli, inhibine, rétrocontrôle négatif exclusif), et maîtrise de la reproduction par les méthodes contraceptives hormonales (pilules combinées, séquentielles, microdosées et pilule du lendemain).",
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_cycles_sexuels_femelle_ovarien_uterin_hormonal",

@@ -14,7 +14,7 @@ export const MATHS_TLE_A_L03_LOGARITHME_NEPERIEN: CurriculumChapter = {
   "summary": "Définition et signe de ln, propriétés algébriques, limites, dérivée de ln u, équations et inéquations.",
   "officialVolumeHours": 12,
   "contentVersion": 2,
-  "source": "Programme de Terminale A fourni par l'équipe KONAN (pas de PDF officiel), vérifié et corrigé",
+  "source": "Programme de Terminale A fourni par l'équipe KONAN, vérifié et corrigé",
   "points": [
     {
       "id": "terminale_a_maths_numerique_l03_logarithme_neperien_p01",

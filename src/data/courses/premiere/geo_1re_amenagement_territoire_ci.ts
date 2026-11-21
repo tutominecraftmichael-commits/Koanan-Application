@@ -181,7 +181,7 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
               "Vraie seulement depuis 2011"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "C'est la question 1 de l'activité d'application 3 du cours."
+            "explanation": "Cette notion est un point clé à retenir pour les évaluations."
           }
         }
       ],
@@ -275,7 +275,7 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
             "Vraie seulement depuis 2011"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "C'est la question 1 de l'activité d'application 3 du cours."
+          "explanation": "Cette notion est un point clé à retenir pour les évaluations."
         }
       ]
     },
@@ -701,7 +701,7 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
               "Les plantations d'hévéa du Sud-Ouest"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est l'activité d'application 2 du cours."
+            "explanation": "Cette notion est un point clé à maîtriser."
           }
         }
       ],
@@ -795,7 +795,7 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
             "Les plantations d'hévéa du Sud-Ouest"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est l'activité d'application 2 du cours."
+          "explanation": "Cette notion est un point clé à maîtriser."
         }
       ]
     },

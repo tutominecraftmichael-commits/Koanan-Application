@@ -10,7 +10,7 @@ export const MATHS_TLE_D_L11_STATISTIQUE_DEUX_VARIABLES: CurriculumChapter = {
   summary: "Étude complète et approfondie des séries statistiques doubles : tableaux de contingence, séries et fréquences marginales, nuage de points, coordonnées du point moyen G, calcul de covariance, coefficient de corrélation linéaire de Bravais-Pearson, droites de régression par la méthode des moindres carrés, droite de Mayer et prévisions de situations réelles au Baccalauréat.",
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - Mathématiques Terminale D / C",
+  source: "Programme KONAN — Mathématiques Terminale D / C",
   points: [
     {
       id: "pt1_serie_double_tableaux_nuage_point_moyen",
@@ -228,7 +228,7 @@ export const MATHS_TLE_D_L11_STATISTIQUE_DEUX_VARIABLES: CurriculumChapter = {
         {
           id: "tle_d_maths_c11_p2_ex4",
           type: "mcq",
-          prompt: "Selon le programme officiel de Terminale en Côte d'Ivoire, à partir de quel seuil sur |r| affirme-t-on qu'il existe une forte corrélation linéaire justifiant un ajustement linéaire ?",
+          prompt: " de Terminale en Côte d'Ivoire, à partir de quel seuil sur |r| affirme-t-on qu'il existe une forte corrélation linéaire justifiant un ajustement linéaire ?",
           options: [
             "|r| ≥ 0,87",
             "|r| ≥ 0,50",

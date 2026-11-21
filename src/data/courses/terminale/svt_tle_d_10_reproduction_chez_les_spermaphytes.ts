@@ -7,10 +7,10 @@ export const SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES: CurriculumChapter = {
   alsoForGrades: ["terminale_c"],
   order: 10,
   title: "La reproduction chez les spermaphytes (Anthère, ovule, pollinisation et double fécondation)",
-  summary: "Étude complète et approfondie de la reproduction sexuée chez les plantes à fleurs (Spermaphytes / Angiospermes) selon le programme officiel de SVT Terminale D de Côte d'Ivoire : structure microscopique de l'anthère et microsporogenèse (formation du grain de pollen bicellulaire), anatomie de l'ovaire, ovule anatrope et mégasporogenèse (formation du sac embryonnaire à 7 cellules et 8 noyaux), pollinisation et germination chimiotropique du tube pollinique avec division du noyau reproducteur en 2 anthérozoïdes, double fécondation exclusive (zygote principal diploïde 2n donnant l'embryon, zygote accessoire triploïde 3n donnant l'albumen), et transformation finale de l'ovule en graine et de l'ovaire en fruit.",
+  summary: "Étude complète et approfondie de la reproduction sexuée chez les plantes à fleurs (Spermaphytes / Angiospermes) : structure microscopique de l'anthère et microsporogenèse (formation du grain de pollen bicellulaire), anatomie de l'ovaire, ovule anatrope et mégasporogenèse (formation du sac embryonnaire à 7 cellules et 8 noyaux), pollinisation et germination chimiotropique du tube pollinique avec division du noyau reproducteur en 2 anthérozoïdes, double fécondation exclusive (zygote principal diploïde 2n donnant l'embryon, zygote accessoire triploïde 3n donnant l'albumen), et transformation finale de l'ovule en graine et de l'ovaire en fruit.",
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_structure_anthere_formation_grain_pollen",

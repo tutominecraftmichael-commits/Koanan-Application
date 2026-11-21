@@ -35,7 +35,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Identifier un alcane et vérifier des propositions Vrai/Faux (Exercice 2 p. 7–8)',
+        title: 'Identifier un alcane et vérifier des propositions Vrai/Faux',
         statement:
           'Parmi ces affirmations, détermine lesquelles sont vraies ou fausses : (1) « Un composé contenant uniquement C et H est forcément un alcane » ; (2) « La molécule d’alcane est dite saturée car elle ne peut pas additionner une autre molécule » ; (3) « La formule brute générale des alcanes est $\\mathrm{C_nH_{2n-2}}$ ».',
         methodSteps: [
@@ -147,7 +147,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
           stepTheme: 'Définition stricte',
           stepTitle: '« Contenir uniquement C et H » suffit-il à définir un alcane ?',
           paragraphText:
-            'Attention à ce piège classique (Exercice 2 p. 7–8) ! L’affirmation « Un alcane est un composé organique renfermant uniquement C et H » est insuffisante donc FAUSSE comme définition d’un alcane : elle définit un hydrocarbure en général (comme les alcènes ou alcynes), alors qu’un alcane exige en plus des liaisons simples uniquement.',
+            'Attention à ce piège classique ! L’affirmation « Un alcane est un composé organique renfermant uniquement C et H » est insuffisante donc FAUSSE comme définition d’un alcane : elle définit un hydrocarbure en général (comme les alcènes ou alcynes), alors qu’un alcane exige en plus des liaisons simples uniquement.',
           exercise: {
             id: 'premiere_c_chimie_l02_alcanes_p01_q5',
             type: 'mcq',
@@ -578,7 +578,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Nommer un alcane ramifié et un dérivé halogéné (Activité p. 3 & Ex 1 p. 7)',
+        title: 'Nommer un alcane ramifié et un dérivé halogéné',
         statement:
           'Nomme le composé C de l’activité p. 3 : $\\mathrm{CH_3-CH(C_2H_5)-CH(C_2H_5)-CH_2-CH(C_2H_5)-CH_3}$, ainsi que le dérivé bromo-chloro de l’Exercice 1c.',
         methodSteps: [
@@ -662,7 +662,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
           stepTheme: 'Chaîne la plus longue',
           stepTitle: 'Bien repérer la chaîne principale avec des éthyles',
           paragraphText:
-            'Dans l’exemple du cours $\\mathrm{CH_3-CH(CH_3)-CH_2-CH(C_2H_5)-CH_2-CH_3}$, la chaîne horizontale contient 5 carbones, mais en descendant sur $-\\mathrm{C_2H_5}$ on obtient 6 carbones (hexane). C’est donc un hexane substitué en 2 et 4 : le 4-éthyl-2-méthylhexane (ou attention selon la position : vérifie toujours les deux bouts !).',
+            'Dans la molécule $\\mathrm{CH_3-CH(CH_3)-CH_2-CH(C_2H_5)-CH_2-CH_3}$, la chaîne horizontale contient 5 carbones, mais en descendant sur $-\\mathrm{C_2H_5}$ on obtient 6 carbones (hexane). C’est donc un hexane substitué en 2 et 4 : le 4-éthyl-2-méthylhexane (ou attention selon la position : vérifie toujours les deux bouts !).',
           exercise: {
             id: 'premiere_c_chimie_l02_alcanes_p03_q3',
             type: 'mcq',
@@ -857,7 +857,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Trouver les trois isomères de chaîne de C₅H₁₂ (Activité p. 5)',
+        title: 'Trouver les trois isomères de chaîne de C₅H₁₂',
         statement:
           'Donne les formules semi-développées et les noms des trois isomères de l’alcane de formule brute $\\mathrm{C_5H_{12}}$.',
         methodSteps: [
@@ -920,9 +920,9 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
           stepKind: 'methode',
           stepBadge: 'Nomenclature',
           stepTheme: 'Cyclanes substitués',
-          stepTitle: 'Numéroter un cyclane ramifié (Activité p. 4)',
+          stepTitle: 'Numéroter un cyclane ramifié',
           paragraphText:
-            'Sur un cycle à 1 seul substituant, l’indice 1 est inutile (ex. méthylcyclobutane). Avec 2 substituants, on choisit le sens donnant les plus petits indices (ex. 1,3-diméthylcyclohexane plutôt que 1,5), et en cas d’égalité (1 et 2, ou 1 et 3), on attribue l’indice 1 au groupe prioritaire par ordre alphabétique : 1-éthyl-2-méthylcyclopentane et 1-éthyl-3-méthylcyclopentane.',
+            'Sur un cycle à 1 seul substituant, l’indice 1 est inutile (ex. méthylcyclobutane). Avec 2 substituants, on choisit le sens donnant les plus petits indices, et en cas d’égalité (1 et 2, ou 1 et 3), on attribue l’indice 1 au groupe prioritaire par ordre alphabétique : 1-éthyl-2-méthylcyclopentane et 1-éthyl-3-méthylcyclopentane.',
           exercise: {
             id: 'premiere_c_chimie_l02_alcanes_p04_q3',
             type: 'mcq',
@@ -1120,7 +1120,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Composition d’un mélange gazeux propane/butane (Exercice 5 p. 9–10)',
+        title: 'Composition d’un mélange gazeux propane/butane',
         statement:
           'On brûle complètement $12\\text{ cm}^3$ d’un mélange de propane ($V_1$) et de butane ($V_2$) dans $100\\text{ cm}^3$ de dioxygène. Après condensation de l’eau, il reste $42\\text{ cm}^3$ de $\\mathrm{CO_2}$ et $31\\text{ cm}^3$ de $\\mathrm{O_2}$ en excès. Détermine $V_1$ et $V_2$.',
         methodSteps: [
@@ -1381,7 +1381,7 @@ export const CHIMIE_1RE_CD_L02_ALCANES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Identifier un isomère en C₅H₁₂ par monochloration (Exercice 4 p. 8–9)',
+        title: 'Identifier un isomère en C₅H₁₂ par monochloration',
         statement:
           'Un alcane A de formule brute $\\mathrm{C_5H_{12}}$ ne donne qu’un seul produit monochloré lors de sa réaction avec le dichlore à la lumière. Identifie A et écris l’équation de sa monochloration.',
         methodSteps: [

@@ -7,7 +7,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
   "summary": "Découverte de la nature corpusculaire de la lumière : effet photoélectrique, théorie des quanta de Planck-Einstein, caractéristiques du photon, quantification des niveaux d'énergie de l'atome, spectres de raies de l'hydrogène, séries de Lyman, Balmer et Paschen, et conditions strictes d'absorption et d'ionisation.",
   "officialVolumeHours": 8,
   "contentVersion": 2,
-  "source": "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC)",
+  "source": "Programme KONAN — ",
   "points": [
     {
       "id": "pt1_effet_photoelectrique_limites_classiques",

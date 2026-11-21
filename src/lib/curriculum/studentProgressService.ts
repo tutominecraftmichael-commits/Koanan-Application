@@ -10,7 +10,7 @@ import type {
   TutorPointSessionItem,
   TutorSessionPayload,
 } from './types';
-import { END_OF_CHAPTER_MARKER, getSessionMiniLessonQuota } from './types';
+import { END_OF_CHAPTER_MARKER, STEM_SUBJECTS, getSessionMiniLessonQuota } from './types';
 import { getCurriculumChapterById, getCurriculumChapters, normalizeGradeForLookup } from './curriculumRegistry';
 import { isChimieChapter } from './curriculumExpander';
 import { voletFromSubjectName } from './curriculumMatcher';
@@ -100,17 +100,20 @@ export function isTerminaleAGrade(gradeLevel?: CurriculumGradeLevel): boolean {
 
 /** Matières à un seul volet (pas d'alternance Chimie/Physique ou Géométrie/Numérique). */
 export function isSingleVoletSubject(subjectId: StemSubjectId, gradeLevel?: CurriculumGradeLevel): boolean {
+  if (subjectId.startsWith('lmd_')) return true;
   if (subjectId === 'maths' && isTerminaleAGrade(gradeLevel)) return true;
   return subjectId === 'svt' || subjectId === 'francais' || subjectId === 'philosophie';
 }
 
 /** Matières à deux volets alternés : Physique ↔ Chimie, Géométrie ↔ Numérique, Histoire ↔ Géographie. */
 export function isTwoVoletSubject(subjectId: StemSubjectId, gradeLevel?: CurriculumGradeLevel): boolean {
+  if (subjectId.startsWith('lmd_')) return false;
   if (subjectId === 'maths' && isTerminaleAGrade(gradeLevel)) return false;
   return subjectId === 'physique_chimie' || subjectId === 'maths' || subjectId === 'histoire_geo';
 }
 
 export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCategory {
+  if (chapter.subjectId.startsWith('lmd_')) return chapter.subjectId as StemSubCategory;
   if (chapter.subjectId === 'svt') return 'svt';
   if (chapter.subjectId === 'francais') return 'francais';
   if (chapter.subjectId === 'histoire_geo') return (chapter.id || '').includes('_histoire_') ? 'histoire' : 'geographie';
@@ -155,6 +158,9 @@ export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCatego
 }
 
 export function getSubCategoryName(subCategory: StemSubCategory, gradeLevel?: CurriculumGradeLevel): string {
+  if (subCategory.startsWith('lmd_')) {
+    return STEM_SUBJECTS[subCategory as StemSubjectId]?.name || subCategory;
+  }
   if ((subCategory === 'numerique' || subCategory === 'geometrie') && isTerminaleAGrade(gradeLevel)) {
     return 'Mathématiques';
   }
@@ -173,6 +179,10 @@ export function getSubCategoryName(subCategory: StemSubCategory, gradeLevel?: Cu
 }
 
 export function getSubCategoryQuestion(subCategory: StemSubCategory, gradeLevel?: CurriculumGradeLevel): string {
+  if (subCategory.startsWith('lmd_')) {
+    const name = STEM_SUBJECTS[subCategory as StemSubjectId]?.name || subCategory;
+    return `À quel chapitre êtes-vous arrivés en ${name} ?`;
+  }
   if ((subCategory === 'numerique' || subCategory === 'geometrie') && isTerminaleAGrade(gradeLevel)) {
     return 'À quelle leçon êtes-vous arrivés en Mathématiques ?';
   }
@@ -202,6 +212,7 @@ const SIBLING_SUBCATEGORY: Partial<Record<StemSubCategory, StemSubCategory>> = {
 };
 
 export function defaultSubCategoryFor(subjectId: StemSubjectId): StemSubCategory {
+  if (subjectId.startsWith('lmd_')) return subjectId as StemSubCategory;
   if (subjectId === 'physique_chimie') return 'physique';
   if (subjectId === 'maths') return 'numerique';
   if (subjectId === 'francais') return 'francais';

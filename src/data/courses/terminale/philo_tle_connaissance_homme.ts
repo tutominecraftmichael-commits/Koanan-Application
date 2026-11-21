@@ -127,7 +127,7 @@ export const PHILO_TLE_L03_CONNAISSANCE_HOMME: CurriculumChapter = {
           "stepTitle": "La conscience n'est pas commune à l'animal",
           "stepTheme": "La conscience n'est pas commune à l'animal",
           "stepBadge": "La conscience n'est pas commune à l'animal",
-          "paragraphText": "L'homme partage avec l'animal une dimension biologique.\nMais la conscience réfléchie (se savoir soi-même, juger ses actes) est propre à l'homme selon le cours.",
+          "paragraphText": "L'homme partage avec l'animal une dimension biologique.\nMais la conscience réfléchie (se savoir soi-même, juger ses actes) est propre à l'homme.",
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l01_connaissance_homme_p01_q5",
             "type": "mcq",
@@ -501,7 +501,7 @@ export const PHILO_TLE_L03_CONNAISSANCE_HOMME: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l01_connaissance_homme_p03_q1",
             "type": "mcq",
-            "prompt": "Quelle est la bonne définition de la liberté selon le cours ?",
+            "prompt": "Quelle est la bonne définition de la liberté ?",
             "options": [
               "N'obéir qu'à sa volonté, indépendamment de toute contrainte extérieure",
               "Faire tout ce qu'on veut, même malade ou sous l'emprise",
@@ -622,7 +622,7 @@ export const PHILO_TLE_L03_CONNAISSANCE_HOMME: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l01_connaissance_homme_p03_q1",
           "type": "mcq",
-          "prompt": "Quelle est la bonne définition de la liberté selon le cours ?",
+          "prompt": "Quelle est la bonne définition de la liberté ?",
           "options": [
             "N'obéir qu'à sa volonté, indépendamment de toute contrainte extérieure",
             "Faire tout ce qu'on veut, même malade ou sous l'emprise",
@@ -807,7 +807,7 @@ export const PHILO_TLE_L03_CONNAISSANCE_HOMME: CurriculumChapter = {
           "stepTitle": "La citation exacte de Freud",
           "stepTheme": "La citation exacte de Freud",
           "stepBadge": "La citation exacte de Freud",
-          "paragraphText": "Le corrigé du PDF écrit « la conscience n'est pas toujours maître dans sa propre maison ».\nLa formule exacte de Freud est : « Le moi n'est pas maître dans sa propre maison » (Une difficulté de la psychanalyse, 1917).",
+          "paragraphText": "Attention à la citation exacte : on lit parfois « la conscience n'est pas toujours maître dans sa propre maison ».\nLa formule exacte de Freud est : « Le moi n'est pas maître dans sa propre maison » (Une difficulté de la psychanalyse, 1917).",
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l01_connaissance_homme_p04_q5",
             "type": "mcq",

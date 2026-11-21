@@ -31,7 +31,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       summary:
         'Définir le travail d’une force constante comme le produit scalaire W = F.AB.cos(alpha), connaître son unité SI (joule) et qualifier un travail moteur, nul ou résistant.',
       conceptExplanation:
-        "Lorsqu’un tracteur tire un camion hors d’un ravin (Situation d’apprentissage p. 1), l’effort fourni dépend de la force exercée et du déplacement.\n\n- **Force constante** : une force $\\vec{F}$ est dite constante si sa **norme** (intensité), sa **direction** et son **sens** restent invariants au cours du temps.\n- **Définition** : le travail $W_{AB}(\\vec{F})$ d’une force constante $\\vec{F}$ lors d’un déplacement rectiligne $\\overrightarrow{AB}$ de son point d’application est égal au produit scalaire de $\\vec{F}$ par $\\overrightarrow{AB}$ :\n  $$W_{AB}(\\vec{F}) = \\vec{F} \\cdot \\overrightarrow{AB} = F \\cdot AB \\cdot \\cos\\alpha$$\n  où $\\alpha = (\\widehat{\\vec{F}, \\overrightarrow{AB}})$ est l’angle entre le vecteur force et le vecteur déplacement.\n- **Unité SI** : le travail s’exprime en **joule** (symbole $\\mathrm{J}$), avec $1\\,\\mathrm{J} = 1\\,\\mathrm{N}\\cdot\\mathrm{m}$.\n- **Grandeur algébrique** :\n  - Si $0^\\circ \\le \\alpha < 90^\\circ$, $\\cos\\alpha > 0 \\implies W_{AB}(\\vec{F}) > 0$ : le travail est **moteur** (la force favorise le déplacement).\n  - Si $\\alpha = 90^\\circ$, $\\cos\\alpha = 0 \\implies W_{AB}(\\vec{F}) = 0$ : le travail est **nul** (force orthogonale au déplacement).\n  - Si $90^\\circ < \\alpha \\le 180^\\circ$, $\\cos\\alpha < 0 \\implies W_{AB}(\\vec{F}) < 0$ : le travail est **résistant** (la force s’oppose au déplacement).",
+        "Lorsqu’un tracteur tire un camion hors d’un ravin, l’effort fourni dépend de la force exercée et du déplacement.\n\n- **Force constante** : une force $\\vec{F}$ est dite constante si sa **norme** (intensité), sa **direction** et son **sens** restent invariants au cours du temps.\n- **Définition** : le travail $W_{AB}(\\vec{F})$ d’une force constante $\\vec{F}$ lors d’un déplacement rectiligne $\\overrightarrow{AB}$ de son point d’application est égal au produit scalaire de $\\vec{F}$ par $\\overrightarrow{AB}$ :\n $$W_{AB}(\\vec{F}) = \\vec{F} \\cdot \\overrightarrow{AB} = F \\cdot AB \\cdot \\cos\\alpha$$\n où $\\alpha = (\\widehat{\\vec{F}, \\overrightarrow{AB}})$ est l’angle entre le vecteur force et le vecteur déplacement.\n- **Unité SI** : le travail s’exprime en **joule** (symbole $\\mathrm{J}$), avec $1\\,\\mathrm{J} = 1\\,\\mathrm{N}\\cdot\\mathrm{m}$.\n- **Grandeur algébrique** :\n - Si $0^\\circ \\le \\alpha < 90^\\circ$, $\\cos\\alpha > 0 \\implies W_{AB}(\\vec{F}) > 0$ : le travail est **moteur** (la force favorise le déplacement).\n - Si $\\alpha = 90^\\circ$, $\\cos\\alpha = 0 \\implies W_{AB}(\\vec{F}) = 0$ : le travail est **nul** (force orthogonale au déplacement).\n - Si $90^\\circ < \\alpha \\le 180^\\circ$, $\\cos\\alpha < 0 \\implies W_{AB}(\\vec{F}) < 0$ : le travail est **résistant** (la force s’oppose au déplacement).",
       keyRule:
         'W_AB(F) = F · AB · cos α est algébrique (en joules) : moteur si α < 90° (> 0), nul si α = 90° (= 0), résistant si 90° < α ≤ 180° (< 0).',
       formulas: [
@@ -177,7 +177,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Activité p. 2',
           stepTitle: 'Identifier la nature du travail des quatre forces',
           paragraphText:
-            'Sur l’activité du cours (p. 2), un solide avance suivant $\\vec{V}$ : $\\vec{F}_1$ inclinée vers l’avant fournit un travail moteur ; $\\vec{F}_2$ et $\\vec{F}_4$ perpendiculaires à $\\vec{V}$ ont un travail nul ; $\\vec{F}_3$ opposée à $\\vec{V}$ fournit un travail résistant.',
+            'Considérons un solide avance suivant $\\vec{V}$ : $\\vec{F}_1$ inclinée vers l’avant fournit un travail moteur ; $\\vec{F}_2$ et $\\vec{F}_4$ perpendiculaires à $\\vec{V}$ ont un travail nul ; $\\vec{F}_3$ opposée à $\\vec{V}$ fournit un travail résistant.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p01_q4',
             type: 'mcq',
@@ -242,7 +242,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       summary:
         'Montrer que le travail d’une force constante ne dépend pas du chemin suivi et calculer le travail du poids W_AB(P) = mg(z_A - z_B).',
       conceptExplanation:
-        "Que se passe-t-il si le trajet entre $A$ et $B$ n’est plus rectiligne (trajectoire courbe, ligne brisée) ?\n\n- **Invariance par rapport au chemin suivi** : en découpant un trajet quelconque entre $A$ et $B$ en déplacements élémentaires rectilignes $\\overrightarrow{\\delta\\ell}_i$, la somme vaut $\\sum \\vec{F}\\cdot\\overrightarrow{\\delta\\ell}_i = \\vec{F}\\cdot \\sum \\overrightarrow{\\delta\\ell}_i = \\vec{F}\\cdot\\overrightarrow{AB}$. Le travail d’une force constante **ne dépend pas du chemin suivi**, mais uniquement des positions de départ $A$ et d’arrivée $B$.\n- **Expression analytique dans un repère $(O,\\vec{i},\\vec{j},\\vec{k})$** : si $\\vec{F} = F_x\\vec{i}+F_y\\vec{j}+F_z\\vec{k}$ et $\\overrightarrow{AB} = (x_B-x_A)\\vec{i}+(y_B-y_A)\\vec{j}+(z_B-z_A)\\vec{k}$, alors :\n  $$W_{AB}(\\vec{F}) = F_x(x_B-x_A) + F_y(y_B-y_A) + F_z(z_B-z_A)$$\n  *(Remarque : le PDF p. 2 comporte une coquille $(x_A-x_B)\\vec{i}$ sur la ligne de définition de $\\overrightarrow{AB}$, corrigée à la ligne suivante en $(x_B-x_A)\\vec{i}$.)*\n- **Travail du poids** : dans un repère d’axe vertical $(Oz)$ **ascendant**, $\\vec{g} = -g\\vec{k}$ et $\\vec{P} = -mg\\vec{k}$ :\n  $$W_{AB}(\\vec{P}) = -mg\\vec{k} \\cdot [(x_B-x_A)\\vec{i} + (z_B-z_A)\\vec{k}] = mg(z_A - z_B)$$\n  - **À la descente** ($z_A > z_B$, dénivelé $h = z_A - z_B > 0$) : $W_{AB}(\\vec{P}) = +mgh > 0$ (**moteur**).\n  - **À la montée** ($z_B > z_A$, dénivelé $h = z_B - z_A > 0$) : $W_{AB}(\\vec{P}) = -mgh < 0$ (**résistant**).\n  - **Sur un trajet horizontal** ($z_A = z_B$) : $W_{AB}(\\vec{P}) = 0$.",
+        "Que se passe-t-il si le trajet entre $A$ et $B$ n’est plus rectiligne (trajectoire courbe, ligne brisée) ?\n\n- **Invariance par rapport au chemin suivi** : en découpant un trajet quelconque entre $A$ et $B$ en déplacements élémentaires rectilignes $\\overrightarrow{\\delta\\ell}_i$, la somme vaut $\\sum \\vec{F}\\cdot\\overrightarrow{\\delta\\ell}_i = \\vec{F}\\cdot \\sum \\overrightarrow{\\delta\\ell}_i = \\vec{F}\\cdot\\overrightarrow{AB}$. Le travail d’une force constante **ne dépend pas du chemin suivi**, mais uniquement des positions de départ $A$ et d’arrivée $B$.\n- **Expression analytique dans un repère $(O,\\vec{i},\\vec{j},\\vec{k})$** : si $\\vec{F} = F_x\\vec{i}+F_y\\vec{j}+F_z\\vec{k}$ et $\\overrightarrow{AB} = (x_B-x_A)\\vec{i}+(y_B-y_A)\\vec{j}+(z_B-z_A)\\vec{k}$, alors :\n $$W_{AB}(\\vec{F}) = F_x(x_B-x_A) + F_y(y_B-y_A) + F_z(z_B-z_A)$$\n *(Remarque : une erreur fréquente comporte une coquille $(x_A-x_B)\\vec{i}$ sur la ligne de définition de $\\overrightarrow{AB}$, corrigée à la ligne suivante en $(x_B-x_A)\\vec{i}$.)*\n- **Travail du poids** : dans un repère d’axe vertical $(Oz)$ **ascendant**, $\\vec{g} = -g\\vec{k}$ et $\\vec{P} = -mg\\vec{k}$ :\n $$W_{AB}(\\vec{P}) = -mg\\vec{k} \\cdot [(x_B-x_A)\\vec{i} + (z_B-z_A)\\vec{k}] = mg(z_A - z_B)$$\n - **À la descente** ($z_A > z_B$, dénivelé $h = z_A - z_B > 0$) : $W_{AB}(\\vec{P}) = +mgh > 0$ (**moteur**).\n - **À la montée** ($z_B > z_A$, dénivelé $h = z_B - z_A > 0$) : $W_{AB}(\\vec{P}) = -mgh < 0$ (**résistant**).\n - **Sur un trajet horizontal** ($z_A = z_B$) : $W_{AB}(\\vec{P}) = 0$.",
       keyRule:
         'Le travail d’une force constante ne dépend pas du chemin suivi : W_AB(F) = F · AB. Avec l’axe (Oz) ascendant, W_AB(P) = mg(z_A − z_B) (+mgh en descente, −mgh en montée).',
       formulas: [
@@ -303,7 +303,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
 </svg>`,
       },
       workedExample: {
-        title: 'Pendule simple (Exercice 2 p. 7)',
+        title: 'Pendule simple',
         statement:
           'Une bille de masse $m = 100\\,\\mathrm{g}$ fixée à un fil de longueur $\\ell = 40\\,\\mathrm{cm}$ est écartée d’un angle $\\theta = 60^\\circ$ (position $A$) puis lâchée jusqu’à la verticale $A_0$. On donne $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$. Calculer $W_{A\\to A_0}(\\vec{T})$ et $W_{A\\to A_0}(\\vec{P})$.',
         methodSteps: [
@@ -357,7 +357,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             ],
             correctAnswerIndex: 0,
             explanation:
-              'P = −mg k et AB_z = z_B − z_A, donc W_AB(P) = −mg(z_B − z_A) = mg(z_A − z_B) (Activité p. 2–3).',
+              'P = −mg k et AB_z = z_B − z_A, donc W_AB(P) = −mg(z_B − z_A) = mg(z_A − z_B).',
           },
         },
         {
@@ -367,7 +367,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Exercice 1 p. 6',
           stepTitle: 'Calcul analytique dans un repère orthonormé',
           paragraphText:
-            'Dans l’Exercice 1 (p. 6), $\\vec{F} = 200\\vec{i} - 100\\vec{j}$ se déplace de $A$ à $B$ ($\\overrightarrow{AB} = \\vec{i} + 2{,}5\\vec{j}$), puis $B\\to C$ ($2\\vec{i} - 1{,}5\\vec{j}$), puis $C\\to D$ ($\\vec{i} + \\vec{j}$). Comme $\\overrightarrow{AB}+\\overrightarrow{BC}+\\overrightarrow{CD} = \\overrightarrow{AD} = 4\\vec{i}+2\\vec{j}$, la somme des travaux $-50 + 550 + 100 = 600\\,\\mathrm{J}$ égale directement $W_{AD}(\\vec{F}) = 200\\times 4 - 100\\times 2 = 600\\,\\mathrm{J}$.',
+            'Dans l’Exercice 1, $\\vec{F} = 200\\vec{i} - 100\\vec{j}$ se déplace de $A$ à $B$ ($\\overrightarrow{AB} = \\vec{i} + 2{,}5\\vec{j}$), puis $B\\to C$ ($2\\vec{i} - 1{,}5\\vec{j}$), puis $C\\to D$ ($\\vec{i} + \\vec{j}$). Comme $\\overrightarrow{AB}+\\overrightarrow{BC}+\\overrightarrow{CD} = \\overrightarrow{AD} = 4\\vec{i}+2\\vec{j}$, la somme des travaux $-50 + 550 + 100 = 600\\,\\mathrm{J}$ égale directement $W_{AD}(\\vec{F}) = 200\\times 4 - 100\\times 2 = 600\\,\\mathrm{J}$.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p02_q3',
             type: 'mcq',
@@ -375,7 +375,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             options: ['+600 J', '+1 000 J', '-600 J', '+200 J'],
             correctAnswerIndex: 0,
             explanation:
-              'W_AD(F) = F_x·Δx + F_y·Δy = 200 × 4 + (−100) × 2 = 800 − 200 = +600 J (Exercice 1 p. 6).',
+              'W_AD(F) = F_x·Δx + F_y·Δy = 200 × 4 + (−100) × 2 = 800 − 200 = +600 J.',
           },
         },
         {
@@ -393,7 +393,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             options: ['+0,2 J', '+0,4 J', '-0,2 J', '0 J'],
             correctAnswerIndex: 0,
             explanation:
-              'W(P) = mgℓ(1 − cos 60°) = 0,1 × 10 × 0,4 × (1 − 0,5) = +0,2 J (Exercice 2 p. 7).',
+              'W(P) = mgℓ(1 − cos 60°) = 0,1 × 10 × 0,4 × (1 − 0,5) = +0,2 J.',
           },
         },
         {
@@ -426,7 +426,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Montée vs descente',
           stepTitle: 'Ne jamais confondre Δz = z_B − z_A et z_A − z_B',
           paragraphText:
-            'Le PDF p. 2 écrit $W_{AB}(\\vec{P}) = mg(z_A - z_B)$ puis $mg\\Delta z$ : attention, si l’on définit $\\Delta z = z_B - z_A$ (variation d’altitude), alors $W_{AB}(\\vec{P}) = -mg\\Delta z$. Retiens la règle physique infaillible : **descente $\\Rightarrow +mgh$, montée $\\Rightarrow -mgh$**.',
+            'Attention à la notation : on rencontre parfois $W_{AB}(\\vec{P}) = mg(z_A - z_B)$ puis $mg\\Delta z$ : attention, si l’on définit $\\Delta z = z_B - z_A$ (variation d’altitude), alors $W_{AB}(\\vec{P}) = -mg\\Delta z$. Retiens la règle physique infaillible : **descente $\\Rightarrow +mgh$, montée $\\Rightarrow -mgh$**.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p02_q6',
             type: 'mcq',
@@ -450,7 +450,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       summary:
         'Distinguer le travail (énergie échangée) de la puissance (débit d’énergie), calculer P_m = W/Δt et p = F · v en watts.',
       conceptExplanation:
-        "Deux personnes qui montent la même caisse en haut d’un escalier effectuent le **même travail**, mais celle qui monte en courant développe une **plus grande puissance** parce qu’elle met moins de temps (Documentation p. 11).\n\n- **Puissance moyenne** : si une force $\\vec{F}$ effectue un travail $W(\\vec{F})$ pendant une durée $\\Delta t$, sa puissance moyenne est :\n  $$P_m = \\frac{W(\\vec{F})}{\\Delta t}$$\n  - **Unité SI** : le **watt** (symbole $\\mathrm{W}$), avec $1\\,\\mathrm{W} = 1\\,\\mathrm{J}\\cdot\\mathrm{s}^{-1} = 1\\,\\mathrm{kg}\\cdot\\mathrm{m}^2\\cdot\\mathrm{s}^{-3}$.\n- **Puissance instantanée** : pour un déplacement élémentaire $\\overrightarrow{\\delta\\ell}$ effectué pendant un intervalle de temps très bref $\\delta t$, on a $\\vec{v} = \\frac{\\overrightarrow{\\delta\\ell}}{\\delta t}$, d’où :\n  $$p = \\frac{\\delta W}{\\delta t} = \\vec{F}\\cdot\\frac{\\overrightarrow{\\delta\\ell}}{\\delta t} = \\vec{F}\\cdot\\vec{v} = F \\cdot v \\cdot \\cos(\\widehat{\\vec{F},\\vec{v}})$$\n- **Précision sur l’Activité p. 3 (grue)** : l’énoncé demande le travail et la puissance du *poids* alors que le corrigé calcule ceux de la *force motrice* $\\vec{F}$ ($F = 1\\,000\\,\\mathrm{N}$, $\\Delta z = 30\\,\\mathrm{m}$, $\\Delta t = 50\\,\\mathrm{s}$). Pour la force motrice vers le haut : $W(\\vec{F}) = +30\\,000\\,\\mathrm{J}$ et $P_m(\\vec{F}) = +600\\,\\mathrm{W}$. Si la montée est à vitesse constante ($P = F$), le poids fournit $W(\\vec{P}) = -30\\,000\\,\\mathrm{J}$ et $P_m(\\vec{P}) = -600\\,\\mathrm{W}$.",
+        "Deux personnes qui montent la même caisse en haut d’un escalier effectuent le **même travail**, mais celle qui monte en courant développe une **plus grande puissance** parce qu’elle met moins de temps.\n\n- **Puissance moyenne** : si une force $\\vec{F}$ effectue un travail $W(\\vec{F})$ pendant une durée $\\Delta t$, sa puissance moyenne est :\n $$P_m = \\frac{W(\\vec{F})}{\\Delta t}$$\n - **Unité SI** : le **watt** (symbole $\\mathrm{W}$), avec $1\\,\\mathrm{W} = 1\\,\\mathrm{J}\\cdot\\mathrm{s}^{-1} = 1\\,\\mathrm{kg}\\cdot\\mathrm{m}^2\\cdot\\mathrm{s}^{-3}$.\n- **Puissance instantanée** : pour un déplacement élémentaire $\\overrightarrow{\\delta\\ell}$ effectué pendant un intervalle de temps très bref $\\delta t$, on a $\\vec{v} = \\frac{\\overrightarrow{\\delta\\ell}}{\\delta t}$, d’où :\n $$p = \\frac{\\delta W}{\\delta t} = \\vec{F}\\cdot\\frac{\\overrightarrow{\\delta\\ell}}{\\delta t} = \\vec{F}\\cdot\\vec{v} = F \\cdot v \\cdot \\cos(\\widehat{\\vec{F},\\vec{v}})$$\n- **Précision sur l’Activité p. 3 (grue)** : l’énoncé demande le travail et la puissance du *poids* alors que le corrigé calcule ceux de la *force motrice* $\\vec{F}$ ($F = 1\\,000\\,\\mathrm{N}$, $\\Delta z = 30\\,\\mathrm{m}$, $\\Delta t = 50\\,\\mathrm{s}$). Pour la force motrice vers le haut : $W(\\vec{F}) = +30\\,000\\,\\mathrm{J}$ et $P_m(\\vec{F}) = +600\\,\\mathrm{W}$. Si la montée est à vitesse constante ($P = F$), le poids fournit $W(\\vec{P}) = -30\\,000\\,\\mathrm{J}$ et $P_m(\\vec{P}) = -600\\,\\mathrm{W}$.",
       keyRule:
         'P_m = W(F) / Δt et p = F · v = F · v · cos α (en watts, W = J/s). Toujours convertir v en m/s (diviser km/h par 3,6).',
       formulas: [
@@ -466,7 +466,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Puissance développée sur le trajet AB du wagonnet (Exercice 4 p. 8–9)',
+        title: 'Puissance développée sur le trajet AB du wagonnet',
         statement:
           'Sur une voie horizontale, un ouvrier tire un wagonnet à vitesse constante $v = 54\\,\\mathrm{km}\\cdot\\mathrm{h}^{-1}$ avec une force horizontale $\\vec{F}$ de valeur $F = 50\\,\\mathrm{N}$ dans le sens du mouvement.',
         methodSteps: [
@@ -535,7 +535,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
               'W(F) = −30 000 J et P_m(F) = 600 W',
             ],
             correctAnswerIndex: 0,
-            explanation: 'W(F) = F · Δz = 1 000 × 30 = 30 000 J, et P_m = 30 000 / 50 = 600 W (Activité p. 3).',
+            explanation: 'W(F) = F · Δz = 1 000 × 30 = 30 000 J, et P_m = 30 000 / 50 = 600 W.',
           },
         },
         {
@@ -552,7 +552,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             prompt: 'Un moteur exerce une force de traction horizontale $F = 50\\,\\mathrm{N}$ dans le sens du mouvement sur un wagonnet roulant à $v = 54\\,\\mathrm{km}\\cdot\\mathrm{h}^{-1}$. Quelle puissance développe-t-il ?',
             options: ['750 W', '2 700 W', '208,3 W', '7 500 W'],
             correctAnswerIndex: 0,
-            explanation: 'v = 54 / 3,6 = 15 m/s ⇒ p = F · v = 50 × 15 = 750 W (Exercice 4 p. 9).',
+            explanation: 'V = 54 / 3,6 = 15 m/s ⇒ p = F · v = 50 × 15 = 750 W.',
           },
         },
         {
@@ -562,7 +562,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Travail vs Puissance',
           stepTitle: 'Même travail ne signifie pas même puissance',
           paragraphText:
-            'Comme l’illustre la documentation (p. 11), brûler $1\\,\\mathrm{kg}$ de charbon libère plus d’énergie ($15\\text{ à }30\\,\\mathrm{MJ}$) que $1\\,\\mathrm{kg}$ de TNT ($4{,}7\\,\\mathrm{MJ}$), mais l’explosion du TNT est quasi instantanée : sa **puissance** est donc immensément supérieure.',
+            'Comme l’illustre la documentation, brûler $1\\,\\mathrm{kg}$ de charbon libère plus d’énergie ($15\\text{ à }30\\,\\mathrm{MJ}$) que $1\\,\\mathrm{kg}$ de TNT ($4{,}7\\,\\mathrm{MJ}$), mais l’explosion du TNT est quasi instantanée : sa **puissance** est donc immensément supérieure.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p03_q5',
             type: 'mcq',
@@ -591,7 +591,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             prompt: 'Parmi ces écritures, laquelle correspond à l’unité du watt ($\\mathrm{W}$) dans le système international ?',
             options: ['J·s⁻¹ (ou kg·m²·s⁻³)', 'N·m (ou kg·m²·s⁻²)', 'N·s⁻¹', 'J·s'],
             correctAnswerIndex: 0,
-            explanation: 'Le watt est un joule par seconde : 1 W = 1 J·s⁻¹ = 1 kg·m²·s⁻³ (Documentation p. 11).',
+            explanation: 'Le watt est un joule par seconde : 1 W = 1 J·s⁻¹ = 1 kg·m²·s⁻³.',
           },
         },
       ],
@@ -624,7 +624,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Travail élémentaire et aire du triangle F = kx (p. 4)',
+        title: 'Travail élémentaire et aire du triangle F = kx',
         caption: 'La somme des aires δW = kx·δx entre 0 et x vaut l’aire du triangle OMP : W(F) = ½·x·(kx) = ½kx².',
         svgContent: `<svg viewBox="0 0 360 175" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <defs>
@@ -657,7 +657,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
 </svg>`,
       },
       workedExample: {
-        title: 'Allongement progressif d’un ressort (Activité p. 5)',
+        title: 'Allongement progressif d’un ressort',
         statement:
           'Un ressort horizontal de raideur $k = 25\\,\\mathrm{N}\\cdot\\mathrm{m}^{-1}$ est étiré : 1) de sa position d’équilibre ($x_1 = 0$) jusqu’à $x_2 = 8\\,\\mathrm{cm}$ ; 2) de $x_1 = 3\\,\\mathrm{cm}$ jusqu’à $x_2 = 8\\,\\mathrm{cm}$. Calculer $W(\\vec{T})$ puis $W(\\vec{F}_{\\text{op}})$ pour le cas 1.',
         methodSteps: [
@@ -720,7 +720,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p04_q3',
             type: 'mcq',
-            prompt: 'Un ressort de raideur $k = 25\\,\\mathrm{N}\\cdot\\mathrm{m}^{-1}$ est allongé de $x_1 = 3\\,\\mathrm{cm}$ jusqu’à $x_2 = 8\\,\\mathrm{cm}$ (Activité p. 5). Quel est le travail $W(\\vec{T})$ de sa tension ?',
+            prompt: 'Un ressort de raideur $k = 25\\,\\mathrm{N}\\cdot\\mathrm{m}^{-1}$ est allongé de $x_1 = 3\\,\\mathrm{cm}$ jusqu’à $x_2 = 8\\,\\mathrm{cm}$. Quel est le travail $W(\\vec{T})$ de sa tension ?',
             options: ['−6,9·10⁻² J', '−3,1·10⁻² J', '+6,9·10⁻² J', '−8,0·10⁻² J'],
             correctAnswerIndex: 0,
             explanation:
@@ -742,7 +742,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             options: ['+8·10⁻² J', '−8·10⁻² J', '+16·10⁻² J', '+2,0 J'],
             correctAnswerIndex: 0,
             explanation:
-              'W(F) = −W(T) = +(1/2) × 25 × 0,08² = +0,08 J = +8·10⁻² J (travail moteur, Activité p. 5).',
+              'W(F) = −W(T) = +(1/2) × 25 × 0,08² = +0,08 J = +8·10⁻² J.',
           },
         },
         {
@@ -804,7 +804,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       summary:
         'Décomposer la réaction du support R = R_N + f, calculer W(P), W(T) et W(f) en montée ou en descente et appliquer le principe de l’inertie.',
       conceptExplanation:
-        "Sur un plan incliné d’angle $\\alpha$ par rapport à l’horizontale (Situation d’évaluation p. 5 et Exercice 3 p. 7–8), il faut savoir dresser le **bilan des forces** avant tout calcul de travail.\n\n- **Réaction du plan** : lorsqu’il existe des frottements, la réaction $\\vec{R}$ du support se décompose en :\n  - $\\vec{R}_N$, composante **normale** (perpendiculaire au plan) : son travail est toujours **nul** ($W_{AB}(\\vec{R}_N) = 0$) ;\n  - $\\vec{f} = \\vec{R}_T$, force de **frottement** parallèle au plan et opposée au mouvement : son travail est toujours **résistant**, $W_{AB}(\\vec{f}) = -f \\cdot AB$.\n- **Travail du poids sur un plan incliné** : sur une longueur $AB = \\ell$, la variation d’altitude vaut $h = \\ell\\sin\\alpha$. En **montée**, $W_{AB}(\\vec{P}) = -mg\\ell\\sin\\alpha$ ; en **descente**, $W_{AB}(\\vec{P}) = +mg\\ell\\sin\\alpha$.\n- **Principe de l’inertie et vitesse constante (Exercice 3 p. 8)** : si un solide glisse à **vitesse constante** (mouvement rectiligne uniforme), la somme vectorielle des forces est nulle ($\\sum \\vec{F} = \\vec{0}$), ce qui implique que la **somme des travaux est nulle** :\n  $$W(\\vec{P}) + W(\\vec{T}) + W(\\vec{R}_N) + W(\\vec{f}) = 0$$",
+        "Sur un plan incliné d’angle $\\alpha$ par rapport à l’horizontale, il faut savoir dresser le **bilan des forces** avant tout calcul de travail.\n\n- **Réaction du plan** : lorsqu’il existe des frottements, la réaction $\\vec{R}$ du support se décompose en :\n - $\\vec{R}_N$, composante **normale** (perpendiculaire au plan) : son travail est toujours **nul** ($W_{AB}(\\vec{R}_N) = 0$) ;\n - $\\vec{f} = \\vec{R}_T$, force de **frottement** parallèle au plan et opposée au mouvement : son travail est toujours **résistant**, $W_{AB}(\\vec{f}) = -f \\cdot AB$.\n- **Travail du poids sur un plan incliné** : sur une longueur $AB = \\ell$, la variation d’altitude vaut $h = \\ell\\sin\\alpha$. En **montée**, $W_{AB}(\\vec{P}) = -mg\\ell\\sin\\alpha$ ; en **descente**, $W_{AB}(\\vec{P}) = +mg\\ell\\sin\\alpha$.\n- **Principe de l’inertie et vitesse constante** : si un solide glisse à **vitesse constante** (mouvement rectiligne uniforme), la somme vectorielle des forces est nulle ($\\sum \\vec{F} = \\vec{0}$), ce qui implique que la **somme des travaux est nulle** :\n $$W(\\vec{P}) + W(\\vec{T}) + W(\\vec{R}_N) + W(\\vec{f}) = 0$$",
       keyRule:
         'Sur un plan incliné d’angle α : W(R_N) = 0, W(f) = −f · AB, et W(P) = ∓mg · AB · sin α (− en montée, + en descente). À vitesse constante, ∑ W(F) = 0.',
       formulas: [
@@ -826,7 +826,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Forces exercées sur une caisse tirée le long d’un plan incliné (p. 5)',
+        title: 'Forces exercées sur une caisse tirée le long d’un plan incliné',
         caption: 'Situation p. 5 : T tire vers le haut du plan (moteur) ; P et f = R_T travaillent négativement (résistants) ; R_N ⊥ AB ne travaille pas.',
         svgContent: `<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <defs>
@@ -870,12 +870,12 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
 </svg>`,
       },
       workedExample: {
-        title: 'Caisse tirée sur un chantier (Situation d’évaluation p. 5–6)',
+        title: 'Caisse tirée sur un chantier',
         statement:
           'Une caisse de masse $m = 60\\,\\mathrm{kg}$ est tirée sur une longueur $AB = 11{,}5\\,\\mathrm{m}$ le long d’un plan incliné d’angle $\\alpha = 20^\\circ$ par une corde parallèle au plan ($T = 500\\,\\mathrm{N}$), avec un frottement $f = 50\\,\\mathrm{N}$ et $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$. Calculer $W(\\vec{P})$, $W(\\vec{T})$ et $W(\\vec{f})$.',
         methodSteps: [
           '1) Poids (montée de h = 11,5 sin 20°) : W_AB(P) = −mg · AB · sin(20°) = −60 × 10 × 11,5 × 0,342 ≈ −2 360 J (résistant).',
-          '2) Tension de la corde (colinéaire et de même sens que AB) : W_AB(T) = +T · AB = 500 × 11,5 = +5 750 J (moteur ; note : le PDF p. 6 écrit par erreur −T·AB en étape intermédiaire mais donne bien +5 750 J).',
+          '2) Tension de la corde (colinéaire et de même sens que AB) : W_AB(T) = +T · AB = 500 × 11,5 = +5 750 J.',
           '3) Frottements (opposés à AB) : W_AB(f) = −f · AB = −50 × 11,5 = −575 J (résistant).',
         ],
         conclusion: 'W(P) ≈ −2 360 J ; W(T) = +5 750 J ; W(f) = −575 J (et W(R_N) = 0 J).',
@@ -944,7 +944,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Principe d’inertie',
           stepTitle: 'Utiliser ∑ W = 0 lorsque la vitesse est constante',
           paragraphText:
-            'Dans l’Exercice 3 (p. 7–8), une skieuse ($m = 58\\,\\mathrm{kg}$) monte sans frottement à **vitesse constante** une pente d’angle $\\alpha = 20^\\circ$ ($g = 9{,}8\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$), tirée par une perche faisant un angle $\\beta = 30^\\circ$ avec la piste. Par le principe de l’inertie, $W(\\vec{T}) + W(\\vec{P}) + W(\\vec{R}_N) = 0$, soit $T\\,L\\cos\\beta - m g L\\sin\\alpha = 0$.',
+            'Dans l’Exercice 3, une skieuse ($m = 58\\,\\mathrm{kg}$) monte sans frottement à **vitesse constante** une pente d’angle $\\alpha = 20^\\circ$ ($g = 9{,}8\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$), tirée par une perche faisant un angle $\\beta = 30^\\circ$ avec la piste. Par le principe de l’inertie, $W(\\vec{T}) + W(\\vec{P}) + W(\\vec{R}_N) = 0$, soit $T\\,L\\cos\\beta - m g L\\sin\\alpha = 0$.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p05_q4',
             type: 'mcq',
@@ -956,7 +956,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
               'T = m·g·(sin α + cos β)',
             ],
             correctAnswerIndex: 0,
-            explanation: 'T·L·cos β − m·g·L·sin α = 0 ⇒ T = (m·g·sin α) / cos β (Exercice 3 p. 8).',
+            explanation: 'T·L·cos β − m·g·L·sin α = 0 ⇒ T = (m·g·sin α) / cos β.',
           },
         },
         {
@@ -1016,7 +1016,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
       summary:
         'Découper un trajet complexe (horizontal, plan incliné, arc de cercle), calculer le travail du poids et des frottements avec les angles en radians.',
       conceptExplanation:
-        "Dans les devoirs (Exercices 4 et 5 p. 8–11), un mobile parcourt successivement des tronçons horizontaux, inclinés et circulaires.\n\n- **Méthode par tronçons (additivité)** : pour un trajet $A\\to B\\to C\\to D$, le travail total d’une force est la somme des travaux sur chaque tronçon :\n  $$W_{A\\to D}(\\vec{F}) = W_{AB}(\\vec{F}) + W_{BC}(\\vec{F}) + W_{CD}(\\vec{F})$$\n- **Travail d’une force constante vs frottements tangentiels** :\n  - Pour une force **constante** (comme le poids $\\vec{P}$), il suffit de trouver la dénivellation $z_A - z_D$. Sur un arc circulaire $CD$ de centre $O$ et d’angle au centre $\\alpha$ à partir de la verticale basse $C$, l’altitude monte de $h' = r(1 - \\cos\\alpha)$, d’où $W_{C\\to D}(\\vec{P}) = -mgr(1 - \\cos\\alpha)$.\n  - Pour une force de **frottement** $\\vec{f}$ d’intensité constante mais toujours tangente à la trajectoire, sa direction change sur l’arc de cercle ! Son travail est égal à $-f \\times L_{\\text{totale}}$, où la longueur d’un arc de cercle de rayon $r$ et d’angle $\\alpha$ vaut :\n    $$L_{\\text{arc}} = r \\cdot \\alpha \\quad (\\text{avec } \\alpha \\text{ en radians !})$$\n- **Précision sur la pente « à $p\\,\\%$ »** : « l’altitude s’élève de $2\\,\\mathrm{m}$ pour un parcours de $100\\,\\mathrm{m}$ » signifie $\\sin\\beta = \\frac{2}{100} = 0{,}02$. Dans l’Exercice 4 (p. 8–9), avec $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$, $m = 950\\,\\mathrm{kg}$ et $CD = 165\\,\\mathrm{m}$, on obtient rigoureusement $W_{CD}(\\vec{P}) = -950\\times 10\\times 165\\times 0{,}02 = -31\\,350\\,\\mathrm{J}$ *(le corrigé PDF affiche $-30\\,723\\,\\mathrm{J}$ car il a utilisé $9{,}8$ par mégarde alors que l’énoncé donne $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$)*.",
+        "Dans les devoirs, un mobile parcourt successivement des tronçons horizontaux, inclinés et circulaires.\n\n- **Méthode par tronçons (additivité)** : pour un trajet $A\\to B\\to C\\to D$, le travail total d’une force est la somme des travaux sur chaque tronçon :\n $$W_{A\\to D}(\\vec{F}) = W_{AB}(\\vec{F}) + W_{BC}(\\vec{F}) + W_{CD}(\\vec{F})$$\n- **Travail d’une force constante vs frottements tangentiels** :\n - Pour une force **constante** (comme le poids $\\vec{P}$), il suffit de trouver la dénivellation $z_A - z_D$. Sur un arc circulaire $CD$ de centre $O$ et d’angle au centre $\\alpha$ à partir de la verticale basse $C$, l’altitude monte de $h' = r(1 - \\cos\\alpha)$, d’où $W_{C\\to D}(\\vec{P}) = -mgr(1 - \\cos\\alpha)$.\n - Pour une force de **frottement** $\\vec{f}$ d’intensité constante mais toujours tangente à la trajectoire, sa direction change sur l’arc de cercle ! Son travail est égal à $-f \\times L_{\\text{totale}}$, où la longueur d’un arc de cercle de rayon $r$ et d’angle $\\alpha$ vaut :\n $$L_{\\text{arc}} = r \\cdot \\alpha \\quad (\\text{avec } \\alpha \\text{ en radians !})$$\n- **Précision sur la pente « à $p\\,\\%$ »** : « l’altitude s’élève de $2\\,\\mathrm{m}$ pour un parcours de $100\\,\\mathrm{m}$ » signifie $\\sin\\beta = \\frac{2}{100} = 0{,}02$. Dans l’Exercice 4, avec $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$, $m = 950\\,\\mathrm{kg}$ et $CD = 165\\,\\mathrm{m}$, on obtient rigoureusement $W_{CD}(\\vec{P}) = -950\\times 10\\times 165\\times 0{,}02 = -31\\,350\\,\\mathrm{J}$ *(le corrigé PDF affiche $-30\\,723\\,\\mathrm{J}$ car il a utilisé $9{,}8$ par mégarde alors que l’énoncé donne $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$)*.",
       keyRule:
         'Sur un arc circulaire de rayon r et d’angle α, la montée de hauteur vaut r(1 − cos α) pour le poids, et la longueur parcourue par les frottements vaut r·α avec α obligatoirement en radians.',
       formulas: [
@@ -1032,7 +1032,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Chariot sur la piste ABCD (Exercice 5 p. 10–11)',
+        title: 'Chariot sur la piste ABCD',
         statement:
           'Un chariot ($m = 1\\,\\mathrm{kg}$, $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$) descend une rampe $AB = 2\\,\\mathrm{m}$ inclinée de $\\alpha = 30^\\circ$, parcourt une horizontale $BC = 3\\,\\mathrm{m}$ puis remonte un arc circulaire $CD$ de rayon $r = 1\\,\\mathrm{m}$ et d’angle au centre $\\alpha = 30^\\circ$. Une force de frottement constante $f = 1{,}23\\,\\mathrm{N}$ s’oppose au mouvement. Calculer $W_{A\\to D}(\\vec{P})$ et $W_{A\\to D}(\\vec{f})$.',
         methodSteps: [
@@ -1051,7 +1051,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Exercice 4 (BC)',
           stepTitle: 'Retrouver l’angle de traction à partir d’un travail connu',
           paragraphText:
-            'Sur la portion horizontale $BC = 100\\,\\mathrm{m}$ de l’Exercice 4 (p. 8–9), une force constante $F = 50\\,\\mathrm{N}$ inclinée d’un angle $\\alpha$ avec les rails fournit un travail $W_{BC}(\\vec{F}) = 4\\,\\mathrm{kJ} = 4\\,000\\,\\mathrm{J}$. On en déduit $\\cos\\alpha = \\frac{4\\,000}{50\\times 100} = 0{,}8 \\implies \\alpha \\approx 36{,}87^\\circ$.',
+            'Sur la portion horizontale $BC = 100\\,\\mathrm{m}$ de l’Exercice 4, une force constante $F = 50\\,\\mathrm{N}$ inclinée d’un angle $\\alpha$ avec les rails fournit un travail $W_{BC}(\\vec{F}) = 4\\,\\mathrm{kJ} = 4\\,000\\,\\mathrm{J}$. On en déduit $\\cos\\alpha = \\frac{4\\,000}{50\\times 100} = 0{,}8 \\implies \\alpha \\approx 36{,}87^\\circ$.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p06_q1',
             type: 'mcq',
@@ -1090,7 +1090,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
           stepTheme: 'Exercice 5 (poids)',
           stepTitle: 'Dénivelé sur un arc circulaire pour le travail du poids',
           paragraphText:
-            'Dans l’Exercice 5 (p. 10), la partie $CD$ est un arc de cercle de centre $O$ et de rayon $r$ tel que $C$ soit à la verticale sous $O$. Quand le chariot monte jusqu’à l’angle $\\alpha$, son altitude augmente de $h\' = r - r\\cos\\alpha = r(1 - \\cos\\alpha)$.',
+            'Dans l’Exercice 5, la partie $CD$ est un arc de cercle de centre $O$ et de rayon $r$ tel que $C$ soit à la verticale sous $O$. Quand le chariot monte jusqu’à l’angle $\\alpha$, son altitude augmente de $h\' = r - r\\cos\\alpha = r(1 - \\cos\\alpha)$.',
           exercise: {
             id: 'premiere_c_physique_l01_travail_puissance_translation_p06_q3',
             type: 'mcq',
@@ -1131,7 +1131,7 @@ export const PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE: CurriculumChapter = {
             prompt: 'Sur la piste $ABCD$ ($AB = 2\\,\\mathrm{m}$, $BC = 3\\,\\mathrm{m}$, arc $CD$ de $r = 1\\,\\mathrm{m}$ et $\\alpha = 30^\\circ$), avec $f = 1{,}23\\,\\mathrm{N}$, quel est le travail total des frottements $W_{A\\to D}(\\vec{f})$ ?',
             options: ['−6,79 J', '+6,79 J', '−43,05 J', '−6,15 J'],
             correctAnswerIndex: 0,
-            explanation: 'L = AB + BC + r·α_rad = 2 + 3 + π/6 ≈ 5,5236 m ⇒ W_A→D(f) = −1,23 × 5,5236 ≈ −6,79 J (Exercice 5 p. 11).',
+            explanation: 'L = AB + BC + r·α_rad = 2 + 3 + π/6 ≈ 5,5236 m ⇒ W_A→D(f) = −1,23 × 5,5236 ≈ −6,79 J.',
           },
         },
         {

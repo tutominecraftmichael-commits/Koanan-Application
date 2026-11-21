@@ -604,10 +604,10 @@ export const GEO_TLE_L02_SECTEURS_ACTIVITES_CI: CurriculumChapter = {
         {
           "stepNumber": 3,
           "stepKind": "piege",
-          "stepTitle": "Erreur dans le PDF : le café",
-          "stepTheme": "Erreur dans le PDF : le café",
-          "stepBadge": "Erreur dans le PDF : le café",
-          "paragraphText": "Le PDF indique 1 230 000 t de café pour un 15e rang mondial.\nC'est une erreur d'unité : la production ivoirienne de café tourne autour de 100 000 à 130 000 t par an.\nRetiens surtout que le café a beaucoup reculé face au cacao.",
+          "stepTitle": "Point de vigilance : le café",
+          "stepTheme": "Point de vigilance : le café",
+          "stepBadge": "Point de vigilance : le café",
+          "paragraphText": "Attention aux ordres de grandeur sur le café : on rencontre parfois le chiffre erroné de 1 230 000 t.\nC'est une erreur d'unité : la production ivoirienne de café tourne autour de 100 000 à 130 000 t par an.\nRetiens surtout que le café a beaucoup reculé face au cacao.",
           "konanTip": "Un 15e producteur mondial ne peut pas produire presque autant de café que de cacao.",
           "exercise": {
             "id": "terminale_hg_geographie_l02_secteurs_activites_economiques_p03_q3",

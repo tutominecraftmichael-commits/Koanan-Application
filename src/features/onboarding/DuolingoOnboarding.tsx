@@ -42,6 +42,7 @@ import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { PlanPicker } from '../../components/pricing/PlanPicker';
 import { isProMethod } from '../../lib/subscriptionPlans';
+import { LMD_PROGRAMS, LMD_TRACKS, isLmdTrackGrade } from '../../lib/curriculum/lmdTracks';
 import { soundFX } from '../../lib/audioEffects';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../../components/common/AdminGoogleLoginButton';
@@ -424,6 +425,14 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const handleSelectStudySystem = (choice: StudySystemChoice) => {
     soundFX.playCheckmarkPop();
     setStudyType(choice);
+    if (choice === 'lmd' && !isLmdTrackGrade(selectedGradeLevel) && LMD_PROGRAMS[0]) {
+      setSelectedGradeLevel(LMD_PROGRAMS[0].gradeLevel);
+      setCustomFiliere(LMD_PROGRAMS[0].displayLabel);
+    } else if (choice === 'bts') {
+      setSelectedGradeLevel('superieur_bts');
+    } else if (choice === 'lycee' && (isLmdTrackGrade(selectedGradeLevel) || selectedGradeLevel === 'superieur_lmd' || selectedGradeLevel === 'superieur_bts')) {
+      setSelectedGradeLevel('seconde_c');
+    }
     const targetConfig = STUDY_SYSTEM_CONFIG[choice];
     if (scheduleText.trim().length > 10) {
       try {
@@ -2197,20 +2206,90 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 </div>
               )}
 
-              {/* Options Supérieur LMD & BTS */}
-              {studyType !== 'lycee' && (
+              {/* Options Supérieur LMD : Filières & Niveaux PRÉDÉFINIS (zéro saisie libre) */}
+              {studyType === 'lmd' && (
+                <div className="space-y-4 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
+                      Choisis ta filière LMD et ton niveau
+                    </span>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Les filières et niveaux sont prédéfinis pour charger automatiquement tes cours guidés et QCM.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {LMD_TRACKS.map((track) => (
+                      <div
+                        key={track.id}
+                        className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-2.5"
+                      >
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded-lg bg-sky-500/15 text-sky-700 dark:text-sky-300 text-[10px] font-black uppercase">
+                              {track.code}
+                            </span>
+                            <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
+                              {track.name}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                            {track.shortDescription}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                          {track.levels.map((lvl) => {
+                            const isSelected = selectedGradeLevel === lvl.gradeLevel;
+                            const label = `${track.code} — ${lvl.fullLabel}`;
+                            return (
+                              <button
+                                key={lvl.gradeLevel}
+                                type="button"
+                                onClick={() => {
+                                  soundFX.playCheckmarkPop();
+                                  setSelectedGradeLevel(lvl.gradeLevel);
+                                  setCustomFiliere(label);
+                                }}
+                                className={`px-3.5 py-2 rounded-xl border text-xs font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
+                                  isSelected
+                                    ? 'bg-sky-500 text-white border-sky-500 shadow-sm'
+                                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-sky-400'
+                                }`}
+                              >
+                                <span>{lvl.fullLabel}</span>
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-black ${
+                                  isSelected
+                                    ? 'bg-white/20 text-white'
+                                    : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300'
+                                }`}>
+                                  {lvl.subjectIds.length} matières
+                                </span>
+                                {isSelected && <Check className="w-3.5 h-3.5 shrink-0" />}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Options BTS / Prépa */}
+              {studyType === 'bts' && (
                 <div className="space-y-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
                   <span className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
-                    Filières courantes ou personnalisée
+                    Filières BTS / Prépa prédéfinies
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
-                      'Informatique & Génie Logiciel',
-                      'Réseaux & Télécommunications',
-                      'Sciences Économiques & Gestion',
-                      'Mathématiques & Informatique (MI)',
-                      'Sciences Physiques & Chimie (PC)',
-                      'Biologie & Sciences Médicales',
+                      'BTS Informatique Développeur d’Application (IDA)',
+                      'BTS Réseaux Informatiques & Télécoms (RIT)',
+                      'BTS Finances Comptabilité & Gestion (FCGE)',
+                      'BTS Gestion Commerciale (GESCOM)',
+                      'Classes Préparatoires Scientifiques (MPSI/PCSI)',
+                      'Classes Préparatoires Économiques (ECS/ECE)',
                     ].map(filiere => {
                       const isSelected = customFiliere === filiere;
                       return (
@@ -2220,7 +2299,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                           onClick={() => {
                             soundFX.playCheckmarkPop();
                             setCustomFiliere(filiere);
-                            setSelectedGradeLevel(studyType === 'bts' ? 'superieur_bts' : 'superieur_lmd');
+                            setSelectedGradeLevel('superieur_bts');
                           }}
                           className={`p-3 rounded-xl border text-left text-xs font-bold transition-all cursor-pointer flex items-center justify-between ${
                             isSelected
@@ -2233,22 +2312,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         </button>
                       );
                     })}
-                  </div>
-
-                  <div className="pt-2">
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">
-                      Ou écris ta filière exacte :
-                    </label>
-                    <input
-                      type="text"
-                      value={customFiliere}
-                      onChange={(e) => {
-                        setCustomFiliere(e.target.value);
-                        setSelectedGradeLevel(studyType === 'bts' ? 'superieur_bts' : 'superieur_lmd');
-                      }}
-                      placeholder="Ex: Électronique Industrielle, Droit Privé, etc."
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
-                    />
                   </div>
                 </div>
               )}

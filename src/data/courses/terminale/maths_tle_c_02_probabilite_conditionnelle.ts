@@ -90,7 +90,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Calculer $P(A \\cap B)$ à partir de $P_B(A)$ ou $P_A(B)$',
     paragraphText:
-      'En multipliant les deux membres de la définition par le dénominateur, on obtient la formule des probabilités composées : pour tous événements $A$ et $B$ de probabilités non nulles, $P(A \\cap B) = P(A) \\times P_A(B) = P(B) \\times P_B(A)$. Exemple du cours : si $P(F) = 0{,}75$ et $P_F(I) = 0{,}45$, alors $P(F \\cap I) = 0{,}45 \\times 0{,}75 = 0{,}3375$.',
+      'En multipliant les deux membres de la définition par le dénominateur, on obtient la formule des probabilités composées : pour tous événements $A$ et $B$ de probabilités non nulles, $P(A \\cap B) = P(A) \\times P_A(B) = P(B) \\times P_B(A)$. Exemple : si $P(F) = 0{,}75$ et $P_F(I) = 0{,}45$, alors $P(F \\cap I) = 0{,}45 \\times 0{,}75 = 0{,}3375$.',
     formula: {
       name: 'Formule des probabilités composées',
       formula: 'P(A \\cap B) = P(A)\\times P_A(B) = P(B)\\times P_B(A)',
@@ -204,7 +204,7 @@ const p02Steps: StructuredLessonStep[] = [
   {
     stepNumber: 3,
     stepKind: 'exemple',
-    stepBadge: 'Exercice du cours',
+    stepBadge: 'Exercice',
     stepTheme: 'slate',
     stepTitle: 'Démontrer l’indépendance sur deux lancers de pièce',
     paragraphText:
@@ -397,11 +397,11 @@ const p03Steps: StructuredLessonStep[] = [
   {
     stepNumber: 4,
     stepKind: 'exemple',
-    stepBadge: 'Exercice du cours',
+    stepBadge: 'Exercice',
     stepTheme: 'slate',
     stepTitle: 'Inverser le conditionnement : formule de Bayes ($P_B(A)$)',
     paragraphText:
-      'Reprenons Mariam (exercice d’approfondissement p.12) : $P(A \\cap B) = 0{,}42$ et $P(B) = 0{,}58$. Sachant que Mariam a réalisé un bénéfice ce jour-là ($B$), quelle est la probabilité qu’il y ait eu affluence de clients ($A$) ? On calcule $P_B(A) = \\frac{P(A \\cap B)}{P(B)} = \\frac{0{,}42}{0{,}58} = \\frac{42}{58} = \\frac{21}{29} \\approx 0{,}724$. C’est le principe dit « de Bayes » : on passe des probabilités des causes aux probabilités sachant l’effet.',
+      'Reprenons Mariam : $P(A \\cap B) = 0{,}42$ et $P(B) = 0{,}58$. Sachant que Mariam a réalisé un bénéfice ce jour-là ($B$), quelle est la probabilité qu’il y ait eu affluence de clients ($A$) ? On calcule $P_B(A) = \\frac{P(A \\cap B)}{P(B)} = \\frac{0{,}42}{0{,}58} = \\frac{42}{58} = \\frac{21}{29} \\approx 0{,}724$. C’est le principe dit « de Bayes » : on passe des probabilités des causes aux probabilités sachant l’effet.',
     formula: {
       name: 'Retournement du conditionnement',
       formula: 'P_B(A) = \\frac{P(A)\\,P_A(B)}{P(A)\\,P_A(B) + P(\\overline{A})\\,P_{\\overline{A}}(B)}',
@@ -422,7 +422,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'slate',
     stepTitle: 'Retrouver une proportion inconnue par équation',
     paragraphText:
-      'Situation complexe du cours (Dago, p.8) : parmi des élèves de Tle C et D, $25\\%$ des Tle C aiment le damier ($R$), $\\frac{1}{3}$ des Tle D ($E$) aiment le damier, et au total $\\frac{3}{10}$ des élèves aiment le damier. Posons $x = P(E)$. Par la formule des probabilités totales : $P(R) = P_E(R)\\,x + P_{\\overline{E}}(R)(1 - x) \\iff \\frac{3}{10} = \\frac{1}{3}x + \\frac{1}{4}(1 - x) \\iff \\frac{3}{10} - \\frac{1}{4} = \\left(\\frac{1}{3} - \\frac{1}{4}\\right)x \\iff \\frac{1}{20} = \\frac{1}{12}x \\iff x = \\frac{12}{20} = \\frac{3}{5} = 60\\%$.',
+      'Situation complexe : parmi des élèves de Tle C et D, $25\\%$ des Tle C aiment le damier ($R$), $\\frac{1}{3}$ des Tle D ($E$) aiment le damier, et au total $\\frac{3}{10}$ des élèves aiment le damier. Posons $x = P(E)$. Par la formule des probabilités totales : $P(R) = P_E(R)\\,x + P_{\\overline{E}}(R)(1 - x) \\iff \\frac{3}{10} = \\frac{1}{3}x + \\frac{1}{4}(1 - x) \\iff \\frac{3}{10} - \\frac{1}{4} = \\left(\\frac{1}{3} - \\frac{1}{4}\\right)x \\iff \\frac{1}{20} = \\frac{1}{12}x \\iff x = \\frac{12}{20} = \\frac{3}{5} = 60\\%$.',
     formula: {
       name: 'Équation sur les probabilités totales',
       formula: '\\frac{1}{3}x + \\frac{1}{4}(1 - x) = \\frac{3}{10} \\implies \\frac{1}{12}x = \\frac{1}{20} \\implies x = \\frac{3}{5}',
@@ -521,9 +521,9 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Exercice corrigé',
     stepTheme: 'slate',
-    stepTitle: 'Calculer une loi avec gains algébriques (correction du PDF Ex. 2 p.10)',
+    stepTitle: 'Calculer une loi avec gains algébriques',
     paragraphText:
-      'Une urne contient $3$ boules blanches ($+1$ pt) et $5$ boules noires ($-1$ pt). On tire simultanément $3$ boules ($\\binom{8}{3} = 56$). Soit $X$ le score. Attention : la solution du PDF inversait $+3$ et $-3$ ! Vérifions rigoureusement : $3$ noires $\\implies X = -3$ avec $P(X=-3) = \\frac{\\binom{5}{3}}{56} = \\frac{10}{56}$ ; $1$ blanche et $2$ noires $\\implies X = -1$ avec $P(X=-1) = \\frac{\\binom{3}{1}\\binom{5}{2}}{56} = \\frac{30}{56}$ ; $2$ blanches et $1$ noire $\\implies X = +1$ avec $P(X=1) = \\frac{\\binom{3}{2}\\binom{5}{1}}{56} = \\frac{15}{56}$ ; $3$ blanches $\\implies X = +3$ avec $P(X=3) = \\frac{\\binom{3}{3}}{56} = \\frac{1}{56}$. Somme : $\\frac{10+30+15+1}{56} = 1$.',
+      'Une urne contient $3$ boules blanches ($+1$ pt) et $5$ boules noires ($-1$ pt). On tire simultanément $3$ boules ($\\binom{8}{3} = 56$). Soit $X$ le score. Attention : la solution inversait $+3$ et $-3$ ! Vérifions rigoureusement : $3$ noires $\\implies X = -3$ avec $P(X=-3) = \\frac{\\binom{5}{3}}{56} = \\frac{10}{56}$ ; $1$ blanche et $2$ noires $\\implies X = -1$ avec $P(X=-1) = \\frac{\\binom{3}{1}\\binom{5}{2}}{56} = \\frac{30}{56}$ ; $2$ blanches et $1$ noire $\\implies X = +1$ avec $P(X=1) = \\frac{\\binom{3}{2}\\binom{5}{1}}{56} = \\frac{15}{56}$ ; $3$ blanches $\\implies X = +3$ avec $P(X=3) = \\frac{\\binom{3}{3}}{56} = \\frac{1}{56}$. Somme : $\\frac{10+30+15+1}{56} = 1$.',
     visualSchema: {
       type: 'custom_svg',
       title: 'Loi corrigée de l’Exercice 2 (3 blanches, 5 noires)',
@@ -567,7 +567,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Représentation en escalier',
     stepTheme: 'slate',
-    stepTitle: 'Écrire $F(x)$ par intervalles (exemple du cours p.7–8)',
+    stepTitle: 'Écrire $F(x)$ par intervalles',
     paragraphText:
       'Pour la variable $X$ ci-dessus, on cumule les probabilités de gauche à droite : pour $x \\in ]-\\infty ; -1000[$, $F(x) = 0$ ; pour $x \\in [-1000 ; 100[$, $F(x) = \\frac{1}{8}$ ; pour $x \\in [100 ; 300[$, $F(x) = \\frac{1}{2}$ ; pour $x \\in [300 ; 600[$, $F(x) = \\frac{7}{8}$ ; pour $x \\in [600 ; +\\infty[$, $F(x) = 1$. Chaque saut de la fonction en $x_i$ a pour hauteur exactement $P(X = x_i)$ !',
     formula: {
@@ -590,7 +590,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'orange',
     stepTitle: 'Bornes fermées à gauche $[x_i ; x_{i+1}[$ et valeur à gauche/droite',
     paragraphText:
-      'Dans l’expression de $F(x)$, les intervalles sont toujours fermés à gauche et ouverts à droite : $[x_i ; x_{i+1}[$, car $F(x) = P(X \\leqslant x)$ (inégalité large). Et attention dans l’Exercice 3 p.10 du PDF (les 10 morceaux A à J choisis au hasard avec la même probabilité) : chaque morceau a pour probabilité $\\frac{1}{10}$ (et NON sa durée divisée par $2500$ comme écrit par erreur dans le corrigé du PDF !). Ainsi $P(E_1 \\text{ « 240 s »}) = \\frac{3}{10}$ et $P(E_2 \\text{ « > 220 s »}) = \\frac{8}{10} = \\frac{4}{5}$.',
+      'Dans l’expression de $F(x)$, les intervalles sont toujours fermés à gauche et ouverts à droite : $[x_i ; x_{i+1}[$, car $F(x) = P(X \\leqslant x)$ (inégalité large). Et attention dans l’Exercice 3 p.10 (les 10 morceaux A à J choisis au hasard avec la même probabilité) : chaque morceau a pour probabilité $\\frac{1}{10}$. Ainsi $P(E_1 \\text{ « 240 s »}) = \\frac{3}{10}$ et $P(E_2 \\text{ « > 220 s »}) = \\frac{8}{10} = \\frac{4}{5}$.',
     konanTip: 'Quand un énoncé dit « tous les morceaux ont la même probabilité d’être sélectionnés » sur $10$ morceaux, la proba élémentaire est $\\frac{1}{10}$, jamais proportionnelle à la durée !',
     exercise: {
       id: 'tc_m_num_l02_p04_q06',
@@ -874,7 +874,7 @@ const p06Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Trouver $n$ tel que $P(\\text{au moins } 1 \\text{ succès}) \\geqslant \\alpha$',
     paragraphText:
-      'Question classique du Bac (Mariam, q3b p.13) : on répète $n$ fois l’épreuve et on note $P_n$ la probabilité d’obtenir **au moins un** succès. L’événement contraire est « $0$ succès » de probabilité $(1 - p)^n$. Donc $P_n = 1 - (1 - p)^n$. Pour résoudre $P_n \\geqslant 0{,}9999$ avec $p = 0{,}58$ ($1 - p = 0{,}42$), on passe au logarithme : $(0{,}42)^n \\leqslant 0{,}0001 \\iff n\\ln(0{,}42) \\leqslant \\ln(0{,}0001) \\iff n \\geqslant \\frac{\\ln(0{,}0001)}{\\ln(0{,}42)} \\approx 10{,}61$ (car $\\ln(0{,}42) < 0$ change le sens !). D’où $n_{\\min} = 11$.',
+      'Question classique du Bac : on répète $n$ fois l’épreuve et on note $P_n$ la probabilité d’obtenir **au moins un** succès. L’événement contraire est « $0$ succès » de probabilité $(1 - p)^n$. Donc $P_n = 1 - (1 - p)^n$. Pour résoudre $P_n \\geqslant 0{,}9999$ avec $p = 0{,}58$ ($1 - p = 0{,}42$), on passe au logarithme : $(0{,}42)^n \\leqslant 0{,}0001 \\iff n\\ln(0{,}42) \\leqslant \\ln(0{,}0001) \\iff n \\geqslant \\frac{\\ln(0{,}0001)}{\\ln(0{,}42)} \\approx 10{,}61$ (car $\\ln(0{,}42) < 0$ change le sens !). D’où $n_{\\min} = 11$.',
     formula: {
       name: 'Au moins un succès et passage au ln',
       formula: '1 - (1-p)^n \\geqslant \\alpha \\iff n \\geqslant \\frac{\\ln(1-\\alpha)}{\\ln(1-p)} \\quad (\\text{car } \\ln(1-p) < 0)',

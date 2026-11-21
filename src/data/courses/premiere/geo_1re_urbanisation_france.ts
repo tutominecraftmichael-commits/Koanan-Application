@@ -671,7 +671,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p03_q6",
             "type": "mcq",
-            "prompt": "Qu'est-ce qu'une mégalopole selon le cours ?",
+            "prompt": "Qu'est-ce qu'une mégalopole ?",
             "options": [
               "Un petit village isolé",
               "Un centre-ville et ses banlieues étroitement liés",
@@ -773,7 +773,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p03_q6",
           "type": "mcq",
-          "prompt": "Qu'est-ce qu'une mégalopole selon le cours ?",
+          "prompt": "Qu'est-ce qu'une mégalopole ?",
           "options": [
             "Un petit village isolé",
             "Un centre-ville et ses banlieues étroitement liés",
@@ -834,7 +834,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
               "Le Centre-Ouest"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Attention : un exercice du cours écrit « à l'ouest » par erreur ; c'est bien l'Est."
+            "explanation": "C'est bien l'Est qui est concerné (et non l'Ouest)."
           }
         },
         {
@@ -931,7 +931,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p04_q6",
             "type": "mcq",
-            "prompt": "Combien la France compte-t-elle d'aires métropolitaines selon le cours ?",
+            "prompt": "Combien la France compte-t-elle d'aires métropolitaines ?",
             "options": [
               "354",
               "116",
@@ -976,7 +976,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
             "Le Centre-Ouest"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Attention : un exercice du cours écrit « à l'ouest » par erreur ; c'est bien l'Est."
+          "explanation": "C'est bien l'Est qui est concerné (et non l'Ouest)."
         },
         {
           "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p04_q2",
@@ -1033,7 +1033,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p04_q6",
           "type": "mcq",
-          "prompt": "Combien la France compte-t-elle d'aires métropolitaines selon le cours ?",
+          "prompt": "Combien la France compte-t-elle d'aires métropolitaines ?",
           "options": [
             "354",
             "116",
@@ -1149,7 +1149,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p05_q4",
             "type": "mcq",
-            "prompt": "Quelle tranche d'âge souffre le plus du chômage dans les villes françaises selon le cours ?",
+            "prompt": "Quelle tranche d'âge souffre le plus du chômage dans les villes françaises ?",
             "options": [
               "Les 65 ans et plus",
               "Les moins de 5 ans",
@@ -1267,7 +1267,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p05_q4",
           "type": "mcq",
-          "prompt": "Quelle tranche d'âge souffre le plus du chômage dans les villes françaises selon le cours ?",
+          "prompt": "Quelle tranche d'âge souffre le plus du chômage dans les villes françaises ?",
           "options": [
             "Les 65 ans et plus",
             "Les moins de 5 ans",

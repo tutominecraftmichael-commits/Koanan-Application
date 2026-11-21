@@ -32,7 +32,7 @@ export const MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION: CurriculumChapter = 
         { name: 'Fonction impaire', formula: '\\forall x \\in D_f,\\ -x \\in D_f \\text{ et } f(-x) = -f(x)' },
       ],
       workedExample: {
-        title: 'Étudier la parité de quatre fonctions (Exercice 1 p. 9-10)',
+        title: 'Étudier la parité de quatre fonctions',
         statement:
           'Étudie la parité des fonctions : (1) $f_1(x) = 3x^4 - |x| + 1$ ; (2) $f_2(x) = \\dfrac{x^3}{x^2 - 1}$ ; (3) $f_3(x) = \\dfrac{x^2}{x - 1}$ ; (4) $f_4(x) = x^2 + 4x - 8$.',
         methodSteps: [
@@ -283,7 +283,7 @@ export const MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION: CurriculumChapter = 
         },
       },
       workedExample: {
-        title: 'Axe x = 3 et centre A(2 ; 3) (Exercices de fixation p. 5-6)',
+        title: 'Axe x = 3 et centre A(2 ; 3)',
         statement:
           '1. Démontre que la droite $(D) : x = 3$ est axe de symétrie de $(C_f)$ pour $f(x) = -2(x - 3)^2 + 5$.\n2. Démontre que $A(2; 3)$ est centre de symétrie de $(C_g)$ pour $g(x) = (x - 2)^3 + 3$.',
         methodSteps: [
@@ -487,7 +487,7 @@ export const MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION: CurriculumChapter = 
         { name: 'Dérivée dans l’Exercice 9', formula: '(2\\sin x + \\sin 2x)\' = 2(2\\cos x - 1)(\\cos x + 1)' },
       ],
       workedExample: {
-        title: 'Réduire l’étude de f(x) = 2sin(x) + sin(2x) (Exercice 9 p. 16-17)',
+        title: 'Réduire l’étude de f(x) = 2sin(x) + sin(2x)',
         statement:
           'Soit $f(x) = 2\\sin(x) + \\sin(2x)$ définie sur $\\mathbb{R}$. (1) Montre que $f$ est impaire et $2\\pi$-périodique, et déduis-en qu’on peut réduire l’étude à $I = [0; \\pi]$. (2) Étudie les variations sur $[0; \\pi]$.',
         methodSteps: [
@@ -686,7 +686,7 @@ export const MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION: CurriculumChapter = 
         { name: 'Position relative', formula: 'f(x) - y_D > 0 \\iff (C_f) \\text{ est au-dessus de } (D)' },
       ],
       workedExample: {
-        title: 'Asymptote oblique et position relative (Exercice 8 p. 14)',
+        title: 'Asymptote oblique et position relative',
         statement:
           'Soit $f(x) = \\dfrac{x^2 - 3x + 3}{x - 2}$ définie sur $\\mathbb{R}\\setminus\\{2\\}$. (1) Écris $f(x)$ sous la forme $ax + b + \\dfrac{c}{x - 2}$. (2) Justifie que $(D): y = x - 1$ est asymptote à $(C_f)$ en $+\\infty$ et $-\\infty$. (3) Étudie la position de $(C_f)$ par rapport à $(D)$.',
         methodSteps: [
@@ -922,7 +922,7 @@ export const MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION: CurriculumChapter = 
         { name: 'Factorisation clé (Exercice 11)', formula: 'x^4 + 6x^2 - 16x + 9 = (x - 1)^2(x^2 + 2x + 9)' },
       ],
       workedExample: {
-        title: 'Étudier un polynôme et sa tangente au point d’inflexion (Exercice 6 p. 11-12)',
+        title: 'Étudier un polynôme et sa tangente au point d’inflexion',
         statement:
           'Soit $f(x) = x^3 - 3x - 1$. Dresse le tableau de variation de $f$, détermine la tangente $(T)$ au point d’abscisse $0$, et étudie la position de $(C)$ par rapport à $(T)$.',
         methodSteps: [
@@ -1180,10 +1180,10 @@ export const MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION: CurriculumChapter = 
         'Sur un intervalle concret [m ; M], élimine les racines de f\'(x) situées hors de [m ; M] et vérifie s’il s’agit d’un minimum ou d’un maximum.',
       formulas: [
         { name: 'Coût des ampoules', formula: 'U(x) = x - 10 + \\frac{900}{x}, \\quad U\'(x) = \\frac{(x - 30)(x + 30)}{x^2}' },
-        { name: 'Bénéfice jus de fruits (Ex. 10)', formula: 'B(x) = -x^2 + 130x - 4125, \\quad B\'(x) = -2x + 130' },
+        { name: 'Bénéfice jus de fruits', formula: 'B(x) = -x^2 + 130x - 4125, \\quad B\'(x) = -2x + 130' },
       ],
       workedExample: {
-        title: 'Minimiser le coût de production d’ampoules (Situation complexe p. 8-9)',
+        title: 'Minimiser le coût de production d’ampoules',
         statement:
           'Une entreprise fabrique chaque jour $x \\in [10; 100]$ ampoules. Le coût de production est modélisé par $U(x) = x - 10 + \\dfrac{900}{x}$ (en F CFA). Quel nombre d’ampoules faut-il fabriquer pour minimiser ce coût ?',
         methodSteps: [

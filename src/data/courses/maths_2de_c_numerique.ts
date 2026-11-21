@@ -1,5 +1,5 @@
 // ============================================================================
-// MODULE OFFICIEL : MATHÉMATIQUES 2de C – NUMÉRIQUE (MENA CÔTE D'IVOIRE)
+// MODULE OFFICIEL : MATHÉMATIQUES 2de C – NUMÉRIQUE
 // Volet : Numérique | Classe : Seconde C
 // Leçon 1 approfondie : Généralités sur les fonctions (12 Mini-Leçons distinctes, 96 questions uniques)
 // ============================================================================

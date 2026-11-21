@@ -14,7 +14,7 @@ export const MATHS_TLE_A_L06_PROBABILITES_STATISTIQUES: CurriculumChapter = {
   "summary": "Règles de calcul des probabilités, probabilité conditionnelle et indépendance, point moyen, droite de Mayer, covariance et moindres carrés.",
   "officialVolumeHours": 12,
   "contentVersion": 2,
-  "source": "Programme de Terminale A fourni par l'équipe KONAN (pas de PDF officiel), vérifié et corrigé",
+  "source": "Programme de Terminale A fourni par l'équipe KONAN, vérifié et corrigé",
   "points": [
     {
       "id": "terminale_a_maths_numerique_l06_probabilites_statistiques_p01",

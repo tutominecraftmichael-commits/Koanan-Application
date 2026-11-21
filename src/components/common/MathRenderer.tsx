@@ -3,6 +3,13 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { StackedFraction, renderTextWithStackedFractions } from './StackedFraction';
 import { SketchFunctionPlot, SketchSignTable, SketchVariationTable } from './SketchFigure';
+import {
+  SketchBarChart,
+  SketchCycleDiagram,
+  SketchFlowchart,
+  SketchLayeredStack,
+  SketchMatrix2x2,
+} from './CourseDiagrams';
 import type { PointVisualSchema } from '../../lib/curriculum/types';
 import { renderScene } from '../../lib/scenes/sceneRenderer';
 export { StackedFraction, renderTextWithStackedFractions };
@@ -1105,6 +1112,16 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
               ? 'Arbre pondéré'
               : schema.type === 'function_plot'
               ? 'Courbe'
+              : schema.type === 'bar_chart'
+              ? 'Graphique'
+              : schema.type === 'flowchart'
+              ? 'Processus'
+              : schema.type === 'layered_stack'
+              ? 'Architecture'
+              : schema.type === 'matrix_2x2'
+              ? 'Matrice'
+              : schema.type === 'cycle_diagram'
+              ? 'Circuit'
               : 'Schéma'}
           </span>
         </div>
@@ -1114,14 +1131,20 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
       {schema.plot && <SketchFunctionPlot spec={schema.plot} />}
       {schema.variation && <SketchVariationTable spec={schema.variation} />}
       {schema.signs && <SketchSignTable spec={schema.signs} />}
+      {schema.barChart && <SketchBarChart spec={schema.barChart} />}
+      {schema.flowchart && <SketchFlowchart spec={schema.flowchart} />}
+      {schema.layeredStack && <SketchLayeredStack spec={schema.layeredStack} />}
+      {schema.matrix2x2 && <SketchMatrix2x2 spec={schema.matrix2x2} />}
+      {schema.cycle && <SketchCycleDiagram spec={schema.cycle} />}
 
       {svgContent && (
         <div
           className={isScene
             ? 'flex items-center justify-center rounded-xl overflow-hidden'
             // Schémas SVG : toujours sur une « feuille » claire (même en mode nuit), car leurs traits et
-            // textes sont dessinés en couleurs foncées fixes ; currentColor devient un gris très foncé.
-            : 'flex items-center justify-center py-2 bg-white text-slate-800 dark:bg-slate-100 rounded-xl border border-slate-200/70 dark:border-slate-700 overflow-x-auto'}
+            // textes sont dessinés en couleurs foncées fixes ; konan-svg-sheet force currentColor en encre foncée
+            // même si le <svg> embarque une classe dark:text-slate-200.
+            : 'konan-svg-sheet flex items-center justify-center py-2 bg-white text-slate-900 dark:bg-slate-100 rounded-xl border border-slate-200/70 dark:border-slate-700 overflow-x-auto'}
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}

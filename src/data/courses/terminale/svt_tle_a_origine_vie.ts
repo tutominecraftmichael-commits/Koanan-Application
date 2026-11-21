@@ -44,7 +44,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l03_origine_vie_p01_q1",
             "type": "mcq",
-            "prompt": "Selon le cours de SVT, par quels deux types de faits scientifiques peut-on expliquer l'origine de la vie ?",
+            "prompt": "Par quels deux types de faits scientifiques peut-on expliquer l'origine de la vie ?",
             "options": [
               "Des faits paléontologiques et des faits expérimentaux",
               "Des légendes et des rêves",
@@ -186,7 +186,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l03_origine_vie_p01_q1",
           "type": "mcq",
-          "prompt": "Selon le cours de SVT, par quels deux types de faits scientifiques peut-on expliquer l'origine de la vie ?",
+          "prompt": "Par quels deux types de faits scientifiques peut-on expliquer l'origine de la vie ?",
           "options": [
             "Des faits paléontologiques et des faits expérimentaux",
             "Des légendes et des rêves",
@@ -409,7 +409,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l03_origine_vie_p02_q6",
             "type": "mcq",
-            "prompt": "Selon le document 3 sur l'évolution de la vie, comment ont évolué le mode de reproduction et le milieu de vie des animaux ?",
+            "prompt": "Concernant l'évolution de la vie, comment ont évolué le mode de reproduction et le milieu de vie des animaux ?",
             "options": [
               "De la reproduction sexuée à asexuée ; de la terre à l'eau",
               "De la reproduction asexuée à sexuée ; des invertébrés aquatiques aux vertébrés terrestres",
@@ -511,7 +511,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l03_origine_vie_p02_q6",
           "type": "mcq",
-          "prompt": "Selon le document 3 sur l'évolution de la vie, comment ont évolué le mode de reproduction et le milieu de vie des animaux ?",
+          "prompt": "Concernant l'évolution de la vie, comment ont évolué le mode de reproduction et le milieu de vie des animaux ?",
           "options": [
             "De la reproduction sexuée à asexuée ; de la terre à l'eau",
             "De la reproduction asexuée à sexuée ; des invertébrés aquatiques aux vertébrés terrestres",
@@ -806,7 +806,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
       "formulas": [],
       "workedExample": {
         "title": "Lire le document 3",
-        "statement": "D'après le document 3, d'où viennent les petites molécules organiques réactives (HCN, HCHO) et où naît la vie ?",
+        "statement": "D'où viennent les petites molécules organiques réactives (HCN, HCHO) et où naît la vie ?",
         "methodSteps": [
           "Elles se forment dans l'atmosphère primitive grâce à l'énergie (Soleil, éclairs) et sont aussi apportées par les comètes et les météorites.",
           "Elles s'accumulent dans l'océan, près des sources chaudes et des argiles."
@@ -1061,7 +1061,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
       "order": 5,
       "title": "La chronologie de la vie sur Terre",
       "summary": "De la naissance de la Terre à la conquête des continents.",
-      "conceptExplanation": "Chronologie d'après le document 3 (« Évolution de l'atmosphère et apparition de la vie sur la Terre ») ; les âges sont en millions d'années (Ma) avant aujourd'hui :\n- vers −4 600 Ma : naissance de la Terre ; atmosphère primitive sans dioxygène (CO₂, CH₄, H₂O…) ;\n- vers −3 500 Ma : apparition des premières cellules procaryotes ;\n- de −3 000 à −2 000 Ma : la photosynthèse des algues produit l'O₂ ; dépôt des fers rubanés ;\n- vers −2 000 Ma : l'O₂ s'accumule dans l'atmosphère (couches rouges) ;\n- vers −1 500 Ma : apparition des eucaryotes (cellules avec noyau) ;\n- vers −670 Ma : premiers êtres pluricellulaires (animaux à corps mou) ;\n- vers −540 Ma (début de l'ère primaire) : « explosion » de la vie dans les océans ;\n- vers −450 Ma : début de la conquête des continents par les végétaux et les animaux, protégés des ultraviolets par la couche d'ozone.\n\nToute cette longue période avant l'ère primaire s'appelle le PRÉCAMBRIEN.\n\nConclusion générale : l'origine de la vie s'explique par des faits paléontologiques et par des faits expérimentaux. L'apparition de la vie correspond à l'apparition des premières cellules : les procaryotes.\n\nScience et religion : la science explique l'origine de la vie par des faits observés et des expériences ; elle laisse ouverte la question du sens, qui relève d'autres approches (philosophie, religion).",
+      "conceptExplanation": "Chronologie de l'évolution de l'atmosphère et de l'apparition de la vie sur Terre ; les âges sont en millions d'années (Ma) avant aujourd'hui :\n- vers −4 600 Ma : naissance de la Terre ; atmosphère primitive sans dioxygène (CO₂, CH₄, H₂O…) ;\n- vers −3 500 Ma : apparition des premières cellules procaryotes ;\n- de −3 000 à −2 000 Ma : la photosynthèse des algues produit l'O₂ ; dépôt des fers rubanés ;\n- vers −2 000 Ma : l'O₂ s'accumule dans l'atmosphère (couches rouges) ;\n- vers −1 500 Ma : apparition des eucaryotes (cellules avec noyau) ;\n- vers −670 Ma : premiers êtres pluricellulaires (animaux à corps mou) ;\n- vers −540 Ma (début de l'ère primaire) : « explosion » de la vie dans les océans ;\n- vers −450 Ma : début de la conquête des continents par les végétaux et les animaux, protégés des ultraviolets par la couche d'ozone.\n\nToute cette longue période avant l'ère primaire s'appelle le PRÉCAMBRIEN.\n\nConclusion générale : l'origine de la vie s'explique par des faits paléontologiques et par des faits expérimentaux. L'apparition de la vie correspond à l'apparition des premières cellules : les procaryotes.\n\nScience et religion : la science explique l'origine de la vie par des faits observés et des expériences ; elle laisse ouverte la question du sens, qui relève d'autres approches (philosophie, religion).",
       "keyRule": "Terre −4 600 Ma → procaryotes −3 500 Ma → O₂ (algues) → eucaryotes vers −1 500 Ma → pluricellulaires vers −670 Ma → conquête des continents vers −450 Ma.",
       "formulas": [],
       "workedExample": {
@@ -1105,7 +1105,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l03_origine_vie_p05_q2",
             "type": "mcq",
-            "prompt": "D'après le document 3, vers quand apparaissent les premières cellules procaryotes ?",
+            "prompt": "Vers quand apparaissent les premières cellules procaryotes ?",
             "options": [
               "Vers −3 500 millions d'années",
               "Vers −450 millions d'années",
@@ -1147,7 +1147,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l03_origine_vie_p05_q4",
             "type": "mcq",
-            "prompt": "D'après le document 3, les eucaryotes apparaissent vers −1 500 Ma et les procaryotes vers −3 500 Ma. Lesquels sont apparus en premier ?",
+            "prompt": "Les eucaryotes apparaissent vers −1 500 Ma et les procaryotes vers −3 500 Ma. Lesquels sont apparus en premier ?",
             "options": [
               "Les eucaryotes",
               "Les procaryotes",
@@ -1210,7 +1210,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l03_origine_vie_p05_q7",
             "type": "mcq",
-            "prompt": "Selon la conclusion générale du cours sur l'origine de la vie, à quoi correspond l'apparition de la vie ?",
+            "prompt": "Concernant l'origine de la vie, à quoi correspond l'apparition de la vie ?",
             "options": [
               "À l'apparition des premières cellules, les procaryotes",
               "À l'apparition de l'Homme",
@@ -1239,7 +1239,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l03_origine_vie_p05_q2",
           "type": "mcq",
-          "prompt": "D'après le document 3, vers quand apparaissent les premières cellules procaryotes ?",
+          "prompt": "Vers quand apparaissent les premières cellules procaryotes ?",
           "options": [
             "Vers −3 500 millions d'années",
             "Vers −450 millions d'années",
@@ -1265,7 +1265,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l03_origine_vie_p05_q4",
           "type": "mcq",
-          "prompt": "D'après le document 3, les eucaryotes apparaissent vers −1 500 Ma et les procaryotes vers −3 500 Ma. Lesquels sont apparus en premier ?",
+          "prompt": "Les eucaryotes apparaissent vers −1 500 Ma et les procaryotes vers −3 500 Ma. Lesquels sont apparus en premier ?",
           "options": [
             "Les eucaryotes",
             "Les procaryotes",
@@ -1304,7 +1304,7 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l03_origine_vie_p05_q7",
           "type": "mcq",
-          "prompt": "Selon la conclusion générale du cours sur l'origine de la vie, à quoi correspond l'apparition de la vie ?",
+          "prompt": "Concernant l'origine de la vie, à quoi correspond l'apparition de la vie ?",
           "options": [
             "À l'apparition des premières cellules, les procaryotes",
             "À l'apparition de l'Homme",

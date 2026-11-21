@@ -348,7 +348,7 @@ export const GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI: CurriculumChapter = 
           "exercise": {
             "id": "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci_p02_q3",
             "type": "mcq",
-            "prompt": "Combien de régions la Côte d'Ivoire compte-t-elle selon le cours ?",
+            "prompt": "Combien de régions la Côte d'Ivoire compte-t-elle ?",
             "options": [
               "12",
               "108",
@@ -474,7 +474,7 @@ export const GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI: CurriculumChapter = 
         {
           "id": "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci_p02_q3",
           "type": "mcq",
-          "prompt": "Combien de régions la Côte d'Ivoire compte-t-elle selon le cours ?",
+          "prompt": "Combien de régions la Côte d'Ivoire compte-t-elle ?",
           "options": [
             "12",
             "108",
@@ -1451,7 +1451,7 @@ export const GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI: CurriculumChapter = 
           "exercise": {
             "id": "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci_p06_q6",
             "type": "mcq",
-            "prompt": "Quels acteurs participent trop peu au développement local selon le cours ?",
+            "prompt": "Quels acteurs participent trop peu au développement local ?",
             "options": [
               "Les préfets et les sous-préfets",
               "Les ministres",
@@ -1553,7 +1553,7 @@ export const GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI: CurriculumChapter = 
         {
           "id": "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci_p06_q6",
           "type": "mcq",
-          "prompt": "Quels acteurs participent trop peu au développement local selon le cours ?",
+          "prompt": "Quels acteurs participent trop peu au développement local ?",
           "options": [
             "Les préfets et les sous-préfets",
             "Les ministres",

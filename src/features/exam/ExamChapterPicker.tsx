@@ -24,8 +24,8 @@ interface Group { key: string; label: string; chapters: { id: string; title: str
 
 export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectName, gradeRaw, value, onChange, onAvailability }) => {
   const [groups, setGroups] = useState<Group[] | null>(null);
-  const match = useMemo(() => matchSubjectToStemCurriculum(subjectName), [subjectName]);
   const grade = useMemo(() => tryResolveGradeLevel(gradeRaw), [gradeRaw]);
+  const match = useMemo(() => matchSubjectToStemCurriculum(subjectName, grade), [subjectName, grade]);
   const subjectKey = match.isStemSubject ? match.stemSubjectId : undefined;
 
   useEffect(() => {

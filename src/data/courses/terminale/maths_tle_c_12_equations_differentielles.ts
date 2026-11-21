@@ -38,7 +38,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p01_q02',
       type: 'mcq',
-      prompt: 'Parmi ces équations (Ex. 1 p.1–2), lesquelles sont des équations différentielles ?',
+      prompt: 'Parmi ces équations, lesquelles sont des équations différentielles ?',
       options: [
         '$2y^2 + y = 2$ et $y + 3 = 0$',
         '$y’ + 4 = 0$ et $y’’ + 2y’ + y = 5$',
@@ -60,7 +60,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p01_q03',
       type: 'mcq',
-      prompt: 'Parmi les équations suivantes (Ex. 1 p.5), lesquelles sont des équations différentielles ? $(E) : y^2+y=2$ ; $(F) : y’-\\ln(2)y=3$ ; $(G) : y’’-y’=3x^2$ ; $(H) : y=3x$.',
+      prompt: 'Parmi les équations suivantes, lesquelles sont des équations différentielles ? $(E) : y^2+y=2$ ; $(F) : y’-\\ln(2)y=3$ ; $(G) : y’’-y’=3x^2$ ; $(H) : y=3x$.',
       options: ['$(E)$ et $(H)$', '$(F)$ et $(G)$', '$(F)$ seulement', '$(E)$, $(F)$ et $(G)$'],
       correctAnswerIndex: 1,
       explanation: 'Les équations $(F)$ (ordre $1$) et $(G)$ (ordre $2$) contiennent une dérivée de $y$ ; $(E)$ et $(H)$ sont des équations algébriques ordinaires.',
@@ -73,7 +73,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Méthode pour vérifier qu’une fonction donnée $g$ est solution',
     paragraphText:
-      'Pour prouver qu’une fonction explicite $g$ est solution de $(E)$ sur $K$, inutile de résoudre $(E)$ ! Il suffit de calculer $g’(x)$ (et $g’’(x)$ si besoin), de **substituer** $g(x)$ et ses dérivées dans le membre de gauche de $(E)$, et de constater qu’on retrouve exactement le membre de droite pour tout $x \\in K$. Exemple (Ex. 4 p.6) : pour $g(x) = (x+1)e^{-2x}$, $g’(x) = (-2x - 1)e^{-2x}$, donc $g’(x) + 2g(x) = (-2x - 1 + 2x + 2)e^{-2x} = e^{-2x}$ : $g$ est bien solution de $y’ + 2y = e^{-2x}$.',
+      'Pour prouver qu’une fonction explicite $g$ est solution de $(E)$ sur $K$, inutile de résoudre $(E)$ ! Il suffit de calculer $g’(x)$ (et $g’’(x)$ si besoin), de **substituer** $g(x)$ et ses dérivées dans le membre de gauche de $(E)$, et de constater qu’on retrouve exactement le membre de droite pour tout $x \\in K$. Exemple : pour $g(x) = (x+1)e^{-2x}$, $g’(x) = (-2x - 1)e^{-2x}$, donc $g’(x) + 2g(x) = (-2x - 1 + 2x + 2)e^{-2x} = e^{-2x}$ : $g$ est bien solution de $y’ + 2y = e^{-2x}$.',
     exercise: {
       id: 'tc_m_num_l12_eq_p01_q04',
       type: 'mcq',
@@ -172,7 +172,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p02_q01',
       type: 'mcq',
-      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $y’ + 2y = 0$ (exercice du cours p.2) ?',
+      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $y’ + 2y = 0$ ?',
       options: [
         '$x \\mapsto k e^{2x},\\; k \\in \\mathbb{R}$',
         '$x \\mapsto k e^{-2x},\\; k \\in \\mathbb{R}$',
@@ -212,7 +212,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p02_q02',
       type: 'mcq',
-      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $7y’ = 3y$ (exercice du cours p.2) ?',
+      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $7y’ = 3y$ ?',
       options: [
         '$x \\mapsto k e^{-\\frac{3}{7}x},\\; k \\in \\mathbb{R}$',
         '$x \\mapsto k e^{\\frac{3}{7}x},\\; k \\in \\mathbb{R}$',
@@ -238,7 +238,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p02_q03',
       type: 'mcq',
-      prompt: 'Déterminer la solution $f$ de $y’ - (\\ln 2)y = 0$ vérifiant $f(2) = \\frac{1}{2}$ (Ex. 2b p.5).',
+      prompt: 'Déterminer la solution $f$ de $y’ - (\\ln 2)y = 0$ vérifiant $f(2) = \\frac{1}{2}$.',
       options: [
         '$f(x) = \\frac{1}{2}e^{x\\ln 2}$',
         '$f(x) = \\frac{1}{8}e^{x\\ln 2}$',
@@ -276,7 +276,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Vitesse et coefficient',
     stepTheme: 'slate',
-    stepTitle: 'Résoudre $y’ = -2y$ avec $f(0) = 1$ (Ex. 2a p.5)',
+    stepTitle: 'Résoudre $y’ = -2y$ avec $f(0) = 1$',
     paragraphText:
       '$y’ = -2y \\iff y’ + 2y = 0$, dont les solutions sur $\\mathbb{R}$ sont $f(x) = k e^{-2x}$ ($k \\in \\mathbb{R}$). La condition initiale $f(0) = 1$ donne $k e^0 = 1 \\iff k = 1$. L’unique solution cherchée est $f(x) = e^{-2x}$.',
     exercise: {
@@ -300,7 +300,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p02_q06',
       type: 'mcq',
-      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $-2f’ + 5f = 0$ (Exemple 1 p.1) ?',
+      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $-2f’ + 5f = 0$ ?',
       options: [
         '$x \\mapsto k e^{-5x},\\; k \\in \\mathbb{R}$',
         '$x \\mapsto k e^{\\frac{5}{2}x},\\; k \\in \\mathbb{R}$',
@@ -346,7 +346,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p03_q01',
       type: 'mcq',
-      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $y’ + 2y = 6$ (exercice du cours p.2) ?',
+      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $y’ + 2y = 6$ ?',
       options: [
         '$x \\mapsto k e^{-2x} + 6,\\; k \\in \\mathbb{R}$',
         '$x \\mapsto k e^{-2x} + 3,\\; k \\in \\mathbb{R}$',
@@ -362,7 +362,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Condition initiale',
     stepTheme: 'slate',
-    stepTitle: 'Résoudre $y’ - 3y = 7$ avec $f(0) = 1$ (exercice du cours p.2–3)',
+    stepTitle: 'Résoudre $y’ - 3y = 7$ avec $f(0) = 1$',
     paragraphText:
       'Pour $(E) : y’ - 3y = 7$, on identifie $a = -3$ et $b = 7$, d’où $-a = 3$ et $\\frac{b}{a} = -\\frac{7}{3}$. La forme générale des solutions sur $\\mathbb{R}$ est $f(x) = c\\,e^{3x} - \\frac{7}{3}$ ($c \\in \\mathbb{R}$). La condition initiale $f(0) = 1$ donne $c e^0 - \\frac{7}{3} = 1 \\iff c = 1 + \\frac{7}{3} = \\frac{10}{3}$. La solution unique est donc $f(x) = \\frac{10}{3}e^{3x} - \\frac{7}{3}$.',
     formula: {
@@ -413,7 +413,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Résoudre $y’ + ay = g(x)$ à l’aide d’une solution particulière',
     paragraphText:
-      'Lorsque le second membre dépend de $x$ (comme $(E) : y’ + 2y = e^{-2x}$ dans l’Ex. 4 p.6, ou $y’ + 3y = 2e^{-x}$ p.6–7), le théorème reste identique : si $g_0$ est **une solution particulière** de $(E)$, alors une fonction $f$ est solution de $(E)$ si et seulement si $h = f - g_0$ est solution de l’équation homogène associée $(E’) : y’ + ay = 0$ ! Donc $f(x) = g_0(x) + k e^{-ax}$.',
+      'Lorsque le second membre dépend de $x$ (comme $(E) : y’ + 2y = e^{-2x}$ ou $y’ + 3y = 2e^{-x}$), le théorème reste identique : si $g_0$ est **une solution particulière** de $(E)$, alors une fonction $f$ est solution de $(E)$ si et seulement si $h = f - g_0$ est solution de l’équation homogène associée $(E’) : y’ + ay = 0$ ! Donc $f(x) = g_0(x) + k e^{-ax}$.',
     formula: {
       name: 'Principe de superposition (solution particulière + homogène)',
       formula: 'f \\text{ solution de } (E) \\iff (f - g_0) \\text{ solution de } (E’) \\iff f(x) = g_0(x) + k\\,e^{-ax}',
@@ -421,7 +421,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p03_q04',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 4 p.6 : $(E) : y’ + 2y = e^{-2x}$, on a vérifié que $g(x) = (x+1)e^{-2x}$ est solution de $(E)$, et $(E’) : y’ + 2y = 0$. Quelles sont toutes les solutions $f$ de $(E)$ ?',
+      prompt: 'Pour $(E) : y’ + 2y = e^{-2x}$, on a vérifié que $g(x) = (x+1)e^{-2x}$ est solution de $(E)$, et $(E’) : y’ + 2y = 0$. Quelles sont toutes les solutions $f$ de $(E)$ ?',
       options: [
         '$f(x) = (x + 1)e^{-2x}$ uniquement',
         '$f(x) = (k + x + 1)e^{-2x},\\; k \\in \\mathbb{R}$',
@@ -435,15 +435,15 @@ const p03Steps: StructuredLessonStep[] = [
   {
     stepNumber: 5,
     stepKind: 'exemple',
-    stepBadge: 'Correction du PDF p.6 !',
+    stepBadge: 'Point de vigilance',
     stepTheme: 'slate',
     stepTitle: 'Condition initiale sur $y’ + 2y = e^{-2x}$ avec $f(0) = -2$',
     paragraphText:
-      'Dans l’Ex. 4 question 4b (p.6), l’énoncé demande la solution $f$ de $y’ + 2y = e^{-2x}$ vérifiant **$f(0) = -2$** (le corrigé du PDF avait résolu par mégarde $f(0) = 1$ !). Avec $f(x) = (k + x + 1)e^{-2x}$, la vraie condition $f(0) = -2$ donne $(k + 1)e^0 = -2 \\iff k + 1 = -2 \\iff k = -3$. L’unique solution répondant à l’énoncé est donc $f(x) = (x - 2)e^{-2x}$ !',
+      'Pour trouver la solution $f$ de $y’ + 2y = e^{-2x}$ vérifiant **$f(0) = -2$**, on remplace $x = 0$ dans la forme générale. Avec $f(x) = (k + x + 1)e^{-2x}$, la vraie condition $f(0) = -2$ donne $(k + 1)e^0 = -2 \\iff k + 1 = -2 \\iff k = -3$. L’unique solution répondant à l’énoncé est donc $f(x) = (x - 2)e^{-2x}$ !',
     exercise: {
       id: 'tc_m_num_l12_eq_p03_q05',
       type: 'mcq',
-      prompt: 'Quelle est la vraie solution $f$ de $(E) : y’ + 2y = e^{-2x}$ vérifiant $f(0) = -2$ (énoncé de l’Ex. 4 q4b p.6) ?',
+      prompt: 'Quelle est la vraie solution $f$ de $(E) : y’ + 2y = e^{-2x}$ vérifiant $f(0) = -2$ ?',
       options: [
         '$f(x) = (x + 1)e^{-2x}$',
         '$f(x) = (x - 2)e^{-2x}$',
@@ -537,7 +537,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p04_q02',
       type: 'mcq',
-      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $y’’ - 4y = 0$ (exercice du cours p.3) ?',
+      prompt: 'Quelles sont les solutions sur $\\mathbb{R}$ de $y’’ - 4y = 0$ ?',
       options: [
         '$x \\mapsto a\\cos(2x) + b\\sin(2x)$',
         '$x \\mapsto a e^{-2x} + b e^{2x}$ ($a, b \\in \\mathbb{R}$)',
@@ -563,7 +563,7 @@ const p04Steps: StructuredLessonStep[] = [
     visualSchema: {
       type: 'function_plot',
       title: 'Solution oscillante $f(x) = \\cos(5x) + \\frac{2}{5}\\sin(5x)$ de $y’’ + 25y = 0$',
-      caption: 'Vérifie $f(0) = 1$ et $f’(\\frac{\\pi}{5}) = -2$ (exercice du cours p.4).',
+      caption: 'Vérifie $f(0) = 1$ et $f’(\\frac{\\pi}{5}) = -2$.',
       plot: {
         xMin: -1.5,
         xMax: 1.5,
@@ -596,7 +596,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Unicité avec deux conditions : $y(x_0) = y_0$ et $y’(x_0) = z_0$',
     paragraphText:
-      'Une équation du second ordre dépend de **deux** constantes réelles $(a, b)$. Pour fixer une solution unique, il faut donc **deux** conditions (par exemple $y(x_0) = y_0$ et $y’(x_0) = z_0$, ou deux points). Exemple du cours p.4 : pour $y’’ + 25y = 0$ ($f(x) = a\\cos(5x) + b\\sin(5x)$, $f’(x) = -5a\\sin(5x) + 5b\\cos(5x)$) avec $f(0) = 1$ et $f’(\\frac{\\pi}{5}) = -2$ : $f(0) = a = 1$, et $f’(\\frac{\\pi}{5}) = -5a\\sin\\pi + 5b\\cos\\pi = -5b = -2 \\implies b = \\frac{2}{5}$. D’où $f(x) = \\cos(5x) + \\frac{2}{5}\\sin(5x)$.',
+      'Une équation du second ordre dépend de **deux** constantes réelles $(a, b)$. Pour fixer une solution unique, il faut donc **deux** conditions (par exemple $y(x_0) = y_0$ et $y’(x_0) = z_0$, ou deux points). Exemple : pour $y’’ + 25y = 0$ ($f(x) = a\\cos(5x) + b\\sin(5x)$, $f’(x) = -5a\\sin(5x) + 5b\\cos(5x)$) avec $f(0) = 1$ et $f’(\\frac{\\pi}{5}) = -2$ : $f(0) = a = 1$, et $f’(\\frac{\\pi}{5}) = -5a\\sin\\pi + 5b\\cos\\pi = -5b = -2 \\implies b = \\frac{2}{5}$. D’où $f(x) = \\cos(5x) + \\frac{2}{5}\\sin(5x)$.',
     exercise: {
       id: 'tc_m_num_l12_eq_p04_q04',
       type: 'mcq',
@@ -634,7 +634,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Tableau récapitulatif',
     stepTheme: 'slate',
-    stepTitle: 'Les 5 équations différentielles canoniques du programme (tableau p.4)',
+    stepTitle: 'Les 5 équations différentielles canoniques du programme',
     paragraphText:
       'Le tableau officiel récapitule les 5 types d’équations différentielles à connaître par cœur au Bac C : $y’ + ay = 0$ ; $y’ + ay = b$ ; $y’’ = 0$ ; $y’’ - \\omega^2 y = 0$ et $y’’ + \\omega^2 y = 0$. Avant d’appliquer une formule, veille toujours à ramener le coefficient devant la plus haute dérivée ($y’$ ou $y’’$) à $1$ et à faire passer le terme en $y$ à gauche !',
     visualSchema: {
@@ -699,9 +699,9 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Situation complexe',
     stepTheme: 'slate',
-    stepTitle: 'Croissance démographique : de $f’(t) = a f(t)$ à la prévision (p.4–5)',
+    stepTitle: 'Croissance démographique : de $f’(t) = a f(t)$ à la prévision',
     paragraphText:
-      'Situation complexe du cours : un pays comptait $4{,}75$ millions d’habitants en $1990$ ($t = 0$) et $5{,}5$ millions en $1995$ ($t = 5$). La vitesse d’accroissement étant proportionnelle à la population, $f’(t) = a f(t)$, d’où $f(t) = k e^{at}$. Avec $f(0) = 4{,}75$, on a $k = 4{,}75$. Avec $f(5) = 5{,}5$, $4{,}75 e^{5a} = 5{,}5 \\iff e^{5a} = \\frac{22}{19} \\iff a = \\frac{1}{5}\\ln\\left(\\frac{22}{19}\\right)$. On atteint $f(t) = 20$ lorsque $e^{at} = \\frac{20}{4{,}75} = \\frac{80}{19} \\iff t = \\frac{5\\ln(80/19)}{\\ln(22/19)} \\approx 48{,}9\\text{ ans}$, soit vers $1990 + 49 = 2039$ (ou $2038$ en prenant $48$).',
+      'Situation complexe : un pays comptait $4{,}75$ millions d’habitants en $1990$ ($t = 0$) et $5{,}5$ millions en $1995$ ($t = 5$). La vitesse d’accroissement étant proportionnelle à la population, $f’(t) = a f(t)$, d’où $f(t) = k e^{at}$. Avec $f(0) = 4{,}75$, on a $k = 4{,}75$. Avec $f(5) = 5{,}5$, $4{,}75 e^{5a} = 5{,}5 \\iff e^{5a} = \\frac{22}{19} \\iff a = \\frac{1}{5}\\ln\\left(\\frac{22}{19}\\right)$. On atteint $f(t) = 20$ lorsque $e^{at} = \\frac{20}{4{,}75} = \\frac{80}{19} \\iff t = \\frac{5\\ln(80/19)}{\\ln(22/19)} \\approx 48{,}9\\text{ ans}$, soit vers $1990 + 49 = 2039$ (ou $2038$ en prenant $48$).',
     formula: {
       name: 'Temps d’atteinte d’un seuil N',
       formula: 'f(t) = N_0\\,e^{at} = N \\iff t = \\frac{1}{a}\\ln\\left(\\frac{N}{N_0}\\right)',
@@ -723,7 +723,7 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 2,
     stepKind: 'exemple',
-    stepBadge: 'Loi de refroidissement (Ex. 3 p.5–6)',
+    stepBadge: 'Loi de refroidissement',
     stepTheme: 'slate',
     stepTitle: 'Refroidissement d’un corps par changement de fonction $x(t) = \\theta(t) - 30$',
     paragraphText:
@@ -735,7 +735,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l12_eq_p05_q02',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 3 ($\\theta(t) = c e^{-k^2 t} + 30$, $\\theta(0) = 70$, $\\theta(5) = 60$), quelle est la limite de $\\theta(t)$ lorsque $t \\to +\\infty$ ?',
+      prompt: 'Pour une fonction de température vérifiant $\\theta(t) = c e^{-k^2 t} + 30$ avec $\\theta(0) = 70$ et $\\theta(5) = 60$, quelle est la limite de $\\theta(t)$ lorsque $t \\to +\\infty$ ?',
       options: ['$70\\text{ °C}$', '$40\\text{ °C}$', '$30\\text{ °C}$', '$0\\text{ °C}$'],
       correctAnswerIndex: 2,
       explanation: 'Comme $-k^2 < 0$, $\\lim_{t \\to +\\infty} e^{-k^2 t} = 0$, donc $\\lim_{t \\to +\\infty} \\theta(t) = 30\\text{ °C}$ (le corps tend vers la température ambiante !).',
@@ -748,7 +748,7 @@ const p05Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Passer de $\\theta’ + a\\theta = b$ à $x’ + ax = 0$ par translation',
     paragraphText:
-      'Dans l’Ex. 3 ci-dessus, poser $x(t) = \\theta(t) - 30$ (donc $\\theta’(t) = x’(t)$) revient exactement à résoudre $\\theta’(t) + k^2 \\theta(t) = 30k^2$, dont la constante limite est $\\frac{30k^2}{k^2} = 30$. En général, pour résoudre $\\theta’ + a\\theta = b$ ($a \\ne 0$), on peut soit appliquer la formule $\\theta(t) = c e^{-at} + \\frac{b}{a}$, soit poser $x = \\theta - \\frac{b}{a}$ pour retrouver l’équation homogène $x’ + ax = 0$.',
+      'En pratique, poser $x(t) = \\theta(t) - 30$ (donc $\\theta’(t) = x’(t)$) revient exactement à résoudre $\\theta’(t) + k^2 \\theta(t) = 30k^2$, dont la constante limite est $\\frac{30k^2}{k^2} = 30$. En général, pour résoudre $\\theta’ + a\\theta = b$ ($a \\ne 0$), on peut soit appliquer la formule $\\theta(t) = c e^{-at} + \\frac{b}{a}$, soit poser $x = \\theta - \\frac{b}{a}$ pour retrouver l’équation homogène $x’ + ax = 0$.',
     exercise: {
       id: 'tc_m_num_l12_eq_p05_q03',
       type: 'mcq',
@@ -770,7 +770,7 @@ const p05Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Les 4 étapes de l’exercice type Bac avec second membre $g(x)$',
     paragraphText:
-      'Dans presque tous les sujets de Bac C sur $(E) : y’ + ay = \\varphi(x)$, les questions suivent le même plan (Ex. 4 et Approfondissement p.6–7) : (1) Trouver $m$ ou vérifier qu’une fonction particulière $g$ est solution de $(E)$ ; (2) Résoudre l’homogène $(E’) : y’ + ay = 0$ ; (3) Montrer que $f$ est solution de $(E) \\iff f - g$ est solution de $(E’)$ ; (4) En déduire $f(x) = g(x) + k e^{-ax}$ et déterminer $k$ avec une condition initiale.',
+      'Dans presque tous les sujets de Bac C sur $(E) : y’ + ay = \\varphi(x)$, les questions suivent le même plan : (1) Trouver $m$ ou vérifier qu’une fonction particulière $g$ est solution de $(E)$ ; (2) Résoudre l’homogène $(E’) : y’ + ay = 0$ ; (3) Montrer que $f$ est solution de $(E) \\iff f - g$ est solution de $(E’)$ ; (4) En déduire $f(x) = g(x) + k e^{-ax}$ et déterminer $k$ avec une condition initiale.',
     exercise: {
       id: 'tc_m_num_l12_eq_p05_q04',
       type: 'mcq',

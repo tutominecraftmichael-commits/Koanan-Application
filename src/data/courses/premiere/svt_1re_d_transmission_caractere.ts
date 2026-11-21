@@ -133,7 +133,7 @@ export const SVT_1RE_D_L04_TRANSMISSION_CARACTERE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_d_svt_l04_transmission_caractere_p01_q4",
             "type": "mcq",
-            "prompt": "Pelage gris (dominant) et pelage blanc (récessif) : quels symboles choisit-on selon la convention du cours ?",
+            "prompt": "Pelage gris (dominant) et pelage blanc (récessif) : quels symboles choisit-on par convention usuelle ?",
             "options": [
               "B pour l’allèle gris et b pour l’allèle blanc",
               "G pour gris et g pour blanc",
@@ -254,7 +254,7 @@ export const SVT_1RE_D_L04_TRANSMISSION_CARACTERE: CurriculumChapter = {
         {
           "id": "premiere_d_svt_l04_transmission_caractere_p01_q4",
           "type": "mcq",
-          "prompt": "Pelage gris (dominant) et pelage blanc (récessif) : quels symboles choisit-on selon la convention du cours ?",
+          "prompt": "Pelage gris (dominant) et pelage blanc (récessif) : quels symboles choisit-on par convention usuelle ?",
           "options": [
             "B pour l’allèle gris et b pour l’allèle blanc",
             "G pour gris et g pour blanc",

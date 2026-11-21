@@ -7,10 +7,10 @@ export const SVT_TLE_D_L05_SYSTEME_DEFENSE_ORGANISME: CurriculumChapter = {
   alsoForGrades: ["terminale_c"],
   order: 6,
   title: "Le système de défense de l'organisme (Immunologie : Soi et non-soi, RIMC, RIMH, coopération cellulaire et vaccination)",
-  summary: "Étude exhaustive des mécanismes de l'immunité selon le programme officiel de Côte d'Ivoire (Leçon 6 SVT Tle D) : défenses innées non spécifiques (barrières anatomiques, réaction inflammatoire aiguë, phagocytose et système du complément), bases moléculaires du soi et du non-soi (système ABO, CMH/HLA de classe I et II, immunologie des greffes et rejets), réponse spécifique humorale (RIMH, LB, plasmocytes, immunoglobulines et complexes immuns), réponse spécifique cellulaire (RIMC, LT8, perforine et cytolyse), coopération cellulaire indispensable orchestrée par les LT4, dysfonctionnements du système immunitaire (infection à VIH/SIDA) et applications médicales (vaccination et sérothérapie).",
+  summary: "Étude exhaustive des mécanismes de l'immunité : défenses innées non spécifiques (barrières anatomiques, réaction inflammatoire aiguë, phagocytose et système du complément), bases moléculaires du soi et du non-soi (système ABO, CMH/HLA de classe I et II, immunologie des greffes et rejets), réponse spécifique humorale (RIMH, LB, plasmocytes, immunoglobulines et complexes immuns), réponse spécifique cellulaire (RIMC, LT8, perforine et cytolyse), coopération cellulaire indispensable orchestrée par les LT4, dysfonctionnements du système immunitaire (infection à VIH/SIDA) et applications médicales (vaccination et sérothérapie).",
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_defense_innee_barrieres_inflammation_phagocytose",

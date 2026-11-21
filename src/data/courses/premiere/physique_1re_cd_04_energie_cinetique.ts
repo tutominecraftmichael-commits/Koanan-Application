@@ -32,7 +32,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       summary:
         'Définir l’énergie cinétique, calculer Ec = ½mv² en unités SI et distinguer énergie cinétique et quantité de mouvement.',
       conceptExplanation:
-        "Lors d’une collision routière (Situation d’apprentissage p. 1), l’importance des dégâts causés par un véhicule lançé à grande vitesse s’explique par son **énergie cinétique**.\n\n- **Définition** : l’**énergie cinétique** $E_c$ d’un solide est l’énergie qu’il possède du fait de sa vitesse dans un référentiel donné (elle est donc positive ou nulle et dépend du référentiel choisi).\n- **Solide en translation (ou point matériel)** : pour un solide de masse $m$ animé d’une vitesse $v$ :\n  $$E_c = \\frac{1}{2} m v^2$$\n  - **Unités SI** : $m$ en kilogramme ($\\mathrm{kg}$), $v$ en $\\mathrm{m}\\cdot\\mathrm{s}^{-1}$, $E_c$ en **joule** ($\\mathrm{J}$).\n- **Ensemble de points matériels** : l’énergie cinétique totale d’un système formé de points $M_i(m_i, v_i)$ est la somme de leurs énergies cinétiques :\n  $$E_c = \\sum_i E_{c,i} = \\sum_i \\frac{1}{2} m_i v_i^2$$\n- **Lien avec la quantité de mouvement** (Documentation p. 9) : pour une particule de quantité de mouvement $p = mv$, on a $E_c = \\frac{p^2}{2m}$.",
+        "Lors d’une collision routière, l’importance des dégâts causés par un véhicule lançé à grande vitesse s’explique par son **énergie cinétique**.\n\n- **Définition** : l’**énergie cinétique** $E_c$ d’un solide est l’énergie qu’il possède du fait de sa vitesse dans un référentiel donné (elle est donc positive ou nulle et dépend du référentiel choisi).\n- **Solide en translation (ou point matériel)** : pour un solide de masse $m$ animé d’une vitesse $v$ :\n $$E_c = \\frac{1}{2} m v^2$$\n - **Unités SI** : $m$ en kilogramme ($\\mathrm{kg}$), $v$ en $\\mathrm{m}\\cdot\\mathrm{s}^{-1}$, $E_c$ en **joule** ($\\mathrm{J}$).\n- **Ensemble de points matériels** : l’énergie cinétique totale d’un système formé de points $M_i(m_i, v_i)$ est la somme de leurs énergies cinétiques :\n $$E_c = \\sum_i E_{c,i} = \\sum_i \\frac{1}{2} m_i v_i^2$$\n- **Lien avec la quantité de mouvement** : pour une particule de quantité de mouvement $p = mv$, on a $E_c = \\frac{p^2}{2m}$.",
       keyRule:
         'Ec = ½·m·v² (en joules, avec m en kg et v en m/s). Toujours positif ou nul ; si la vitesse double, Ec est multipliée par 4.',
       formulas: [
@@ -48,7 +48,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Bille en translation rectiligne (Activité 1 p. 1)',
+        title: 'Bille en translation rectiligne',
         statement:
           'Une bille de masse $m = 250\\,\\mathrm{g}$ se déplace sur une route rectiligne à la vitesse $V = 2\\,\\mathrm{m}\\cdot\\mathrm{s}^{-1}$. Calculer son énergie cinétique $E_c$.',
         methodSteps: [
@@ -78,7 +78,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
               'Nulle dans le référentiel terrestre',
             ],
             correctAnswerIndex: 0,
-            explanation: 'L’énergie cinétique Ec = ½mv² dépend de la vitesse, donc du référentiel (Documentation p. 9).',
+            explanation: 'L’énergie cinétique Ec = ½mv² dépend de la vitesse, donc du référentiel.',
           },
         },
         {
@@ -92,7 +92,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p01_q2',
             type: 'mcq',
-            prompt: 'Une bille de masse $m = 250\\,\\mathrm{g}$ se déplace en translation à $V = 2\\,\\mathrm{m}\\cdot\\mathrm{s}^{-1}$ (Activité 1 p. 1). Quelle est son énergie cinétique ?',
+            prompt: 'Une bille de masse $m = 250\\,\\mathrm{g}$ se déplace en translation à $V = 2\\,\\mathrm{m}\\cdot\\mathrm{s}^{-1}$. Quelle est son énergie cinétique ?',
             options: ['0,5 J', '500 J', '1,0 J', '0,25 J'],
             correctAnswerIndex: 0,
             explanation: 'm = 250 g = 0,25 kg ⇒ Ec = ½ × 0,25 × 2² = 0,5 J.',
@@ -184,7 +184,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       summary:
         'Définir le moment d’inertie J_Δ, connaître les moments d’inertie des solides homogènes usuels et calculer Ec = ½ J_Δ ω².',
       conceptExplanation:
-        "Lorsqu’un solide $S$ tourne autour d’un axe fixe $(\\Delta)$ avec une vitesse angulaire $\\omega$ (section 1.3 du cours, spécifique à la **1ère C**), chaque point $M_i$ à la distance $r_i$ de l’axe décrit un cercle à la vitesse $v_i = r_i\\omega$.\n\n- **Moment d’inertie $J_\\Delta$** : en sommant $E_c = \\sum \\frac{1}{2} m_i(r_i\\omega)^2 = \\frac{1}{2}(\\sum m_i r_i^2)\\omega^2$, on définit le **moment d’inertie** du solide par rapport à $(\\Delta)$ :\n  $$J_\\Delta = \\sum_i m_i r_i^2$$\n  - **Unité SI** : $\\mathrm{kg}\\cdot\\mathrm{m}^2$ *(corrige la coquille « kg. M » du PDF p. 2)*.\n  - Il caractérise la répartition des masses autour de l’axe $(\\Delta)$.\n- **Énergie cinétique de rotation** :\n  $$E_c = \\frac{1}{2} J_\\Delta \\omega^2$$\n  où $\\omega$ s’exprime en $\\mathrm{rad}\\cdot\\mathrm{s}^{-1}$. Si la vitesse est donnée en tours par minute ($N$ en $\\mathrm{tr}\\cdot\\mathrm{min}^{-1}$), on convertit par $\\omega = \\frac{2\\pi N}{60}$.\n- **Moments d’inertie usuels (axe passant par G)** (p. 2) :\n  - Anneau (ou cerceau) de rayon $R$ : $J_\\Delta = M R^2$ ;\n  - Disque ou cylindre plein : $J_\\Delta = \\frac{1}{2} M R^2$ ;\n  - Boule pleine (sphère) : $J_\\Delta = \\frac{2}{5} M R^2$ ;\n  - Barre homogène de longueur $\\ell$ (axe $\\perp$ passant par $G$) : $J_\\Delta = \\frac{1}{12} M \\ell^2$.",
+        "Lorsqu’un solide $S$ tourne autour d’un axe fixe $(\\Delta)$ avec une vitesse angulaire $\\omega$ (programme de **1ère C**), chaque point $M_i$ à la distance $r_i$ de l’axe décrit un cercle à la vitesse $v_i = r_i\\omega$.\n\n- **Moment d’inertie $J_\\Delta$** : en sommant $E_c = \\sum \\frac{1}{2} m_i(r_i\\omega)^2 = \\frac{1}{2}(\\sum m_i r_i^2)\\omega^2$, on définit le **moment d’inertie** du solide par rapport à $(\\Delta)$ :\n $$J_\\Delta = \\sum_i m_i r_i^2$$\n - **Unité SI** : $\\mathrm{kg}\\cdot\\mathrm{m}^2$ **.\n - Il caractérise la répartition des masses autour de l’axe $(\\Delta)$.\n- **Énergie cinétique de rotation** :\n $$E_c = \\frac{1}{2} J_\\Delta \\omega^2$$\n où $\\omega$ s’exprime en $\\mathrm{rad}\\cdot\\mathrm{s}^{-1}$. Si la vitesse est donnée en tours par minute ($N$ en $\\mathrm{tr}\\cdot\\mathrm{min}^{-1}$), on convertit par $\\omega = \\frac{2\\pi N}{60}$.\n- **Moments d’inertie usuels (axe passant par G)** :\n - Anneau (ou cerceau) de rayon $R$ : $J_\\Delta = M R^2$ ;\n - Disque ou cylindre plein : $J_\\Delta = \\frac{1}{2} M R^2$ ;\n - Boule pleine (sphère) : $J_\\Delta = \\frac{2}{5} M R^2$ ;\n - Barre homogène de longueur $\\ell$ (axe $\\perp$ passant par $G$) : $J_\\Delta = \\frac{1}{12} M \\ell^2$.",
       keyRule:
         'En rotation autour d’un axe fixe Δ : Ec = ½·J_Δ·ω², avec J_Δ en kg·m² et ω = 2πN/60 en rad/s. Disque/cylindre : ½MR², boule : 2/5 MR², anneau : MR², barre : 1/12 Mℓ².',
       formulas: [
@@ -201,7 +201,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Moments d’inertie des solides homogènes usuels (p. 2)',
+        title: 'Moments d’inertie des solides homogènes usuels',
         caption: 'Plus la masse est éloignée de l’axe Δ, plus J_Δ est grand (anneau MR² > disque ½MR² > boule ⅖MR²).',
         svgContent: `<svg viewBox="0 0 380 140" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <!-- 1. Anneau -->
@@ -235,7 +235,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
 </svg>`,
       },
       workedExample: {
-        title: 'Solide en rotation autour d’un axe fixe (Activité p. 2–3)',
+        title: 'Solide en rotation autour d’un axe fixe',
         statement:
           'Un solide de moment d’inertie $J_\\Delta = 6\\cdot 10^{-1}\\,\\mathrm{kg}\\cdot\\mathrm{m}^2$ tourne à la vitesse angulaire $\\omega = 0{,}5\\,\\mathrm{rad}\\cdot\\mathrm{s}^{-1}$. Calculer son énergie cinétique de rotation.',
         methodSteps: [
@@ -277,7 +277,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
             prompt: 'Un solide de moment d’inertie $J_\\Delta = 6\\cdot 10^{-1}\\,\\mathrm{kg}\\cdot\\mathrm{m}^2$ tourne à $\\omega = 0{,}5\\,\\mathrm{rad}\\cdot\\mathrm{s}^{-1}$. Quelle est son énergie cinétique ?',
             options: ['7,5·10⁻² J', '1,5·10⁻¹ J', '3,0·10⁻¹ J', '7,5·10⁻¹ J'],
             correctAnswerIndex: 0,
-            explanation: 'Ec = ½ × 0,6 × (0,5)² = 0,3 × 0,25 = 0,075 J = 7,5·10⁻² J (Activité p. 2–3).',
+            explanation: 'Ec = ½ × 0,6 × (0,5)² = 0,3 × 0,25 = 0,075 J = 7,5·10⁻² J.',
           },
         },
         {
@@ -331,7 +331,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Exercice 3 p. 6',
           stepTitle: 'Calculer le moment d’inertie d’un cylindre à partir de ρ',
           paragraphText:
-            'Dans l’Exercice 3 (p. 6), un volant cylindrique de rayon $R = 50\\,\\mathrm{cm} = 0{,}5\\,\\mathrm{m}$, hauteur $h = 1\\,\\mathrm{m}$ et masse volumique $\\rho = 7\\,600\\,\\mathrm{kg}\\cdot\\mathrm{m}^{-3}$ a une masse $M = \\rho\\pi R^2 h$, donc $J_\\Delta = \\frac{1}{2}MR^2 = \\frac{1}{2}\\rho\\pi h R^4$.',
+            'Dans l’Exercice 3, un volant cylindrique de rayon $R = 50\\,\\mathrm{cm} = 0{,}5\\,\\mathrm{m}$, hauteur $h = 1\\,\\mathrm{m}$ et masse volumique $\\rho = 7\\,600\\,\\mathrm{kg}\\cdot\\mathrm{m}^{-3}$ a une masse $M = \\rho\\pi R^2 h$, donc $J_\\Delta = \\frac{1}{2}MR^2 = \\frac{1}{2}\\rho\\pi h R^4$.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p02_q5',
             type: 'mcq',
@@ -365,7 +365,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
               'P = J_Δ · Δt',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Attention : ω₁² − ω₂² ≠ (ω₁ − ω₂)² ! On calcule ΔEc = ½ J_Δ(ω₂² − ω₁²) avec ω = 2πN/60, puis P = |ΔEc| / Δt (Exercice 3 p. 6).',
+            explanation: 'Attention : ω₁² − ω₂² ≠ (ω₁ − ω₂)² ! On calcule ΔEc = ½ J_Δ(ω₂² − ω₁²) avec ω = 2πN/60, puis P = |ΔEc| / Δt.',
           },
         },
       ],
@@ -381,7 +381,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       summary:
         'Énoncer le théorème de l’énergie cinétique (ΔEc = ∑W_ext) et appliquer la méthode en 3 étapes sur plan incliné et horizontal.',
       conceptExplanation:
-        "Le **théorème de l’énergie cinétique (TEC)** relie directement le mouvement (les vitesses) aux forces qui s’exercent sur le système.\n\n- **Énoncé officiel** (p. 3 & p. 8) : dans un **référentiel galiléen**, la variation de l’énergie cinétique d’un solide (en translation ou en rotation autour d’un axe fixe) entre deux instants $t_1$ et $t_2$ est égale à la **somme algébrique des travaux des forces extérieures** appliquées au solide entre ces deux instants :\n  $$\\Delta E_c = E_{c,2} - E_{c,1} = \\sum W_{1\\to 2}(\\vec{F}_{\\text{ext}})$$\n- **Méthode rigoureuse en 3 étapes (p. 3)** :\n  1. **Préciser le système** étudié (et le référentiel galiléen) ;\n  2. **Faire l’inventaire des forces extérieures** appliquées au système ;\n  3. **Préciser les deux positions (instants)** initial et final entre lesquels on applique le théorème.\n- **Lien avec le principe de l’inertie** : si le mouvement s’effectue à **vitesse constante**, $\\Delta E_c = 0 \\implies \\sum W(\\vec{F}_{\\text{ext}}) = 0$.",
+        "Le **théorème de l’énergie cinétique (TEC)** relie directement le mouvement (les vitesses) aux forces qui s’exercent sur le système.\n\n- **Énoncé officiel** : dans un **référentiel galiléen**, la variation de l’énergie cinétique d’un solide (en translation ou en rotation autour d’un axe fixe) entre deux instants $t_1$ et $t_2$ est égale à la **somme algébrique des travaux des forces extérieures** appliquées au solide entre ces deux instants :\n $$\\Delta E_c = E_{c,2} - E_{c,1} = \\sum W_{1\\to 2}(\\vec{F}_{\\text{ext}})$$\n- **Méthode rigoureuse en 3 étapes** :\n 1. **Préciser le système** étudié (et le référentiel galiléen) ;\n 2. **Faire l’inventaire des forces extérieures** appliquées au système ;\n 3. **Préciser les deux positions (instants)** initial et final entre lesquels on applique le théorème.\n- **Lien avec le principe de l’inertie** : si le mouvement s’effectue à **vitesse constante**, $\\Delta E_c = 0 \\implies \\sum W(\\vec{F}_{\\text{ext}}) = 0$.",
       keyRule:
         'TEC (référentiel galiléen) : ΔEc = Ec(B) − Ec(A) = ∑ W_A→B(F_ext). Méthode : 1) système, 2) bilan des forces, 3) états initial et final.',
       formulas: [
@@ -397,7 +397,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Descente sans frottement puis arrêt par frottement (Activité p. 3)',
+        title: 'Descente sans frottement puis arrêt par frottement',
         statement:
           'Un solide de masse $m = 85\\,\\mathrm{kg}$ part sans vitesse initiale du sommet $A$ d’un plan incliné sans frottement ($AB = 20\\,\\mathrm{m}$, $\\alpha = 30^\\circ$), puis s’arrête au bout d’un trajet horizontal $BC = 30\\,\\mathrm{m}$ soumis à un frottement constant $f$ ($g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$). Calculer $V_B$ puis $f$.',
         methodSteps: [
@@ -428,7 +428,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
               'À la somme vectorielle des forces extérieures appliquées',
             ],
             correctAnswerIndex: 0,
-            explanation: 'C’est l’énoncé exact du théorème de l’énergie cinétique (Exercice 2 p. 6).',
+            explanation: 'C’est l’énoncé exact du théorème de l’énergie cinétique.',
           },
         },
         {
@@ -438,7 +438,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Rédaction physique',
           stepTitle: 'Les trois préalables avant d’écrire ΔEc = ∑W',
           paragraphText:
-            'Avant d’appliquer le TEC dans un devoir (p. 3), indique toujours : 1) le **système** (et le référentiel galiléen) ; 2) l’**inventaire des forces** extérieures ; 3) les **deux instants (ou positions)** initial et final.',
+            'Avant d’appliquer le TEC dans un devoir, indique toujours : 1) le **système** (et le référentiel galiléen) ; 2) l’**inventaire des forces** extérieures ; 3) les **deux instants (ou positions)** initial et final.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p03_q2',
             type: 'mcq',
@@ -467,7 +467,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
             prompt: 'Un solide ($m = 85\\,\\mathrm{kg}$) glisse sans frottement depuis le repos sur une pente $AB = 20\\,\\mathrm{m}$ inclinée de $30^\\circ$ ($g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$). Quelle est sa vitesse en $B$ ?',
             options: ['14,14 m/s (√200)', '20,0 m/s', '10,0 m/s', '17,32 m/s'],
             correctAnswerIndex: 0,
-            explanation: 'V_B = √(2 · 10 · 20 · sin 30°) = √(400 × 0,5) = √200 ≈ 14,14 m/s (Activité p. 3).',
+            explanation: 'V_B = √(2 · 10 · 20 · sin 30°) = √(400 × 0,5) = √200 ≈ 14,14 m/s.',
           },
         },
         {
@@ -484,7 +484,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
             prompt: 'Le solide précédent ($m = 85\\,\\mathrm{kg}$, $V_B^2 = 200\\,\\mathrm{m}^2\\cdot\\mathrm{s}^{-2}$) s’arrête en $C$ après $BC = 30\\,\\mathrm{m}$ de glissement horizontal. Que vaut l’intensité $f$ de la force de frottement ?',
             options: ['283,3 N', '566,7 N', '141,7 N', '850,0 N'],
             correctAnswerIndex: 0,
-            explanation: 'f = (m V_B²) / (2 BC) = (85 × 200) / (2 × 30) = 17 000 / 60 ≈ 283,3 N (Activité p. 3).',
+            explanation: 'F = (m V_B²) / (2 BC) = (85 × 200) / (2 × 30) = 17 000 / 60 ≈ 283,3 N.',
           },
         },
         {
@@ -511,7 +511,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Vigilance P = mg',
           stepTitle: 'Ne jamais confondre la masse m (en kg) et le poids P (en N)',
           paragraphText:
-            'Vérifie toujours si l’énoncé te donne la **masse $m$** ou le **poids $P$** : si $P = 1\\,300\\,\\mathrm{N}$ et $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$ (Situation p. 3–4), alors $m = \\frac{P}{g} = 130\\,\\mathrm{kg}$ ! Remplacer $m$ par $1\\,300$ dans $\\frac{1}{2}mv^2$ rendrait l’énergie cinétique $10$ fois trop grande.',
+            'Vérifie toujours si l’énoncé te donne la **masse $m$** ou le **poids $P$** : si $P = 1\\,300\\,\\mathrm{N}$ et $g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$, alors $m = \\frac{P}{g} = 130\\,\\mathrm{kg}$ ! Remplacer $m$ par $1\\,300$ dans $\\frac{1}{2}mv^2$ rendrait l’énergie cinétique $10$ fois trop grande.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p03_q6',
             type: 'mcq',
@@ -534,7 +534,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       summary:
         'Appliquer le TEC sur un arc de cercle (cuvette demi-sphérique), déduire la présence de frottements et calculer l’intensité f sur l’arc.',
       conceptExplanation:
-        "De nombreux problèmes de 1ère (Exercice 1 p. 5–6, Exercice 5 p. 7–9) étudient un mobile glissant dans une **cuvette circulaire** de rayon $r$.\n\n- **Sans frottement** : les seules forces sont le poids $\\vec{P}$ et la réaction normale $\\vec{R}$ (toujours orthogonale au cercle, donc $W(\\vec{R}) = 0$). Du bord $A$ (altitude $h = r$ au-dessus du fond $B$) jusqu’au fond $B$, en partant sans vitesse initiale ($V_A = 0$) :\n  $$\\frac{1}{2} m V_B^2 = m g r \\implies V_B = \\sqrt{2 g r}$$\n- **Détection et calcul des frottements** : si la vitesse réelle mesurée au fond vérifie $V'_B < \\sqrt{2gr}$, c’est qu’il existe des forces de frottement $\\vec{f}$ résistantes. Le TEC s’écrit alors :\n  $$\\frac{1}{2} m {V'_B}^2 - 0 = m g r + W_{AB}(\\vec{f}) \\implies W_{AB}(\\vec{f}) = \\frac{1}{2} m {V'_B}^2 - m g r < 0$$\n- **Intensité $f$ supposée constante sur l’arc** : le travail des frottements sur un quart de cercle de longueur $\\widehat{AB} = \\frac{2\\pi r}{4} = \\frac{\\pi r}{2}$ vaut :\n  $$W_{AB}(\\vec{f}) = -f \\cdot \\frac{\\pi r}{2} \\implies f = -\\frac{2\\,W_{AB}(\\vec{f})}{\\pi r}$$",
+        "De nombreux problèmes de 1ère étudient un mobile glissant dans une **cuvette circulaire** de rayon $r$.\n\n- **Sans frottement** : les seules forces sont le poids $\\vec{P}$ et la réaction normale $\\vec{R}$ (toujours orthogonale au cercle, donc $W(\\vec{R}) = 0$). Du bord $A$ (altitude $h = r$ au-dessus du fond $B$) jusqu’au fond $B$, en partant sans vitesse initiale ($V_A = 0$) :\n $$\\frac{1}{2} m V_B^2 = m g r \\implies V_B = \\sqrt{2 g r}$$\n- **Détection et calcul des frottements** : si la vitesse réelle mesurée au fond vérifie $V'_B < \\sqrt{2gr}$, c’est qu’il existe des forces de frottement $\\vec{f}$ résistantes. Le TEC s’écrit alors :\n $$\\frac{1}{2} m {V'_B}^2 - 0 = m g r + W_{AB}(\\vec{f}) \\implies W_{AB}(\\vec{f}) = \\frac{1}{2} m {V'_B}^2 - m g r < 0$$\n- **Intensité $f$ supposée constante sur l’arc** : le travail des frottements sur un quart de cercle de longueur $\\widehat{AB} = \\frac{2\\pi r}{4} = \\frac{\\pi r}{2}$ vaut :\n $$W_{AB}(\\vec{f}) = -f \\cdot \\frac{\\pi r}{2} \\implies f = -\\frac{2\\,W_{AB}(\\vec{f})}{\\pi r}$$",
       keyRule:
         'Dans une cuvette circulaire de rayon r (descente du bord A au fond B sans vitesse) : théoriquement V_B = √(2gr) ; s’il y a frottement (V′_B < V_B), W(f) = ½mV′_B² − mgr et f = −W(f) / L_arc.',
       formulas: [
@@ -550,7 +550,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Bille dans une cuvette demi-sphérique (Exercice 1 p. 5–6)',
+        title: 'Bille dans une cuvette demi-sphérique',
         statement:
           'Une bille de masse $m = 100\\,\\mathrm{g}$ glisse sans vitesse initiale du bord $A$ d’une cuvette demi-sphérique de rayon $r = 0{,}5\\,\\mathrm{m}$ ($g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$). 1) Calculer $V_B$ sans frottement. 2) En réalité $V\'_B = 2{,}5\\,\\mathrm{m}\\cdot\\mathrm{s}^{-1}$ : en déduire $W_{AB}(\\vec{f})$ puis $f$.',
         methodSteps: [
@@ -576,7 +576,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
             prompt: 'Une bille ($m = 100\\,\\mathrm{g}$) est lâchée sans vitesse du bord d’une cuvette hémisphérique de rayon $r = 0{,}5\\,\\mathrm{m}$ sans frottement ($g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$). Quelle est sa vitesse au fond $B$ ?',
             options: ['3,16 m/s', '2,50 m/s', '10,0 m/s', '2,24 m/s'],
             correctAnswerIndex: 0,
-            explanation: 'V_B = √(2gr) = √(2 × 10 × 0,5) = √10 ≈ 3,16 m/s (Exercice 1 p. 5).',
+            explanation: 'V_B = √(2gr) = √(2 × 10 × 0,5) = √10 ≈ 3,16 m/s.',
           },
         },
         {
@@ -632,7 +632,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
             prompt: 'Sachant que $W_{AB}(\\vec{f}) \\approx -0{,}19\\,\\mathrm{J}$ le long d’un quart de cercle de rayon $r = 0{,}5\\,\\mathrm{m}$, que vaut l’intensité $f$ de la force de frottement ?',
             options: ['≈ 0,24 N', '≈ 0,38 N', '≈ 0,12 N', '≈ 0,76 N'],
             correctAnswerIndex: 0,
-            explanation: 'Longueur = πr/2 = 0,25π ≈ 0,785 m ⇒ f = 0,19 / 0,785 ≈ 0,24 N (Exercice 1 p. 6).',
+            explanation: 'Longueur = πr/2 = 0,25π ≈ 0,785 m ⇒ f = 0,19 / 0,785 ≈ 0,24 N.',
           },
         },
         {
@@ -642,7 +642,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Dénivelé r(1 − cos α)',
           stepTitle: 'Dénivelé quand la piste circulaire ne couvre qu’un angle α < 90°',
           paragraphText:
-            'Si la piste circulaire ne va que d’un angle $\\alpha$ à la verticale passant par le fond $B$ (comme dans l’Exercice 5 p. 7–8 avec $\\alpha = 60^\\circ$), la hauteur de descente entre $A$ et $B$ vaut $h = r(1 - \\cos\\alpha)$ et la longueur de l’arc vaut $\\widehat{AB} = r\\cdot\\alpha_{\\text{rad}}$.',
+            'Si la piste circulaire ne va que d’un angle $\\alpha$ à la verticale passant par le fond $B$, la hauteur de descente entre $A$ et $B$ vaut $h = r(1 - \\cos\\alpha)$ et la longueur de l’arc vaut $\\widehat{AB} = r\\cdot\\alpha_{\\text{rad}}$.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p04_q5',
             type: 'mcq',
@@ -687,7 +687,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       summary:
         'Intégrer le travail de la tension du ressort W(T) = ±½k(Δℓ)² dans le TEC pour trouver la vitesse d’éjection, la hauteur maximale ou la compression du ressort.',
       conceptExplanation:
-        "Le théorème de l’énergie cinétique permet d’étudier très élégamment les lanceurs et amortisseurs à ressort (Exercices 4 et 5 p. 7–9).\n\n- **Travail de la tension du ressort** : lorsque le ressort passe d’une compression (ou allongement) $x_1$ à $x_2$, $W_{1\\to 2}(\\vec{T}) = -\\frac{1}{2}k(x_2^2 - x_1^2)$ :\n  - Si le ressort **propulse** un projectile depuis sa compression initiale $x_0 = |\\ell - \\ell_0|$ jusqu’à sa longueur à vide ($x_2 = 0$), le ressort fournit un travail **moteur** $W(\\vec{T}) = +\\frac{1}{2} k (\\ell - \\ell_0)^2$.\n  - Si un mobile **comprime** le ressort depuis le repos ($x_1 = 0$) jusqu’à l’arrêt ($x_2 = x$), le ressort effectue un travail **résistant** $W(\\vec{T}) = -\\frac{1}{2} k x^2$.\n- **Canon à ressort (Exercice 4 p. 7)** :\n  - Lors de la détente ($0 \\to v_1$, action du poids négligée dans le canon) : $\\frac{1}{2} m v_1^2 = \\frac{1}{2} k (\\ell - \\ell_0)^2 \\implies v_1 = \\sqrt{\\frac{k(\\ell - \\ell_0)^2}{m}}$.\n  - En l’air ensuite (phase verticale montante de $v_1$ jusqu’au sommet $v_f = 0$) : $0 - \\frac{1}{2} m v_1^2 = -m g h_{\\max} \\implies h_{\\max} = \\frac{v_1^2}{2g}$.",
+        "Le théorème de l’énergie cinétique permet d’étudier très élégamment les lanceurs et amortisseurs à ressort.\n\n- **Travail de la tension du ressort** : lorsque le ressort passe d’une compression (ou allongement) $x_1$ à $x_2$, $W_{1\\to 2}(\\vec{T}) = -\\frac{1}{2}k(x_2^2 - x_1^2)$ :\n - Si le ressort **propulse** un projectile depuis sa compression initiale $x_0 = |\\ell - \\ell_0|$ jusqu’à sa longueur à vide ($x_2 = 0$), le ressort fournit un travail **moteur** $W(\\vec{T}) = +\\frac{1}{2} k (\\ell - \\ell_0)^2$.\n - Si un mobile **comprime** le ressort depuis le repos ($x_1 = 0$) jusqu’à l’arrêt ($x_2 = x$), le ressort effectue un travail **résistant** $W(\\vec{T}) = -\\frac{1}{2} k x^2$.\n- **Canon à ressort** :\n - Lors de la détente ($0 \\to v_1$, action du poids négligée dans le canon) : $\\frac{1}{2} m v_1^2 = \\frac{1}{2} k (\\ell - \\ell_0)^2 \\implies v_1 = \\sqrt{\\frac{k(\\ell - \\ell_0)^2}{m}}$.\n - En l’air ensuite (phase verticale montante de $v_1$ jusqu’au sommet $v_f = 0$) : $0 - \\frac{1}{2} m v_1^2 = -m g h_{\\max} \\implies h_{\\max} = \\frac{v_1^2}{2g}$.",
       keyRule:
         'Détente d’un ressort comprimé de x : W(T) = +½kx² (moteur) ⇒ v₁ = x√(k/m). Compression jusqu’à l’arrêt : W(T) = −½kx² (résistant).',
       formulas: [
@@ -703,7 +703,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Canon à ressort vertical (Exercice 4 p. 6–7)',
+        title: 'Canon à ressort vertical',
         statement:
           'Une force $F = 10\\,\\mathrm{N}$ raccourcit un ressort de $x = 0{,}5\\,\\mathrm{cm}$. On comprime ce ressort ($\\ell_0 = 10\\,\\mathrm{cm}$) jusqu’à $\\ell = 5\\,\\mathrm{cm}$ pour lancer verticalement un projectile de masse $m = 30\\,\\mathrm{g}$ ($g = 10\\,\\mathrm{N}\\cdot\\mathrm{kg}^{-1}$, poids négligé dans le canon). Calculer $k$, $v_1$ et $h_{\\max}$.',
         methodSteps: [
@@ -725,7 +725,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p05_q1',
             type: 'mcq',
-            prompt: 'Une force d’intensité $F = 10\\,\\mathrm{N}$ provoque un raccourcissement de $x = 0{,}5\\,\\mathrm{cm}$ d’un ressort (Exercice 4 p. 7). Quelle est sa constante de raideur $k$ ?',
+            prompt: 'Une force d’intensité $F = 10\\,\\mathrm{N}$ provoque un raccourcissement de $x = 0{,}5\\,\\mathrm{cm}$ d’un ressort. Quelle est sa constante de raideur $k$ ?',
             options: ['2 000 N/m', '200 N/m', '20 N/m', '5 000 N/m'],
             correctAnswerIndex: 0,
             explanation: 'x = 0,5 cm = 0,005 m ⇒ k = F / x = 10 / 0,005 = 2 000 N/m.',
@@ -772,7 +772,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Exercice 5 (1ère C)',
           stepTitle: 'Calculer la compression maximale x d’un ressort heurté par une bille',
           paragraphText:
-            'Dans l’Exercice 5 (p. 7–9), une bille arrive en $A$ avec $E_{cA} = mgH$, descend un arc $AB$ (dénivelé $r(1-\\cos\\alpha)$) puis glisse sur $BC$ avec frottement $f$ (longueur $r\\alpha_{\\text{rad}} + BC$), et s’arrête ($v_D = 0$) en comprimant de $x$ un ressort sans frottement sur $CD$ : $0 - E_{cA} = mgr(1-\\cos\\alpha) - f(r\\alpha_{\\text{rad}}+BC) - \\frac{1}{2}kx^2$.',
+            'Dans l’Exercice 5, une bille arrive en $A$ avec $E_{cA} = mgH$, descend un arc $AB$ (dénivelé $r(1-\\cos\\alpha)$) puis glisse sur $BC$ avec frottement $f$ (longueur $r\\alpha_{\\text{rad}} + BC$), et s’arrête ($v_D = 0$) en comprimant de $x$ un ressort sans frottement sur $CD$ : $0 - E_{cA} = mgr(1-\\cos\\alpha) - f(r\\alpha_{\\text{rad}}+BC) - \\frac{1}{2}kx^2$.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p05_q4',
             type: 'mcq',
@@ -789,7 +789,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Rebond élastique',
           stepTitle: 'Que fait la bille juste après avoir comprimé le ressort au maximum ?',
           paragraphText:
-            'À l’instant d’arrêt en $D$ (compression maximale $x$), la vitesse est nulle mais la tension $\\vec{T}$ du ressort comprimé vaut $kx \\ne 0$ et pousse vers $C$ : la bille n’est donc **pas à l’équilibre**, elle **rebrousse chemin** immédiatement (Exercice 5 Q4 p. 9).',
+            'À l’instant d’arrêt en $D$ (compression maximale $x$), la vitesse est nulle mais la tension $\\vec{T}$ du ressort comprimé vaut $kx \\ne 0$ et pousse vers $C$ : la bille n’est donc **pas à l’équilibre**, elle **rebrousse chemin** immédiatement.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p05_q5',
             type: 'mcq',
@@ -801,7 +801,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
               'Son énergie cinétique devient négative',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Vitesse nulle ne signifie pas équilibre : la force de rappel du ressort comprimé renvoie la bille en sens inverse (p. 9).',
+            explanation: 'Vitesse nulle ne signifie pas équilibre : la force de rappel du ressort comprimé renvoie la bille en sens inverse.',
           },
         },
         {
@@ -839,7 +839,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
       summary:
         'Calculer une puissance mécanique moyenne à partir de ΔEc/Δt (volant en fonte) et situer le théorème dans son cadre newtonien (vis viva).',
       conceptExplanation:
-        "Le théorème de l’énergie cinétique s’applique aussi bien aux échanges de puissance en rotation qu’aux synthèses multi-tronçons.\n\n- **Puissance moyenne restituée par variation d’énergie cinétique** (Exercice 3 p. 6) : si un volant en rotation voit sa vitesse diminuer de $\\omega_1$ à $\\omega_2$ pendant $\\Delta t$, il restitue l’énergie $E_r = |\\Delta E_c| = \\frac{1}{2} J_\\Delta (\\omega_1^2 - \\omega_2^2) > 0$, ce qui correspond à une puissance moyenne restituée :\n  $$P = \\frac{E_r}{\\Delta t}$$\n- **Synthèse multi-étapes (Exercice 5 p. 7–9)** : lorsque les forces changent de nature d’un tronçon à l’autre (chute verticale $H \\to A$, puis arc circulaire $AB$ avec frottements, puis horizontale $BC$ avec frottements, puis ressort $CD$ sans frottement), on peut appliquer le TEC directement entre deux positions très éloignées ($A$ et $D$) en sommant les travaux sur chaque tronçon : $\\Delta E_c = W_{A\\to D}(\\vec{P}) + W_{A\\to D}(\\vec{R}_N) + W_{A\\to C}(\\vec{f}) + W_{C\\to D}(\\vec{T})$.\n- **Repères historiques et limites (Documentation p. 9)** : le mot *cinétique* vient du grec *kinesis* (mouvement) et a été popularisé par **William Thomson (Lord Kelvin)**. Auparavant, **Gottfried Leibniz** et **Johann Bernoulli** avaient introduit la *vis viva* (« force vivante » $mv^2$). Enfin, $E_c = \\frac{1}{2}mv^2$ est valable en **mécanique newtonienne** (pour des vitesses très petites devant celle de la lumière), mais doit être modifiée en mécanique **relativiste** et **quantique**.",
+        "Le théorème de l’énergie cinétique s’applique aussi bien aux échanges de puissance en rotation qu’aux synthèses multi-tronçons.\n\n- **Puissance moyenne restituée par variation d’énergie cinétique** : si un volant en rotation voit sa vitesse diminuer de $\\omega_1$ à $\\omega_2$ pendant $\\Delta t$, il restitue l’énergie $E_r = |\\Delta E_c| = \\frac{1}{2} J_\\Delta (\\omega_1^2 - \\omega_2^2) > 0$, ce qui correspond à une puissance moyenne restituée :\n $$P = \\frac{E_r}{\\Delta t}$$\n- **Synthèse multi-étapes** : lorsque les forces changent de nature d’un tronçon à l’autre (chute verticale $H \\to A$, puis arc circulaire $AB$ avec frottements, puis horizontale $BC$ avec frottements, puis ressort $CD$ sans frottement), on peut appliquer le TEC directement entre deux positions très éloignées ($A$ et $D$) en sommant les travaux sur chaque tronçon : $\\Delta E_c = W_{A\\to D}(\\vec{P}) + W_{A\\to D}(\\vec{R}_N) + W_{A\\to C}(\\vec{f}) + W_{C\\to D}(\\vec{T})$.\n- **Repères historiques et limites** : le mot *cinétique* vient du grec *kinesis* (mouvement) et a été popularisé par **William Thomson (Lord Kelvin)**. Auparavant, **Gottfried Leibniz** et **Johann Bernoulli** avaient introduit la *vis viva* (« force vivante » $mv^2$). Enfin, $E_c = \\frac{1}{2}mv^2$ est valable en **mécanique newtonienne** (pour des vitesses très petites devant celle de la lumière), mais doit être modifiée en mécanique **relativiste** et **quantique**.",
       keyRule:
         'Puissance moyenne échangée : P = |ΔEc| / Δt. Le TEC peut s’appliquer directement entre un état initial A et un état final D éloignés en additionnant les travaux sur chaque tronçon.',
       formulas: [
@@ -873,7 +873,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Exercice 3 Q3',
           stepTitle: 'Calculer une puissance restituée à partir de ΔEc',
           paragraphText:
-            'Si l’énergie cinétique d’un volant en fonte passe de $5{,}0\\cdot 10^5\\,\\mathrm{J}$ à $4{,}32\\cdot 10^5\\,\\mathrm{J}$ en $\\Delta t = 4\\,\\mathrm{s}$ (Exercice 3 p. 6), la perte d’énergie cinétique vaut $|\\Delta E_c| = 6{,}8\\cdot 10^4\\,\\mathrm{J}$, donc la puissance moyenne restituée vaut $P = \\frac{6{,}8\\cdot 10^4}{4} = 1{,}7\\cdot 10^4\\,\\mathrm{W}$.',
+            'Si l’énergie cinétique d’un volant en fonte passe de $5{,}0\\cdot 10^5\\,\\mathrm{J}$ à $4{,}32\\cdot 10^5\\,\\mathrm{J}$ en $\\Delta t = 4\\,\\mathrm{s}$, la perte d’énergie cinétique vaut $|\\Delta E_c| = 6{,}8\\cdot 10^4\\,\\mathrm{J}$, donc la puissance moyenne restituée vaut $P = \\frac{6{,}8\\cdot 10^4}{4} = 1{,}7\\cdot 10^4\\,\\mathrm{W}$.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p06_q1',
             type: 'mcq',
@@ -890,7 +890,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Exercice 5 (A → D)',
           stepTitle: 'Appliquer le TEC directement entre les extrémités d’un parcours mixte',
           paragraphText:
-            'Dans l’Exercice 5 (p. 8–9), au lieu de calculer les vitesses intermédiaires en $B$ et en $C$, il est beaucoup plus rapide d’appliquer directement le TEC entre $A$ et $D$ : $E_{cD} - E_{cA} = W_{A\\to D}(\\vec{P}) + W_{A\\to D}(\\vec{R}_N) + W_{A\\to C}(\\vec{f}) + W_{C\\to D}(\\vec{T})$.',
+            'Dans l’Exercice 5, au lieu de calculer les vitesses intermédiaires en $B$ et en $C$, il est beaucoup plus rapide d’appliquer directement le TEC entre $A$ et $D$ : $E_{cD} - E_{cA} = W_{A\\to D}(\\vec{P}) + W_{A\\to D}(\\vec{R}_N) + W_{A\\to C}(\\vec{f}) + W_{C\\to D}(\\vec{T})$.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p06_q2',
             type: 'mcq',
@@ -911,7 +911,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p06_q3',
             type: 'mcq',
-            prompt: 'D’après la documentation du cours (p. 9), quel physicien a introduit l’appellation moderne d’« énergie cinétique » (du grec *kinesis*) ?',
+            prompt: 'Quel physicien a introduit l’appellation moderne d’« énergie cinétique » (du grec *kinesis*) ?',
             options: [
               'William Thomson (Lord Kelvin)',
               'Blaise Pascal',
@@ -933,7 +933,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p06_q4',
             type: 'mcq',
-            prompt: 'Selon la documentation (p. 9), à quelle grandeur macroscopique d’un gaz chaud est directement liée l’énergie cinétique moyenne de ses molécules ?',
+            prompt: 'Selon la documentation, à quelle grandeur macroscopique d’un gaz chaud est directement liée l’énergie cinétique moyenne de ses molécules ?',
             options: [
               'À sa température',
               'Uniquement à sa couleur',
@@ -941,7 +941,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
               'À son indice de réfraction dans le vide',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Plus la température d’un gaz est élevée, plus l’énergie cinétique moyenne d’agitation de ses particules est grande (p. 9).',
+            explanation: 'Plus la température d’un gaz est élevée, plus l’énergie cinétique moyenne d’agitation de ses particules est grande.',
           },
         },
         {
@@ -951,7 +951,7 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
           stepTheme: 'Formule p²/(2m)',
           stepTitle: 'Relier quantité de mouvement p = mv et énergie cinétique',
           paragraphText:
-            'Pour une particule de masse $m$ et de quantité de mouvement $p = mv$, on peut exprimer $E_c$ en fonction de $p$ : $E_c = \\frac{1}{2} m v^2 = \\frac{(mv)^2}{2m} = \\frac{p^2}{2m}$ (Documentation p. 9).',
+            'Pour une particule de masse $m$ et de quantité de mouvement $p = mv$, on peut exprimer $E_c$ en fonction de $p$ : $E_c = \\frac{1}{2} m v^2 = \\frac{(mv)^2}{2m} = \\frac{p^2}{2m}$.',
           exercise: {
             id: 'premiere_c_physique_l04_energie_cinetique_p06_q5',
             type: 'mcq',

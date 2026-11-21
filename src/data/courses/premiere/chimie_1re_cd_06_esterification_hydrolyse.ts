@@ -35,7 +35,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Préparer l’éthanoate d’éthyle et analyser ses caractères (Ex 1 & Ex 2 p. 5–6)',
+        title: 'Préparer l’éthanoate d’éthyle et analyser ses caractères',
         statement:
           'On souhaite synthétiser l’éthanoate d’éthyle. Indique les réactifs nécessaires, écris l’équation de la réaction d’estérification et précise si elle est rapide/lente, totale/limitée, et exothermique/athermique/endothermique.',
         methodSteps: [
@@ -284,7 +284,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
       summary:
         'Définir l’hydrolyse d’un ester par l’eau, écrire son équation-bilan (coupure entre –C(=O)– et –O–R′) et connaître ses caractéristiques : lente, réversible, limitée et athermique.',
       conceptExplanation:
-        "La **réaction d’hydrolyse d’un ester** est l’action de l’**eau** ($\\mathrm{H_2O}$) sur un **ester** ($\\mathrm{R-COO-R'}$) ; elle régénère l’**acide carboxylique** ($\\mathrm{R-COOH}$) et l’**alcool** ($\\mathrm{R'-OH}$) correspondants :\n\n$$\\mathrm{R-COO-R' + H_2O \\longrightarrow R-COOH + R'-OH}$$\n\n- **Exemples du cours** :\n  - Hydrolyse de l’éthanoate d’éthyle : $\\mathrm{CH_3-COO-C_2H_5 + H_2O \\to CH_3-COOH + C_2H_5-OH}$.\n  - Hydrolyse du propanoate d’isopropyle (Activité 1 p. 4) : $\\mathrm{CH_3-CH_2-COO-CH(CH_3)_2 + H_2O \\to CH_3-CH_2-COOH + CH_3-CH(OH)-CH_3}$ (acide propanoïque + propan-2-ol).\n- **Caractéristiques** : tout comme l’estérification dont elle est la réaction inverse, l’hydrolyse d’un ester est **lente**, **réversible**, **limitée** et **athermique**.",
+        "La **réaction d’hydrolyse d’un ester** est l’action de l’**eau** ($\\mathrm{H_2O}$) sur un **ester** ($\\mathrm{R-COO-R'}$) ; elle régénère l’**acide carboxylique** ($\\mathrm{R-COOH}$) et l’**alcool** ($\\mathrm{R'-OH}$) correspondants :\n\n$$\\mathrm{R-COO-R' + H_2O \\longrightarrow R-COOH + R'-OH}$$\n\n- **Exemples** :\n - Hydrolyse de l’éthanoate d’éthyle : $\\mathrm{CH_3-COO-C_2H_5 + H_2O \\to CH_3-COOH + C_2H_5-OH}$.\n - Hydrolyse du propanoate d’isopropyle : $\\mathrm{CH_3-CH_2-COO-CH(CH_3)_2 + H_2O \\to CH_3-CH_2-COOH + CH_3-CH(OH)-CH_3}$ (acide propanoïque + propan-2-ol).\n- **Caractéristiques** : tout comme l’estérification dont elle est la réaction inverse, l’hydrolyse d’un ester est **lente**, **réversible**, **limitée** et **athermique**.",
       keyRule:
         'Ester + eau → acide carboxylique + alcool : l’hydrolyse d’un ester est une réaction lente, réversible, limitée et athermique.',
       formulas: [
@@ -295,7 +295,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Écrire l’hydrolyse du propanoate d’isopropyle (Activité 1 p. 4)',
+        title: 'Écrire l’hydrolyse du propanoate d’isopropyle',
         statement:
           'Écris l’équation-bilan de la réaction entre le propanoate d’isopropyle et l’eau, puis nomme les deux produits formés.',
         methodSteps: [
@@ -555,7 +555,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Comparer les deux mélanges équimolaires à l’équilibre (p. 1–3)',
+        title: 'Comparer les deux mélanges équimolaires à l’équilibre',
         statement:
           'À $100^\\circ\\mathrm{C}$ en présence de $\\mathrm{H_2SO_4}$, on suit deux expériences : (A) $1\\text{ mol}$ d’acide éthanoïque + $1\\text{ mol}$ d’éthanol ; (B) $1\\text{ mol}$ d’éthanoate d’éthyle + $1\\text{ mol}$ d’eau. Quelle est la composition finale de chaque mélange une fois le palier atteint ?',
         methodSteps: [
@@ -703,7 +703,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
             ],
             correctAnswerIndex: 0,
             explanation:
-              'Chaque mole d’acide consommée donne 1 mole d’ester : n(ester) = 1,00 − 0,50 = 0,50 mol (ce qui correspond à la ligne t = 10 h du tableau p. 1).',
+              'Chaque mole d’acide consommée donne 1 mole d’ester : n(ester) = 1,00 − 0,50 = 0,50 mol.',
           },
         },
         {
@@ -799,7 +799,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
           ],
           correctAnswerIndex: 0,
           explanation:
-            'Chaque mole d’acide consommée donne 1 mole d’ester : n(ester) = 1,00 − 0,50 = 0,50 mol (ce qui correspond à la ligne t = 10 h du tableau p. 1).',
+            'Chaque mole d’acide consommée donne 1 mole d’ester : n(ester) = 1,00 − 0,50 = 0,50 mol.',
         },
         {
           id: 'premiere_c_chimie_l06_esterification_hydrolyse_p03_q6',
@@ -828,11 +828,11 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
       summary:
         'Dénombrer tous les esters isomères d’une formule brute donnée (ex. C₄H₈O₂), identifier l’acide et l’alcool de synthèse et écrire l’équation-bilan exacte (banane, 2-méthylpropanoate d’éthyle).',
       conceptExplanation:
-        "Pour trouver tous les **esters isomères** correspondant à une formule brute $\\mathrm{C_nH_{2n}O_2}$, on répartit méthodiquement les $n$ atomes de carbone entre la partie acide ($p$ carbones avec le carbone de $\\mathrm{C=O}$, $p \\ge 1$) et le groupe alkyle de l’alcool ($q = n - p$ carbones, $q \\ge 1$).\n\n- **Application à $\\mathrm{C_4H_8O_2}$ ($n = 4$, Exercice 3 p. 6–7)** — $4$ esters possibles :\n  1. $p = 3, q = 1$ : $\\mathrm{CH_3-CH_2-COO-CH_3}$ (**propanoate de méthyle** $\\leftarrow$ acide propanoïque + méthanol).\n  2. $p = 2, q = 2$ : $\\mathrm{CH_3-COO-CH_2-CH_3}$ (**éthanoate d’éthyle** $\\leftarrow$ acide éthanoïque + éthanol).\n  3. $p = 1, q = 3$ (chaîne linéaire) : $\\mathrm{H-COO-CH_2-CH_2-CH_3}$ (**méthanoate de propyle** $\\leftarrow$ acide méthanoïque + propan-1-ol).\n  4. $p = 1, q = 3$ (chaîne ramifiée) : $\\mathrm{H-COO-CH(CH_3)_2}$ (**méthanoate d’isopropyle** $\\leftarrow$ acide méthanoïque + propan-2-ol).\n- **Synthèses ramifiées du cours (Situation p. 5 & Ex 5 p. 8)** :\n  - *Arôme banane* (**éthanoate de 3-méthylbutyle**) : $\\mathrm{CH_3-COOH + HO-CH_2-CH_2-CH(CH_3)-CH_3 \\rightleftharpoons CH_3-COO-CH_2-CH_2-CH(CH_3)-CH_3 + H_2O}$.\n  - **2-méthylpropanoate d’éthyle** : $\\mathrm{CH_3-CH(CH_3)-COOH + CH_3-CH_2-OH \\rightleftharpoons CH_3-CH(CH_3)-COO-CH_2-CH_3 + H_2O}$.",
+        "Pour trouver tous les **esters isomères** correspondant à une formule brute $\\mathrm{C_nH_{2n}O_2}$, on répartit méthodiquement les $n$ atomes de carbone entre la partie acide ($p$ carbones avec le carbone de $\\mathrm{C=O}$, $p \\ge 1$) et le groupe alkyle de l’alcool ($q = n - p$ carbones, $q \\ge 1$).\n\n- **Application à $\\mathrm{C_4H_8O_2}$** — $4$ esters possibles :\n 1. $p = 3, q = 1$ : $\\mathrm{CH_3-CH_2-COO-CH_3}$ (**propanoate de méthyle** $\\leftarrow$ acide propanoïque + méthanol).\n 2. $p = 2, q = 2$ : $\\mathrm{CH_3-COO-CH_2-CH_3}$ (**éthanoate d’éthyle** $\\leftarrow$ acide éthanoïque + éthanol).\n 3. $p = 1, q = 3$ (chaîne linéaire) : $\\mathrm{H-COO-CH_2-CH_2-CH_3}$ (**méthanoate de propyle** $\\leftarrow$ acide méthanoïque + propan-1-ol).\n 4. $p = 1, q = 3$ (chaîne ramifiée) : $\\mathrm{H-COO-CH(CH_3)_2}$ (**méthanoate d’isopropyle** $\\leftarrow$ acide méthanoïque + propan-2-ol).\n- **Synthèses ramifiées** :\n - *Arôme banane* (**éthanoate de 3-méthylbutyle**) : $\\mathrm{CH_3-COOH + HO-CH_2-CH_2-CH(CH_3)-CH_3 \\rightleftharpoons CH_3-COO-CH_2-CH_2-CH(CH_3)-CH_3 + H_2O}$.\n - **2-méthylpropanoate d’éthyle** : $\\mathrm{CH_3-CH(CH_3)-COOH + CH_3-CH_2-OH \\rightleftharpoons CH_3-CH(CH_3)-COO-CH_2-CH_3 + H_2O}$.",
       keyRule:
         'Pour lister tous les esters CₙH₂ₙO₂, faire varier (p, q) avec p + q = n, p ≥ 1 et q ≥ 1 en envisageant les chaînes linéaires et ramifiées.',
       workedExample: {
-        title: 'Synthétiser l’éthanoate de 3-méthylbutyle (Situation d’évaluation p. 4–5)',
+        title: 'Synthétiser l’éthanoate de 3-méthylbutyle',
         statement:
           'Donne les formules semi-développées exactes des deux réactifs, celle de l’éthanoate de $3$-méthylbutyle et l’équation-bilan de sa préparation.',
         methodSteps: [
@@ -1081,7 +1081,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
       summary:
         'Calculer le rendement ρ d’une estérification ou d’une hydrolyse (mélange équimolaire ou avec excès) et expliquer comment déplacer l’équilibre pour améliorer le rendement.',
       conceptExplanation:
-        "1. **Définition du rendement $\\rho$** :\n   - **Cas de l’estérification** (mélange équimolaire ou acide limitant $n_0(A)$) :\n     $$\\rho = \\frac{n_{\\text{ester formé}}}{n_{\\text{max théorique}}} = \\frac{n_E}{n_0(A)}$$\n     Pour un mélange équimolaire d’acide et d’alcool primaire, $\\rho \\approx 0{,}67 = \\mathbf{67\\%}$ (Activité 2 p. 4, Ex 5 p. 8–9).\n   - **Cas de l’hydrolyse** (mélange équimolaire ou ester limitant $n_0(E)$) :\n     $$\\rho = \\frac{n_{\\text{acide formé}}}{n_0(E)}$$\n     Pour un mélange équimolaire d’ester et d’eau, $\\rho \\approx 0{,}33 = \\mathbf{33\\%}$.\n2. **Comment améliorer le rendement ?** (Remarque p. 4 et Ex 4 p. 7–8) :\n   - **Mettre l’un des réactifs en large excès** : ex. en mélangeant $5\\text{ mol}$ d’eau avec $1\\text{ mol}$ de butanoate d’éthyle (Ex 4 p. 7–8), le rendement d’hydrolyse passe de **$33\\%$ à $70\\%$** ($0{,}7\\text{ mol}$ d’acide formée).\n   - **Empêcher la réaction inverse en éliminant un produit au fur et à mesure** : pour l’estérification, **distiller l’ester** (s’il est le plus volatil) ou **enlever l’eau** formée en continu permet de tendre vers $100\\%$.",
+        "1. **Définition du rendement $\\rho$** :\n - **Cas de l’estérification** (mélange équimolaire ou acide limitant $n_0(A)$) :\n $$\\rho = \\frac{n_{\\text{ester formé}}}{n_{\\text{max théorique}}} = \\frac{n_E}{n_0(A)}$$\n Pour un mélange équimolaire d’acide et d’alcool primaire, $\\rho \\approx 0{,}67 = \\mathbf{67\\%}$.\n - **Cas de l’hydrolyse** (mélange équimolaire ou ester limitant $n_0(E)$) :\n $$\\rho = \\frac{n_{\\text{acide formé}}}{n_0(E)}$$\n Pour un mélange équimolaire d’ester et d’eau, $\\rho \\approx 0{,}33 = \\mathbf{33\\%}$.\n2. **Comment améliorer le rendement ?** :\n - **Mettre l’un des réactifs en large excès** : ex. en mélangeant $5\\text{ mol}$ d’eau avec $1\\text{ mol}$ de butanoate d’éthyle, le rendement d’hydrolyse passe de **$33\\%$ à $70\\%$** ($0{,}7\\text{ mol}$ d’acide formée).\n - **Empêcher la réaction inverse en éliminant un produit au fur et à mesure** : pour l’estérification, **distiller l’ester** (s’il est le plus volatil) ou **enlever l’eau** formée en continu permet de tendre vers $100\\%$.",
       keyRule:
         'En mélange équimolaire (alcool primaire), ρ(estérification) ≈ 67 % et ρ(hydrolyse) ≈ 33 %. On améliore le rendement en mettant un réactif en large excès ou en extrayant un produit (eau ou ester par distillation), jamais avec un catalyseur.',
       formulas: [
@@ -1092,7 +1092,7 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Calculs complets de rendement et masses formées (Situation p. 5 & Ex 4–5 p. 7–9)',
+        title: 'Calculs complets de rendement et masses formées',
         statement:
           '(1) On mélange $0{,}15\\text{ mol}$ d’acide $2$-méthylpropanoïque et $0{,}15\\text{ mol}$ d’éthanol ; il se forme $11{,}6\\text{ g}$ de $2$-méthylpropanoate d’éthyle ($M = 116\\text{ g/mol}$). Calcule le rendement. (2) On hydrolyse $1\\text{ mol}$ de butanoate d’éthyle avec $5\\text{ mol}$ d’eau ; à l’équilibre, on obtient $0{,}7\\text{ mol}$ d’acide butanoïque. Calcule et compare ce rendement.',
         methodSteps: [
@@ -1341,11 +1341,11 @@ export const CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE: CurriculumChapter = {
       summary:
         'Relier quelques esters célèbres à leurs arômes naturels ou synthétiques (banane, ananas, fraise, poire, jasmin, rhum) et situer les esters biologiques (triglycérides).',
       conceptExplanation:
-        "En chimie, les **esters carboxyliques** ($\\mathrm{R-COO-R'}$) sont très répandus dans le monde vivant et dans l’industrie chimique :\n\n- **Arômes naturels et synthétiques / Parfumerie** : de nombreux esters volatils ont une odeur fruitée ou florale très agréable et servent à formuler des parfums et des arômes alimentaires :\n  - **Éthanoate de 3-méthylbutyle (ou d’isoamyle)** : **banane**.\n  - **Butanoate d’éthyle** : **ananas**.\n  - **Propanoate d’éthyle** : **fraise**.\n  - **Éthanoate de propyle / pentyle** : **poire** ; **éthanoate d’octyle** : **orange**.\n  - **Éthanoate de benzyle** : **jasmin** ; **éthanoate de 2-phényléthyle** : **rose**.\n  - **Méthanoate d’éthyle** : odeur de **rhum** (et framboise).\n- **Biologie et savonnerie** : les corps gras animaux et végétaux (graisses, huiles) sont principalement des **triglycérides**, c’est-à-dire des triesters d’acides gras et de glycérol.\n- **Autres familles d’esters (Documentation p. 9)** : lorsque l’atome lié au groupement alkoxy est un atome de soufre, d’azote ou de phosphore au lieu d’un carbone, on parle respectivement d’esters sulfuriques, nitriques ou phosphoriques.",
+        "En chimie, les **esters carboxyliques** ($\\mathrm{R-COO-R'}$) sont très répandus dans le monde vivant et dans l’industrie chimique :\n\n- **Arômes naturels et synthétiques / Parfumerie** : de nombreux esters volatils ont une odeur fruitée ou florale très agréable et servent à formuler des parfums et des arômes alimentaires :\n - **Éthanoate de 3-méthylbutyle (ou d’isoamyle)** : **banane**.\n - **Butanoate d’éthyle** : **ananas**.\n - **Propanoate d’éthyle** : **fraise**.\n - **Éthanoate de propyle / pentyle** : **poire** ; **éthanoate d’octyle** : **orange**.\n - **Éthanoate de benzyle** : **jasmin** ; **éthanoate de 2-phényléthyle** : **rose**.\n - **Méthanoate d’éthyle** : odeur de **rhum** (et framboise).\n- **Biologie et savonnerie** : les corps gras animaux et végétaux (graisses, huiles) sont principalement des **triglycérides**, c’est-à-dire des triesters d’acides gras et de glycérol.\n- **Autres familles d’esters** : lorsque l’atome lié au groupement alkoxy est un atome de soufre, d’azote ou de phosphore au lieu d’un carbone, on parle respectivement d’esters sulfuriques, nitriques ou phosphoriques.",
       keyRule:
         'Les esters carboxyliques donnent leurs arômes aux fruits et fleurs (banane = éthanoate de 3-méthylbutyle, ananas = butanoate d’éthyle, jasmin = éthanoate de benzyle) et constituent les triglycérides des corps gras.',
       workedExample: {
-        title: 'Associer esters aromatiques, noms IUPAC et odeurs (Documentation p. 9–10)',
+        title: 'Associer esters aromatiques, noms IUPAC et odeurs',
         statement:
           'Identifie l’arôme caractéristique de l’éthanoate de $3$-méthylbutyle (ou d’isoamyle), du butanoate d’éthyle et de l’éthanoate de benzyle, puis indique leurs synonymes d’usage « acétate / butyrate ».',
         methodSteps: [

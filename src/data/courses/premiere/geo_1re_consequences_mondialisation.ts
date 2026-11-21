@@ -390,7 +390,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p02_q5",
             "type": "mcq",
-            "prompt": "Quel pays est la première destination touristique du monde selon le cours ?",
+            "prompt": "Quel pays est la première destination touristique du monde ?",
             "options": [
               "La France",
               "Le Mali",
@@ -500,7 +500,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p02_q5",
           "type": "mcq",
-          "prompt": "Quel pays est la première destination touristique du monde selon le cours ?",
+          "prompt": "Quel pays est la première destination touristique du monde ?",
           "options": [
             "La France",
             "Le Mali",
@@ -1220,7 +1220,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
               "Acteurs de la mondialisation"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est l'activité d'application n°1 du cours."
+            "explanation": "Cette notion est un point clé à maîtriser."
           }
         }
       ],
@@ -1314,7 +1314,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
             "Acteurs de la mondialisation"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est l'activité d'application n°1 du cours."
+          "explanation": "Cette notion est un point clé à maîtriser."
         }
       ]
     },
@@ -1409,7 +1409,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p06_q4",
             "type": "mcq",
-            "prompt": "Quelle est la place de l'Afrique dans le commerce mondial selon le cours ?",
+            "prompt": "Quelle est la place de l'Afrique dans le commerce mondial ?",
             "options": [
               "Elle domine le commerce mondial",
               "Elle fait partie de la Triade",
@@ -1465,14 +1465,14 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
         {
           "stepNumber": 7,
           "stepKind": "piege",
-          "stepTitle": "La conclusion du cours",
-          "stepTheme": "La conclusion du cours",
-          "stepBadge": "La conclusion du cours",
+          "stepTitle": "Conclusion et synthèse",
+          "stepTheme": "Synthèse",
+          "stepBadge": "La conclusion",
           "paragraphText": "La mondialisation rapproche le monde, mais elle pose de nombreux problèmes qu'il revient aux États de résoudre.",
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p06_q7",
             "type": "mcq",
-            "prompt": "À qui revient-il de résoudre les problèmes posés par la mondialisation selon le cours ?",
+            "prompt": "À qui revient-il de résoudre les problèmes posés par la mondialisation ?",
             "options": [
               "Aux seuls touristes",
               "À personne",
@@ -1527,7 +1527,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p06_q4",
           "type": "mcq",
-          "prompt": "Quelle est la place de l'Afrique dans le commerce mondial selon le cours ?",
+          "prompt": "Quelle est la place de l'Afrique dans le commerce mondial ?",
           "options": [
             "Elle domine le commerce mondial",
             "Elle fait partie de la Triade",
@@ -1566,7 +1566,7 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p06_q7",
           "type": "mcq",
-          "prompt": "À qui revient-il de résoudre les problèmes posés par la mondialisation selon le cours ?",
+          "prompt": "À qui revient-il de résoudre les problèmes posés par la mondialisation ?",
           "options": [
             "Aux seuls touristes",
             "À personne",

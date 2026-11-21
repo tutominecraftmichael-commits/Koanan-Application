@@ -323,7 +323,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Alignement & Projection',
     stepTheme: 'green',
-    stepTitle: 'Conservation du barycentre par projection et alignement (Ex. 4)',
+    stepTitle: 'Conservation du barycentre par projection et alignement',
     paragraphText:
       'La projection sur une droite parallèlement à une direction donnée **conserve le barycentre**. Dans un triangle $ABC$ avec $\\overrightarrow{AJ} = \\frac{2}{5}\\overrightarrow{AB}$ (soit $J = \\operatorname{bar}\\{(A,3),(B,2)\\}$) et la parallèle à $(AC)$ menée par $J$ coupant $(BC)$ en $K$ : les projetés sur $(BC)$ parallèlement à $(AC)$ de $A, B, J$ sont $C, B, K$, donc directement $K = \\operatorname{bar}\\{(C,3),(B,2)\\}$.',
     formula: {
@@ -814,7 +814,7 @@ const p05Steps: StructuredLessonStep[] = [
       name: 'Norme avec sommes non nulle et nulle',
       formula: '\\|S\\,\\overrightarrow{MG}\\| = \\|\\vec{V}_0\\| \\iff MG = \\frac{\\|\\vec{V}_0\\|}{|S|} \\quad (S \\neq 0)',
     },
-    konanTip: 'Dans l’Exercice 5 du PDF, $IC^2 = IA^2 + AC^2 = a^2 + a^2 = 2a^2 \\implies IC = a\\sqrt{2}$ car $ABC$ est rectangle en $A$ et $IA = \\frac{AB}{2} = a$.',
+    konanTip: 'Dans ce triangle rectangle, $IC^2 = IA^2 + AC^2 = a^2 + a^2 = 2a^2 \\implies IC = a\\sqrt{2}$ car $ABC$ est rectangle en $A$ et $IA = \\frac{AB}{2} = a$.',
     exercise: {
       id: 'tc_m_geo_l02_p05_q03',
       type: 'mcq',
@@ -962,7 +962,7 @@ export const MATHS_TLE_C_L02_BARYCENTRE_LIGNES_NIVEAUX: CurriculumChapter = {
         { name: '2 points', formula: '\\overrightarrow{AG} = \\frac{\\beta}{\\alpha+\\beta}\\overrightarrow{AB}' },
       ],
       workedExample: {
-        title: 'Coordonnées dans l’espace (p.5)',
+        title: 'Coordonnées dans l’espace',
         statement: 'Calculer les coordonnées de $G = \\operatorname{bar}\\{(A,-1),(B,1),(C,-1)\\}$ avec $A(0;-1;2)$, $B(8;5;-1)$, $C(8;-5;-2)$.',
         methodSteps: [
           'Somme des coefficients : $-1 + 1 - 1 = -1 \\neq 0$.',

@@ -114,7 +114,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Exercice de fixation',
     stepTheme: 'green',
-    stepTitle: 'Calculer les coordonnées des sommets $A$ et $A’$ (p.2-3)',
+    stepTitle: 'Calculer les coordonnées des sommets $A$ et $A’$',
     paragraphText:
       'Reprenons $F(2 ; 3)$, $(D) : x = -4$ et $e = \\frac{1}{3}$. Le projeté orthogonal de $F$ sur $(D)$ a même ordonnée que $F$ et pour abscisse $-4$, soit $K(-4 ; 3)$. On applique les coordonnées du barycentre : pour $A = \\operatorname{bar}\\{(F,3),(K,1)\\}$, $x_A = \\frac{3(2) + 1(-4)}{4} = \\frac{2}{4} = \\frac{1}{2}$ et $y_A = 3$. Pour $A’ = \\operatorname{bar}\\{(F,3),(K,-1)\\}$, $x_{A’} = \\frac{3(2) - 1(-4)}{2} = \\frac{10}{2} = 5$ et $y_{A’} = 3$. Donc $A(\\frac{1}{2} ; 3)$ et $A’(5 ; 3)$.',
     formula: {
@@ -284,7 +284,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l07_p02_q03',
       type: 'mcq',
-      prompt: 'La parabole d’équation $2y^2 + 3x = 0$ (Exercice 1 p.10) admet pour foyer et axe focal :',
+      prompt: 'La parabole d’équation $2y^2 + 3x = 0$ admet pour foyer et axe focal :',
       options: [
         'Foyer $F(-\\frac{3}{8} ; 0)$ et axe focal $(O, \\vec{i})$',
         'Foyer $F(-\\frac{3}{4} ; 0)$ et axe focal $(O, \\vec{i})$',
@@ -300,7 +300,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Parabole translatée',
     stepTheme: 'green',
-    stepTitle: 'Déterminer le sommet et le foyer d’une parabole translatée (Ex. 1.2)',
+    stepTitle: 'Déterminer le sommet et le foyer d’une parabole translatée',
     paragraphText:
       'Soit la parabole $(\\mathcal{P}) : x^2 - 2x = -3y - 1$. On complète le carré en $x$ : $(x - 1)^2 - 1 = -3y - 1 \\iff (x - 1)^2 = -3y$. En posant le changement de repère $\\begin{cases} X = x - 1 \\\\ Y = y \\end{cases}$ centré au sommet $S(1 ; 0)$, l’équation devient $X^2 = -3Y = 2(-\\frac{3}{2})Y$ ($a = -\\frac{3}{2}$). L’axe focal est $(S, \\vec{j})$. Dans $(S, \\vec{i}, \\vec{j})$, $F(0 ; \\frac{a}{2}) = (0 ; -\\frac{3}{4})$, donc dans $(O, \\vec{i}, \\vec{j})$ : $x_F = 1 + 0 = 1$ et $y_F = -\\frac{3}{4}$, soit $F(1 ; -\\frac{3}{4})$.',
     formula: {
@@ -455,7 +455,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Axe focal vertical',
     stepTheme: 'blue',
-    stepTitle: 'Cas $a < b$ : l’axe focal est $(O, \\vec{j})$ (Exercice 2.1 p.11)',
+    stepTitle: 'Cas $a < b$ : l’axe focal est $(O, \\vec{j})$',
     paragraphText:
       'Considérons l’ellipse $(\\Gamma) : \\frac{x^2}{9} + \\frac{y^2}{16} = 1$. Ici $a = 3$ et $b = 4$, donc **$a < b$** ! Le grand axe et l’axe focal sont donc portés par l’axe des ordonnées $(O, \\vec{j})$. On calcule $c = \\sqrt{b^2 - a^2} = \\sqrt{16 - 9} = \\sqrt{7}$, d’où les foyers **$F(0 ; \\sqrt{7})$ et $F’(0 ; -\\sqrt{7})$**, l’excentricité $e = \\frac{\\sqrt{7}}{4}$ et les directrices $y = \\pm \\frac{16}{\\sqrt{7}}$.',
     exercise: {
@@ -611,7 +611,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Exercice de fixation (corrigé)',
     stepTheme: 'blue',
-    stepTitle: 'Éléments caractéristiques de $\\frac{x^2}{4} - y^2 = 1$ (p.5)',
+    stepTitle: 'Éléments caractéristiques de $\\frac{x^2}{4} - y^2 = 1$',
     paragraphText:
       'Dans $\\frac{x^2}{4} - \\frac{y^2}{1} = 1$, le signe « $+$ » porte sur $x^2$, donc l’axe focal est **$(O, \\vec{i})$**. On lit $a = 2$ et $b = 1$, d’où $c = \\sqrt{a^2 + b^2} = \\sqrt{4 + 1} = \\sqrt{5}$. Excentricité $e = \\frac{c}{a} = \\frac{\\sqrt{5}}{2}$, sommets $A(2;0)$ et $A’(-2;0)$, foyers $F(\\sqrt{5}; 0)$ et $F’(-\\sqrt{5}; 0)$, asymptotes $y = \\pm \\frac{1}{2}x$, et directrices $x = \\pm \\frac{a^2}{c} = \\pm \\frac{4}{\\sqrt{5}} = \\pm \\frac{4\\sqrt{5}}{5}$ (soit $(D) : x = \\frac{4\\sqrt{5}}{5}$ et $(D’) : x = -\\frac{4\\sqrt{5}}{5}$).',
     formula: {
@@ -875,7 +875,7 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 3,
     stepKind: 'methode',
-    stepBadge: 'Approfondissement Ex. 5.1',
+    stepBadge: 'Approfondissement .1',
     stepTheme: 'green',
     stepTitle: 'Étude complète de l’hyperbole $(\\mathcal{H}) : 3x^2 - y^2 + 2x + 1 = 0$',
     paragraphText:
@@ -901,7 +901,7 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 4,
     stepKind: 'methode',
-    stepBadge: 'Approfondissement Ex. 5.2',
+    stepBadge: 'Approfondissement .2',
     stepTheme: 'green',
     stepTitle: 'Lieu géométrique dans le plan complexe (alignement de $1, z, z^4$)',
     paragraphText:
@@ -1050,7 +1050,7 @@ export const MATHS_TLE_C_L07_CONIQUES: CurriculumChapter = {
         { name: 'Paraboles canoniques', formula: 'y^2 = 2ax \\;\\left(F(\\frac{a}{2};0)\\right) \\qquad ; \\qquad x^2 = 2ay \\;\\left(F(0;\\frac{a}{2})\\right)' },
       ],
       workedExample: {
-        title: 'Parabole depuis F(3; 2) et (D): x = 1 (Ex. 3.1)',
+        title: 'Parabole depuis F(3; 2) et (D): x = 1',
         statement: 'Déterminer une équation de la parabole.',
         methodSteps: [
           'Projeté $K(1; 2)$, paramètre $p = KF = 2$, sommet $S(2; 2)$ (milieu de $[FK]$).',
@@ -1074,7 +1074,7 @@ export const MATHS_TLE_C_L07_CONIQUES: CurriculumChapter = {
         { name: 'Ellipse centrée', formula: '\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 \\qquad (c^2 = |a^2 - b^2|)' },
       ],
       workedExample: {
-        title: 'Ellipse depuis F(1; 0), (D): x = 10 et e = 4/5 (Ex. 4.1 corrigé)',
+        title: 'Ellipse depuis F(1; 0), (D): x = 10 et e = 4/5',
         statement: 'Déterminer l’équation réduite de $(\\Gamma)$.',
         methodSteps: [
           '$K(10;0)$, $A = \\operatorname{bar}\\{(F,5),(K,4)\\} = A(5;0)$, $A’ = \\operatorname{bar}\\{(F,5),(K,-4)\\} = A’(-35;0)$.',
@@ -1098,7 +1098,7 @@ export const MATHS_TLE_C_L07_CONIQUES: CurriculumChapter = {
         { name: 'Hyperbole centrée', formula: '\\pm\\left(\\frac{x^2}{a^2} - \\frac{y^2}{b^2}\\right) = 1 \\qquad (c = \\sqrt{a^2 + b^2},\\; y = \\pm\\frac{b}{a}x)' },
       ],
       workedExample: {
-        title: 'Hyperbole x²/4 − y² = 1 (p.5)',
+        title: 'Hyperbole x²/4 − y² = 1',
         statement: 'Donner nature, axe focal, foyers, directrices et asymptotes.',
         methodSteps: [
           'Signe $+$ devant $x^2$ : axe focal $(O, \\vec{i})$, $a = 2$, $b = 1$, $c = \\sqrt{5}$, $e = \\frac{\\sqrt{5}}{2}$.',
@@ -1122,7 +1122,7 @@ export const MATHS_TLE_C_L07_CONIQUES: CurriculumChapter = {
         { name: 'Piscine elliptique', formula: '3x^2 + 4y^2 + 6x - 9 = 0 \\iff \\frac{(x+1)^2}{4} + \\frac{y^2}{3} = 1' },
       ],
       workedExample: {
-        title: 'Alignement de A(1), M(z) et M’(z⁴) (Ex. 5.2)',
+        title: 'Alignement de A(1), M(z) et M’(z⁴)',
         statement: 'Déterminer l’ensemble des points $M(x ; y)$ tels que $A(1)$, $M(z)$ et $M’(z^4)$ soient alignés.',
         methodSteps: [
           'Condition : $1 + z + z^2 + z^3 \\in \\mathbb{R} \\iff \\operatorname{Im}(1+z+z^2+z^3) = 0$.',

@@ -7,23 +7,19 @@
 import React from 'react';
 
 const CSS = `
-@keyframes konan-ice-spin { to { transform: rotate(360deg) } }
 @keyframes konan-ice-shine { 0% { transform: translateX(-120%) skewX(-18deg) } 60%, 100% { transform: translateX(220%) skewX(-18deg) } }
-@keyframes konan-ice-fall { 0% { transform: translateY(-10px); opacity: 0 } 15% { opacity: .9 } 100% { transform: translateY(70px); opacity: 0 } }
 @keyframes konan-ice-pulse { 0%, 100% { opacity: .55 } 50% { opacity: .9 } }
-.konan-ice-spin { animation: konan-ice-spin 9s linear infinite; transform-origin: center; }
 .konan-ice-shine::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: konan-ice-shine 3.2s ease-in-out infinite; pointer-events: none; }
-.konan-ice-fall { animation: konan-ice-fall 3.6s linear infinite; }
 .konan-ice-pulse { animation: konan-ice-pulse 2.4s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .konan-ice-spin, .konan-ice-fall, .konan-ice-pulse { animation: none } .konan-ice-shine::after { display: none } }
+@media (prefers-reduced-motion: reduce) { .konan-ice-pulse { animation: none } .konan-ice-shine::after { display: none } }
 `;
 
 /** Styles des animations de glace (à mettre une fois sur l'écran). */
 export const IceStyles: React.FC = () => <style>{CSS}</style>;
 
-/** Flocon de neige (6 branches), bleu glacier. */
-export const Snowflake: React.FC<{ size?: number; className?: string; spin?: boolean }> = ({ size = 18, className = '', spin = true }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className={`${spin ? 'konan-ice-spin' : ''} ${className}`}>
+/** Flocon de neige (6 branches), bleu glacier (statique). */
+export const Snowflake: React.FC<{ size?: number; className?: string; spin?: boolean }> = ({ size = 18, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className={className}>
     <g fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
       {[0, 60, 120].map((a) => (
         <g key={a} transform={`rotate(${a} 12 12)`}>
@@ -53,13 +49,5 @@ export const FrostOverlay: React.FC<{ className?: string }> = ({ className = '' 
   </span>
 );
 
-/** Petits flocons qui tombent (bandeau « Ligue gelée »). */
-export const FallingSnow: React.FC = () => (
-  <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-    {[8, 26, 47, 66, 84].map((left, i) => (
-      <span key={left} className="konan-ice-fall absolute top-0 text-cyan-400 dark:text-cyan-200" style={{ left: `${left}%`, animationDelay: `${i * 0.7}s` }}>
-        <Snowflake size={10 + (i % 3) * 3} spin={false} />
-      </span>
-    ))}
-  </span>
-);
+/** Petits flocons qui tombent (conservé comme no-op vide pour compatibilité). */
+export const FallingSnow: React.FC = () => null;

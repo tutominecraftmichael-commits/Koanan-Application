@@ -136,7 +136,7 @@ export const CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE: CurriculumChapter = {
           "stepTheme": "Les ions de l'acide chlorhydrique",
           "stepBadge": "Les ions de l'acide chlorhydrique",
           "paragraphText": "L'acide chlorhydrique contient deux sortes d'ions majoritaires.\n• Ion hydronium : H₃O⁺, responsable du caractère acide.\n• Ion chlorure : Cl⁻.",
-          "konanTip": "Écris toujours H₃O⁺ et non H⁺ dans les équations du cours.",
+          "konanTip": "Écris toujours H₃O⁺ et non H⁺ dans les équations acido-basiques.",
           "exercise": {
             "id": "terminale_c_chimie_l07_acide_fort_base_forte_p01_q5",
             "type": "mcq",

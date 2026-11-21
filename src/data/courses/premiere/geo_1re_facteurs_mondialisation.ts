@@ -180,7 +180,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
               "La planète compte un seul pays"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Elle a été employée par le directeur général de l'OMC dans le cours."
+            "explanation": "Elle a été employée par le directeur général de l'OMC."
           }
         }
       ],
@@ -274,7 +274,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
             "La planète compte un seul pays"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Elle a été employée par le directeur général de l'OMC dans le cours."
+          "explanation": "Elle a été employée par le directeur général de l'OMC."
         }
       ]
     },
@@ -306,7 +306,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p02_q1",
             "type": "mcq",
-            "prompt": "Depuis quand l'internationalisation des économies existe-t-elle selon le cours ?",
+            "prompt": "Depuis quand l'internationalisation des économies existe-t-elle ?",
             "options": [
               "Depuis l'an 2000",
               "Depuis 1994",
@@ -448,7 +448,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p02_q1",
           "type": "mcq",
-          "prompt": "Depuis quand l'internationalisation des économies existe-t-elle selon le cours ?",
+          "prompt": "Depuis quand l'internationalisation des économies existe-t-elle ?",
           "options": [
             "Depuis l'an 2000",
             "Depuis 1994",
@@ -692,7 +692,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p03_q7",
             "type": "mcq",
-            "prompt": "Selon le cours, comment juger la colonisation comme facteur de la mondialisation ?",
+            "prompt": "Comment juger la colonisation comme facteur de la mondialisation ?",
             "options": [
               "Totalement positive pour les colonisés",
               "Négative pour les colonisés, mais elle a préparé les échanges",
@@ -786,7 +786,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p03_q7",
           "type": "mcq",
-          "prompt": "Selon le cours, comment juger la colonisation comme facteur de la mondialisation ?",
+          "prompt": "Comment juger la colonisation comme facteur de la mondialisation ?",
           "options": [
             "Totalement positive pour les colonisés",
             "Négative pour les colonisés, mais elle a préparé les échanges",
@@ -826,7 +826,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p04_q1",
             "type": "mcq",
-            "prompt": "Après quel événement les découvertes technologiques se multiplient-elles selon le cours ?",
+            "prompt": "Après quel événement les découvertes technologiques se multiplient-elles ?",
             "options": [
               "La Seconde Guerre mondiale",
               "La Révolution française",
@@ -968,7 +968,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p04_q1",
           "type": "mcq",
-          "prompt": "Après quel événement les découvertes technologiques se multiplient-elles selon le cours ?",
+          "prompt": "Après quel événement les découvertes technologiques se multiplient-elles ?",
           "options": [
             "La Seconde Guerre mondiale",
             "La Révolution française",
@@ -1063,7 +1063,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
       "order": 5,
       "title": "La libéralisation des échanges",
       "summary": "Du GATT (1947) à l'OMC (1995).",
-      "conceptExplanation": "Chaque pays se spécialise de plus en plus : il exporte certains biens et en importe d'autres. Pour organiser le commerce, les États ont choisi le libre-échange : l'absence de barrières à l'entrée des produits sur les marchés étrangers.\n\n1. Le GATT (General Agreement on Tariffs and Trade, Accord général sur les tarifs douaniers et le commerce), créé en 1947. Son objectif : réduire progressivement les barrières douanières et supprimer les restrictions aux échanges. Il fonctionne par grandes négociations appelées « rounds » :\n- le Kennedy Round (1964-1967) ;\n- le Tokyo Round (1973-1979) ;\n- l'Uruguay Round (1986-1994).\nChacune a réduit les droits de douane d'environ 30 %.\n\n2. L'OMC (Organisation mondiale du commerce). L'Uruguay Round s'achève en 1994 par la décision de remplacer le GATT : l'OMC naît le 1er janvier 1995, avec les mêmes objectifs. C'est son directeur général qui parle de « village planétaire » dans la situation du cours.",
+      "conceptExplanation": "Chaque pays se spécialise de plus en plus : il exporte certains biens et en importe d'autres. Pour organiser le commerce, les États ont choisi le libre-échange : l'absence de barrières à l'entrée des produits sur les marchés étrangers.\n\n1. Le GATT (General Agreement on Tariffs and Trade, Accord général sur les tarifs douaniers et le commerce), créé en 1947. Son objectif : réduire progressivement les barrières douanières et supprimer les restrictions aux échanges. Il fonctionne par grandes négociations appelées « rounds » :\n- le Kennedy Round (1964-1967) ;\n- le Tokyo Round (1973-1979) ;\n- l'Uruguay Round (1986-1994).\nChacune a réduit les droits de douane d'environ 30 %.\n\n2. L'OMC (Organisation mondiale du commerce). L'Uruguay Round s'achève en 1994 par la décision de remplacer le GATT : l'OMC naît le 1er janvier 1995, avec les mêmes objectifs. C'est son directeur général qui parle de « village planétaire » pour qualifier la mondialisation.",
       "keyRule": "Libre-échange = absence de barrières douanières. GATT (1947) puis OMC (1995) : réduction des droits de douane par des rounds (Kennedy, Tokyo, Uruguay).",
       "formulas": [],
       "workedExample": {
@@ -1094,7 +1094,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
               "L'interdiction des importations"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est la réponse de l'activité d'application 2 du cours."
+            "explanation": "Cette réponse correspond exactement à la notion étudiée."
           }
         },
         {
@@ -1236,7 +1236,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
             "L'interdiction des importations"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est la réponse de l'activité d'application 2 du cours."
+          "explanation": "Cette réponse correspond exactement à la notion étudiée."
         },
         {
           "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p05_q2",

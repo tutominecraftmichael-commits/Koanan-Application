@@ -23,7 +23,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
       "order": 1,
       "title": "Les violences de masse",
       "summary": "Des violences de grande ampleur contre des populations.",
-      "conceptExplanation": "Le XXe siècle a connu une multiplication des violences de masse et des génocides.\n\nUne violence de masse est une violence de grande ampleur, le plus souvent collective, qui détruit des biens et tue un grand nombre de personnes, surtout des non-combattants : hommes, femmes, enfants ou soldats désarmés.\n\nSelon le cours, ses caractéristiques sont :\n- elle n'est pas toujours préméditée (planifiée à l'avance) ;\n- elle ne vise pas forcément un groupe précis choisi à l'avance ;\n- elle cause d'énormes dégâts humains et matériels.\n\nExemples : les massacres de civils pendant la Seconde Guerre mondiale ; la répression pendant la colonisation en Côte d'Ivoire (villages bombardés, déportations).\n\nLa notion de violence de masse est plus large que celle de génocide : elle peut désigner n'importe quelle violence de grande ampleur, notamment pendant les guerres, sans qu'on ait à prouver une intention d'exterminer.",
+      "conceptExplanation": "Le XXe siècle a connu une multiplication des violences de masse et des génocides.\n\nUne violence de masse est une violence de grande ampleur, le plus souvent collective, qui détruit des biens et tue un grand nombre de personnes, surtout des non-combattants : hommes, femmes, enfants ou soldats désarmés.\n\nses caractéristiques sont :\n- elle n'est pas toujours préméditée (planifiée à l'avance) ;\n- elle ne vise pas forcément un groupe précis choisi à l'avance ;\n- elle cause d'énormes dégâts humains et matériels.\n\nExemples : les massacres de civils pendant la Seconde Guerre mondiale ; la répression pendant la colonisation en Côte d'Ivoire (villages bombardés, déportations).\n\nLa notion de violence de masse est plus large que celle de génocide : elle peut désigner n'importe quelle violence de grande ampleur, notamment pendant les guerres, sans qu'on ait à prouver une intention d'exterminer.",
       "keyRule": "Violence de masse : violence de grande ampleur contre un grand nombre de personnes, surtout des civils ; pas toujours préméditée ni ciblée. Notion plus large que le génocide.",
       "formulas": [],
       "workedExample": {
@@ -63,7 +63,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
           "stepTitle": "Pas toujours préméditée",
           "stepTheme": "Pas toujours préméditée",
           "stepBadge": "Pas toujours préméditée",
-          "paragraphText": "Selon le cours, une violence de masse n'est pas toujours préméditée et ne vise pas forcément un groupe choisi à l'avance.",
+          "paragraphText": "Une violence de masse n'est pas toujours préméditée et ne vise pas forcément un groupe choisi à l'avance.",
           "exercise": {
             "id": "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p01_q2",
             "type": "mcq",
@@ -168,11 +168,11 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
           "stepTitle": "Vrai ou faux",
           "stepTheme": "Vrai ou faux",
           "stepBadge": "Vrai ou faux",
-          "paragraphText": "Selon le cours, les violences de masse ne sont généralement pas préméditées, contrairement aux génocides.",
+          "paragraphText": "Les violences de masse ne sont généralement pas préméditées, contrairement aux génocides.",
           "exercise": {
             "id": "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p01_q7",
             "type": "mcq",
-            "prompt": "« Les violences de masse sont généralement préméditées. » Selon le cours, cette affirmation est :",
+            "prompt": "« Les violences de masse sont généralement préméditées. » cette affirmation est :",
             "options": [
               "Fausse",
               "Vraie",
@@ -266,7 +266,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p01_q7",
           "type": "mcq",
-          "prompt": "« Les violences de masse sont généralement préméditées. » Selon le cours, cette affirmation est :",
+          "prompt": "« Les violences de masse sont généralement préméditées. » cette affirmation est :",
           "options": [
             "Fausse",
             "Vraie",
@@ -440,7 +440,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
               "Les deux mots veulent dire la même chose"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est la question 5 de l'exercice 1 du cours."
+            "explanation": "Cette notion est essentielle à retenir."
           }
         }
       ],
@@ -534,7 +534,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
             "Les deux mots veulent dire la même chose"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est la question 5 de l'exercice 1 du cours."
+          "explanation": "Cette notion est essentielle à retenir."
         }
       ]
     },
@@ -671,7 +671,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p03_q6",
             "type": "mcq",
-            "prompt": "Quel génocide est le plus meurtrier du XXe siècle selon le cours ?",
+            "prompt": "Quel génocide est le plus meurtrier du XXe siècle ?",
             "options": [
               "Celui de Srebrenica",
               "Celui des Juifs (la Shoah)",
@@ -773,7 +773,7 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p03_q6",
           "type": "mcq",
-          "prompt": "Quel génocide est le plus meurtrier du XXe siècle selon le cours ?",
+          "prompt": "Quel génocide est le plus meurtrier du XXe siècle ?",
           "options": [
             "Celui de Srebrenica",
             "Celui des Juifs (la Shoah)",

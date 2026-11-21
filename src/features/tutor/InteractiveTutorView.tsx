@@ -628,11 +628,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const currentItem: TutorPointSessionItem | undefined = items[activeItemIndex];
   const currentPoint = currentItem?.point;
 
-  // Récupérer les 8 exercices du point
+  // Récupérer les exercices du point (dérivés automatiquement de structuredSteps si exercises est vide)
   const pointExercises: InteractiveExercise[] = useMemo(() => {
     if (!currentPoint) return [];
     if (Array.isArray(currentPoint.exercises) && currentPoint.exercises.length > 0) {
       return currentPoint.exercises;
+    }
+    if (Array.isArray(currentPoint.structuredSteps) && currentPoint.structuredSteps.length > 0) {
+      return currentPoint.structuredSteps.map((s) => s.exercise).filter(Boolean);
     }
     if (currentPoint.exercise) {
       return [currentPoint.exercise];
@@ -1771,11 +1774,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // VUE 3 : ÉCRAN D'INTRODUCTION ANIMÉ DE LA MINI-LEÇON (ÉTAPE 0)
   // =========================================================================
   if (phase === 'intro' && currentItem && currentPoint) {
-    const numQuestions = currentPoint.exercises?.length || 8;
+    const numQuestions = pointExercises.length || currentPoint.structuredSteps?.length || 8;
     const objectives = [
       `Comprendre le contexte réel et la définition simple de : ${currentPoint.title}`,
       currentPoint.formulas && currentPoint.formulas.length > 0
-        ? `Manipuler la formule officielle : ${currentPoint.formulas[0].name}`
+        ? `Manipuler la formule clé : ${currentPoint.formulas[0].name}`
         : `Identifier les principes d’application et la démarche rigoureuse`,
       currentPoint.keyRule
         ? `Retenir le réflexe d'examen : ${currentPoint.keyRule}`
@@ -1863,18 +1866,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </p>
           </div>
         )}
-
-        {/* Enjeu pour devoirs et examens */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/70 dark:bg-slate-950/40 border border-sky-200/80 dark:border-slate-800/60 text-left space-y-2 shadow-xs">
-          <div className="flex items-center gap-2 text-sky-900 dark:text-sky-200 font-black text-xs sm:text-sm">
-            <Target className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
-            <span>Pourquoi cette notion est essentielle pour tes devoirs & examens ?</span>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            Cette notion est un classique incontournable au programme officiel et aux examens nationaux (BEPC / BAC).
-            La comprendre en profondeur dès aujourd'hui te permet de poser la démarche attendue par les correcteurs et d'obtenir tous les points dès la première lecture de ton sujet.
-          </p>
-        </div>
 
         {/* Objectifs clés */}
         <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left space-y-3 shadow-xs">
@@ -2072,6 +2063,18 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             {/* Support Visuel / Schéma si présent */}
             {activeCourseSlice.visualSchema && (
               <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
+            )}
+
+            {/* Point clé / Règle d'or de l'étape si présente */}
+            {activeCourseSlice.keyRule && (
+              <div className="p-3 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-300/80 dark:border-emerald-500/35 space-y-1">
+                <div className="text-[10.5px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+                  À retenir
+                </div>
+                <p className="text-xs sm:text-sm text-emerald-950 dark:text-emerald-100 font-semibold leading-relaxed">
+                  <MathRenderer text={activeCourseSlice.keyRule} />
+                </p>
+              </div>
             )}
 
             {/* Astuce Konan si présente */}

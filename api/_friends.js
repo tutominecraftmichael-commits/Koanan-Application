@@ -53,7 +53,7 @@ export async function uidOfKonanId(db, konanId) {
   let snap = await users.where('konanId', '==', id).limit(2).get();
   if (snap.empty) snap = await users.where('userAccount.konanId', '==', id).limit(2).get();
   if (snap.empty) snap = await leagueCol(db, 'league_players').where('konanId', '==', id).limit(2).get();
-  return snap.size === 1 ? snap.docs[0].id : null;
+  return !snap.empty ? snap.docs[0].id : null;
 }
 
 /** Infos publiques de plusieurs élèves : nom, photo, ID, formule, XP au total, division, nombre d'amis. */
@@ -152,8 +152,13 @@ export async function sendFriendRequest(db, uid, konanId, nowMs = Date.now()) {
     // L'autre m'avait déjà envoyé une demande : on devient amis directement
     if (me.incoming.some((o) => o.from === target)) {
       if (me.friends.length >= MAX_FRIENDS || other.friends.length >= MAX_FRIENDS) return { error: 'TOO_MANY_FRIENDS' };
-      tx.set(fsCol(db).doc(uid), { ...me, friends: [...me.friends, target], incoming: me.incoming.filter((o) => o.from !== target) });
-      tx.set(fsCol(db).doc(target), pushNotice({ ...other, friends: [...other.friends, uid], outgoing: other.outgoing.filter((o) => o.to !== uid) }, { id: `accepted_${uid}_${nowMs}`, kind: 'accepted', from: uid, at: nowMs }));
+      tx.set(fsCol(db).doc(uid), {
+        ...me,
+        friends: [...new Set([...me.friends, target])],
+        incoming: me.incoming.filter((o) => o.from !== target),
+        notices: me.notices.filter((n) => !(n.kind === 'request' && n.from === target)),
+      });
+      tx.set(fsCol(db).doc(target), pushNotice({ ...other, friends: [...new Set([...other.friends, uid])], outgoing: other.outgoing.filter((o) => o.to !== uid) }, { id: `accepted_${uid}_${nowMs}`, kind: 'accepted', from: uid, at: nowMs }));
       return { status: 'friends', notify: 'accepted' };
     }
     if (other.allowRequests === false) return { error: 'REQUESTS_CLOSED' };
@@ -230,6 +235,18 @@ export async function removeFriend(db, uid, konanId) {
     });
   });
   return { status: 'removed' };
+}
+
+/** Efface les notifications informatives lues (acceptées / refusées), en gardant les demandes entrantes en attente. */
+export async function clearFriendNotices(db, uid) {
+  const ref = fsCol(db).doc(uid);
+  await db.runTransaction(async (tx) => {
+    const me = await readDoc(tx, db, uid);
+    const incomingSet = new Set((me.incoming || []).map((o) => o.from));
+    const kept = (me.notices || []).filter((n) => n.kind === 'request' && incomingSet.has(n.from));
+    tx.set(ref, { ...me, notices: kept });
+  });
+  return { status: 'cleared' };
 }
 
 /** Réglages de confidentialité : recevoir des demandes, profil visible par tous ou par mes amis seulement. */

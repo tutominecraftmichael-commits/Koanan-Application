@@ -24,7 +24,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
       summary:
         'Décrire la constitution d’une pile Daniell (demi-piles Zn²⁺/Zn et Cu²⁺/Cu, pont salin), identifier ses bornes (+ et −) et expliquer l’évolution des électrodes et des concentrations.',
       conceptExplanation:
-        "Une **pile électrochimique** sépare spatialement deux couples oxydant/réducteur en deux **demi-piles** reliées par un **pont salin** afin d’obliger les électrons à circuler dans un circuit extérieur : elle convertit l’**énergie chimique en énergie électrique**.\n\n**Exemple fondamental : la pile Daniell (p. 1–2)**\n- **Demi-pile négative ($-$)** : lame de **zinc** ($\\mathrm{Zn}$) plongée dans une solution de sulfate de zinc ($\\mathrm{Zn^{2+} + SO_4^{2-}}$).\n  - Elle est le siège d’une **oxydation** : $\\mathrm{Zn \\longrightarrow Zn^{2+} + 2\\,e^-}$.\n  - La **masse de la lame de zinc diminue** et la concentration $[\\mathrm{Zn^{2+}}]$ **augmente**.\n- **Demi-pile positive ($+$)** : lame de **cuivre** ($\\mathrm{Cu}$) plongée dans une solution de sulfate de cuivre ($\\mathrm{Cu^{2+} + SO_4^{2-}}$).\n  - Elle est le siège d’une **réduction** : $\\mathrm{Cu^{2+} + 2\\,e^- \\longrightarrow Cu}$.\n  - La **masse de la lame de cuivre augmente** (dépôt de cuivre) et $[\\mathrm{Cu^{2+}}]$ **diminue**.\n- **Pont salin (pont de jonction)** : bande de papier filtre imbibée de $\\mathrm{KCl}$ ou $\\mathrm{KNO_3}$ inerte ; il assure le contact électrique et l’électroneutralité des solutions.\n- **Équation-bilan de fonctionnement** : $\\mathrm{Zn + Cu^{2+} \\longrightarrow Zn^{2+} + Cu}$.\n- **Circulation** : les électrons ($e^-$) circulent à l’extérieur du pôle **$-$ (Zn)** vers le pôle **$+$ (Cu)** ; le courant électrique conventionnel $I$ va de **$+$ (Cu)** vers **$-$ (Zn)**.",
+        "Une **pile électrochimique** sépare spatialement deux couples oxydant/réducteur en deux **demi-piles** reliées par un **pont salin** afin d’obliger les électrons à circuler dans un circuit extérieur : elle convertit l’**énergie chimique en énergie électrique**.\n\n**Exemple fondamental : la pile Daniell**\n- **Demi-pile négative ($-$)** : lame de **zinc** ($\\mathrm{Zn}$) plongée dans une solution de sulfate de zinc ($\\mathrm{Zn^{2+} + SO_4^{2-}}$).\n - Elle est le siège d’une **oxydation** : $\\mathrm{Zn \\longrightarrow Zn^{2+} + 2\\,e^-}$.\n - La **masse de la lame de zinc diminue** et la concentration $[\\mathrm{Zn^{2+}}]$ **augmente**.\n- **Demi-pile positive ($+$)** : lame de **cuivre** ($\\mathrm{Cu}$) plongée dans une solution de sulfate de cuivre ($\\mathrm{Cu^{2+} + SO_4^{2-}}$).\n - Elle est le siège d’une **réduction** : $\\mathrm{Cu^{2+} + 2\\,e^- \\longrightarrow Cu}$.\n - La **masse de la lame de cuivre augmente** (dépôt de cuivre) et $[\\mathrm{Cu^{2+}}]$ **diminue**.\n- **Pont salin (pont de jonction)** : bande de papier filtre imbibée de $\\mathrm{KCl}$ ou $\\mathrm{KNO_3}$ inerte ; il assure le contact électrique et l’électroneutralité des solutions.\n- **Équation-bilan de fonctionnement** : $\\mathrm{Zn + Cu^{2+} \\longrightarrow Zn^{2+} + Cu}$.\n- **Circulation** : les électrons ($e^-$) circulent à l’extérieur du pôle **$-$ (Zn)** vers le pôle **$+$ (Cu)** ; le courant électrique conventionnel $I$ va de **$+$ (Cu)** vers **$-$ (Zn)**.",
       keyRule:
         'Dans toute pile : le pôle négatif (−) est toujours le siège de l’oxydation (le métal se consomme) et libère les électrons vers le pôle positif (+), siège de la réduction (dépôt métallique). Le pont salin ferme le circuit.',
       formulas: [
@@ -35,7 +35,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         },
       ],
       workedExample: {
-        title: 'Suivre l’évolution d’une pile Cu/Ag (Activité d’application p. 3)',
+        title: 'Suivre l’évolution d’une pile Cu/Ag',
         statement:
           'On considère la pile $\\ominus\\ \\mathrm{Cu/Cu^{2+} \\parallel Ag^+/Ag}\\ \\oplus$. Que deviennent les masses des deux électrodes lorsqu’elle débite ?',
         methodSteps: [
@@ -200,7 +200,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p01_q6',
             type: 'mcq',
-            prompt: 'Dans la pile $\\ominus\\ \\mathrm{Cu/Cu^{2+} \\parallel Ag^+/Ag}\\ \\oplus$ (Activité p. 3), quelle affirmation est vraie ?',
+            prompt: 'Dans la pile $\\ominus\\ \\mathrm{Cu/Cu^{2+} \\parallel Ag^+/Ag}\\ \\oplus$, quelle affirmation est vraie ?',
             options: [
               'La masse de l’électrode de cuivre diminue et celle de l’électrode d’argent augmente',
               'La masse de l’électrode de cuivre augmente et celle de l’électrode d’argent diminue',
@@ -287,7 +287,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p01_q6',
           type: 'mcq',
-          prompt: 'Dans la pile $\\ominus\\ \\mathrm{Cu/Cu^{2+} \\parallel Ag^+/Ag}\\ \\oplus$ (Activité p. 3), quelle affirmation est vraie ?',
+          prompt: 'Dans la pile $\\ominus\\ \\mathrm{Cu/Cu^{2+} \\parallel Ag^+/Ag}\\ \\oplus$, quelle affirmation est vraie ?',
           options: [
             'La masse de l’électrode de cuivre diminue et celle de l’électrode d’argent augmente',
             'La masse de l’électrode de cuivre augmente et celle de l’électrode d’argent diminue',
@@ -311,7 +311,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
       summary:
         'Écrire et lire la notation conventionnelle d’une pile (pôle − à gauche, pont salin //, pôle + à droite) et établir l’équation-bilan pour Cu/Pb, Pb/Fe, Pb/Zn, Ni/Ag.',
       conceptExplanation:
-        "Par convention (p. 2–3), la **notation schématique (conventionnelle)** d’une pile place le **pôle négatif ($-$) à gauche** (sous forme $\\text{Red}/\\text{Ox}$) et le **pôle positif ($+$) à droite** (sous forme $\\text{Ox}/\\text{Red}$), séparés par deux traits verticaux ($\\parallel$) représentant le **pont salin** :\n\n$$\\ominus\\; \\mathrm{M_1 / M_1^{n+}} \\;\\parallel\\; \\mathrm{M_2^{m+} / M_2} \\;\\oplus$$\n\n- **Règle d’or** : la borne négative ($-$) est constituée par le métal **le plus réducteur** (potentiel le plus bas) et la borne positive ($+$) par le métal **le moins réducteur** (potentiel le plus élevé).\n- **Exemples du cours (p. 2 et Ex 4 p. 8)** :\n  - Pile Daniell ($\\mathrm{Cu/Zn}$) : $\\ominus\\ \\mathrm{Zn/Zn^{2+} \\parallel Cu^{2+}/Cu}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Zn + Cu^{2+} \\to Zn^{2+} + Cu}$.\n  - Pile $\\mathrm{Cu/Pb}$ : $\\ominus\\ \\mathrm{Pb/Pb^{2+} \\parallel Cu^{2+}/Cu}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Pb + Cu^{2+} \\to Pb^{2+} + Cu}$.\n  - Pile $\\mathrm{Pb/Fe}$ : $\\ominus\\ \\mathrm{Fe/Fe^{2+} \\parallel Pb^{2+}/Pb}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Fe + Pb^{2+} \\to Fe^{2+} + Pb}$.\n  - Pile $\\mathrm{Ag/Ni}$ (Ex 4) : $\\ominus\\ \\mathrm{Ni/Ni^{2+} \\parallel Ag^+/Ag}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Ni + 2\\,Ag^+ \\to Ni^{2+} + 2\\,Ag}$.",
+        "Par convention, la **notation schématique (conventionnelle)** d’une pile place le **pôle négatif ($-$) à gauche** (sous forme $\\text{Red}/\\text{Ox}$) et le **pôle positif ($+$) à droite** (sous forme $\\text{Ox}/\\text{Red}$), séparés par deux traits verticaux ($\\parallel$) représentant le **pont salin** :\n\n$$\\ominus\\; \\mathrm{M_1 / M_1^{n+}} \\;\\parallel\\; \\mathrm{M_2^{m+} / M_2} \\;\\oplus$$\n\n- **Règle d’or** : la borne négative ($-$) est constituée par le métal **le plus réducteur** (potentiel le plus bas) et la borne positive ($+$) par le métal **le moins réducteur** (potentiel le plus élevé).\n- **Exemples** :\n - Pile Daniell ($\\mathrm{Cu/Zn}$) : $\\ominus\\ \\mathrm{Zn/Zn^{2+} \\parallel Cu^{2+}/Cu}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Zn + Cu^{2+} \\to Zn^{2+} + Cu}$.\n - Pile $\\mathrm{Cu/Pb}$ : $\\ominus\\ \\mathrm{Pb/Pb^{2+} \\parallel Cu^{2+}/Cu}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Pb + Cu^{2+} \\to Pb^{2+} + Cu}$.\n - Pile $\\mathrm{Pb/Fe}$ : $\\ominus\\ \\mathrm{Fe/Fe^{2+} \\parallel Pb^{2+}/Pb}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Fe + Pb^{2+} \\to Fe^{2+} + Pb}$.\n - Pile $\\mathrm{Ag/Ni}$ : $\\ominus\\ \\mathrm{Ni/Ni^{2+} \\parallel Ag^+/Ag}\\ \\oplus$ $\\implies$ bilan : $\\mathrm{Ni + 2\\,Ag^+ \\to Ni^{2+} + 2\\,Ag}$.",
       keyRule:
         'Notation conventionnelle : ⊖ Métal(−)/Ion(−) // Ion(+)/Métal(+) ⊕. Le métal le plus réducteur (E° le plus faible) est toujours à gauche (pôle −, oxydé) et le moins réducteur à droite (pôle +, réduit).',
       formulas: [
@@ -322,7 +322,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         },
       ],
       workedExample: {
-        title: 'Construire la pile Ni / Ag (Exercice 4 p. 8)',
+        title: 'Construire la pile Ni / Ag',
         statement:
           'On associe les demi-piles $\\mathrm{Ag^+/Ag}$ ($E^0 = 0{,}80\\text{ V}$) et $\\mathrm{Ni^{2+}/Ni}$ ($E^0 = 0{,}23\\text{ V}$). Donne sa polarité, sa notation conventionnelle et son équation-bilan.',
         methodSteps: [
@@ -415,7 +415,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p02_q4',
             type: 'mcq',
-            prompt: 'Quelle est l’équation-bilan de fonctionnement de la pile $\\ominus\\ \\mathrm{Zn / Zn^{2+} \\parallel Ag^+ / Ag}\\ \\oplus$ (Situation p. 6) ?',
+            prompt: 'Quelle est l’équation-bilan de fonctionnement de la pile $\\ominus\\ \\mathrm{Zn / Zn^{2+} \\parallel Ag^+ / Ag}\\ \\oplus$ ?',
             options: [
               '$\\mathrm{Zn + 2\\,Ag^+ \\longrightarrow Zn^{2+} + 2\\,Ag}$',
               '$\\mathrm{Zn + Ag^+ \\longrightarrow Zn^{2+} + Ag}$',
@@ -438,7 +438,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p02_q5',
             type: 'mcq',
-            prompt: 'On relie une demi-pile $\\mathrm{Cu^{2+}/Cu}$ (pôle $+$) à une demi-pile $\\mathrm{Sn^{2+}/Sn}$ (pôle $-$). Quel est le schéma conventionnel de cette pile (Ex 5 p. 8–9) ?',
+            prompt: 'On relie une demi-pile $\\mathrm{Cu^{2+}/Cu}$ (pôle $+$) à une demi-pile $\\mathrm{Sn^{2+}/Sn}$ (pôle $-$). Quel est le schéma conventionnel de cette pile ?',
             options: [
               '$\\ominus\\ \\mathrm{Sn / Sn^{2+} \\parallel Cu^{2+} / Cu}\\ \\oplus$',
               '$\\ominus\\ \\mathrm{Cu / Cu^{2+} \\parallel Sn^{2+} / Sn}\\ \\oplus$',
@@ -520,7 +520,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p02_q4',
           type: 'mcq',
-          prompt: 'Quelle est l’équation-bilan de fonctionnement de la pile $\\ominus\\ \\mathrm{Zn / Zn^{2+} \\parallel Ag^+ / Ag}\\ \\oplus$ (Situation p. 6) ?',
+          prompt: 'Quelle est l’équation-bilan de fonctionnement de la pile $\\ominus\\ \\mathrm{Zn / Zn^{2+} \\parallel Ag^+ / Ag}\\ \\oplus$ ?',
           options: [
             '$\\mathrm{Zn + 2\\,Ag^+ \\longrightarrow Zn^{2+} + 2\\,Ag}$',
             '$\\mathrm{Zn + Ag^+ \\longrightarrow Zn^{2+} + Ag}$',
@@ -534,7 +534,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p02_q5',
           type: 'mcq',
-          prompt: 'On relie une demi-pile $\\mathrm{Cu^{2+}/Cu}$ (pôle $+$) à une demi-pile $\\mathrm{Sn^{2+}/Sn}$ (pôle $-$). Quel est le schéma conventionnel de cette pile (Ex 5 p. 8–9) ?',
+          prompt: 'On relie une demi-pile $\\mathrm{Cu^{2+}/Cu}$ (pôle $+$) à une demi-pile $\\mathrm{Sn^{2+}/Sn}$ (pôle $-$). Quel est le schéma conventionnel de cette pile ?',
           options: [
             '$\\ominus\\ \\mathrm{Sn / Sn^{2+} \\parallel Cu^{2+} / Cu}\\ \\oplus$',
             '$\\ominus\\ \\mathrm{Cu / Cu^{2+} \\parallel Sn^{2+} / Sn}\\ \\oplus$',
@@ -572,7 +572,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
       summary:
         'Définir l’Électrode Standard à Hydrogène (ESH : 0,00 V), le potentiel standard E° d’un couple et l’usage de la demi-pile Cu²⁺/Cu (+0,34 V) comme référence secondaire.',
       conceptExplanation:
-        "Pour classer numériquement tous les couples redox, il faut choisir une **référence zéro**, comme le niveau de la mer (ou le bas d’une cascade, Documentation p. 9) pour mesurer des altitudes :\n\n1. **Électrode Standard à Hydrogène (ESH)** (p. 3) :\n   - Constituée d’une lame de **platine ($\\mathrm{Pt}$)** plongeant dans une solution acide à **$[\\mathrm{H_3O^+}] = 1\\text{ mol/L}$ ($\\text{pH} = 0$)** où barbote du **dihydrogène $\\mathrm{H_2}$** sous **$P = 1\\text{ atm}$**.\n   - Demi-équation : $2\\,\\mathrm{H^+ + 2\\,e^- \\longrightarrow H_2}$.\n   - Par convention, à toute température : **$E^0(\\mathrm{H^+/H_2}) = 0{,}00\\text{ V}$**.\n2. **Définition du potentiel d’oxydoréduction** :\n   - Le potentiel du couple $\\mathrm{M^{n+}/M}$ est la f.é.m. de la pile associée à l’ESH : $E_{\\mathrm{M^{n+}/M}} = V_M - V_{\\text{ESH}}$.\n   - Si $M$ est **moins réducteur** que $\\mathrm{H_2}$, $E > 0$ (ex. $\\mathrm{Cu}$ : $+0{,}34\\text{ V}$, $\\mathrm{Ag}$ : $+0{,}80\\text{ V}$).\n   - Si $M$ est **plus réducteur** que $\\mathrm{H_2}$, $E < 0$ (ex. $\\mathrm{Zn}$ : $-0{,}77\\text{ V}$, $\\mathrm{Fe}$ : $-0{,}44\\text{ V}$).\n3. **Électrode de référence secondaire ($\\mathrm{Cu^{2+}/Cu}$)** (p. 3–4) :\n   - L’ESH étant délicate à mettre en œuvre, on utilise souvent au laboratoire la demi-pile $\\mathrm{Cu^{2+}/Cu}$ dans les conditions standard ($[\\mathrm{Cu^{2+}}] = 1\\text{ mol/L}$, $T = 298\\text{ K}$), dont le potentiel normal vaut **$E^0(\\mathrm{Cu^{2+}/Cu}) = +0{,}34\\text{ V}$**.\n   - La différence de potentiel mesurée entre la lame de cuivre et la lame du métal $M$ vaut alors :\n     $$V_{\\mathrm{Cu}} - V_M = E^0(\\mathrm{Cu^{2+}/Cu}) - E^0(\\mathrm{M^{n+}/M})$$",
+        "Pour classer numériquement tous les couples redox, il faut choisir une **référence zéro**, comme le niveau de la mer pour mesurer des altitudes :\n\n1. **Électrode Standard à Hydrogène (ESH)** :\n - Constituée d’une lame de **platine ($\\mathrm{Pt}$)** plongeant dans une solution acide à **$[\\mathrm{H_3O^+}] = 1\\text{ mol/L}$ ($\\text{pH} = 0$)** où barbote du **dihydrogène $\\mathrm{H_2}$** sous **$P = 1\\text{ atm}$**.\n - Demi-équation : $2\\,\\mathrm{H^+ + 2\\,e^- \\longrightarrow H_2}$.\n - Par convention, à toute température : **$E^0(\\mathrm{H^+/H_2}) = 0{,}00\\text{ V}$**.\n2. **Définition du potentiel d’oxydoréduction** :\n - Le potentiel du couple $\\mathrm{M^{n+}/M}$ est la f.é.m. de la pile associée à l’ESH : $E_{\\mathrm{M^{n+}/M}} = V_M - V_{\\text{ESH}}$.\n - Si $M$ est **moins réducteur** que $\\mathrm{H_2}$, $E > 0$ (ex. $\\mathrm{Cu}$ : $+0{,}34\\text{ V}$, $\\mathrm{Ag}$ : $+0{,}80\\text{ V}$).\n - Si $M$ est **plus réducteur** que $\\mathrm{H_2}$, $E < 0$ (ex. $\\mathrm{Zn}$ : $-0{,}77\\text{ V}$, $\\mathrm{Fe}$ : $-0{,}44\\text{ V}$).\n3. **Électrode de référence secondaire ($\\mathrm{Cu^{2+}/Cu}$)** :\n - L’ESH étant délicate à mettre en œuvre, on utilise souvent au laboratoire la demi-pile $\\mathrm{Cu^{2+}/Cu}$ dans les conditions standard ($[\\mathrm{Cu^{2+}}] = 1\\text{ mol/L}$, $T = 298\\text{ K}$), dont le potentiel normal vaut **$E^0(\\mathrm{Cu^{2+}/Cu}) = +0{,}34\\text{ V}$**.\n - La différence de potentiel mesurée entre la lame de cuivre et la lame du métal $M$ vaut alors :\n $$V_{\\mathrm{Cu}} - V_M = E^0(\\mathrm{Cu^{2+}/Cu}) - E^0(\\mathrm{M^{n+}/M})$$",
       keyRule:
         'L’ESH (Pt, H₂ à 1 atm, pH = 0) fixe le potentiel de référence E°(H⁺/H₂) = 0,00 V. En pratique, la référence secondaire Cu²⁺/Cu ([Cu²⁺] = 1 mol/L à 298 K) a pour potentiel normal E° = +0,34 V.',
       formulas: [
@@ -583,7 +583,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         },
       ],
       workedExample: {
-        title: 'Déterminer E°(Sn²⁺/Sn) à l’aide de l’électrode Cu²⁺/Cu (Exercice 5 p. 8–9)',
+        title: 'Déterminer E°(Sn²⁺/Sn) à l’aide de l’électrode Cu²⁺/Cu',
         statement:
           'On réalise la pile standard $\\ominus\\ \\mathrm{Sn/Sn^{2+} \\parallel Cu^{2+}/Cu}\\ \\oplus$ et on mesure une f.é.m. $E = 0{,}48\\text{ V}$. Sachant que $E^0(\\mathrm{Cu^{2+}/Cu}) = +0{,}34\\text{ V}$, détermine $E^0(\\mathrm{Sn^{2+}/Sn})$.',
         methodSteps: [
@@ -625,11 +625,11 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           stepTheme: 'Couple H⁺/H₂',
           stepTitle: 'Situer le couple H⁺/H₂ dans la classification',
           paragraphText:
-            'Par convention, le potentiel du couple H⁺/H₂ vaut 0,00 V à toute température : il marque l’origine de l’échelle des potentiels normaux (Ex 2 p. 7).',
+            'Par convention, le potentiel du couple H⁺/H₂ vaut 0,00 V à toute température : il marque l’origine de l’échelle des potentiels normaux.',
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q2',
             type: 'mcq',
-            prompt: 'Quelle place occupe le couple $\\mathrm{H^+/H_2}$ dans la classification quantitative des couples redox (Ex 2 p. 7) ?',
+            prompt: 'Quelle place occupe le couple $\\mathrm{H^+/H_2}$ dans la classification quantitative des couples redox ?',
             options: [
               'Il est placé à l’origine de la classification avec $E^0(\\mathrm{H^+/H_2}) = 0\\text{ V}$ par convention',
               'Il possède le potentiel le plus élevé possible ($+3{,}0\\text{ V}$)',
@@ -638,7 +638,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
             ],
             correctAnswerIndex: 0,
             explanation:
-              'Tout comme on choisit une altitude zéro pour mesurer les hauteurs (Documentation p. 9), E°(H⁺/H₂) = 0 V sert d’origine conventionnelle.',
+              'Tout comme on choisit une altitude zéro pour mesurer les hauteurs, E°(H⁺/H₂) = 0 V sert d’origine conventionnelle.',
           },
         },
         {
@@ -698,7 +698,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q5',
             type: 'mcq',
-            prompt: 'Une pile standard associant le cuivre ($+$) à l’étain ($-$) a pour f.é.m. $E = 0{,}48\\text{ V}$ (Ex 5 p. 8–9). Sachant que $E^0(\\mathrm{Cu^{2+}/Cu}) = 0{,}34\\text{ V}$, que vaut $E^0(\\mathrm{Sn^{2+}/Sn})$ ?',
+            prompt: 'Une pile standard associant le cuivre ($+$) à l’étain ($-$) a pour f.é.m. $E = 0{,}48\\text{ V}$. Sachant que $E^0(\\mathrm{Cu^{2+}/Cu}) = 0{,}34\\text{ V}$, que vaut $E^0(\\mathrm{Sn^{2+}/Sn})$ ?',
             options: [
               '$-0{,}14\\text{ V}$',
               '$+0{,}82\\text{ V}$',
@@ -721,7 +721,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q6',
             type: 'mcq',
-            prompt: 'Dans l’analogie de la cascade (Documentation p. 9), à quoi assimile-t-on la tension électrique entre deux bornes ?',
+            prompt: 'Dans l’analogie de la cascade, à quoi assimile-t-on la tension électrique entre deux bornes ?',
             options: [
               'À la hauteur de la chute d’eau (différence entre deux potentiels/altitudes)',
               'Au débit massique de l’eau par seconde',
@@ -752,7 +752,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q2',
           type: 'mcq',
-          prompt: 'Quelle place occupe le couple $\\mathrm{H^+/H_2}$ dans la classification quantitative des couples redox (Ex 2 p. 7) ?',
+          prompt: 'Quelle place occupe le couple $\\mathrm{H^+/H_2}$ dans la classification quantitative des couples redox ?',
           options: [
             'Il est placé à l’origine de la classification avec $E^0(\\mathrm{H^+/H_2}) = 0\\text{ V}$ par convention',
             'Il possède le potentiel le plus élevé possible ($+3{,}0\\text{ V}$)',
@@ -761,7 +761,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           ],
           correctAnswerIndex: 0,
           explanation:
-            'Tout comme on choisit une altitude zéro pour mesurer les hauteurs (Documentation p. 9), E°(H⁺/H₂) = 0 V sert d’origine conventionnelle.',
+            'Tout comme on choisit une altitude zéro pour mesurer les hauteurs, E°(H⁺/H₂) = 0 V sert d’origine conventionnelle.',
         },
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q3',
@@ -794,7 +794,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q5',
           type: 'mcq',
-          prompt: 'Une pile standard associant le cuivre ($+$) à l’étain ($-$) a pour f.é.m. $E = 0{,}48\\text{ V}$ (Ex 5 p. 8–9). Sachant que $E^0(\\mathrm{Cu^{2+}/Cu}) = 0{,}34\\text{ V}$, que vaut $E^0(\\mathrm{Sn^{2+}/Sn})$ ?',
+          prompt: 'Une pile standard associant le cuivre ($+$) à l’étain ($-$) a pour f.é.m. $E = 0{,}48\\text{ V}$. Sachant que $E^0(\\mathrm{Cu^{2+}/Cu}) = 0{,}34\\text{ V}$, que vaut $E^0(\\mathrm{Sn^{2+}/Sn})$ ?',
           options: [
             '$-0{,}14\\text{ V}$',
             '$+0{,}82\\text{ V}$',
@@ -808,7 +808,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p03_q6',
           type: 'mcq',
-          prompt: 'Dans l’analogie de la cascade (Documentation p. 9), à quoi assimile-t-on la tension électrique entre deux bornes ?',
+          prompt: 'Dans l’analogie de la cascade, à quoi assimile-t-on la tension électrique entre deux bornes ?',
           options: [
             'À la hauteur de la chute d’eau (différence entre deux potentiels/altitudes)',
             'Au débit massique de l’eau par seconde',
@@ -832,7 +832,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
       summary:
         'Déterminer les bornes d’une pile quelconque à partir des potentiels standards E° et calculer sa f.é.m. par E° = E°(+) − E°(−).',
       conceptExplanation:
-        "Lorsque deux couples sont associés pour former une pile standard ($C = 1\\text{ mol/L}$, $T = 298\\text{ K}$) (p. 4–6) :\n\n1. **Détermination des bornes** :\n   - La **borne positive ($+$)** correspond au couple de potentiel standard **le plus élevé** ($E^0(+)$).\n   - La **borne négative ($-$)** correspond au couple de potentiel standard **le plus bas** ($E^0(-)$).\n2. **Force électromotrice (f.é.m.)** : la f.é.m. $E$ (toujours positive) est la différence entre le potentiel du pôle positif et celui du pôle négatif :\n   $$E^0 = E^0(+) - E^0(-)$$\n\n**Valeurs de référence du cours (p. 4–8) :**\n- $E^0(\\mathrm{Ag^+/Ag}) = +0{,}80\\text{ V}$, $E^0(\\mathrm{Hg^{2+}/Hg}) = +0{,}86\\text{ V}$, $E^0(\\mathrm{Cu^{2+}/Cu}) = +0{,}34\\text{ V}$, $E^0(\\mathrm{Pb^{2+}/Pb}) = -0{,}13\\text{ V}$, $E^0(\\mathrm{Fe^{2+}/Fe}) = -0{,}44\\text{ V}$, $E^0(\\mathrm{Zn^{2+}/Zn}) = -0{,}77\\text{ V}$ (ou $-0{,}76\\text{ V}$).\n- Exemples de calculs : pile $\\mathrm{Cu/Zn}$ : $0{,}34 - (-0{,}77) = 1{,}11\\text{ V}$ ; pile $\\mathrm{Cu/Pb}$ : $0{,}34 - (-0{,}13) = 0{,}47\\text{ V}$ ; pile $\\mathrm{Pb/Zn}$ : $-0{,}13 - (-0{,}77) = 0{,}64\\text{ V}$.",
+        "Lorsque deux couples sont associés pour former une pile standard ($C = 1\\text{ mol/L}$, $T = 298\\text{ K}$) :\n\n1. **Détermination des bornes** :\n - La **borne positive ($+$)** correspond au couple de potentiel standard **le plus élevé** ($E^0(+)$).\n - La **borne négative ($-$)** correspond au couple de potentiel standard **le plus bas** ($E^0(-)$).\n2. **Force électromotrice (f.é.m.)** : la f.é.m. $E$ (toujours positive) est la différence entre le potentiel du pôle positif et celui du pôle négatif :\n $$E^0 = E^0(+) - E^0(-)$$\n\n**Valeurs de référence :**\n- $E^0(\\mathrm{Ag^+/Ag}) = +0{,}80\\text{ V}$, $E^0(\\mathrm{Hg^{2+}/Hg}) = +0{,}86\\text{ V}$, $E^0(\\mathrm{Cu^{2+}/Cu}) = +0{,}34\\text{ V}$, $E^0(\\mathrm{Pb^{2+}/Pb}) = -0{,}13\\text{ V}$, $E^0(\\mathrm{Fe^{2+}/Fe}) = -0{,}44\\text{ V}$, $E^0(\\mathrm{Zn^{2+}/Zn}) = -0{,}77\\text{ V}$ (ou $-0{,}76\\text{ V}$).\n- Exemples de calculs : pile $\\mathrm{Cu/Zn}$ : $0{,}34 - (-0{,}77) = 1{,}11\\text{ V}$ ; pile $\\mathrm{Cu/Pb}$ : $0{,}34 - (-0{,}13) = 0{,}47\\text{ V}$ ; pile $\\mathrm{Pb/Zn}$ : $-0{,}13 - (-0{,}77) = 0{,}64\\text{ V}$.",
       keyRule:
         'Pour toute pile standard : pôle (+) = couple de E° le plus élevé, pôle (−) = couple de E° le plus bas, et f.é.m. E° = E°(+) − E°(−) > 0 (attention au signe moins quand E°(−) < 0 !).',
       formulas: [
@@ -843,7 +843,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         },
       ],
       workedExample: {
-        title: 'Calculer les f.é.m. des piles A (Ag/Zn) et B (Hg/Cu) (Situation p. 6)',
+        title: 'Calculer les f.é.m. des piles A (Ag/Zn) et B (Hg/Cu)',
         statement:
           'On donne $E^0(\\mathrm{Zn^{2+}/Zn}) = -0{,}76\\text{ V}$, $E^0(\\mathrm{Ag^+/Ag}) = +0{,}80\\text{ V}$, $E^0(\\mathrm{Cu^{2+}/Cu}) = +0{,}34\\text{ V}$ et $E^0(\\mathrm{Hg^{2+}/Hg}) = +0{,}86\\text{ V}$. Détermine la polarité et la f.é.m. des piles A ($\\mathrm{Ag/Zn}$) et B ($\\mathrm{Hg/Cu}$).',
         methodSteps: [
@@ -911,7 +911,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p04_q3',
             type: 'mcq',
-            prompt: 'On réalise une pile avec $\\mathrm{Fe^{2+}/Fe}$ ($-0{,}44\\text{ V}$) et $\\mathrm{Ag^+/Ag}$ ($+0{,}80\\text{ V}$) (Activité p. 5). Quels sont la borne ($+$) et la f.é.m. $E$ ?',
+            prompt: 'On réalise une pile avec $\\mathrm{Fe^{2+}/Fe}$ ($-0{,}44\\text{ V}$) et $\\mathrm{Ag^+/Ag}$ ($+0{,}80\\text{ V}$). Quels sont la borne ($+$) et la f.é.m. $E$ ?',
             options: [
               'Borne ($+$) : $\\mathrm{Ag}$ ; $E = 1{,}24\\text{ V}$',
               'Borne ($+$) : $\\mathrm{Ag}$ ; $E = 0{,}36\\text{ V}$',
@@ -980,7 +980,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p04_q6',
             type: 'mcq',
-            prompt: 'Que vaut la f.é.m. d’une pile associant $\\mathrm{Ag^+/Ag}$ ($0{,}80\\text{ V}$) et $\\mathrm{Ni^{2+}/Ni}$ ($0{,}23\\text{ V}$) (Ex 4 p. 8) ?',
+            prompt: 'Que vaut la f.é.m. d’une pile associant $\\mathrm{Ag^+/Ag}$ ($0{,}80\\text{ V}$) et $\\mathrm{Ni^{2+}/Ni}$ ($0{,}23\\text{ V}$) ?',
             options: [
               '$0{,}57\\text{ V}$ (pôle $+$ : $\\mathrm{Ag}$, pôle $-$ : $\\mathrm{Ni}$)',
               '$1{,}03\\text{ V}$ (pôle $+$ : $\\mathrm{Ag}$, pôle $-$ : $\\mathrm{Ni}$)',
@@ -1025,7 +1025,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p04_q3',
           type: 'mcq',
-          prompt: 'On réalise une pile avec $\\mathrm{Fe^{2+}/Fe}$ ($-0{,}44\\text{ V}$) et $\\mathrm{Ag^+/Ag}$ ($+0{,}80\\text{ V}$) (Activité p. 5). Quels sont la borne ($+$) et la f.é.m. $E$ ?',
+          prompt: 'On réalise une pile avec $\\mathrm{Fe^{2+}/Fe}$ ($-0{,}44\\text{ V}$) et $\\mathrm{Ag^+/Ag}$ ($+0{,}80\\text{ V}$). Quels sont la borne ($+$) et la f.é.m. $E$ ?',
           options: [
             'Borne ($+$) : $\\mathrm{Ag}$ ; $E = 1{,}24\\text{ V}$',
             'Borne ($+$) : $\\mathrm{Ag}$ ; $E = 0{,}36\\text{ V}$',
@@ -1067,7 +1067,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p04_q6',
           type: 'mcq',
-          prompt: 'Que vaut la f.é.m. d’une pile associant $\\mathrm{Ag^+/Ag}$ ($0{,}80\\text{ V}$) et $\\mathrm{Ni^{2+}/Ni}$ ($0{,}23\\text{ V}$) (Ex 4 p. 8) ?',
+          prompt: 'Que vaut la f.é.m. d’une pile associant $\\mathrm{Ag^+/Ag}$ ($0{,}80\\text{ V}$) et $\\mathrm{Ni^{2+}/Ni}$ ($0{,}23\\text{ V}$) ?',
           options: [
             '$0{,}57\\text{ V}$ (pôle $+$ : $\\mathrm{Ag}$, pôle $-$ : $\\mathrm{Ni}$)',
             '$1{,}03\\text{ V}$ (pôle $+$ : $\\mathrm{Ag}$, pôle $-$ : $\\mathrm{Ni}$)',
@@ -1091,7 +1091,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
       summary:
         'Classer les couples sur l’axe vertical des potentiels standards (POC vers le haut, PRC vers le bas) et prévoir les réactions spontanées entre métaux, ions métalliques et acides.',
       conceptExplanation:
-        "En ordonnant les couples $\\text{Ox}/\\text{Red}$ suivant l’axe croissant des potentiels normaux $E^0(\\text{V})$ (p. 4–7) :\n\n- **POC (Pouvoir Oxydant Croissant)** vers le **haut** : plus l’oxydant d’un couple est fort, plus son potentiel standard $E^0$ est **élevé**.\n- **PRC (Pouvoir Réducteur Croissant)** vers le **bas** : plus le réducteur d’un couple est fort, plus son potentiel standard $E^0$ est **faible**.\n- **Prévision des réactions (règle du gamma $\\gamma$)** : la seule réaction spontanée possible entre deux couples met en jeu l’**oxydant le plus fort** (couple de $E^0$ le plus grand) et le **réducteur le plus fort** (couple de $E^0$ le plus petit).\n  - **Action des acides ($\\mathrm{H^+/H_2}$, $0\\text{ V}$) sur les métaux (Ex 2 p. 7)** : tout métal de potentiel $E^0 < 0$ (comme $\\mathrm{Mn}$, $\\mathrm{Fe}$, $\\mathrm{Zn}$) est attaqué par l’acide chlorhydrique avec dégagement de $\\mathrm{H_2}$, tandis que les métaux à $E^0 > 0$ ($\\mathrm{Cu}$, $\\mathrm{Ag}$, $\\mathrm{Pt}$, $\\mathrm{Au}$) ne réagissent pas avec $\\mathrm{H^+}$.",
+        "En ordonnant les couples $\\text{Ox}/\\text{Red}$ suivant l’axe croissant des potentiels normaux $E^0(\\text{V})$ :\n\n- **POC (Pouvoir Oxydant Croissant)** vers le **haut** : plus l’oxydant d’un couple est fort, plus son potentiel standard $E^0$ est **élevé**.\n- **PRC (Pouvoir Réducteur Croissant)** vers le **bas** : plus le réducteur d’un couple est fort, plus son potentiel standard $E^0$ est **faible**.\n- **Prévision des réactions (règle du gamma $\\gamma$)** : la seule réaction spontanée possible entre deux couples met en jeu l’**oxydant le plus fort** (couple de $E^0$ le plus grand) et le **réducteur le plus fort** (couple de $E^0$ le plus petit).\n - **Action des acides ($\\mathrm{H^+/H_2}$, $0\\text{ V}$) sur les métaux** : tout métal de potentiel $E^0 < 0$ (comme $\\mathrm{Mn}$, $\\mathrm{Fe}$, $\\mathrm{Zn}$) est attaqué par l’acide chlorhydrique avec dégagement de $\\mathrm{H_2}$, tandis que les métaux à $E^0 > 0$ ($\\mathrm{Cu}$, $\\mathrm{Ag}$, $\\mathrm{Pt}$, $\\mathrm{Au}$) ne réagissent pas avec $\\mathrm{H^+}$.",
       keyRule:
         'Plus E° est élevé, plus l’oxydant est fort (POC ↑). Plus E° est faible, plus le réducteur est fort (PRC ↓). La réaction spontanée se fait entre l’oxydant de plus grand E° et le réducteur de plus petit E°.',
       formulas: [
@@ -1102,7 +1102,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         },
       ],
       workedExample: {
-        title: 'Comparer Mn et Pt face à HCl, puis Mg et Au³⁺ (Exercices 2 et 3 p. 7)',
+        title: 'Comparer Mn et Pt face à HCl, puis Mg et Au³⁺',
         statement:
           '(1) On donne $E^0(\\mathrm{Pt^{2+}/Pt}) = +1{,}2\\text{ V}$ et $E^0(\\mathrm{Mn^{2+}/Mn}) = -1{,}18\\text{ V}$. Lequel réagit avec l’acide chlorhydrique ? (2) Prévois et équilibre la réaction entre $\\mathrm{Au^{3+}/Au}$ ($+1{,}5\\text{ V}$) et $\\mathrm{Mg^{2+}/Mg}$ ($-2{,}37\\text{ V}$).',
         methodSteps: [
@@ -1148,7 +1148,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p05_q2',
             type: 'mcq',
-            prompt: 'Une lame de zinc plongée dans $\\mathrm{CuSO_4}$ se recouvre de cuivre, alors que le cuivre ne réagit pas dans $\\mathrm{ZnSO_4}$ (Ex 1 p. 6–7). Qu’en déduit-on ?',
+            prompt: 'Une lame de zinc plongée dans $\\mathrm{CuSO_4}$ se recouvre de cuivre, alors que le cuivre ne réagit pas dans $\\mathrm{ZnSO_4}$. Qu’en déduit-on ?',
             options: [
               '$E^0(\\mathrm{Cu^{2+}/Cu}) > E^0(\\mathrm{Zn^{2+}/Zn})$ et bilan : $\\mathrm{Cu^{2+} + Zn \\longrightarrow Cu + Zn^{2+}}$',
               '$E^0(\\mathrm{Zn^{2+}/Zn}) > E^0(\\mathrm{Cu^{2+}/Cu})$ et bilan : $\\mathrm{Zn^{2+} + Cu \\longrightarrow Zn + Cu^{2+}}$',
@@ -1171,7 +1171,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p05_q3',
             type: 'mcq',
-            prompt: 'Sachant que $E^0(\\mathrm{Pt^{2+}/Pt}) = +1{,}2\\text{ V}$ et $E^0(\\mathrm{Mn^{2+}/Mn}) = -1{,}18\\text{ V}$, comment se comportent le manganèse et le platine dans l’acide chlorhydrique (Ex 2 p. 7) ?',
+            prompt: 'Sachant que $E^0(\\mathrm{Pt^{2+}/Pt}) = +1{,}2\\text{ V}$ et $E^0(\\mathrm{Mn^{2+}/Mn}) = -1{,}18\\text{ V}$, comment se comportent le manganèse et le platine dans l’acide chlorhydrique ?',
             options: [
               'Le manganèse réagit selon $\\mathrm{Mn + 2\\,H^+ \\longrightarrow Mn^{2+} + H_2}$, tandis que le platine ne réagit pas',
               'Le platine réagit selon $\\mathrm{Pt + 2\\,H^+ \\longrightarrow Pt^{2+} + H_2}$, tandis que le manganèse ne réagit pas',
@@ -1194,7 +1194,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p05_q4',
             type: 'mcq',
-            prompt: 'Avec $E^0(\\mathrm{Au^{3+}/Au}) = 1{,}5\\text{ V}$ et $E^0(\\mathrm{Mg^{2+}/Mg}) = -2{,}37\\text{ V}$, quelle réaction spontanée se produit (Ex 3 p. 7) ?',
+            prompt: 'Avec $E^0(\\mathrm{Au^{3+}/Au}) = 1{,}5\\text{ V}$ et $E^0(\\mathrm{Mg^{2+}/Mg}) = -2{,}37\\text{ V}$, quelle réaction spontanée se produit ?',
             options: [
               '$3\\,\\mathrm{Mg} + 2\\,\\mathrm{Au^{3+}} \\longrightarrow 3\\,\\mathrm{Mg^{2+}} + 2\\,\\mathrm{Au}$',
               '$\\mathrm{Mg} + \\mathrm{Au^{3+}} \\longrightarrow \\mathrm{Mg^{2+}} + \\mathrm{Au}$',
@@ -1271,7 +1271,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p05_q2',
           type: 'mcq',
-          prompt: 'Une lame de zinc plongée dans $\\mathrm{CuSO_4}$ se recouvre de cuivre, alors que le cuivre ne réagit pas dans $\\mathrm{ZnSO_4}$ (Ex 1 p. 6–7). Qu’en déduit-on ?',
+          prompt: 'Une lame de zinc plongée dans $\\mathrm{CuSO_4}$ se recouvre de cuivre, alors que le cuivre ne réagit pas dans $\\mathrm{ZnSO_4}$. Qu’en déduit-on ?',
           options: [
             '$E^0(\\mathrm{Cu^{2+}/Cu}) > E^0(\\mathrm{Zn^{2+}/Zn})$ et bilan : $\\mathrm{Cu^{2+} + Zn \\longrightarrow Cu + Zn^{2+}}$',
             '$E^0(\\mathrm{Zn^{2+}/Zn}) > E^0(\\mathrm{Cu^{2+}/Cu})$ et bilan : $\\mathrm{Zn^{2+} + Cu \\longrightarrow Zn + Cu^{2+}}$',
@@ -1285,7 +1285,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p05_q3',
           type: 'mcq',
-          prompt: 'Sachant que $E^0(\\mathrm{Pt^{2+}/Pt}) = +1{,}2\\text{ V}$ et $E^0(\\mathrm{Mn^{2+}/Mn}) = -1{,}18\\text{ V}$, comment se comportent le manganèse et le platine dans l’acide chlorhydrique (Ex 2 p. 7) ?',
+          prompt: 'Sachant que $E^0(\\mathrm{Pt^{2+}/Pt}) = +1{,}2\\text{ V}$ et $E^0(\\mathrm{Mn^{2+}/Mn}) = -1{,}18\\text{ V}$, comment se comportent le manganèse et le platine dans l’acide chlorhydrique ?',
           options: [
             'Le manganèse réagit selon $\\mathrm{Mn + 2\\,H^+ \\longrightarrow Mn^{2+} + H_2}$, tandis que le platine ne réagit pas',
             'Le platine réagit selon $\\mathrm{Pt + 2\\,H^+ \\longrightarrow Pt^{2+} + H_2}$, tandis que le manganèse ne réagit pas',
@@ -1299,7 +1299,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p05_q4',
           type: 'mcq',
-          prompt: 'Avec $E^0(\\mathrm{Au^{3+}/Au}) = 1{,}5\\text{ V}$ et $E^0(\\mathrm{Mg^{2+}/Mg}) = -2{,}37\\text{ V}$, quelle réaction spontanée se produit (Ex 3 p. 7) ?',
+          prompt: 'Avec $E^0(\\mathrm{Au^{3+}/Au}) = 1{,}5\\text{ V}$ et $E^0(\\mathrm{Mg^{2+}/Mg}) = -2{,}37\\text{ V}$, quelle réaction spontanée se produit ?',
           options: [
             '$3\\,\\mathrm{Mg} + 2\\,\\mathrm{Au^{3+}} \\longrightarrow 3\\,\\mathrm{Mg^{2+}} + 2\\,\\mathrm{Au}$',
             '$\\mathrm{Mg} + \\mathrm{Au^{3+}} \\longrightarrow \\mathrm{Mg^{2+}} + \\mathrm{Au}$',
@@ -1351,7 +1351,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
       summary:
         'Distinguer les piles non rechargeables (Volta, Leclanché saline, pile alcaline) des accumulateurs (batteries rechargeables par courant inverse).',
       conceptExplanation:
-        "Le cours présente plusieurs générateurs électrochimiques usuels (p. 5–6) :\n\n1. **Pile de Volta (1800, Alessandro Volta)** :\n   $$\\mathrm{Zn + 2\\,H_2O \\longrightarrow Zn^{2+} + 2\\,HO^- + H_2}$$\n2. **Pile Leclanché (première pile saline)** : contient un sel comme électrolyte :\n   $$\\mathrm{Zn(s) + 2\\,MnO_2(s) + 2\\,H^+(aq) \\longrightarrow Zn^{2+}(aq) + 2\\,MnO(OH)(s)}$$\n3. **Pile alcaline (ex. pile Duracell)** : son électrolyte est **alcalin (basique, ions $\\mathrm{HO^-}$)** :\n   $$\\mathrm{Zn(s) + 2\\,HO^-(aq) + MnO_2(s) + H_2O(l) \\longrightarrow MnO(OH)(s) + HO^-(aq) + ZnO(s) + H_2O(l)}$$\n   - **Attention sécurité** : une pile usagée a consommé l’un de ses réactifs ; elle **ne doit jamais être rechargée**.\n4. **Les accumulateurs (batteries)** :\n   - Contrairement aux piles classiques, ce sont des générateurs **rechargeables**.\n   - Branchés à un récepteur, ils fournissent du courant par réaction spontanée (décharge) ; branchés aux bornes d’un générateur imposant un **courant de sens inverse (électrolyse forcée)**, le système évolue en sens contraire et **se recharge**.",
+        "Le cours présente plusieurs générateurs électrochimiques usuels :\n\n1. **Pile de Volta (1800, Alessandro Volta)** :\n $$\\mathrm{Zn + 2\\,H_2O \\longrightarrow Zn^{2+} + 2\\,HO^- + H_2}$$\n2. **Pile Leclanché (première pile saline)** : contient un sel comme électrolyte :\n $$\\mathrm{Zn(s) + 2\\,MnO_2(s) + 2\\,H^+(aq) \\longrightarrow Zn^{2+}(aq) + 2\\,MnO(OH)(s)}$$\n3. **Pile alcaline (ex. pile Duracell)** : son électrolyte est **alcalin (basique, ions $\\mathrm{HO^-}$)** :\n $$\\mathrm{Zn(s) + 2\\,HO^-(aq) + MnO_2(s) + H_2O(l) \\longrightarrow MnO(OH)(s) + HO^-(aq) + ZnO(s) + H_2O(l)}$$\n - **Attention sécurité** : une pile usagée a consommé l’un de ses réactifs ; elle **ne doit jamais être rechargée**.\n4. **Les accumulateurs (batteries)** :\n - Contrairement aux piles classiques, ce sont des générateurs **rechargeables**.\n - Branchés à un récepteur, ils fournissent du courant par réaction spontanée (décharge) ; branchés aux bornes d’un générateur imposant un **courant de sens inverse (électrolyse forcée)**, le système évolue en sens contraire et **se recharge**.",
       keyRule:
         'Les piles usuelles (Volta, Leclanché saline, alcaline à électrolyte basique) sont non rechargeables une fois un réactif consommé. Seuls les accumulateurs (batteries) peuvent être rechargés en inversant la réaction par électrolyse.',
       formulas: [
@@ -1476,7 +1476,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
           exercise: {
             id: 'premiere_c_chimie_l09_classification_quantitative_couples_p06_q5',
             type: 'mcq',
-            prompt: 'Quel phénomène permet de recharger un accumulateur (ou batterie) (p. 6) ?',
+            prompt: 'Quel phénomène permet de recharger un accumulateur (ou batterie) ?',
             options: [
               'Un générateur extérieur impose un courant de sens inverse (électrolyse), inversant la réaction chimique spontanée',
               'On ajoute du chlorure de sodium sec sur les bornes',
@@ -1572,7 +1572,7 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
         {
           id: 'premiere_c_chimie_l09_classification_quantitative_couples_p06_q5',
           type: 'mcq',
-          prompt: 'Quel phénomène permet de recharger un accumulateur (ou batterie) (p. 6) ?',
+          prompt: 'Quel phénomène permet de recharger un accumulateur (ou batterie) ?',
           options: [
             'Un générateur extérieur impose un courant de sens inverse (électrolyse), inversant la réaction chimique spontanée',
             'On ajoute du chlorure de sodium sec sur les bornes',

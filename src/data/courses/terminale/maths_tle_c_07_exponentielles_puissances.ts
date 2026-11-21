@@ -424,7 +424,7 @@ const p03Steps: StructuredLessonStep[] = [
   {
     stepNumber: 4,
     stepKind: 'exemple',
-    stepBadge: 'Exercice du cours',
+    stepBadge: 'Exercice',
     stepTheme: 'blue',
     stepTitle: 'Limites de $g(x) = (2x - 3)e^{-x}$ et $h(x) = \\frac{xe^x}{x + 1}$',
     paragraphText:
@@ -1031,7 +1031,7 @@ export const MATHS_TLE_C_L07_EXPONENTIELLES_PUISSANCES: CurriculumChapter = {
     'Exponentielle népérienne (réciproque de ln, propriétés algébriques, équations/inéquations, limites, dérivée u′e^u, primitives), exponentielle de base a, fonctions puissances x^α, croissances comparées et études complètes.',
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l07_exponentielles_puissances_p01',

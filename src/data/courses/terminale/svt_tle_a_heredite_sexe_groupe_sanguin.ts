@@ -909,7 +909,7 @@ export const SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q5",
             "type": "mcq",
-            "prompt": "Un père menace de divorcer parce que sa femme « ne lui donne que des filles ». Que lui expliquer, d'après le cours ?",
+            "prompt": "Un père menace de divorcer parce que sa femme « ne lui donne que des filles ». Que lui expliquer, ?",
             "options": [
               "Il a raison : la mère choisit le sexe",
               "C'est le spermatozoïde qui porte X ou Y : le sexe dépend du gamète du père, et du hasard de la fécondation",
@@ -1019,7 +1019,7 @@ export const SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q5",
           "type": "mcq",
-          "prompt": "Un père menace de divorcer parce que sa femme « ne lui donne que des filles ». Que lui expliquer, d'après le cours ?",
+          "prompt": "Un père menace de divorcer parce que sa femme « ne lui donne que des filles ». Que lui expliquer, ?",
           "options": [
             "Il a raison : la mère choisit le sexe",
             "C'est le spermatozoïde qui porte X ou Y : le sexe dépend du gamète du père, et du hasard de la fécondation",

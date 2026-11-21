@@ -6,7 +6,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'definition',
     stepBadge: 'Situation & Définition',
     stepTheme: 'blue',
-    stepTitle: 'Qu’est-ce qu’une similitude directe du plan ? (p.1)',
+    stepTitle: 'Qu’est-ce qu’une similitude directe du plan ?',
     paragraphText:
       'En visitant une société de confection de pagnes, des élèves de Terminale C observent deux motifs identiques à l’échelle et tournés l’un par rapport à l’autre : une simple homothétie ne suffit pas lorsqu’il y a aussi rotation ! On appelle **similitude directe** toute **composée d’une homothétie et d’un déplacement** (translation ou rotation). Toute similitude directe est une **transformation du plan** (bijection). En particulier, tout déplacement ($k=1$) et toute homothétie ($\\theta=0$ ou $\\pi$) sont des similitudes directes.',
     formula: {
@@ -17,7 +17,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p01_q01',
       type: 'mcq',
-      prompt: 'Comment définit-on une similitude directe du plan (p.1) ?',
+      prompt: 'Comment définit-on une similitude directe du plan ?',
       options: [
         'Toute composée d’une homothétie et d’un déplacement',
         'Toute composée d’une homothétie et d’un antidéplacement',
@@ -33,7 +33,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Rapport et angle',
     stepTheme: 'violet',
-    stepTitle: 'Rapport $k > 0$ et angle $\\theta \\in ]-\\pi ; \\pi]$ d’une similitude directe (p.1–2)',
+    stepTitle: 'Rapport $k > 0$ et angle $\\theta \\in ]-\\pi ; \\pi]$ d’une similitude directe',
     paragraphText:
       'Une transformation du plan est une similitude directe ssi elle conserve **le rapport des distances** et **les angles orientés**. Plus précisément, pour toute similitude directe $S$, il existe un unique réel **$k > 0$** (appelé **rapport** de $S$) et un réel **$\\theta \\in ]-\\pi ; \\pi]$** (appelé **angle** de $S$) tels que pour tous points distincts $M, N$ d’images $M’, N’$ par $S$ : $M’N’ = k\\,MN$ et $\\operatorname{Mes}(\\widehat{\\overrightarrow{MN}, \\overrightarrow{M’N’}}) = \\theta$.',
     formula: {
@@ -43,7 +43,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p01_q02',
       type: 'mcq',
-      prompt: 'Quels sont le rapport $k$ et l’angle $\\theta$ d’une homothétie de rapport $-3 < 0$ vue comme similitude directe (p.2) ?',
+      prompt: 'Quels sont le rapport $k$ et l’angle $\\theta$ d’une homothétie de rapport $-3 < 0$ vue comme similitude directe ?',
       options: [
         'Rapport $-3$ et angle $0$',
         'Rapport $3$ et angle $\\pi$',
@@ -64,7 +64,7 @@ const p01Steps: StructuredLessonStep[] = [
       'Soit $ABC$ un triangle équilatéral direct et $I$ le milieu de $[BC]$. On considère la similitude directe $s$ telle que $s(I) = B$ et $s(B) = A$. Pour déterminer son rapport $k$ et son angle $\\theta$, on applique directement la propriété au couple $(I, B)$ d’image $(B, A)$ : $k = \\frac{BA}{IB} = \\frac{2IB}{IB} = 2$, et $\\theta = \\operatorname{Mes}(\\widehat{\\overrightarrow{IB}, \\overrightarrow{BA}})$. Comme $\\overrightarrow{IB}$ est colinéaire de même sens à $\\overrightarrow{CB}$ et que le triangle $ABC$ est équilatéral direct ($(\\widehat{\\overrightarrow{BC}, \\overrightarrow{BA}}) = +\\frac{\\pi}{3}$), on obtient $\\theta = \\operatorname{Mes}(\\widehat{\\overrightarrow{CB}, \\overrightarrow{BA}}) = -\\pi + \\frac{\\pi}{3} = -\\frac{2\\pi}{3}$.',
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Angle θ = Mes(IB⃗, BA⃗) = −2π/3 dans ABC équilatéral direct (p.2)',
+      title: 'Angle θ = Mes(IB⃗, BA⃗) = −2π/3 dans ABC équilatéral direct',
       caption: 'En prolongeant [CB) au-delà de B, l’angle orienté de IB⃗ vers BA⃗ mesure −2π/3 (sens indirect).',
       svgContent: `<svg viewBox="0 0 300 155" width="285" height="148" xmlns="http://www.w3.org/2000/svg">
         <polygon points="85,125 205,125 145,22" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/>
@@ -80,7 +80,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p01_q03',
       type: 'mcq',
-      prompt: 'Dans le carré direct $ABCD$ de centre $O$ (Ex. 2 p.22), on considère la similitude directe $s$ telle que $s(D) = O$ et $s(C) = B$. Quels sont son rapport et son angle ?',
+      prompt: 'Dans le carré direct $ABCD$ de centre $O$, on considère la similitude directe $s$ telle que $s(D) = O$ et $s(C) = B$. Quels sont son rapport et son angle ?',
       options: [
         'Rapport $\\frac{\\sqrt{2}}{2}$ et angle $-\\frac{\\pi}{4}$',
         'Rapport $\\sqrt{2}$ et angle $\\frac{\\pi}{4}$',
@@ -96,7 +96,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Composée & Réciproque',
     stepTheme: 'violet',
-    stepTitle: 'Composée de deux similitudes directes et réciproque (p.3)',
+    stepTitle: 'Composée de deux similitudes directes et réciproque',
     paragraphText:
       'Dans le plan orienté : la **composée** de deux similitudes directes de rapports $k_1, k_2$ et d’angles $\\theta_1, \\theta_2$ est une similitude directe de **rapport $k_1 k_2$** et d’**angle $\\theta_1 + \\theta_2$** (modulo $2\\pi$). La **réciproque** $s^{-1}$ d’une similitude directe de rapport $k$ et d’angle $\\theta$ est une similitude directe de **rapport $\\frac{1}{k}$** et d’**angle $-\\theta$**. Attention : en général, $g \\circ f$ et $f \\circ g$ ont le même rapport et le même angle, mais **pas le même centre** !',
     formula: {
@@ -106,7 +106,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p01_q04',
       type: 'mcq',
-      prompt: 'Soit $f$ une similitude directe de rapport $3$ et d’angle $\\frac{\\pi}{2}$, et $g$ une similitude directe de rapport $\\frac{\\sqrt{2}}{2}$ et d’angle $-\\frac{2\\pi}{3}$ (p.3). Que vaut le rapport et l’angle de $f \\circ g$ et de $g^{-1}$ ?',
+      prompt: 'Soit $f$ une similitude directe de rapport $3$ et d’angle $\\frac{\\pi}{2}$, et $g$ une similitude directe de rapport $\\frac{\\sqrt{2}}{2}$ et d’angle $-\\frac{2\\pi}{3}$. Que vaut le rapport et l’angle de $f \\circ g$ et de $g^{-1}$ ?',
       options: [
         '$f \\circ g : (\\frac{3\\sqrt{2}}{2}, -\\frac{\\pi}{6})$ et $g^{-1} : (\\sqrt{2}, \\frac{2\\pi}{3})$',
         '$f \\circ g : (\\frac{3\\sqrt{2}}{2}, \\frac{\\pi}{6})$ et $g^{-1} : (\\frac{\\sqrt{2}}{2}, \\frac{2\\pi}{3})$',
@@ -122,7 +122,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Conservations géométriques',
     stepTheme: 'violet',
-    stepTitle: 'Ce que toute similitude directe conserve et ce qu’elle multiplie (p.3–4)',
+    stepTitle: 'Ce que toute similitude directe conserve et ce qu’elle multiplie',
     paragraphText:
       'Toute similitude directe de rapport $k$ **conserve** : l’alignement, le parallélisme, l’orthogonalité, le contact (tangence), le **barycentre**, les **angles orientés** et les rapports de distances ($\\frac{A’B’}{AB} = \\frac{C’D’}{CD}$). Elle **multiplie** les longueurs (et rayons de cercles) par **$k$**, et les **aires par $k^2$**. Elle transforme droite en droite, demi-droite en demi-droite, segment en segment et cercle de rayon $r$ en cercle de rayon $kr$.',
     exercise: {
@@ -139,13 +139,13 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Conservation du barycentre',
     stepTheme: 'green',
-    stepTitle: 'Transporter une relation vectorielle via le barycentre (p.4)',
+    stepTitle: 'Transporter une relation vectorielle via le barycentre',
     paragraphText:
       'Dans l’exercice de fixation p.4, on donne $\\overrightarrow{AD} = 2\\overrightarrow{AB} - 5\\overrightarrow{CD}$ et une similitude directe $s$ envoyant $A, B, C, D$ sur $A’, B’, C’, D’$. En introduisant $A$ dans $\\overrightarrow{CD} = \\overrightarrow{AD} - \\overrightarrow{AC}$, on obtient $-6\\overrightarrow{AD} + 2\\overrightarrow{AB} + 5\\overrightarrow{AC} = \\vec{0}$, soit $A = \\operatorname{bar}\\{(D, -6), (B, 2), (C, 5)\\}$ (somme $-6+2+5 = 1 \\neq 0$). Par conservation du barycentre, $A’ = \\operatorname{bar}\\{(D’, -6), (B’, 2), (C’, 5)\\}$, d’où immédiatement $\\overrightarrow{A’D’} = 2\\overrightarrow{A’B’} - 5\\overrightarrow{C’D’}$ !',
     exercise: {
       id: 'tc_m_geo_l16_p01_q06',
       type: 'mcq',
-      prompt: 'Si $s$ est une similitude directe de rapport $k$ transformant $A, B, C$ en $A’, B’, C’$, à quoi est égal le produit scalaire $\\overrightarrow{A’B’} \\cdot \\overrightarrow{A’C’}$ (Ex. 4 p.22) ?',
+      prompt: 'Si $s$ est une similitude directe de rapport $k$ transformant $A, B, C$ en $A’, B’, C’$, à quoi est égal le produit scalaire $\\overrightarrow{A’B’} \\cdot \\overrightarrow{A’C’}$ ?',
       options: [
         '$k\\,\\overrightarrow{AB} \\cdot \\overrightarrow{AC}$',
         '$k^2\\,\\overrightarrow{AB} \\cdot \\overrightarrow{AC}$',
@@ -167,7 +167,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p01_q07',
       type: 'mcq',
-      prompt: 'Parmi ces affirmations sur $f \\circ g$ et $g \\circ f$ (où $f, g$ sont deux similitudes directes), laquelle est vraie en général (p.3) ?',
+      prompt: 'Parmi ces affirmations sur $f \\circ g$ et $g \\circ f$ (où $f, g$ sont deux similitudes directes), laquelle est vraie en général ?',
       options: [
         '$f \\circ g$ et $g \\circ f$ ont le même rapport et le même angle, mais pas nécessairement le même centre',
         '$f \\circ g = g \\circ f$ dès que $f$ et $g$ ont le même rapport',
@@ -186,7 +186,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Forme réduite',
     stepTheme: 'violet',
-    stepTitle: 'Centre invariant et décomposition canonique $h \\circ r = r \\circ h$ (p.4–5)',
+    stepTitle: 'Centre invariant et décomposition canonique $h \\circ r = r \\circ h$',
     paragraphText:
       'Toute similitude directe du plan qui n’est **pas une translation** admet un **unique point invariant**, appelé son **centre $\\Omega$**. Plus précisément, toute similitude directe autre que l’identité, de rapport $k$ et d’angle $\\theta$, est soit une translation ($k=1, \\theta=0$), soit la composée commutable d’une rotation et d’une homothétie de **même centre $\\Omega$** : **$S = h_{(\\Omega,k)} \\circ r_{(\\Omega,\\theta)} = r_{(\\Omega,\\theta)} \\circ h_{(\\Omega,k)}$**. Cette écriture unique s’appelle la **forme réduite** (ou décomposition canonique), notée $s_{(\\Omega, k, \\theta)}$.',
     formula: {
@@ -195,7 +195,7 @@ const p02Steps: StructuredLessonStep[] = [
     },
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Construction géométrique de M’ par la forme réduite (p.5)',
+      title: 'Construction géométrique de M’ par la forme réduite',
       caption: 'Chemin M → M₁ (rotation d’angle θ) → M’ (homothétie de rapport k) ou M → M₂ (homothétie) → M’ (rotation).',
       svgContent: `<svg viewBox="0 0 320 155" width="305" height="148" xmlns="http://www.w3.org/2000/svg">
         <line x1="35" y1="125" x2="275" y2="125" stroke="#334155" stroke-width="1.5"/>
@@ -213,7 +213,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p02_q01',
       type: 'mcq',
-      prompt: 'Quelle est la décomposition canonique de la similitude directe $S_{(A,\\, 2,\\, -\\frac{\\pi}{3})}$ (p.5) ?',
+      prompt: 'Quelle est la décomposition canonique de la similitude directe $S_{(A,\\, 2,\\, -\\frac{\\pi}{3})}$ ?',
       options: [
         '$r_{(A, -\\frac{\\pi}{3})} \\circ h_{(A, 2)} = h_{(A, 2)} \\circ r_{(A, -\\frac{\\pi}{3})}$',
         '$t_{\\vec{u}} \\circ h_{(A, 2)}$ uniquement',
@@ -229,13 +229,13 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Expression analytique',
     stepTheme: 'green',
-    stepTitle: 'Passer des coordonnées $(x’, y’)$ à l’écriture complexe $z’ = az + b$ (p.6)',
+    stepTitle: 'Passer des coordonnées $(x’, y’)$ à l’écriture complexe $z’ = az + b$',
     paragraphText:
-      'On donne l’application $s : \\begin{cases} x’ = x + y - 3 \\\\ y’ = -x + y + 2 \\end{cases}$ (p.6). Pour prouver que $s$ est une similitude directe et trouver son écriture complexe, on forme $z’ = x’ + iy’ = (x + y - 3) + i(-x + y + 2)$. On regroupe les termes en $x$ et en $y$ : $z’ = (1 - i)x + (1 + i)y - 3 + 2i$. Astuce : dans le bloc en $y$, on factorise $i$ en remarquant que $1 + i = i(1 - i)$ ! On obtient ainsi $z’ = (1 - i)x + (1 - i)iy - 3 + 2i = (1 - i)(x + iy) - 3 + 2i = (1 - i)z - 3 + 2i$, de la forme $az + b$ avec $a = 1 - i \\in \\mathbb{C}^*$.',
+      'On donne l’application $s : \\begin{cases} x’ = x + y - 3 \\\\ y’ = -x + y + 2 \\end{cases}$. Pour prouver que $s$ est une similitude directe et trouver son écriture complexe, on forme $z’ = x’ + iy’ = (x + y - 3) + i(-x + y + 2)$. On regroupe les termes en $x$ et en $y$ : $z’ = (1 - i)x + (1 + i)y - 3 + 2i$. Astuce : dans le bloc en $y$, on factorise $i$ en remarquant que $1 + i = i(1 - i)$ ! On obtient ainsi $z’ = (1 - i)x + (1 - i)iy - 3 + 2i = (1 - i)(x + iy) - 3 + 2i = (1 - i)z - 3 + 2i$, de la forme $az + b$ avec $a = 1 - i \\in \\mathbb{C}^*$.',
     exercise: {
       id: 'tc_m_geo_l16_p02_q02',
       type: 'mcq',
-      prompt: 'À l’aide de l’expression analytique $\\begin{cases} x’ = x + y - 3 \\\\ y’ = -x + y + 2 \\end{cases}$ (p.6), quelle est l’écriture complexe de $s$ ?',
+      prompt: 'À l’aide de l’expression analytique $\\begin{cases} x’ = x + y - 3 \\\\ y’ = -x + y + 2 \\end{cases}$, quelle est l’écriture complexe de $s$ ?',
       options: [
         '$z’ = (1 + i)z - 3 + 2i$',
         '$z’ = (1 - i)z - 3 + 2i$',
@@ -251,12 +251,12 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Tableau complexe',
     stepTheme: 'violet',
-    stepTitle: 'Éléments caractéristiques depuis $z’ = az + b$ et inversement (p.6–7)',
+    stepTitle: 'Éléments caractéristiques depuis $z’ = az + b$ et inversement',
     paragraphText:
       'Pour toute similitude directe d’écriture complexe $z’ = az + b$ ($a \\in \\mathbb{C}^*, b \\in \\mathbb{C}$) : si $a = 1$, c’est une translation de vecteur $b$ ; si $a \\neq 1$, son centre a pour affixe $z_\\Omega = \\frac{b}{1 - a}$, son rapport vaut $|a|$ et son angle vaut $\\operatorname{Arg}(a)$ (homothétie si $a \\in \\mathbb{R}^*\\setminus\\{1\\}$, rotation si $|a|=1$). Inversement, la similitude de centre $A(z_A)$, de rapport $k$ et d’angle $\\theta$ s’écrit $z’ = ke^{i\\theta}(z - z_A) + z_A$.',
     visualSchema: {
       type: 'custom_svg',
-      title: 'Particularisation de z’ = az + b selon a (p.6)',
+      title: 'Particularisation de z’ = az + b selon a',
       caption: 'Rappel de synthèse (a ∈ ℂ*, b ∈ ℂ).',
       tableData: {
         headers: ['Valeur de a', 'Nature de S', 'Centre / Vecteur', 'Rapport & Angle'],
@@ -271,7 +271,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p02_q03',
       type: 'mcq',
-      prompt: 'Quels sont la nature et les éléments caractéristiques de $z’ = -4z + \\frac{15}{2} - \\frac{5}{2}i$ (Ex. 3d p.22) ?',
+      prompt: 'Quels sont la nature et les éléments caractéristiques de $z’ = -4z + \\frac{15}{2} - \\frac{5}{2}i$ ?',
       options: [
         'L’homothétie de centre $\\Omega\\left(\\frac{3}{2} - \\frac{1}{2}i\\right)$ et de rapport $-4$ (similitude de rapport $4$ et d’angle $\\pi$)',
         'La rotation de centre $\\frac{3}{2} - \\frac{1}{2}i$ et d’angle $\\pi$',
@@ -287,12 +287,12 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Triangles ΩMM’',
     stepTheme: 'violet',
-    stepTitle: 'Triangles remarquables $\\Omega MM’$ associés aux valeurs de $(k, \\theta)$ (p.8–9)',
+    stepTitle: 'Triangles remarquables $\\Omega MM’$ associés aux valeurs de $(k, \\theta)$',
     paragraphText:
       'Si $S$ est une similitude directe de centre $\\Omega$, de rapport $k$ et d’angle $\\theta$, alors pour tout $M \\neq \\Omega$ d’image $M’$, tous les triangles $\\Omega MM’$ sont de **même nature** et de **même sens**, avec sommet commun $\\Omega$ ! Pour trois couples classiques de $(\\theta, k)$, $\\Omega MM’$ est un triangle rectangle très utile pour identifier géométriquement $S$ (en prenant éventuellement $N$, symétrique de $\\Omega$ par rapport à $M$, pour faire apparaître un triangle équilatéral $\\Omega N M’$).',
     visualSchema: {
       type: 'custom_svg',
-      title: 'Tableau des triangles ΩMM’ remarquables (p.8–9)',
+      title: 'Tableau des triangles ΩMM’ remarquables',
       caption: 'Équivalence entre valeurs de (θ, k) et géométrie du triangle ΩMM’.',
       tableData: {
         headers: ['Angle θ', 'Rapport k', 'Nature du triangle ΩMM’'],
@@ -306,7 +306,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p02_q04',
       type: 'mcq',
-      prompt: 'Sur la figure de la page 7 ($ABCD, AEFG, AHIJ$ carrés de sens direct imbriqués au sommet $A$), $s$ est la similitude directe de centre $A$, de rapport $\\sqrt{2}$ et d’angle $\\frac{\\pi}{4}$. Quelles sont les images de $H, E$ et $B$ par $s$ (p.7–8) ?',
+      prompt: 'Sur la figure de la page 7 ($ABCD, AEFG, AHIJ$ carrés de sens direct imbriqués au sommet $A$), $s$ est la similitude directe de centre $A$, de rapport $\\sqrt{2}$ et d’angle $\\frac{\\pi}{4}$. Quelles sont les images de $H, E$ et $B$ par $s$ ?',
       options: [
         '$s(H)=J$, $s(E)=G$, $s(B)=D$',
         '$s(H)=I$, $s(E)=F$, $s(B)=C$',
@@ -328,7 +328,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p02_q05',
       type: 'mcq',
-      prompt: 'Avec $ABC$ équilatéral direct et $I$ milieu de $[AB]$ (p.9), pourquoi la similitude directe de centre $A$, rapport $2$ et angle $\\frac{\\pi}{3}$ vérifie-t-elle $s(I) = C$ ?',
+      prompt: 'Avec $ABC$ équilatéral direct et $I$ milieu de $[AB]$, pourquoi la similitude directe de centre $A$, rapport $2$ et angle $\\frac{\\pi}{3}$ vérifie-t-elle $s(I) = C$ ?',
       options: [
         'Car $AC = 2AI$ et $\\operatorname{Mes}(\\widehat{\\overrightarrow{AI}, \\overrightarrow{AC}}) = \\frac{\\pi}{3}$ (demi-triangle équilatéral direct)',
         'Car $CI = 2AI$ et $(\\widehat{\\overrightarrow{AI}, \\overrightarrow{AC}}) = \\frac{\\pi}{6}$',
@@ -346,11 +346,11 @@ const p02Steps: StructuredLessonStep[] = [
     stepTheme: 'blue',
     stepTitle: 'Calculer une écriture complexe depuis $(A, k, \\theta)$',
     paragraphText:
-      'Calculons l’écriture complexe de $s_1$ de centre $A(3 - 2i)$, rapport $2\\sqrt{2}$ et angle $-\\frac{3\\pi}{4}$ (Ex. 6a p.23). On utilise $z’ = ke^{i\\theta}(z - z_A) + z_A$. Or $2\\sqrt{2}e^{-i\\frac{3\\pi}{4}} = 2\\sqrt{2}\\left(-\\frac{\\sqrt{2}}{2} - i\\frac{\\sqrt{2}}{2}\\right) = -2 - 2i$. Donc $z’ = (-2 - 2i)(z - 3 + 2i) + 3 - 2i = (-2 - 2i)z - (-2 - 2i)(3 - 2i) + 3 - 2i$. Comme $(-2-2i)(3-2i) = -6 + 4i - 6i - 4 = -10 - 2i$, on obtient $z’ = (-2 - 2i)z + 10 + 2i + 3 - 2i = (-2 - 2i)z + 13$.',
+      'Calculons l’écriture complexe de $s_1$ de centre $A(3 - 2i)$, rapport $2\\sqrt{2}$ et angle $-\\frac{3\\pi}{4}$. On utilise $z’ = ke^{i\\theta}(z - z_A) + z_A$. Or $2\\sqrt{2}e^{-i\\frac{3\\pi}{4}} = 2\\sqrt{2}\\left(-\\frac{\\sqrt{2}}{2} - i\\frac{\\sqrt{2}}{2}\\right) = -2 - 2i$. Donc $z’ = (-2 - 2i)(z - 3 + 2i) + 3 - 2i = (-2 - 2i)z - (-2 - 2i)(3 - 2i) + 3 - 2i$. Comme $(-2-2i)(3-2i) = -6 + 4i - 6i - 4 = -10 - 2i$, on obtient $z’ = (-2 - 2i)z + 10 + 2i + 3 - 2i = (-2 - 2i)z + 13$.',
     exercise: {
       id: 'tc_m_geo_l16_p02_q06',
       type: 'mcq',
-      prompt: 'Quelle est l’écriture complexe de la similitude $s_1$ de centre $A(3 - 2i)$, de rapport $2\\sqrt{2}$ et d’angle $-\\frac{3\\pi}{4}$ (Ex. 6a p.23) ?',
+      prompt: 'Quelle est l’écriture complexe de la similitude $s_1$ de centre $A(3 - 2i)$, de rapport $2\\sqrt{2}$ et d’angle $-\\frac{3\\pi}{4}$ ?',
       options: [
         '$z’ = (-2 - 2i)z + 13$',
         '$z’ = (-2 + 2i)z + 3 - 2i$',
@@ -391,7 +391,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'propriete',
     stepBadge: 'Unicité géométrique',
     stepTheme: 'violet',
-    stepTitle: 'Trois façons géométriques de déterminer une similitude directe (p.9–12)',
+    stepTitle: 'Trois façons géométriques de déterminer une similitude directe',
     paragraphText:
       'En géométrie pure (sans affixes), une similitude directe est déterminée de façon unique dans chacun des cas suivants : (1) par son **centre $A$**, un point $M \\neq A$ et son image $M’ \\neq A$ ; (2) par **deux points distincts $A \\neq B$ et leurs images distinctes $C \\neq D$** (en particulier par $A \\mapsto B$ et $B \\mapsto C$) ; (3) par deux **triangles $ABC$ et $DEF$ de même sens directement semblables** (c’est-à-dire $\\frac{DE}{AB}=\\frac{EF}{BC}=\\frac{DF}{AC}$, ou deux côtés proportionnels encadrant le même angle orienté).',
     formula: {
@@ -401,7 +401,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p03_q01',
       type: 'mcq',
-      prompt: 'On donne les triangles $ABC$ (côtés $1{,}5 ; 2 ; 1{,}75$) et $DEF$ (côtés $3 ; 4 ; 3{,}5$) de même sens (p.12). Que peut-on conclure ?',
+      prompt: 'On donne les triangles $ABC$ (côtés $1{,}5 ; 2 ; 1{,}75$) et $DEF$ (côtés $3 ; 4 ; 3{,}5$) de même sens. Que peut-on conclure ?',
       options: [
         'Ils sont isométriques',
         'Ils sont directement semblables via une unique similitude directe de rapport $2$ envoyant $A, B, C$ sur $D, E, F$',
@@ -439,12 +439,12 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Construction centre Ω',
     stepTheme: 'green',
-    stepTitle: 'Construire géométriquement le centre $\\Omega$ quand $s(A)=C$ et $s(B)=D$ (p.11)',
+    stepTitle: 'Construire géométriquement le centre $\\Omega$ quand $s(A)=C$ et $s(B)=D$',
     paragraphText:
       'On donne quatre points $A, B, C, D$ tels que $AB \\neq CD$ et $(AB)$ non parallèle à $(CD)$ (donc $s$ n’est ni un déplacement, ni une homothétie), et $s(A)=C, s(B)=D$. Soit **$K$ le point d’intersection des droites $(AB)$ et $(CD)$** (si $(AB) \\parallel (CD)$, on utilise une droite auxiliaire ou des milieux). Par conservation de l’angle $\\theta$ de $s$, on a $\\theta = (\\widehat{\\overrightarrow{AB}, \\overrightarrow{CD}}) = (\\widehat{\\overrightarrow{KA}, \\overrightarrow{KC}}) = (\\widehat{\\overrightarrow{KB}, \\overrightarrow{KD}})$ (modulo $\\pi$ en droites). Or le centre $\\Omega$ vérifie aussi $(\\widehat{\\overrightarrow{\\Omega A}, \\overrightarrow{\\Omega C}}) = \\theta$ et $(\\widehat{\\overrightarrow{\\Omega B}, \\overrightarrow{\\Omega D}}) = \\theta$ ! Donc $\\Omega$ appartient à la fois au cercle $(C_1)$ circonscrit à $KAC$ et au cercle $(C_2)$ circonscrit à $KBD$ : **$\\Omega$ est le second point d’intersection de $(C_1)$ et $(C_2)$, distinct de $K$** !',
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Construction du centre Ω par deux cercles sécants en K et Ω (p.11)',
+      title: 'Construction du centre Ω par deux cercles sécants en K et Ω',
       caption: 'K = (AB) ∩ (CD) ; Ω est l’intersection des cercles (C₁) passant par K, A, C et (C₂) passant par K, B, D, autre que K.',
       svgContent: `<svg viewBox="0 0 320 165" width="305" height="156" xmlns="http://www.w3.org/2000/svg">
         <circle cx="128" cy="88" r="46" fill="none" stroke="#2563eb" stroke-width="1.8"/>
@@ -464,7 +464,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p03_q03',
       type: 'mcq',
-      prompt: 'Dans la méthode géométrique pour construire le centre $\\Omega$ d’une similitude directe $s$ telle que $s(A)=C$ et $s(B)=D$ (p.11), quels deux cercles trace-t-on à l’aide de $K = (AB) \\cap (CD)$ ?',
+      prompt: 'Dans la méthode géométrique pour construire le centre $\\Omega$ d’une similitude directe $s$ telle que $s(A)=C$ et $s(B)=D$, quels deux cercles trace-t-on à l’aide de $K = (AB) \\cap (CD)$ ?',
       options: [
         'Les cercles $(K, KA)$ et $(K, KB)$',
         'Les cercles circonscrits aux triangles $KAC$ et $KBD$, dont l’intersection autre que $K$ est $\\Omega$',
@@ -480,10 +480,10 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Exercice de fixation p.13',
     stepTheme: 'green',
-    stepTitle: 'Construire le centre $K$ depuis $(k, \\theta, s(A)=B)$ via deux lieux (p.13–14)',
+    stepTitle: 'Construire le centre $K$ depuis $(k, \\theta, s(A)=B)$ via deux lieux',
     paragraphText:
-      'On donne $AB = 6$ et la similitude directe $s$ de rapport $4$, d’angle $\\frac{\\pi}{4}$ telle que $s(A) = B$ (p.13–14). Pour placer son centre $K$, on écrit la double équivalence de $s(A) = B$ : $\\begin{cases} \\frac{KB}{KA} = 4 \\\\ \\operatorname{Mes}(\\widehat{\\overrightarrow{KA}, \\overrightarrow{KB}}) = \\frac{\\pi}{4} \\end{cases}$. Le point $K$ se trouve donc à l’intersection de : (1) l’**arc capable $(E_1)$** du segment $[AB]$ d’angle $+\\frac{\\pi}{4}$ (arc de cercle situé « au-dessus » de $(AB)$, privé de $A$ et $B$) ; (2) le **cercle d’Apollonius $(E_2)$** de diamètre $[IJ]$ où $I = \\operatorname{bar}\\{(A,4),(B,1)\\}$ et $J = \\operatorname{bar}\\{(A,-4),(B,1)\\}$, d’où $\\overrightarrow{AI} = \\frac{1}{5}\\overrightarrow{AB}$ et $\\overrightarrow{AJ} = -\\frac{1}{3}\\overrightarrow{AB}$ (la condition $\\frac{MB}{MA}=4 \\implies M \\in (\\mathcal{C})_{[IJ]}$).',
-    konanTip: 'Vérification capitale sur le PDF p.13 : $I = \\operatorname{bar}\\{(A, 4), (B, 1)\\} \\implies \\overrightarrow{AI} = \\frac{1}{4+1}\\overrightarrow{AB} = \\frac{1}{5}\\overrightarrow{AB}$, et $J = \\operatorname{bar}\\{(A, -4), (B, 1)\\} \\implies \\overrightarrow{AJ} = \\frac{1}{-4+1}\\overrightarrow{AB} = -\\frac{1}{3}\\overrightarrow{AB}$ (le PDF p.13 avait mis $\\frac{1}{1+4}$ pour le poids de $B$ mais écrit $\\frac{1}{4}$ à côté par coquille — la valeur exacte est bien $\\frac{1}{5}\\overrightarrow{AB}$ et $-\\frac{1}{3}\\overrightarrow{AB}$ !).',
+      'On donne $AB = 6$ et la similitude directe $s$ de rapport $4$, d’angle $\\frac{\\pi}{4}$ telle que $s(A) = B$. Pour placer son centre $K$, on écrit la double équivalence de $s(A) = B$ : $\\begin{cases} \\frac{KB}{KA} = 4 \\\\ \\operatorname{Mes}(\\widehat{\\overrightarrow{KA}, \\overrightarrow{KB}}) = \\frac{\\pi}{4} \\end{cases}$. Le point $K$ se trouve donc à l’intersection de : (1) l’**arc capable $(E_1)$** du segment $[AB]$ d’angle $+\\frac{\\pi}{4}$ (arc de cercle situé « au-dessus » de $(AB)$, privé de $A$ et $B$) ; (2) le **cercle d’Apollonius $(E_2)$** de diamètre $[IJ]$ où $I = \\operatorname{bar}\\{(A,4),(B,1)\\}$ et $J = \\operatorname{bar}\\{(A,-4),(B,1)\\}$, d’où $\\overrightarrow{AI} = \\frac{1}{5}\\overrightarrow{AB}$ et $\\overrightarrow{AJ} = -\\frac{1}{3}\\overrightarrow{AB}$ (la condition $\\frac{MB}{MA}=4 \\implies M \\in (\\mathcal{C})_{[IJ]}$).',
+    konanTip: 'Vérification essentielle : $I = \\operatorname{bar}\\{(A, 4), (B, 1)\\} \\implies \\overrightarrow{AI} = \\frac{1}{4+1}\\overrightarrow{AB} = \\frac{1}{5}\\overrightarrow{AB}$, et $J = \\operatorname{bar}\\{(A, -4), (B, 1)\\} \\implies \\overrightarrow{AJ} = \\frac{1}{-4+1}\\overrightarrow{AB} = -\\frac{1}{3}\\overrightarrow{AB}$.',
     exercise: {
       id: 'tc_m_geo_l16_p03_q04',
       type: 'mcq',
@@ -495,7 +495,7 @@ const p03Steps: StructuredLessonStep[] = [
         '$\\overrightarrow{AI} = 4\\overrightarrow{AB}$ et $\\overrightarrow{AJ} = -4\\overrightarrow{AB}$',
       ],
       correctAnswerIndex: 1,
-      explanation: 'Par la formule du barycentre de $(A, \\alpha)$ et $(B, \\beta)$ : $\\overrightarrow{AI} = \\frac{\\beta}{\\alpha + \\beta}\\overrightarrow{AB} = \\frac{1}{4+1}\\overrightarrow{AB} = \\frac{1}{5}\\overrightarrow{AB}$, et $\\overrightarrow{AJ} = \\frac{1}{-4+1}\\overrightarrow{AB} = -\\frac{1}{3}\\overrightarrow{AB}$. (On corrige ainsi la coquille $\\frac{1}{4}$ imprimée p.13 !)',
+      explanation: 'Par la formule du barycentre de $(A, \\alpha)$ et $(B, \\beta)$ : $\\overrightarrow{AI} = \\frac{\\beta}{\\alpha + \\beta}\\overrightarrow{AB} = \\frac{1}{4+1}\\overrightarrow{AB} = \\frac{1}{5}\\overrightarrow{AB}$, et $\\overrightarrow{AJ} = \\frac{1}{-4+1}\\overrightarrow{AB} = -\\frac{1}{3}\\overrightarrow{AB}$.',
     },
   },
   {
@@ -503,7 +503,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Exercice de fixation 2',
     stepTheme: 'green',
-    stepTitle: 'Construire $D = s(C)$ connaissant $(k, \\theta)$ et $s(A) = B$ (p.15)',
+    stepTitle: 'Construire $D = s(C)$ connaissant $(k, \\theta)$ et $s(A) = B$',
     paragraphText:
       'Si l’on connaît le rapport $k = 3$, l’angle $\\theta = \\frac{\\pi}{6}$ et l’image $s(A) = B$ (dans $ABC$ rectangle direct en $C$ avec $(\\widehat{\\overrightarrow{AB}, \\overrightarrow{AC}}) = \\frac{\\pi}{6}$, p.15), comment construire $D = s(C)$ sans même chercher le centre ? On traduit directement $\\begin{cases} BD = 3AC \\\\ \\operatorname{Mes}(\\widehat{\\overrightarrow{AC}, \\overrightarrow{BD}}) = \\frac{\\pi}{6} \\end{cases}$. Il suffit de tracer la parallèle à $(AC)$ passant par $B$ et d’y placer $F$ tel que $\\overrightarrow{BF}$ soit colinéaire de même sens à $\\overrightarrow{AC}$, puis de tracer la demi-droite $[BG)$ d’angle $(\\widehat{\\overrightarrow{BF}, \\overrightarrow{BG}}) = +\\frac{\\pi}{6}$ et d’y reporter la longueur $BD = 3AC$ !',
     exercise: {
@@ -549,7 +549,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'orange',
     stepTitle: 'Bien orienter l’arc capable selon le signe de $\\theta$ et l’ordre des points',
     paragraphText:
-      'Pour construire l’arc capable des points $M$ tels que $\\operatorname{Mes}(\\widehat{\\overrightarrow{MA}, \\overrightarrow{MB}}) = +\\frac{\\pi}{4}$ (p.13–14), le demi-cercle ou arc de cercle choisit le côté « positif » (au-dessus de $(AB)$ si $\\overrightarrow{AB}$ pointe vers la droite) : on place une tangente $(T)$ en $A$ de vecteur directeur $\\vec{u}$ tel que $(\\widehat{\\vec{u}, \\overrightarrow{AB}}) = +\\frac{\\pi}{4}$, puis le centre $O$ sur la médiatrice de $[AB]$ et la perpendiculaire à $(T)$ en $A$. Un angle $-\\frac{\\pi}{4}$ donnerait l’arc symétrique de l’autre côté de $(AB)$ !',
+      'Pour construire l’arc capable des points $M$ tels que $\\operatorname{Mes}(\\widehat{\\overrightarrow{MA}, \\overrightarrow{MB}}) = +\\frac{\\pi}{4}$, le demi-cercle ou arc de cercle choisit le côté « positif » (au-dessus de $(AB)$ si $\\overrightarrow{AB}$ pointe vers la droite) : on place une tangente $(T)$ en $A$ de vecteur directeur $\\vec{u}$ tel que $(\\widehat{\\vec{u}, \\overrightarrow{AB}}) = +\\frac{\\pi}{4}$, puis le centre $O$ sur la médiatrice de $[AB]$ et la perpendiculaire à $(T)$ en $A$. Un angle $-\\frac{\\pi}{4}$ donnerait l’arc symétrique de l’autre côté de $(AB)$ !',
     exercise: {
       id: 'tc_m_geo_l16_p03_q07',
       type: 'mcq',
@@ -572,7 +572,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Démontrer une propriété',
     stepTheme: 'green',
-    stepTitle: 'Prouver que $IJAK$ est un parallélogramme avec $s_1 \\circ s_2^{-1}$ (p.16)',
+    stepTitle: 'Prouver que $IJAK$ est un parallélogramme avec $s_1 \\circ s_2^{-1}$',
     paragraphText:
       'Soit $ABC$ un triangle de sens direct ; $I, J, K$ sont construits de sorte que $IBC, JAC, KBA$ soient directs, rectangles et isocèles en $I, J, K$. On considère $s_1$ de centre $A$ ($s_1(C)=J$) et $s_2$ telle que $s_2(A)=K$ et $s_2(C)=I$. Par géométrie sur $ACJ$ direct rectangle isocèle en $J$, $s_1$ a pour rapport $k_1 = \\frac{\\sqrt{2}}{2}$ et angle $\\theta_1 = +\\frac{\\pi}{4}$. De même, $BAK$ et $BCI$ étant rectangles isocèles directs de sommet commun $B$, $s_2$ a pour centre $B$, rapport $k_2 = \\frac{\\sqrt{2}}{2}$ et angle $+\\frac{\\pi}{4}$. Alors $s = s_1 \\circ s_2^{-1}$ a pour rapport $\\frac{\\sqrt{2}}{2} \\times \\sqrt{2} = 1$ et pour angle $\\frac{\\pi}{4} - \\frac{\\pi}{4} = 0$ : c’est une **translation** ! Or $s(K) = s_1(A) = A$ et $s(I) = s_1(C) = J$, donc $\\overrightarrow{KA} = \\overrightarrow{IJ}$, ce qui prouve que **$IJAK$ est un parallélogramme**.',
     exercise: {
@@ -594,13 +594,13 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Problème de construction',
     stepTheme: 'green',
-    stepTitle: 'Construire un triangle rectangle entre deux droites parallèles (p.17)',
+    stepTitle: 'Construire un triangle rectangle entre deux droites parallèles',
     paragraphText:
       'Soient $(D_1)$ et $(D_2)$ deux droites horizontales disjointes et $A$ un point dans la bande entre elles. On veut construire $ABC$ rectangle en $B$ tel que $(\\widehat{\\overrightarrow{AB}, \\overrightarrow{AC}}) = \\frac{\\pi}{3}$, $B \\in (D_2)$ et $C \\in (D_1)$. Analyse : $ABC$ est un demi-triangle équilatéral direct ($AC = 2AB$ et angle $\\frac{\\pi}{3}$), donc $C$ est l’image de $B$ par la similitude directe $s$ de centre $A$, de rapport $2$ et d’angle $\\frac{\\pi}{3}$ ! Comme $B \\in (D_2)$, $C$ appartient aussi à la droite image $(D_2’) = s(D_2)$ : **$C$ est donc l’intersection de $(D_1)$ et $(D_2’)$** (construite à l’aide des images $E’, F’$ de deux points $E, F \\in (D_2)$), puis **$B = s^{-1}(C)$**.',
     exercise: {
       id: 'tc_m_geo_l16_p04_q02',
       type: 'mcq',
-      prompt: 'Dans le problème de construction entre $(D_1)$ et $(D_2)$ (p.17), comment obtient-on le sommet $C \\in (D_1)$ ?',
+      prompt: 'Dans le problème de construction entre $(D_1)$ et $(D_2)$, comment obtient-on le sommet $C \\in (D_1)$ ?',
       options: [
         'Comme milieu du projeté orthogonal de $A$ sur $(D_1)$',
         'Comme point d’intersection de $(D_1)$ avec l’image $(D_2’)$ de $(D_2)$ par $s_{(A,\\, 2,\\, \\frac{\\pi}{3})}$',
@@ -616,12 +616,12 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Lieu géométrique',
     stepTheme: 'green',
-    stepTitle: 'Trouver le lieu de $B$ quand $K$ parcourt un cercle $(C)$ (p.18 & 24–25)',
+    stepTitle: 'Trouver le lieu de $B$ quand $K$ parcourt un cercle $(C)$',
     paragraphText:
       'On donne un cercle $(C)$ de diamètre $[IJ]$ et un point $A$ extérieur à $(C)$. Pour tout $K \\in (C)$, soit $B$ le point tel que $AKB$ soit rectangle isocèle en $B$ et de sens **indirect** (donc $K \\to B \\to A$ négatif, soit $(\\widehat{\\overrightarrow{AK}, \\overrightarrow{AB}}) = -\\frac{\\pi}{4}$ et $AB = \\frac{\\sqrt{2}}{2}AK$). Ainsi, $B$ est l’image de $K$ par la **similitude directe $s$ de centre $A$, rapport $\\frac{\\sqrt{2}}{2}$ et angle $-\\frac{\\pi}{4}$**. Quand $K$ décrit $(C)$, $B$ décrit l’image de $(C)$ par $s$, c’est-à-dire le **cercle $(C’)$ de diamètre $[I’J’]$** où $I’ = s(I)$ et $J’ = s(J)$ !',
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Lieu de B : cercle (C’) de diamètre [I’J’], image de (C) par s (p.18 & 25)',
+      title: 'Lieu de B : cercle (C’) de diamètre [I’J’], image de (C) par s',
       caption: 'Les triangles AII’ et AJJ’ sont rectangles isocèles indirects en I’ et J’ ; B décrit tout le cercle (C’).',
       svgContent: `<svg viewBox="0 0 300 175" width="285" height="166" xmlns="http://www.w3.org/2000/svg">
         <circle cx="120" cy="52" r="40" fill="none" stroke="#2563eb" stroke-width="1.8"/>
@@ -666,7 +666,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p04_q04',
       type: 'mcq',
-      prompt: 'Pourquoi la droite $(AO’)$ tracée à l’aide du point $O’ = h_{(A, \\frac{1}{2})}(O)$ passe-t-elle exactement par le point inaccessible $O = (D) \\cap (D’)$ (p.32–33) ?',
+      prompt: 'Pourquoi la droite $(AO’)$ tracée à l’aide du point $O’ = h_{(A, \\frac{1}{2})}(O)$ passe-t-elle exactement par le point inaccessible $O = (D) \\cap (D’)$ ?',
       options: [
         'Car une homothétie de centre $A$ aligne tout point $O$, son image $O’$ et le centre $A$ ($\\overrightarrow{AO’} = \\frac{1}{2}\\overrightarrow{AO}$)',
         'Car $h$ est une rotation d’angle $\\frac{\\pi}{2}$',
@@ -688,7 +688,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p04_q05',
       type: 'mcq',
-      prompt: 'Pour construire un carré de sens indirect $ABCD$ tel que $B \\in (D_2)$ et $C \\in (D_1)$ ($A$ fixé, Ex. 10 p.24), quelle similitude directe envoie $B$ sur $C$ ?',
+      prompt: 'Pour construire un carré de sens indirect $ABCD$ tel que $B \\in (D_2)$ et $C \\in (D_1)$, quelle similitude directe envoie $B$ sur $C$ ?',
       options: [
         'La similitude de centre $A$, rapport $\\sqrt{2}$ et angle $-\\frac{\\pi}{4}$',
         'La similitude de centre $A$, rapport $2$ et angle $+\\frac{\\pi}{4}$',
@@ -707,11 +707,11 @@ const p04Steps: StructuredLessonStep[] = [
     stepTitle: 'Trouver un lieu par similitude directe ou par module direct',
     paragraphText:
       'Dans l’exercice 9 p.24, on considère $s : z’ = (-1 + i)z + 3 - 4i$. C’est une similitude directe de rapport $k = |-1 + i| = \\sqrt{2}$, d’angle $\\frac{3\\pi}{4}$ et de centre $\\Omega$ d’affixe $z_\\Omega = \\frac{3 - 4i}{2 - i} = \\frac{(3-4i)(2+i)}{5} = 2 - i$. On cherche l’ensemble $(C)$ des points $M(z)$ tels que $|(-1+i)z + 3 - 4i| = 2\\sqrt{2}$, c’est-à-dire $|z’| = 2\\sqrt{2}$ (ou $OM’ = 2\\sqrt{2}$) : (1) avec la similitude directe, $M’ \\in \\mathcal{C}(O, 2\\sqrt{2})$, donc $M = s^{-1}(M’)$ décrit le cercle de centre $s^{-1}(O)$ et de rayon $\\frac{2\\sqrt{2}}{\\sqrt{2}} = 2$ ; (2) sans similitude, on factorise directement par $-1 + i$ : $\\sqrt{2}|z - (2 - i)| = 2\\sqrt{2} \\iff |z - z_\\Omega| = 2$, c’est le **cercle de centre $\\Omega(2 - i)$ et de rayon $2$** (et on vérifie $s(\\Omega) = \\Omega$, mais attention $s^{-1}(O) \\neq \\Omega$ ! Wait : vérifions $|z’| = 2\\sqrt{2}$ vs $|z’-z_\\Omega|$ !).',
-    konanTip: 'Vérification cruciale : dans Ex. 9.2, $|z’| = |(-1+i)z + 3 - 4i| = |(-1+i)(z - z_\\Omega) + z_\\Omega|$ si on ne factorise PAS ! Pour que $|z’| = 2\\sqrt{2}$, comme $z’ = (-1+i)(z - \\frac{-3+4i}{-1+i}) = (-1+i)(z + \\frac{7-i}{2})$, c’est le cercle de centre $s^{-1}(O)$ et rayon $2$ (et $s^{-1}(O) = -\\frac{3-4i}{-1+i} = \\frac{(3-4i)(1+i)}{2} = \\frac{7}{2} - \\frac{1}{2}i \\neq \\Omega$ !). Ne confonds pas $|z’| = r$ ($M’ \\in \\mathcal{C}(O, r)$) avec $|z’ - z_\\Omega| = r$ !',
+    konanTip: 'Vérification cruciale : ici, $|z’| = |(-1+i)z + 3 - 4i| = |(-1+i)(z - z_\\Omega) + z_\\Omega|$ si on ne factorise PAS ! Pour que $|z’| = 2\\sqrt{2}$, comme $z’ = (-1+i)(z - \\frac{-3+4i}{-1+i}) = (-1+i)(z + \\frac{7-i}{2})$, c’est le cercle de centre $s^{-1}(O)$ et rayon $2$ (et $s^{-1}(O) = -\\frac{3-4i}{-1+i} = \\frac{(3-4i)(1+i)}{2} = \\frac{7}{2} - \\frac{1}{2}i \\neq \\Omega$ !). Ne confonds pas $|z’| = r$ ($M’ \\in \\mathcal{C}(O, r)$) avec $|z’ - z_\\Omega| = r$ !',
     exercise: {
       id: 'tc_m_geo_l16_p04_q06',
       type: 'mcq',
-      prompt: 'Si $s : z’ = (-1 + i)z + 3 - 4i$ a pour rapport $\\sqrt{2}$, quel est le **rayon** du cercle $(C)$ d’équation $|(-1 + i)z + 3 - 4i| = 2\\sqrt{2}$ (Ex. 9 p.24) ?',
+      prompt: 'Si $s : z’ = (-1 + i)z + 3 - 4i$ a pour rapport $\\sqrt{2}$, quel est le **rayon** du cercle $(C)$ d’équation $|(-1 + i)z + 3 - 4i| = 2\\sqrt{2}$ ?',
       options: ['$2\\sqrt{2}$', '$2$', '$4$', '$\\sqrt{2}$'],
       correctAnswerIndex: 1,
       explanation: '$|(-1 + i)z + 3 - 4i| = |-1 + i|\\,\\left|z - s^{-1}(O)\\right| = \\sqrt{2}\\,\\left|z - s^{-1}(O)\\right| = 2\\sqrt{2} \\iff |z - s^{-1}(O)| = 2$. Le rayon vaut $2$ !',
@@ -724,11 +724,11 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'orange',
     stepTitle: 'Savoir distinguer sens direct et sens indirect sur les sommets d’un triangle',
     paragraphText:
-      'Dans les exercices de lieux et de démonstrations (p.16, 18, 24), lis attentivement l’ordre des lettres ! Dire « le triangle $AKB$ est rectangle isocèle en $B$ et de sens indirect » signifie que le parcours $A \\to K \\to B$ (ou $\\overrightarrow{BA} \\to \\overrightarrow{BK}$? Vérifions : $A \\to K \\to B$ en sens négatif équivaut à $(\\widehat{\\overrightarrow{BA}, \\overrightarrow{BK}}) = -\\frac{\\pi}{2}$ et donc $(\\widehat{\\overrightarrow{AK}, \\overrightarrow{AB}}) = -\\frac{\\pi}{4}$). Toujours tracer un petit croquis orienté pour fixer le signe de $\\theta$ !',
+      'Dans les exercices de lieux et de démonstrations, lis attentivement l’ordre des lettres ! Dire « le triangle $AKB$ est rectangle isocèle en $B$ et de sens indirect » signifie que le parcours $A \\to K \\to B$ (ou $\\overrightarrow{BA} \\to \\overrightarrow{BK}$? Vérifions : $A \\to K \\to B$ en sens négatif équivaut à $(\\widehat{\\overrightarrow{BA}, \\overrightarrow{BK}}) = -\\frac{\\pi}{2}$ et donc $(\\widehat{\\overrightarrow{AK}, \\overrightarrow{AB}}) = -\\frac{\\pi}{4}$). Toujours tracer un petit croquis orienté pour fixer le signe de $\\theta$ !',
     exercise: {
       id: 'tc_m_geo_l16_p04_q07',
       type: 'mcq',
-      prompt: 'Dans l’exercice 4 de maison (Bac C CI 1998, p.32), $ABCD$ est un carré de centre $O$ tel que $(\\widehat{\\overrightarrow{AI}, \\overrightarrow{AD}}) = \\frac{\\pi}{2}$ (plutôt $(\\widehat{\\overrightarrow{AB}, \\overrightarrow{AD}}) = \\frac{\\pi}{2}$), $r$ est la rotation de centre $A$ envoyant $D$ en $B$, $M \\in (DC)$, $N \\in (BC) \\cap (AM)^\\perp$, $I$ milieu de $[MN]$. Quelle similitude directe de centre $A$ envoie $D$ sur $O$ ?',
+      prompt: 'Dans l’exercice 4 de maison, $ABCD$ est un carré de centre $O$ tel que $(\\widehat{\\overrightarrow{AI}, \\overrightarrow{AD}}) = \\frac{\\pi}{2}$ (plutôt $(\\widehat{\\overrightarrow{AB}, \\overrightarrow{AD}}) = \\frac{\\pi}{2}$), $r$ est la rotation de centre $A$ envoyant $D$ en $B$, $M \\in (DC)$, $N \\in (BC) \\cap (AM)^\\perp$, $I$ milieu de $[MN]$. Quelle similitude directe de centre $A$ envoie $D$ sur $O$ ?',
       options: [
         'Rapport $\\frac{\\sqrt{2}}{2}$ et angle $-\\frac{\\pi}{4}$ (ou $+\\frac{\\pi}{4}$ selon le sens direct de $ABCD$)',
         'Rapport $\\sqrt{2}$ et angle $\\frac{\\pi}{2}$',
@@ -747,12 +747,12 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Synthèse conique',
     stepTheme: 'green',
-    stepTitle: 'Reconnaître une ellipse tournée via une similitude directe (p.19–21)',
+    stepTitle: 'Reconnaître une ellipse tournée via une similitude directe',
     paragraphText:
       'Dans l’exercice de synthèse p.19–21, on étudie la courbe $(E) : 25x^2 + 25y^2 + 14xy - 144 = 0$ à l’aide de la similitude $s : z’ = (1 - i)z$. En inversant, $z = \\frac{1}{1-i}z’ = \\left(\\frac{1}{2} + \\frac{1}{2}i\\right)(x’ + iy’)$, d’où $\\begin{cases} x = \\frac{1}{2}(x’ - y’) \\\\ y = \\frac{1}{2}(x’ + y’) \\end{cases}$. En substituant $x^2, y^2, xy$ dans l’équation de $(E)$, les termes rectangles en $x’y’$ s’annulent et on obtient $\\frac{64}{4}x’^2 + \\frac{36}{4}y’^2 - 144 = 0$, soit $(E_0) : 16x’^2 + 9y’^2 - 144 = 0$? Attention au PDF p.19–20 : la question 2 écrivait $9x^2+16y^2-144=0$ alors que le calcul exact p.20 ligne 3 donne $16x’^2 + 9y’^2 - 144 = 0$ (puis la ligne suivante $9x^2+16y^2=144$ inversait $16$ et $9$ sous $x^2$ et $y^2$ !). Vérifions : $x^2 = \\frac{1}{4}(x’^2+y’^2-2x’y’)$, $y^2 = \\frac{1}{4}(x’^2+y’^2+2x’y’)$, $xy = \\frac{1}{4}(x’^2-y’^2)$, donc $25(x^2+y^2)+14xy = \\frac{50}{4}(x’^2+y’^2) + \\frac{14}{4}(x’^2-y’^2) = 16x’^2 + 9y’^2$ ! Ainsi $(E_0) : \\frac{x’^2}{9} + \\frac{y’^2}{16} = 1$ (grand axe vertical $4$ sur $(Oy)$, petits sommets $3$ sur $(Ox)$) !',
     visualSchema: {
       type: 'geometry_svg',
-      title: 'Ellipse (E) inclinée à 45° et ellipse réduite (E₀) (p.21)',
+      title: 'Ellipse (E) inclinée à 45° et ellipse réduite (E₀)',
       caption: 'La similitude z’ = (1 − i)z redresse les axes obliques de (E) sur les axes du repère et dilate d’un rapport √2.',
       svgContent: `<svg viewBox="0 0 300 165" width="285" height="156" xmlns="http://www.w3.org/2000/svg">
         <line x1="25" y1="82" x2="275" y2="82" stroke="#94a3b8" stroke-width="1.2"/>
@@ -768,7 +768,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p05_q01',
       type: 'mcq',
-      prompt: 'Pour $z’ = (1 - i)z$ (p.19), quelle expression donne $(x, y)$ en fonction de $(x’, y’)$ ?',
+      prompt: 'Pour $z’ = (1 - i)z$, quelle expression donne $(x, y)$ en fonction de $(x’, y’)$ ?',
       options: [
         '$x = x’ - y’$ et $y = x’ + y’$',
         '$x = \\frac{1}{2}(x’ - y’)$ et $y = \\frac{1}{2}(x’ + y’)$',
@@ -782,11 +782,11 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 2,
     stepKind: 'methode',
-    stepBadge: 'Suites & Similitude Ex. 2',
+    stepBadge: 'Suites & Similitude',
     stepTheme: 'green',
-    stepTitle: 'Suite récurrente $A_{n+1} = s(A_n)$ : affixe, angle et distance au centre (p.26–28)',
+    stepTitle: 'Suite récurrente $A_{n+1} = s(A_n)$ : affixe, angle et distance au centre',
     paragraphText:
-      'Dans l’exercice 2 de renforcement (p.26–30), $s$ vérifie $x’ = \\frac{x}{2}+\\frac{y}{2}+1$, $y’ = -\\frac{x}{2}+\\frac{y}{2}+1$, soit $z’ = \\frac{1-i}{2}z + 1 + i$ : c’est la similitude directe de **centre $B(2)$**, de **rapport $\\frac{\\sqrt{2}}{2}$** et d’**angle $-\\frac{\\pi}{4}$**. Partant de $A_0 = A(10)$ et $A_{n+1} = s(A_n)$, on démontre par récurrence que $z_n = 2 + 8\\left(\\frac{1-i}{2}\\right)^n$. On en déduit immédiatement que $\\operatorname{Mes}(\\widehat{\\overrightarrow{OI}, \\overrightarrow{BA_n}}) \\equiv -\\frac{n\\pi}{4}\\;[2\\pi]$ et que $BA_n = |z_n - 2| = \\frac{8}{(\\sqrt{2})^n}$.',
+      'Dans l’exercice 2 de renforcement, $s$ vérifie $x’ = \\frac{x}{2}+\\frac{y}{2}+1$, $y’ = -\\frac{x}{2}+\\frac{y}{2}+1$, soit $z’ = \\frac{1-i}{2}z + 1 + i$ : c’est la similitude directe de **centre $B(2)$**, de **rapport $\\frac{\\sqrt{2}}{2}$** et d’**angle $-\\frac{\\pi}{4}$**. Partant de $A_0 = A(10)$ et $A_{n+1} = s(A_n)$, on démontre par récurrence que $z_n = 2 + 8\\left(\\frac{1-i}{2}\\right)^n$. On en déduit immédiatement que $\\operatorname{Mes}(\\widehat{\\overrightarrow{OI}, \\overrightarrow{BA_n}}) \\equiv -\\frac{n\\pi}{4}\\;[2\\pi]$ et que $BA_n = |z_n - 2| = \\frac{8}{(\\sqrt{2})^n}$.',
     formula: {
       name: 'Itération de similitude centrée en B(2)',
       formula: 'z_n - 2 = 8\\left(\\frac{1-i}{2}\\right)^n \\implies BA_n = \\frac{8}{(\\sqrt{2})^n} \\quad\\text{et}\\quad (\\widehat{\\overrightarrow{OI}, \\overrightarrow{BA_n}}) \\equiv -\\frac{n\\pi}{4}\\;[2\\pi]',
@@ -794,7 +794,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p05_q02',
       type: 'mcq',
-      prompt: 'Avec $\\operatorname{Mes}(\\widehat{\\overrightarrow{OI}, \\overrightarrow{BA_n}}) = -\\frac{n\\pi}{4}$ ($n \\in \\mathbb{N}$, p.26 & 28), pour quelles valeurs de $n$ le point $A_n$ appartient-il à la droite $(OI)$, et quand $(BA_n) \\perp (OI)$ ?',
+      prompt: 'Avec $\\operatorname{Mes}(\\widehat{\\overrightarrow{OI}, \\overrightarrow{BA_n}}) = -\\frac{n\\pi}{4}$, pour quelles valeurs de $n$ le point $A_n$ appartient-il à la droite $(OI)$, et quand $(BA_n) \\perp (OI)$ ?',
       options: [
         '$A_n \\in (OI) \\iff n = 4k$ ($k \\in \\mathbb{N}$) ; $(BA_n) \\perp (OI) \\iff n = 4k + 2$ ($k \\in \\mathbb{N}$)',
         '$A_n \\in (OI) \\iff n = 8k$ ; $(BA_n) \\perp (OI) \\iff n = 4k$',
@@ -810,13 +810,13 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Seuil et ligne brisée',
     stepTheme: 'green',
-    stepTitle: 'Seuil $BA_n \\le 10^{-2}$ et longueur totale $L_n$ de la spirale (p.27–30)',
+    stepTitle: 'Seuil $BA_n \\le 10^{-2}$ et longueur totale $L_n$ de la spirale',
     paragraphText:
       'Pour trouver la plus petite valeur de $n$ telle que $A_n$ appartienne au disque de centre $B$ et de rayon $10^{-2}$, on résout $\\frac{8}{(\\sqrt{2})^n} \\le 10^{-2}$. En appliquant $\\log$ (ou $\\ln$), on obtient $\\log 8 - n\\log\\sqrt{2} \\le -2 \\iff n \\ge \\frac{2 + \\log 8}{\\log\\sqrt{2}} \\approx 19{,}28$, d’où **$n = 20$**. Par ailleurs, chaque segment $[A_j A_{j+1}]$ est l’image du précédent par $s$ de rapport $q = \\frac{\\sqrt{2}}{2}$, avec $L_1 = A_0A_1 = |z_1 - z_0| = |-4 - 4i| = 4\\sqrt{2}$. La longueur $L_n = \\sum_{j=0}^{n-1} A_jA_{j+1}$ vaut donc $L_n = 4\\sqrt{2}\\frac{1 - (\\frac{\\sqrt{2}}{2})^n}{1 - \\frac{\\sqrt{2}}{2}} = (8\\sqrt{2} + 8)\\left[1 - \\left(\\frac{\\sqrt{2}}{2}\\right)^n\\right]$, de limite **$8\\sqrt{2} + 8$** quand $n \\to +\\infty$ !',
     exercise: {
       id: 'tc_m_geo_l16_p05_q03',
       type: 'mcq',
-      prompt: 'Dans l’exercice 2 (p.27 & 30), que vaut la limite lorsque $n \\to +\\infty$ de la longueur de la ligne brisée $L_n = A_0A_1 + A_1A_2 + \\dots + A_{n-1}A_n$ ?',
+      prompt: 'Dans l’exercice 2, que vaut la limite lorsque $n \\to +\\infty$ de la longueur de la ligne brisée $L_n = A_0A_1 + A_1A_2 + \\dots + A_{n-1}A_n$ ?',
       options: ['$4\\sqrt{2}$', '$8\\sqrt{2} + 8$', '$16$', '$+\\infty$'],
       correctAnswerIndex: 1,
       explanation: 'Comme $-1 < \\frac{\\sqrt{2}}{2} < 1$, $\\lim (\\frac{\\sqrt{2}}{2})^n = 0$, donc $\\lim L_n = 4\\sqrt{2}(2 + \\sqrt{2}) = 8\\sqrt{2} + 8$.',
@@ -833,7 +833,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_geo_l16_p05_q04',
       type: 'mcq',
-      prompt: 'Dans l’exercice 3 (p.30–31), sachant que $s$ a pour rapport $k = \\frac{\\sqrt{2}}{2}$ et $a_0 = \\operatorname{aire}(IAB) = 16$, quelles sont les valeurs du premier terme et de la raison $q$ de la suite d’aires $(a_n)$ ?',
+      prompt: 'Dans l’exercice 3, sachant que $s$ a pour rapport $k = \\frac{\\sqrt{2}}{2}$ et $a_0 = \\operatorname{aire}(IAB) = 16$, quelles sont les valeurs du premier terme et de la raison $q$ de la suite d’aires $(a_n)$ ?',
       options: [
         '$a_0 = 16$ et $q = \\frac{\\sqrt{2}}{2}$',
         '$a_0 = 16$ et $q = \\left(\\frac{\\sqrt{2}}{2}\\right)^2 = \\frac{1}{2}$',
@@ -847,16 +847,16 @@ const p05Steps: StructuredLessonStep[] = [
   {
     stepNumber: 5,
     stepKind: 'methode',
-    stepBadge: 'Fin Exercice 3 p.31',
+    stepBadge: 'Synthèse géométrique',
     stepTheme: 'green',
     stepTitle: 'Somme $A_n = \\sum_{k=0}^n a_k$, aire de $IABCDE$ et distance $DE$',
     paragraphText:
-      'Pour tout $n \\in \\mathbb{N}$, avec $a_0 = \\operatorname{aire}(IAB) = \\frac{IA \\times HB}{2} = \\frac{8 \\times 4}{2} = 16$ et la raison $q = \\frac{1}{2}$, la somme des $n+1$ premiers termes de $(a_n)$ vaut exactement $A_n = a_0 \\frac{1 - (1/2)^{n+1}}{1 - 1/2} = 16 \\times 2 \\left[1 - \\left(\\frac{1}{2}\\right)^{n+1}\\right] = 32\\left[1 - \\left(\\frac{1}{2}\\right)^{n+1}\\right]$. (Attention : le polycopié p.31 avait oublié le facteur $\\frac{1}{1 - 1/2} = 2$ au dénominateur et écrit $16[1 - (1/2)^{n+1}]$, ce qui donnerait $\\lim A_n = 16$ alors que déjà $a_0 + a_1 = 16 + 8 = 24 > 16$ !). Avec la formule exacte, $\\operatorname{aire}(IABCDE) = a_0 + a_1 + a_2 + a_3 = 32\\left(1 - \\frac{1}{16}\\right) = 30$, et $\\lim_{n\\to+\\infty} A_n = 32$. Enfin, la distance $DE$ vaut $DE = \\left(\\frac{\\sqrt{2}}{2}\\right)^3 AB = \\frac{2\\sqrt{2}}{8} \\times 4\\sqrt{2} = 2$.',
-    konanTip: 'Magnifique contrôle de vraisemblance : comme $a_0 = 16$ et $a_1 = 8$ sont tous positifs, la somme $A_n = a_0 + \\dots + a_n$ est forcément **strictement supérieure à $16$** dès $n=1$ ($A_1 = 24$, $A_3 = 30$, limite $= 32$) ! Le polycopié p.31 avait omis de diviser par $1 - \\frac{1}{2} = \\frac{1}{2}$.',
+      'Pour tout $n \\in \\mathbb{N}$, avec $a_0 = \\operatorname{aire}(IAB) = \\frac{IA \\times HB}{2} = \\frac{8 \\times 4}{2} = 16$ et la raison $q = \\frac{1}{2}$, la somme des $n+1$ premiers termes de $(a_n)$ vaut exactement $A_n = a_0 \\frac{1 - (1/2)^{n+1}}{1 - 1/2} = 16 \\times 2 \\left[1 - \\left(\\frac{1}{2}\\right)^{n+1}\\right] = 32\\left[1 - \\left(\\frac{1}{2}\\right)^{n+1}\\right]$. Attention à ne jamais oublier le facteur $\\frac{1}{1 - 1/2} = 2$ au dénominateur ! Avec la formule exacte, $\\operatorname{aire}(IABCDE) = a_0 + a_1 + a_2 + a_3 = 32\\left(1 - \\frac{1}{16}\\right) = 30$, et $\\lim_{n\\to+\\infty} A_n = 32$. Enfin, la distance $DE$ vaut $DE = \\left(\\frac{\\sqrt{2}}{2}\\right)^3 AB = \\frac{2\\sqrt{2}}{8} \\times 4\\sqrt{2} = 2$.',
+    konanTip: 'Magnifique contrôle de vraisemblance : comme $a_0 = 16$ et $a_1 = 8$ sont tous positifs, la somme $A_n = a_0 + \\dots + a_n$ est forcément **strictement supérieure à $16$** dès $n=1$ ($A_1 = 24$, $A_3 = 30$, limite $= 32$) ! Ne jamais oublier de diviser par $1 - q = 1 - \\frac{1}{2} = \\frac{1}{2}$.',
     exercise: {
       id: 'tc_m_geo_l16_p05_q05',
       type: 'mcq',
-      prompt: 'Dans la spirale d’aires $(a_n)$ de premier terme $a_0 = 16$ et de raison $q = \\frac{1}{2}$ (Ex. 3 p.31, formule corrigée), que valent exactement l’aire de $IABCDE$ ($A_3 = a_0 + a_1 + a_2 + a_3$) et la limite $\\lim_{n \\to +\\infty} A_n$ ?',
+      prompt: 'Dans la spirale d’aires $(a_n)$ de premier terme $a_0 = 16$ et de raison $q = \\frac{1}{2}$, que valent exactement l’aire de $IABCDE$ ($A_3 = a_0 + a_1 + a_2 + a_3$) et la limite $\\lim_{n \\to +\\infty} A_n$ ?',
       options: [
         '$A_3 = 15$ et $\\lim A_n = 16$',
         '$A_3 = 30$ et $\\lim A_n = 32$',
@@ -874,11 +874,11 @@ const p05Steps: StructuredLessonStep[] = [
     stepTheme: 'blue',
     stepTitle: 'Calculer une longueur après $p$ applications de la similitude : $DE = k^3 AB$',
     paragraphText:
-      'Dans le même exercice 3 (p.31), sachant que $AB = 4\\sqrt{2}$ et que $B=s(A), C=s(B), D=s(C), E=s(D)$, chaque segment image a sa longueur multipliée par $k = \\frac{\\sqrt{2}}{2}$. Ainsi $BC = k\\,AB$, $CD = k\\,BC = k^2 AB$ et $DE = k\\,CD = k^3 AB = \\left(\\frac{\\sqrt{2}}{2}\\right)^3 \\times 4\\sqrt{2} = \\frac{2\\sqrt{2}}{8} \\times 4\\sqrt{2} = 2$. Cette règle $M_n M_{n+1} = k^n M_0 M_1$ évite de recalculer les affixes des points intermédiaires !',
+      'Dans le même exercice 3, sachant que $AB = 4\\sqrt{2}$ et que $B=s(A), C=s(B), D=s(C), E=s(D)$, chaque segment image a sa longueur multipliée par $k = \\frac{\\sqrt{2}}{2}$. Ainsi $BC = k\\,AB$, $CD = k\\,BC = k^2 AB$ et $DE = k\\,CD = k^3 AB = \\left(\\frac{\\sqrt{2}}{2}\\right)^3 \\times 4\\sqrt{2} = \\frac{2\\sqrt{2}}{8} \\times 4\\sqrt{2} = 2$. Cette règle $M_n M_{n+1} = k^n M_0 M_1$ évite de recalculer les affixes des points intermédiaires !',
     exercise: {
       id: 'tc_m_geo_l16_p05_q06',
       type: 'mcq',
-      prompt: 'Sachant que $AB = 4\\sqrt{2}$ et que $s$ est de rapport $k = \\frac{\\sqrt{2}}{2}$ avec $s(A)=B, s(B)=C, s(C)=D, s(D)=E$ (Ex. 3.5 p.31), quelle est la longueur exacte du segment $[DE]$ ?',
+      prompt: 'Sachant que $AB = 4\\sqrt{2}$ et que $s$ est de rapport $k = \\frac{\\sqrt{2}}{2}$ avec $s(A)=B, s(B)=C, s(C)=D, s(D)=E$, quelle est la longueur exacte du segment $[DE]$ ?',
       options: ['$1$', '$\\sqrt{2}$', '$2$', '$2\\sqrt{2}$'],
       correctAnswerIndex: 2,
       explanation: '$[DE]$ est obtenu après $3$ applications successives de $s$ sur $[AB]$, donc $DE = \\left(\\frac{\\sqrt{2}}{2}\\right)^3 \\times 4\\sqrt{2} = \\frac{2\\sqrt{2}}{8} \\times 4\\sqrt{2} = 2$.',
@@ -933,7 +933,7 @@ export const MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN: CurriculumChapter = {
         { name: 'Composition et réciproque', formula: 's_1 \\circ s_2 : (k_1 k_2,\\; \\theta_1 + \\theta_2) \\qquad ; \\qquad s^{-1} : (\\frac{1}{k},\\; -\\theta)' },
       ],
       workedExample: {
-        title: 'Triangle équilatéral direct ABC : s(I)=B et s(B)=A (p.2)',
+        title: 'Triangle équilatéral direct ABC : s(I)=B et s(B)=A',
         statement: 'Déterminer le rapport et l’angle de $s$ ($I$ milieu de $[BC]$).',
         methodSteps: [
           '$k = \\frac{BA}{IB} = \\frac{2IB}{IB} = 2$.',
@@ -957,7 +957,7 @@ export const MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN: CurriculumChapter = {
         { name: 'Forme réduite et écriture', formula: 's_{(\\Omega, k, \\theta)} = h_{(\\Omega, k)} \\circ r_{(\\Omega, \\theta)} \\quad \\iff \\quad z’ = k e^{i\\theta}(z - z_\\Omega) + z_\\Omega' },
       ],
       workedExample: {
-        title: 'Expression analytique x’ = x + y − 3, y’ = −x + y + 2 (p.6)',
+        title: 'Expression analytique x’ = x + y − 3, y’ = −x + y + 2',
         statement: 'Écrire $z’$ en fonction de $z$.',
         methodSteps: [
           '$z’ = x’ + iy’ = (1 - i)x + (1 + i)y - 3 + 2i$.',
@@ -981,7 +981,7 @@ export const MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN: CurriculumChapter = {
         { name: 'Centre par (k, θ, s(A)=B)', formula: '\\Omega \\in \\left\\{ M : \\frac{MB}{MA} = k \\right\\} \\cap \\left\\{ M : \\operatorname{Mes}(\\widehat{\\overrightarrow{MA}, \\overrightarrow{MB}}) = \\theta \\right\\}' },
       ],
       workedExample: {
-        title: 'Deux carrés directs accolés ABCD et DCEF : s(B)=C, s(O)=D (p.10)',
+        title: 'Deux carrés directs accolés ABCD et DCEF : s(B)=C, s(O)=D',
         statement: 'Trouver le centre de $s$ et l’image de $C$.',
         methodSteps: [
           'Les triangles $ABC$ et $AOD$ sont rectangles isocèles directs respectivement en $B$ et $O$, de sommet commun $A$.',
@@ -1005,7 +1005,7 @@ export const MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN: CurriculumChapter = {
         { name: 'Construction entre parallèles', formula: 'B \\in (D_2) \\text{ et } C = s(B) \\in (D_1) \\implies C \\in (D_1) \\cap s(D_2)' },
       ],
       workedExample: {
-        title: 'Parallélogramme IJAK via s₁ ∘ s₂⁻¹ (p.16)',
+        title: 'Parallélogramme IJAK via s₁ ∘ s₂⁻¹',
         statement: 'Prouver que $IJAK$ est un parallélogramme.',
         methodSteps: [
           '$s_1(A)=A, s_1(C)=J$ ($k_1 = \\frac{\\sqrt{2}}{2}, \\theta_1 = \\frac{\\pi}{4}$) et $s_2(B)=B, s_2(A)=K, s_2(C)=I$ ($k_2 = \\frac{\\sqrt{2}}{2}, \\theta_2 = \\frac{\\pi}{4}$).',
@@ -1024,12 +1024,12 @@ export const MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN: CurriculumChapter = {
         'Ramener une ellipse oblique à sa forme réduite par z’ = (1−i)z, et étudier des suites de points A_{n+1} = s(A_n) : affixe, alignement, seuil logarithmique, ligne brisée et spirale d’aires.',
       conceptExplanation:
         'Une suite géométrique de points $M_{n+1} = s(M_n)$ pour $s$ de centre $\\Omega$, rapport $k$ et angle $\\theta$ vérifie $z_n - z_\\Omega = (ke^{i\\theta})^n (z_0 - z_\\Omega)$. Les longueurs $\\Omega M_n$ et $M_n M_{n+1}$ suivent des suites géométriques de raison $k$, les angles avancent de $\\theta$ à chaque pas, et les aires de triangles successifs forment une suite géométrique de raison $k^2$.',
-      keyRule: 'Attention aux sommes d’aires $\\sum_{j=0}^n a_j = a_0\\frac{1 - q^{n+1}}{1 - q}$ : ne pas oublier de diviser par $1 - q$ (p.31 corrigé : $32$, pas $16$).',
+      keyRule: 'Attention aux sommes d’aires $\\sum_{j=0}^n a_j = a_0\\frac{1 - q^{n+1}}{1 - q}$ : ne pas oublier de diviser par $1 - q$.',
       formulas: [
         { name: 'Suites géométriques de similitudes', formula: 'z_n - z_\\Omega = (ke^{i\\theta})^n(z_0 - z_\\Omega) \\quad ; \\quad \\lim_{n\\to+\\infty} L_n = \\frac{L_1}{1-k} \\;(0<k<1)' },
       ],
       workedExample: {
-        title: 'Ligne brisée dans z’ = ((1−i)/2)z + 1 + i (p.26–30)',
+        title: 'Ligne brisée dans z’ = ((1−i)/2)z + 1 + i',
         statement: 'Calculer la longueur limite de la spirale $A_0A_1 + A_1A_2 + \\dots + A_{n-1}A_n$.',
         methodSteps: [
           'Centre $B(2)$, rapport $k = \\frac{\\sqrt{2}}{2}$, $z_0 = 10 \\implies z_1 = 6 - 4i \\implies L_1 = A_0A_1 = |-4-4i| = 4\\sqrt{2}$.',

@@ -199,7 +199,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Valeur absolue',
     stepTheme: 'slate',
-    stepTitle: 'Intégrer une fonction avec valeur absolue (Ex. 2 p.12)',
+    stepTitle: 'Intégrer une fonction avec valeur absolue',
     paragraphText:
       'Pour calculer $P = \\int_{-4}^6 |x + 3|\\,dx$, on repère où l’intérieur s’annule : $x + 3 = 0 \\iff x = -3 \\in [-4 ; 6]$. Sur $[-4 ; -3]$, $x + 3 \\leqslant 0$ donc $|x + 3| = -x - 3$. Sur $[-3 ; 6]$, $|x + 3| = x + 3$. Par Chasles : $P = \\int_{-4}^{-3} (-x - 3)\\,dx + \\int_{-3}^6 (x + 3)\\,dx = \\left[-\\frac{x^2}{2}-3x\\right]_{-4}^{-3} + \\left[\\frac{x^2}{2}+3x\\right]_{-3}^6 = \\frac{1}{2} + \\frac{81}{2} = 41$.',
     formula: {
@@ -222,7 +222,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Linéarité de l’intégrale (somme et multiplication par $\\alpha$)',
     paragraphText:
-      'Soient $f$ et $g$ continues sur $K$, $a, b \\in K$ et $\\alpha \\in \\mathbb{R}$. Alors $\\int_a^b [f(x) + g(x)]\\,dx = \\int_a^b f(x)\\,dx + \\int_a^b g(x)\\,dx$ et $\\int_a^b \\alpha f(x)\\,dx = \\alpha \\int_a^b f(x)\\,dx$. Exemple du cours : $\\int_0^{2\\pi} (-3\\cos x + 2\\sin x)\\,dx = -3[\\sin x]_0^{2\\pi} + 2[-\\cos x]_0^{2\\pi} = 0 + 2(-1 + 1) = 0$.',
+      'Soient $f$ et $g$ continues sur $K$, $a, b \\in K$ et $\\alpha \\in \\mathbb{R}$. Alors $\\int_a^b [f(x) + g(x)]\\,dx = \\int_a^b f(x)\\,dx + \\int_a^b g(x)\\,dx$ et $\\int_a^b \\alpha f(x)\\,dx = \\alpha \\int_a^b f(x)\\,dx$. Exemple : $\\int_0^{2\\pi} (-3\\cos x + 2\\sin x)\\,dx = -3[\\sin x]_0^{2\\pi} + 2[-\\cos x]_0^{2\\pi} = 0 + 2(-1 + 1) = 0$.',
     formula: {
       name: 'Linéarité',
       formula: '\\int_a^b (\\alpha f(x) + \\beta g(x))\\,dx = \\alpha\\int_a^b f(x)\\,dx + \\beta\\int_a^b g(x)\\,dx',
@@ -243,7 +243,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Intégration d’une fonction paire ou impaire sur $[-a ; a]$',
     paragraphText:
-      'Soit $f$ continue sur un intervalle $K$ symétrique par rapport à $0$ et $a \\in K$. (1) Si $f$ est **paire** ($f(-x) = f(x)$), alors $\\int_{-a}^a f(x)\\,dx = 2\\int_0^a f(x)\\,dx$. (2) Si $f$ est **impaire** ($f(-x) = -f(x)$), alors $\\int_{-a}^a f(x)\\,dx = 0$ sans même chercher de primitive ! Exemples du cours : $\\int_{-\\pi/4}^{\\pi/4} \\cos(2x)\\,dx = 2\\int_0^{\\pi/4}\\cos(2x)\\,dx = [\\sin 2x]_0^{\\pi/4} = 1$, et $\\int_{-\\pi/4}^{\\pi/4} \\sin(2x)\\,dx = 0$.',
+      'Soit $f$ continue sur un intervalle $K$ symétrique par rapport à $0$ et $a \\in K$. (1) Si $f$ est **paire** ($f(-x) = f(x)$), alors $\\int_{-a}^a f(x)\\,dx = 2\\int_0^a f(x)\\,dx$. (2) Si $f$ est **impaire** ($f(-x) = -f(x)$), alors $\\int_{-a}^a f(x)\\,dx = 0$ sans même chercher de primitive ! Exemple : $\\int_{-\\pi/4}^{\\pi/4} \\cos(2x)\\,dx = 2\\int_0^{\\pi/4}\\cos(2x)\\,dx = [\\sin 2x]_0^{\\pi/4} = 1$, et $\\int_{-\\pi/4}^{\\pi/4} \\sin(2x)\\,dx = 0$.',
     formula: {
       name: 'Symétries sur [-a ; a]',
       formula: 'f \\text{ paire} \\implies \\int_{-a}^a f = 2\\int_0^a f \\qquad ; \\qquad f \\text{ impaire} \\implies \\int_{-a}^a f = 0',
@@ -251,7 +251,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p02_q04',
       type: 'mcq',
-      prompt: 'Que vaut $\\int_{-\\pi/6}^{\\pi/6} x^6 \\sin x\\,dx$ (Exercice 10 p.13) ?',
+      prompt: 'Que vaut $\\int_{-\\pi/6}^{\\pi/6} x^6 \\sin x\\,dx$ ?',
       options: ['$2\\int_0^{\\pi/6} x^6 \\sin x\\,dx$', '$0$', '$1$', '$\\frac{\\pi}{3}$'],
       correctAnswerIndex: 1,
       explanation: 'Posons $g(x) = x^6 \\sin x$ sur $[-\\frac{\\pi}{6} ; \\frac{\\pi}{6}]$ : $g(-x) = (-x)^6 \\sin(-x) = -x^6 \\sin x = -g(x)$. $g$ est impaire sur un intervalle symétrique, donc son intégrale vaut $0$ !',
@@ -308,7 +308,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Simplifier une intégrale avant de chercher une primitive',
     paragraphText:
-      'Avant de te lancer dans une intégration compliquée : (1) vérifie si les bornes sont égales ($\\to 0$) ; (2) si les bornes sont opposées $[-a ; a]$, décompose $f$ en somme paire $+$ impaire (la partie impaire disparaît !) ; (3) regarde si l’amplitude vaut une période $T$ ou $kT$. Ex. 10 p.13 : $\\int_{\\pi/2}^{5\\pi/2} \\cos x\\,dx = \\int_0^{2\\pi} \\cos x\\,dx = 0$ immédiatement !',
+      'Avant de te lancer dans une intégration compliquée : (1) vérifie si les bornes sont égales ($\\to 0$) ; (2) si les bornes sont opposées $[-a ; a]$, décompose $f$ en somme paire $+$ impaire (la partie impaire disparaît !) ; (3) regarde si l’amplitude vaut une période $T$ ou $kT$. Par exemple : $\\int_{\\pi/2}^{5\\pi/2} \\cos x\\,dx = \\int_0^{2\\pi} \\cos x\\,dx = 0$ immédiatement !',
     exercise: {
       id: 'tc_m_num_l10_p02_q07',
       type: 'mcq',
@@ -328,7 +328,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Positivité et conservation des inégalités (avec $a \\leqslant b$)',
     paragraphText:
-      'Soient $f$ et $g$ continues sur $[a ; b]$ **avec $a \\leqslant b$** : (1) Si $f \\geqslant 0$ sur $[a ; b]$, alors $\\int_a^b f(x)\\,dx \\geqslant 0$. (2) Si $f \\leqslant g$ sur $[a ; b]$, alors $\\int_a^b f(x)\\,dx \\leqslant \\int_a^b g(x)\\,dx$. Exemples du cours : $\\int_{-2}^7 x^2\\,dx \\geqslant 0$ car $x^2 \\geqslant 0$ ; $\\int_0^1 (x^2 + 1)\\,dx \\geqslant \\int_0^1 2x\\,dx$ car $x^2 + 1 - 2x = (x-1)^2 \\geqslant 0$.',
+      'Soient $f$ et $g$ continues sur $[a ; b]$ **avec $a \\leqslant b$** : (1) Si $f \\geqslant 0$ sur $[a ; b]$, alors $\\int_a^b f(x)\\,dx \\geqslant 0$. (2) Si $f \\leqslant g$ sur $[a ; b]$, alors $\\int_a^b f(x)\\,dx \\leqslant \\int_a^b g(x)\\,dx$. Exemple : $\\int_{-2}^7 x^2\\,dx \\geqslant 0$ car $x^2 \\geqslant 0$ ; $\\int_0^1 (x^2 + 1)\\,dx \\geqslant \\int_0^1 2x\\,dx$ car $x^2 + 1 - 2x = (x-1)^2 \\geqslant 0$.',
     formula: {
       name: 'Comparaison d’intégrales (a ≤ b)',
       formula: '(\\forall x \\in [a;b],\\; f(x) \\leqslant g(x)) \\implies \\int_a^b f(x)\\,dx \\leqslant \\int_a^b g(x)\\,dx',
@@ -336,7 +336,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p03_q01',
       type: 'mcq',
-      prompt: 'Comment prouve-t-on sans calcul que $\\int_0^{\\pi} x^2 \\cos x\\,dx \\leqslant \\int_0^{\\pi} x^2\\,dx$ (Ex. 4 p.12) ?',
+      prompt: 'Comment prouve-t-on sans calcul que $\\int_0^{\\pi} x^2 \\cos x\\,dx \\leqslant \\int_0^{\\pi} x^2\\,dx$ ?',
       options: [
         'En intégrant deux fois par parties',
         'Car pour tout $x \\in [0 ; \\pi]$, $\\cos x \\leqslant 1$ et $x^2 \\geqslant 0$, donc $x^2 \\cos x \\leqslant x^2$',
@@ -401,7 +401,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Exercice type Bac',
     stepTheme: 'slate',
-    stepTitle: 'Encadrer $\\tan b - \\tan a$ par l’inégalité de la moyenne (Ex. 5 p.12)',
+    stepTitle: 'Encadrer $\\tan b - \\tan a$ par l’inégalité de la moyenne',
     paragraphText:
       'Soient $0 \\leqslant a < b < \\frac{\\pi}{2}$. Comme $\\cos$ est positive et décroissante sur $[0 ; \\frac{\\pi}{2}[$, pour tout $x \\in [a ; b]$ on a $\\cos b \\leqslant \\cos x \\leqslant \\cos a$, d’où $\\frac{1}{\\cos^2 a} \\leqslant \\frac{1}{\\cos^2 x} \\leqslant \\frac{1}{\\cos^2 b}$. En intégrant sur $[a ; b]$ (et en sachant que $\\int_a^b \\frac{dx}{\\cos^2 x} = [\\tan x]_a^b = \\tan b - \\tan a$), on obtient $\\frac{b - a}{\\cos^2 a} \\leqslant \\tan b - \\tan a \\leqslant \\frac{b - a}{\\cos^2 b}$.',
     formula: {
@@ -437,7 +437,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p03_q05',
       type: 'mcq',
-      prompt: 'Quelle est la valeur moyenne de $f(x) = x - \\sin x$ sur $[0 ; \\pi]$ (exercice du cours p.5–6) ?',
+      prompt: 'Quelle est la valeur moyenne de $f(x) = x - \\sin x$ sur $[0 ; \\pi]$ ?',
       options: ['$\\frac{\\pi^2 - 4}{2}$', '$\\frac{\\pi^2 - 4}{2\\pi}$', '$\\frac{\\pi}{2}$', '$\\frac{\\pi^2 - 2}{2\\pi}$'],
       correctAnswerIndex: 1,
       explanation: '$\\mu = \\frac{1}{\\pi}\\left[\\frac{1}{2}x^2 + \\cos x\\right]_0^{\\pi} = \\frac{1}{\\pi}\\left(\\left(\\frac{\\pi^2}{2} - 1\\right) - (0 + 1)\\right) = \\frac{\\pi^2 - 4}{2\\pi}$.',
@@ -448,7 +448,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Calcul de moyenne',
     stepTheme: 'slate',
-    stepTitle: 'Calculer une valeur moyenne avec parité (Ex. 6 p.12)',
+    stepTitle: 'Calculer une valeur moyenne avec parité',
     paragraphText:
       'Soit $f(x) = 3x + \\cos x$ sur $\\left[-\\frac{\\pi}{2} ; \\frac{\\pi}{2}\\right]$. La largeur de l’intervalle vaut $\\frac{\\pi}{2} - \\left(-\\frac{\\pi}{2}\\right) = \\pi$. Par linéarité et parité sur $\\left[-\\frac{\\pi}{2} ; \\frac{\\pi}{2}\\right]$, $\\int_{-\\pi/2}^{\\pi/2} 3x\\,dx = 0$ (impaire) et $\\int_{-\\pi/2}^{\\pi/2} \\cos x\\,dx = [\\sin x]_{-\\pi/2}^{\\pi/2} = 1 - (-1) = 2$. Donc $\\mu = \\frac{2}{\\pi}$.',
     exercise: {
@@ -492,7 +492,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Reconnaître $\\frac{u’(x)}{u(x)}$ et intégrer vers $\\ln|u(x)|$',
     paragraphText:
-      'Dès qu’une fraction a au numérateur la dérivée (ou un multiple de la dérivée) du dénominateur, on reconnaît $\\frac{u’(x)}{u(x)}$ dont une primitive est $\\ln|u(x)|$ (sur un intervalle où $u$ ne s’annule pas). Exemple 1 du cours : pour $I = \\int_0^1 \\frac{e^x}{1 + e^x}\\,dx$, on pose $u(x) = 1 + e^x > 0$ ($u’(x) = e^x$). Donc $I = [\\ln(1 + e^x)]_0^1 = \\ln(1+e) - \\ln 2 = \\ln\\left(\\frac{1+e}{2}\\right)$.',
+      'Dès qu’une fraction a au numérateur la dérivée (ou un multiple de la dérivée) du dénominateur, on reconnaît $\\frac{u’(x)}{u(x)}$ dont une primitive est $\\ln|u(x)|$ (sur un intervalle où $u$ ne s’annule pas). Exemple : pour $I = \\int_0^1 \\frac{e^x}{1 + e^x}\\,dx$, on pose $u(x) = 1 + e^x > 0$ ($u’(x) = e^x$). Donc $I = [\\ln(1 + e^x)]_0^1 = \\ln(1+e) - \\ln 2 = \\ln\\left(\\frac{1+e}{2}\\right)$.',
     formula: {
       name: 'Intégrale de u’/u',
       formula: '\\int_a^b \\frac{u’(x)}{u(x)}\\,dx = \\Big[\\ln|u(x)|\\Big]_a^b',
@@ -500,7 +500,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p04_q01',
       type: 'mcq',
-      prompt: 'Que vaut $\\int_{\\pi/4}^{\\pi/3} \\frac{\\cos x}{\\sin x}\\,dx$ (Ex. 7 p.12) ?',
+      prompt: 'Que vaut $\\int_{\\pi/4}^{\\pi/3} \\frac{\\cos x}{\\sin x}\\,dx$ ?',
       options: [
         '$\\ln(\\sqrt{3})$',
         '$\\frac{1}{2}\\ln\\left(\\frac{3}{2}\\right)$',
@@ -516,7 +516,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Forme u’ e^u',
     stepTheme: 'slate',
-    stepTitle: 'Intégrer $u’(x) e^{u(x)}$ (Exemple 2 et Ex. 1 p.12)',
+    stepTitle: 'Intégrer $u’(x) e^{u(x)}$',
     paragraphText:
       'Pour $J = \\int_0^1 x e^{x^2}\\,dx$, la dérivée de l’exposant $u(x) = x^2$ est $u’(x) = 2x$, donc $x e^{x^2} = \\frac{1}{2}(2x)e^{x^2} = \\frac{1}{2}u’(x)e^{u(x)}$. On obtient $J = \\left[\\frac{1}{2}e^{x^2}\\right]_0^1 = \\frac{e - 1}{2}$. De même, pour $\\int_0^{\\pi/4} (\\cos x + 2x)e^{\\sin x + x^2}\\,dx$, on reconnaît directement $u’(x)e^{u(x)}$ avec $u(x) = \\sin x + x^2$ !',
     formula: {
@@ -539,7 +539,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Intégrer $u’ u^n$, $\\frac{u’}{\\sqrt{u}}$ et $\\frac{u’}{u^n}$',
     paragraphText:
-      'Pour tout $\\alpha \\ne -1$, une primitive de $u’ u^{\\alpha}$ est $\\frac{u^{\\alpha+1}}{\\alpha+1}$. Cas fréquents du PDF : (1) $\\frac{u’}{2\\sqrt{u}} \\to \\sqrt{u}$, donc $\\int_1^e \\frac{\\sqrt{\\ln z + 2}}{z}\\,dz = \\int_1^e \\frac{1}{z}(\\ln z + 2)^{1/2}\\,dz = \\left[\\frac{2}{3}(\\ln z + 2)^{3/2}\\right]_1^e = \\frac{2}{3}(3\\sqrt{3} - 2\\sqrt{2})$ ; (2) $\\int_{-2}^1 \\frac{2t^3 - t}{(t^4 - t^2 + 3)^4}\\,dt = \\frac{1}{2}\\int_{-2}^1 \\frac{4t^3 - 2t}{(t^4 - t^2 + 3)^4}\\,dt = \\left[-\\frac{1}{6(t^4 - t^2 + 3)^3}\\right]_{-2}^1$.',
+      'Pour tout $\\alpha \\ne -1$, une primitive de $u’ u^{\\alpha}$ est $\\frac{u^{\\alpha+1}}{\\alpha+1}$. Cas fréquents : (1) $\\frac{u’}{2\\sqrt{u}} \\to \\sqrt{u}$, donc $\\int_1^e \\frac{\\sqrt{\\ln z + 2}}{z}\\,dz = \\int_1^e \\frac{1}{z}(\\ln z + 2)^{1/2}\\,dz = \\left[\\frac{2}{3}(\\ln z + 2)^{3/2}\\right]_1^e = \\frac{2}{3}(3\\sqrt{3} - 2\\sqrt{2})$ ; (2) $\\int_{-2}^1 \\frac{2t^3 - t}{(t^4 - t^2 + 3)^4}\\,dt = \\frac{1}{2}\\int_{-2}^1 \\frac{4t^3 - 2t}{(t^4 - t^2 + 3)^4}\\,dt = \\left[-\\frac{1}{6(t^4 - t^2 + 3)^3}\\right]_{-2}^1$.',
     formula: {
       name: 'Puissance composée',
       formula: '\\int_a^b u’(x)\\,(u(x))^{\\alpha}\\,dx = \\left[\\frac{(u(x))^{\\alpha+1}}{\\alpha+1}\\right]_a^b \\quad (\\alpha \\ne -1)',
@@ -547,7 +547,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p04_q03',
       type: 'mcq',
-      prompt: 'Que vaut $\\int_0^1 x\\sqrt{1 - x^2}\\,dx$ (exercices de renforcement p.13) ?',
+      prompt: 'Que vaut $\\int_0^1 x\\sqrt{1 - x^2}\\,dx$ ?',
       options: ['$\\frac{1}{2}$', '$\\frac{1}{3}$', '$\\frac{2}{3}$', '$-\\frac{1}{3}$'],
       correctAnswerIndex: 1,
       explanation: 'Posons $u(x) = 1 - x^2$, $u’(x) = -2x$. Alors $x\\sqrt{1 - x^2} = -\\frac{1}{2}u’ u^{1/2}$, de primitive $-\\frac{1}{2}\\cdot\\frac{2}{3}(1-x^2)^{3/2} = -\\frac{1}{3}(1-x^2)^{3/2}$. Entre $0$ et $1$ : $0 - (-\\frac{1}{3}) = \\frac{1}{3}$.',
@@ -558,7 +558,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Trigonométrie',
     stepTheme: 'slate',
-    stepTitle: 'Intégrer des puissances impaires de $\\cos$ ou $\\sin$ (Ex. 3 p.6 & p.12)',
+    stepTitle: 'Intégrer des puissances impaires de $\\cos$ ou $\\sin$',
     paragraphText:
       'Pour calculer $K = \\int_0^{\\pi/3} \\cos^3 t\\,dt$, on utilise $\\cos^2 t = 1 - \\sin^2 t$ pour isoler un $\\cos t$ : $\\cos^3 t = \\cos t - \\cos t\\sin^2 t$. Or $\\cos t\\sin^2 t$ est de la forme $u’ u^2$ avec $u(t) = \\sin t$ ($u’(t) = \\cos t$) ! Donc une primitive est $\\sin t - \\frac{1}{3}\\sin^3 t$. En $t = \\frac{\\pi}{3}$ : $\\frac{\\sqrt{3}}{2} - \\frac{1}{3}\\left(\\frac{3\\sqrt{3}}{8}\\right) = \\frac{3\\sqrt{3}}{8}$.',
     formula: {
@@ -568,7 +568,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p04_q04',
       type: 'mcq',
-      prompt: 'Que vaut $\\int_0^{\\pi/3} -4\\cos^3 t\\,dt$ (Ex. 3 p.12) ?',
+      prompt: 'Que vaut $\\int_0^{\\pi/3} -4\\cos^3 t\\,dt$ ?',
       options: ['$-\\frac{3\\sqrt{3}}{2}$', '$\\frac{3\\sqrt{3}}{2}$', '$-2\\sqrt{3}$', '$-\\frac{\\sqrt{3}}{2}$'],
       correctAnswerIndex: 0,
       explanation: 'Comme $\\int_0^{\\pi/3}\\cos^3 t\\,dt = \\frac{3\\sqrt{3}}{8}$, en multipliant par $-4$ on obtient $-4 \\times \\frac{3\\sqrt{3}}{8} = -\\frac{3\\sqrt{3}}{2}$.',
@@ -614,7 +614,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Degré numérateur ≥ dénominateur',
     stepTheme: 'green',
-    stepTitle: 'Réduire une fraction rationnelle avant d’intégrer (Ex. p.13)',
+    stepTitle: 'Réduire une fraction rationnelle avant d’intégrer',
     paragraphText:
       'Pour calculer $\\int_{-4}^{-2} \\frac{t^2 + 3t - 2}{t + 1}\\,dt$, le degré du numérateur ($2$) dépasse celui du dénominateur ($1$). On effectue une division euclidienne par $t + 1$ : $t^2 + 3t - 2 = (t + 1)(t + 2) - 4$. Ainsi $\\frac{t^2 + 3t - 2}{t + 1} = t + 2 - \\frac{4}{t + 1}$, dont une primitive sur $[-4 ; -2]$ (où $t+1 < 0$ !) est $\\frac{t^2}{2} + 2t - 4\\ln|t + 1| = \\frac{t^2}{2} + 2t - 4\\ln(-t - 1)$.',
     exercise: {
@@ -667,7 +667,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p05_q02',
       type: 'mcq',
-      prompt: 'Pour calculer $I = \\int_1^e x^2 \\ln x\\,dx$ par parties (exercice du cours p.6–7), quel choix de $u$ et $v’$ faut-il faire ?',
+      prompt: 'Pour calculer $I = \\int_1^e x^2 \\ln x\\,dx$ par parties, quel choix de $u$ et $v’$ faut-il faire ?',
       options: [
         '$u(x) = x^2$ et $v’(x) = \\ln x$',
         '$u(x) = \\ln x$ et $v’(x) = x^2$',
@@ -704,13 +704,13 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Double IPP',
     stepTheme: 'slate',
-    stepTitle: 'Double intégration par parties : $\\int_0^2 x^2 e^x\\,dx$ (Ex. 8 p.12)',
+    stepTitle: 'Double intégration par parties : $\\int_0^2 x^2 e^x\\,dx$',
     paragraphText:
       'Avec un polynôme de degré $2$, une seule IPP abaisse le degré de $2$ à $1$, et une seconde IPP l’abaisse de $1$ à $0$ ! Pour $I = \\int_0^2 x^2 e^x\\,dx$ : (1) $u = x^2, v’ = e^x \\implies I = [x^2 e^x]_0^2 - 2\\int_0^2 x e^x\\,dx = 4e^2 - 2 J$. (2) Pour $J = \\int_0^2 x e^x\\,dx$, on pose $u = x, v’ = e^x \\implies J = [xe^x]_0^2 - \\int_0^2 e^x\\,dx = 2e^2 - (e^2 - 1) = e^2 + 1$. D’où $I = 4e^2 - 2(e^2 + 1) = 2e^2 - 2$.',
     exercise: {
       id: 'tc_m_num_l10_p05_q04',
       type: 'mcq',
-      prompt: 'Que vaut $\\int_0^1 (x + 1)e^x\\,dx$ (Ex. 8 p.12) ?',
+      prompt: 'Que vaut $\\int_0^1 (x + 1)e^x\\,dx$ ?',
       options: ['$e$', '$e - 1$', '$2e - 1$', '$e + 1$'],
       correctAnswerIndex: 0,
       explanation: 'Avec $u(x) = x+1$ et $v’(x) = e^x$ : $[(x+1)e^x]_0^1 - \\int_0^1 e^x\\,dx = (2e - 1) - (e - 1) = e$.',
@@ -747,13 +747,13 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Application affine',
     stepTheme: 'slate',
-    stepTitle: 'Exprimer aussi le numérateur en fonction de $t$ (Ex. 9 p.12)',
+    stepTitle: 'Exprimer aussi le numérateur en fonction de $t$',
     paragraphText:
       'Pour calculer $I = \\int_0^1 x\\sqrt{x + 1}\\,dx$ par changement affine, on pose $t = x + 1$, d’où $x = t - 1$, $dx = dt$, et les bornes passent de $[0 ; 1]$ à $[1 ; 2]$. L’intégrale devient $I = \\int_1^2 (t - 1)\\sqrt{t}\\,dt = \\int_1^2 (t^{3/2} - t^{1/2})\\,dt = \\left[\\frac{2}{5}t^{5/2} - \\frac{2}{3}t^{3/2}\\right]_1^2 = \\frac{2}{15}(2\\sqrt{2} + 2)$ (ou $\\frac{4\\sqrt{2} + 4}{15}$).',
     exercise: {
       id: 'tc_m_num_l10_p05_q06',
       type: 'mcq',
-      prompt: 'Que vaut $\\int_{-5/2}^{-2} (2x + 5)^7\\,dx$ (Ex. 9 p.12) par changement affine $t = 2x + 5$ ?',
+      prompt: 'Que vaut $\\int_{-5/2}^{-2} (2x + 5)^7\\,dx$ par changement affine $t = 2x + 5$ ?',
       options: ['$\\frac{1}{8}$', '$\\frac{1}{16}$', '$\\frac{1}{4}$', '$1$'],
       correctAnswerIndex: 1,
       explanation: 'Pour $x = -\\frac{5}{2}$, $t = 0$ ; pour $x = -2$, $t = 1$ ; $dx = \\frac{1}{2}dt$. Donc $\\int_0^1 \\frac{t^7}{2}\\,dt = \\left[\\frac{t^8}{16}\\right]_0^1 = \\frac{1}{16}$.',
@@ -770,7 +770,7 @@ const p05Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p05_q07',
       type: 'mcq',
-      prompt: 'En posant $t = 3x - 4$ dans $\\int_{5/3}^2 \\frac{x^2}{(3x - 4)^5}\\,dx$ (p.13), quelles sont les nouvelles bornes en $t$ ?',
+      prompt: 'En posant $t = 3x - 4$ dans $\\int_{5/3}^2 \\frac{x^2}{(3x - 4)^5}\\,dx$, quelles sont les nouvelles bornes en $t$ ?',
       options: ['$5/3$ et $2$', '$1$ et $2$', '$0$ et $2$', '$1$ et $6$'],
       correctAnswerIndex: 1,
       explanation: 'En $x = \\frac{5}{3}$, $t = 3\\times\\frac{5}{3} - 4 = 1$ ; en $x = 2$, $t = 3\\times 2 - 4 = 2$.',
@@ -794,7 +794,7 @@ const p06Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p06_q01',
       type: 'mcq',
-      prompt: 'Soit $f(x) = -x^2$ dans un repère orthogonal ($2\\text{ cm}$ sur $(OI)$, $4\\text{ cm}$ sur $(OJ)$). Quelle est l’aire en $\\text{cm}^2$ entre $(\\mathcal{C}_f)$, $(OI)$, $x = 1$ et $x = 3$ (Ex. 1 p.10) ?',
+      prompt: 'Soit $f(x) = -x^2$ dans un repère orthogonal ($2\\text{ cm}$ sur $(OI)$, $4\\text{ cm}$ sur $(OJ)$). Quelle est l’aire en $\\text{cm}^2$ entre $(\\mathcal{C}_f)$, $(OI)$, $x = 1$ et $x = 3$ ?',
       options: ['$\\frac{26}{3}\\text{ cm}^2$', '$\\frac{208}{3}\\text{ cm}^2$', '$-\\frac{208}{3}\\text{ cm}^2$', '$\\frac{104}{3}\\text{ cm}^2$'],
       correctAnswerIndex: 1,
       explanation: 'Sur $[1 ; 3]$, $-x^2 \\leqslant 0$, donc $\\mathcal{A} = -\\int_1^3 (-x^2)\\,dx = [\\frac{x^3}{3}]_1^3 = 9 - \\frac{1}{3} = \\frac{26}{3}\\text{ u.a.}$ Avec $1\\text{ u.a.} = 2\\times 4 = 8\\text{ cm}^2$, $\\mathcal{A} = \\frac{26}{3} \\times 8 = \\frac{208}{3}\\text{ cm}^2$.',
@@ -805,7 +805,7 @@ const p06Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Changement de signe',
     stepTheme: 'slate',
-    stepTitle: 'Aire de $f(x) = x^3$ sur $[-1 ; 1]$ (Ex. 2 p.10–11)',
+    stepTitle: 'Aire de $f(x) = x^3$ sur $[-1 ; 1]$',
     paragraphText:
       'Pour $f(x) = x^3$ en repère orthonormé d’unité $2\\text{ cm}$ ($1\\text{ u.a.} = 2 \\times 2 = 4\\text{ cm}^2$) : $f(x) \\leqslant 0$ sur $[-1 ; 0]$ et $f(x) \\geqslant 0$ sur $[0 ; 1]$. Donc $\\mathcal{A} = \\left(-\\int_{-1}^0 x^3\\,dx + \\int_0^1 x^3\\,dx\\right) \\times 4 = \\left(-\\left[\\frac{x^4}{4}\\right]_{-1}^0 + \\left[\\frac{x^4}{4}\\right]_0^1\\right)\\times 4 = \\left(\\frac{1}{4} + \\frac{1}{4}\\right)\\times 4 = 2\\text{ cm}^2$.',
     exercise: {
@@ -832,7 +832,7 @@ const p06Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p06_q03',
       type: 'mcq',
-      prompt: 'Pour $f(x) = x + 2$ et $g(x) = x^2$ sur $[-1 ; 2]$ (Ex. 11 p.13, unité $2\\text{ cm}$), quelle courbe est au-dessus de l’autre sur $[-1 ; 2]$ ?',
+      prompt: 'Pour $f(x) = x + 2$ et $g(x) = x^2$ sur $[-1 ; 2]$, quelle courbe est au-dessus de l’autre sur $[-1 ; 2]$ ?',
       options: [
         '$(\\mathcal{C}_g)$ est au-dessus car $x^2 \\geqslant 0$',
         '$(\\mathcal{C}_f)$ est au-dessus car $x + 2 - x^2 = -(x+1)(x-2) \\geqslant 0$ sur $[-1 ; 2]$',
@@ -848,9 +848,9 @@ const p06Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Situation complexe corrigée',
     stepTheme: 'slate',
-    stepTitle: 'Aire de la terrasse : parabole $y = -x^2 + 4$ + rectangle (p.11–12 corrigée !)',
+    stepTitle: 'Aire de la terrasse : parabole $y = -x^2 + 4$ + rectangle',
     paragraphText:
-      'Dans la Situation Complexe p.11, la terrasse (repère orthonormé unité $1\\text{ m}$) est formée : (1) d’un rectangle vert $2\\text{ m} \\times 4\\text{ m}$ d’aire $A_2 = 8\\text{ m}^2$ ; (2) d’une zone rose sous $y = -x^2 + 4$ entre $x = -2$ et $x = 2$. **Attention à la coquille du PDF p.12** qui écrivait $A_1 = 16$ ! Calcul exact : $A_1 = \\int_{-2}^2 (-x^2 + 4)\\,dx = 2\\int_0^2 (-x^2 + 4)\\,dx = 2\\left[-\\frac{x^3}{3} + 4x\\right]_0^2 = 2\\left(-\\frac{8}{3} + 8\\right) = \\frac{32}{3}\\text{ m}^2 \\approx 10{,}67\\text{ m}^2$. Aire totale $= \\frac{32}{3} + 8 = \\frac{56}{3}\\text{ m}^2 \\approx 18{,}67\\text{ m}^2$ !',
+      'Dans cette situation géométrique, la terrasse (repère orthonormé unité $1\\text{ m}$) est formée : (1) d’un rectangle vert $2\\text{ m} \\times 4\\text{ m}$ d’aire $A_2 = 8\\text{ m}^2$ ; (2) d’une zone rose sous $y = -x^2 + 4$ entre $x = -2$ et $x = 2$. **Attention à la coquille ** qui écrivait $A_1 = 16$ ! Calcul exact : $A_1 = \\int_{-2}^2 (-x^2 + 4)\\,dx = 2\\int_0^2 (-x^2 + 4)\\,dx = 2\\left[-\\frac{x^3}{3} + 4x\\right]_0^2 = 2\\left(-\\frac{8}{3} + 8\\right) = \\frac{32}{3}\\text{ m}^2 \\approx 10{,}67\\text{ m}^2$. Aire totale $= \\frac{32}{3} + 8 = \\frac{56}{3}\\text{ m}^2 \\approx 18{,}67\\text{ m}^2$ !',
     visualSchema: {
       type: 'function_plot',
       title: 'Arche parabolique de la terrasse : $y = -x^2 + 4$',
@@ -880,7 +880,7 @@ const p06Steps: StructuredLessonStep[] = [
       prompt: 'Quelle est l’aire exacte de la partie rose délimitée par la parabole $y = -x^2 + 4$ et l’axe $(OI)$ entre $A(-2 ; 0)$ et $B(2 ; 0)$ ?',
       options: ['$16\\text{ m}^2$', '$\\frac{32}{3}\\text{ m}^2$', '$\\frac{16}{3}\\text{ m}^2$', '$8\\text{ m}^2$'],
       correctAnswerIndex: 1,
-      explanation: '$G(2) - G(-2) = (-\\frac{8}{3} + 8) - (\\frac{8}{3} - 8) = 16 - \\frac{16}{3} = \\frac{32}{3}\\text{ m}^2$ (le PDF avait fait une erreur de signe sur $-G(-2)$).',
+      explanation: '$G(2) - G(-2) = (-\\frac{8}{3} + 8) - (\\frac{8}{3} - 8) = 16 - \\frac{16}{3} = \\frac{32}{3}\\text{ m}^2$ (attention au signe devant $-G(-2)$ !).',
     },
   },
   {
@@ -888,7 +888,7 @@ const p06Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Aire entre courbe et asymptote',
     stepTheme: 'slate',
-    stepTitle: 'Aire entre $(\\mathcal{C})$ : $f(x) = x + 1 - e^x$ et son asymptote $(D)$ : $y = x + 1$ (p.13–14)',
+    stepTitle: 'Aire entre $(\\mathcal{C})$ : $f(x) = x + 1 - e^x$ et son asymptote $(D)$ : $y = x + 1$',
     paragraphText:
       'Sur $\\mathbb{R}$, $f(x) - (x + 1) = -e^x < 0$, donc la droite $(D)$ d’équation $y = x + 1$ est strictement au-dessus de $(\\mathcal{C})$. Avec une unité graphique de $2\\text{ cm}$ ($1\\text{ u.a.} = 4\\text{ cm}^2$), l’aire entre $(\\mathcal{C})$, $(D)$, $x = -2$ et $x = 0$ vaut : $\\mathcal{A}(\\Delta) = \\left(\\int_{-2}^0 [(x+1) - f(x)]\\,dx\\right) \\times 4 = 4 \\int_{-2}^0 e^x\\,dx = 4\\left[e^x\\right]_{-2}^0 = 4(1 - e^{-2})\\text{ cm}^2$.',
     exercise: {
@@ -958,7 +958,7 @@ const p07Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l10_p07_q01',
       type: 'mcq',
-      prompt: 'Soit $F$ définie sur $\\mathbb{R}_+^*$ par $F(x) = \\int_1^x \\frac{e^t}{t}\\,dt$ (Ex. 2 p.14). Que valent $F(1)$ et $F’(x)$ ?',
+      prompt: 'Soit $F$ définie sur $\\mathbb{R}_+^*$ par $F(x) = \\int_1^x \\frac{e^t}{t}\\,dt$. Que valent $F(1)$ et $F’(x)$ ?',
       options: [
         '$F(1) = e$ et $F’(x) = \\frac{e^x}{x}$',
         '$F(1) = 0$ et $F’(x) = \\frac{e^x}{x}$',
@@ -976,7 +976,7 @@ const p07Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Signe de $\\int_a^x f(t)\\,dt$ quand $x < a$ ou $x > a$',
     paragraphText:
-      'Attention à l’ordre des bornes dans $F(x) = \\int_a^x f(t)\\,dt$ lorsque $f(t) > 0$ sur $K$ : si $x > a$, alors $F(x) > 0$ ; si $x < a$, les bornes sont inversées, donc $F(x) = -\\int_x^a f(t)\\,dt < 0$ ! C’est exactement le cas dans l’Ex. 2 q3b (p.15) pour $f(x) = \\int_1^x \\frac{e^t - 1}{t}\\,dt$ : $\\frac{e^t - 1}{t} > 0$ sur $]0 ; +\\infty[$, donc $f(x) < 0$ sur $]0 ; 1[$ et $f(x) > 0$ sur $]1 ; +\\infty[$.',
+      'Attention à l’ordre des bornes dans $F(x) = \\int_a^x f(t)\\,dt$ lorsque $f(t) > 0$ sur $K$ : si $x > a$, alors $F(x) > 0$ ; si $x < a$, les bornes sont inversées, donc $F(x) = -\\int_x^a f(t)\\,dt < 0$ ! Par exemple, pour $f(x) = \\int_1^x \\frac{e^t - 1}{t}\\,dt$ : $\\frac{e^t - 1}{t} > 0$ sur $]0 ; +\\infty[$, donc $f(x) < 0$ sur $]0 ; 1[$ et $f(x) > 0$ sur $]1 ; +\\infty[$.',
     formula: {
       name: 'Signe selon la position de x par rapport à a (si f > 0)',
       formula: 'x > a \\implies \\int_a^x f(t)\\,dt > 0 \\qquad ; \\qquad x < a \\implies \\int_a^x f(t)\\,dt < 0',
@@ -1000,9 +1000,9 @@ const p07Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Étude complète de F',
     stepTheme: 'slate',
-    stepTitle: 'Limites et asymptote de $F(x) = \\int_1^x \\frac{e^t}{t}\\,dt$ (correction du PDF p.15–16 !)',
+    stepTitle: 'Limites et asymptote de $F(x) = \\int_1^x \\frac{e^t}{t}\\,dt$',
     paragraphText:
-      'De $F(x) - \\ln x = \\int_1^x \\frac{e^t - 1}{t}\\,dt$, on déduit $F(x) < \\ln x$ sur $]0 ; 1[$ et $F(x) > \\ln x$ sur $]1 ; +\\infty[$. Par comparaison : $\\lim_{x \\to 0^+} F(x) = -\\infty$ (car $\\lim_{x \\to 0^+} \\ln x = -\\infty$ — **et NON $0$** comme écrit par coquille p.16 !), donc la droite $x = 0$ est bien **asymptote verticale** à $(\\mathcal{C}_F)$. De même $\\lim_{x \\to +\\infty} F(x) = +\\infty$, et via $\\frac{F(x)}{x} \\geqslant \\frac{e^x - e}{x^2} \\to +\\infty$, $(\\mathcal{C}_F)$ admet en $+\\infty$ une branche parabolique de direction $(OJ)$.',
+      'De $F(x) - \\ln x = \\int_1^x \\frac{e^t - 1}{t}\\,dt$, on déduit $F(x) < \\ln x$ sur $]0 ; 1[$ et $F(x) > \\ln x$ sur $]1 ; +\\infty[$. Par comparaison : $\\lim_{x \\to 0^+} F(x) = -\\infty$, donc la droite $x = 0$ est bien **asymptote verticale** à $(\\mathcal{C}_F)$. De même $\\lim_{x \\to +\\infty} F(x) = +\\infty$, et via $\\frac{F(x)}{x} \\geqslant \\frac{e^x - e}{x^2} \\to +\\infty$, $(\\mathcal{C}_F)$ admet en $+\\infty$ une branche parabolique de direction $(OJ)$.',
     visualSchema: {
       type: 'variation_table',
       title: 'Tableau de variations corrigé de $F(x) = \\int_1^x \\frac{e^t}{t}\\,dt$',
@@ -1028,7 +1028,7 @@ const p07Steps: StructuredLessonStep[] = [
         'Parce que $F’(1) = e$',
       ],
       correctAnswerIndex: 1,
-      explanation: 'Le fait que $\\lim_{x \\to 0^+} F(x) = -\\infty$ (et non $0$, coquille p.16 du PDF) caractérise précisément l’asymptote verticale d’équation $x = 0$.',
+      explanation: 'Le fait que $\\lim_{x \\to 0^+} F(x) = -\\infty$ caractérise précisément l’asymptote verticale d’équation $x = 0$.',
     },
   },
   {
@@ -1057,9 +1057,9 @@ const p07Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Cinématique',
     stepTheme: 'slate',
-    stepTitle: 'Chute libre d’un corps (Ex. 12 p.13 corrigé : $D(x) = \\int_0^x gt\\,dt$)',
+    stepTitle: 'Chute libre d’un corps ($D(x) = \\int_0^x gt\\,dt$)',
     paragraphText:
-      'Un corps est lâché sans vitesse initiale ($v(0) = 0$) d’une hauteur de $2000\\text{ m}$ avec $g = 9{,}8\\text{ m}\\cdot\\text{s}^{-2}$. L’accélération étant constante égale à $g$, la vitesse à l’instant $t$ vaut $v(t) = \\int_0^t g\\,ds = gt$. La distance parcourue après $x$ secondes vaut donc $D(x) = \\int_0^x v(t)\\,dt = \\int_0^x gt\\,dt = \\frac{1}{2}gx^2 = 4{,}9x^2$ (note : le PDF avait un $x$ en trop dans l’intégrande). Le corps touche le sol quand $4{,}9 T^2 = 2000 \\implies T = \\sqrt{\\frac{2000}{4{,}9}} \\approx 20{,}2\\text{ s}$.',
+      'Un corps est lâché sans vitesse initiale ($v(0) = 0$) d’une hauteur de $2000\\text{ m}$ avec $g = 9{,}8\\text{ m}\\cdot\\text{s}^{-2}$. L’accélération étant constante égale à $g$, la vitesse à l’instant $t$ vaut $v(t) = \\int_0^t g\\,ds = gt$. La distance parcourue après $x$ secondes vaut donc $D(x) = \\int_0^x v(t)\\,dt = \\int_0^x gt\\,dt = \\frac{1}{2}gx^2 = 4{,}9x^2$. Le corps touche le sol quand $4{,}9 T^2 = 2000 \\implies T = \\sqrt{\\frac{2000}{4{,}9}} \\approx 20{,}2\\text{ s}$.',
     formula: {
       name: 'Distance de chute libre (v₀ = 0)',
       formula: 'D(x) = \\int_0^x g\\,t\\,dt = \\frac{1}{2}g x^2',

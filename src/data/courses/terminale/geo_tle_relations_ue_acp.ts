@@ -85,7 +85,7 @@ export const GEO_TLE_T3_L02_RELATIONS_UE_ACP: CurriculumChapter = {
           "stepTitle": "27 membres depuis quand ?",
           "stepTheme": "27 membres depuis quand ?",
           "stepBadge": "27 membres depuis quand ?",
-          "paragraphText": "Le PDF écrit « 27 États membres depuis décembre 2019 ».\nEn réalité, le Royaume-Uni est sorti de l'UE le 31 janvier 2020 (Brexit).\nL'UE compte donc 27 membres depuis le 1er février 2020.",
+          "paragraphText": "Attention à ne pas confondre avec la formulation erronée « 27 États membres depuis décembre 2019 ».\nEn réalité, le Royaume-Uni est sorti de l'UE le 31 janvier 2020 (Brexit).\nL'UE compte donc 27 membres depuis le 1er février 2020.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l02_relations_ue_acp_p01_q3",
             "type": "mcq",
@@ -355,7 +355,7 @@ export const GEO_TLE_T3_L02_RELATIONS_UE_ACP: CurriculumChapter = {
           "stepTitle": "Des ressources minières et énergétiques",
           "stepTheme": "Des ressources minières et énergétiques",
           "stepBadge": "Des ressources minières et énergétiques",
-          "paragraphText": "• Minerais : or, diamant, bauxite, uranium, fer, manganèse, phosphate (environ 21 % des réserves mondiales selon le PDF).\n• Pétrole : environ 10 % de la production mondiale, surtout au Nigeria.\n• Gaz naturel, notamment au Nigeria.",
+          "paragraphText": "• Minerais : or, diamant, bauxite, uranium, fer, manganèse, phosphate (environ 21 % des réserves mondiales).\n• Pétrole : environ 10 % de la production mondiale, surtout au Nigeria.\n• Gaz naturel, notamment au Nigeria.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l02_relations_ue_acp_p02_q5",
             "type": "mcq",
@@ -833,7 +833,7 @@ export const GEO_TLE_T3_L02_RELATIONS_UE_ACP: CurriculumChapter = {
           "stepTitle": "La BEI n'est pas née à Yaoundé",
           "stepTheme": "La BEI n'est pas née à Yaoundé",
           "stepBadge": "La BEI n'est pas née à Yaoundé",
-          "paragraphText": "Le PDF écrit que Yaoundé I « crée la BEI » (Banque européenne d'investissement).\nEn réalité, la BEI a été créée en 1958 par le traité de Rome.\nYaoundé I a étendu ses prêts aux pays associés.",
+          "paragraphText": "Attention à une erreur fréquente : on lit parfois que Yaoundé I « crée la BEI » (Banque européenne d'investissement).\nEn réalité, la BEI a été créée en 1958 par le traité de Rome.\nYaoundé I a étendu ses prêts aux pays associés.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l02_relations_ue_acp_p04_q3",
             "type": "mcq",
@@ -1380,10 +1380,10 @@ export const GEO_TLE_T3_L02_RELATIONS_UE_ACP: CurriculumChapter = {
         {
           "stepNumber": 6,
           "stepKind": "piege",
-          "stepTitle": "Erreur dans un exercice du PDF",
-          "stepTheme": "Erreur dans un exercice du PDF",
-          "stepBadge": "Erreur dans un exercice du PDF",
-          "paragraphText": "Un exercice du PDF écrit que le traité de Rome a été signé « le 25 mars 1975 ».\nLa bonne date est le 25 mars 1957 : c'est lui qui crée la CEE et ouvre la coopération avec les pays associés.\n1975 est l'année de Lomé I et de la création du groupe ACP.",
+          "stepTitle": "Point de vigilance historique",
+          "stepTheme": "Point de vigilance historique",
+          "stepBadge": "Point de vigilance historique",
+          "paragraphText": "Attention à la date : le traité de Rome n’a pas été signé a été signé « le 25 mars 1975 ».\nLa bonne date est le 25 mars 1957 : c'est lui qui crée la CEE et ouvre la coopération avec les pays associés.\n1975 est l'année de Lomé I et de la création du groupe ACP.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l02_relations_ue_acp_p06_q6",
             "type": "mcq",
@@ -1485,7 +1485,7 @@ export const GEO_TLE_T3_L02_RELATIONS_UE_ACP: CurriculumChapter = {
       "order": 7,
       "title": "Entraînement type BAC",
       "summary": "S'entraîner aux consignes sur les relations UE-ACP.",
-      "conceptExplanation": "Consigne 1 : nommer le sujet (les relations UE-ACP, la coopération Nord-Sud).\nConsigne 2 : expliquer un passage avec des faits du cours (FED, STABEX, matières premières).\nConsigne 3 : prendre position avec nuance : la coopération a aidé les ACP (aide, infrastructures, bourses) sans les sortir du sous-développement (dépendance, dette, échanges déséquilibrés).",
+      "conceptExplanation": "Consigne 1 : nommer le sujet (les relations UE-ACP, la coopération Nord-Sud).\nConsigne 2 : expliquer un passage avec des faits précis (FED, STABEX, matières premières).\nConsigne 3 : prendre position avec nuance : la coopération a aidé les ACP (aide, infrastructures, bourses) sans les sortir du sous-développement (dépendance, dette, échanges déséquilibrés).",
       "keyRule": "Sur l'UE-ACP, la bonne réponse est nuancée : aide réelle, développement limité.",
       "formulas": [],
       "workedExample": {

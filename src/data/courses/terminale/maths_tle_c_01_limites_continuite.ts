@@ -1351,7 +1351,7 @@ export const MATHS_TLE_C_L01_LIMITES_CONTINUITE: CurriculumChapter = {
     'Limite d’une fonction composée, limite d’une fonction monotone sur un intervalle ouvert, branches paraboliques et asymptotes, continuité et partie entière, prolongement par continuité, image d’un intervalle, TVI (balayage et dichotomie), bijection réciproque, racine n-ième et puissances rationnelles.',
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l01_limites_continuite_p01',

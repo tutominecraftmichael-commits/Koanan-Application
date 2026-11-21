@@ -17,7 +17,7 @@ const p01Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l11_stat_p01_q01',
       type: 'mcq',
-      prompt: 'À la lecture du tableau météo (p.1), comment évolue globalement la pluviométrie $Y$ lorsque la température moyenne $X$ augmente ?',
+      prompt: 'À la lecture du tableau météo, comment évolue globalement la pluviométrie $Y$ lorsque la température moyenne $X$ augmente ?',
       options: [
         'Elle augmente fortement',
         'Elle diminue globalement (liaison décroissante)',
@@ -166,7 +166,7 @@ const p02Steps: StructuredLessonStep[] = [
       'Dans un repère orthogonal $(O ; I, J)$, on appelle **nuage de points** associé à la série double $(X, Y)$ l’ensemble des points $M_i$ de coordonnées $(x_i ; y_i)$ dont l’effectif est non nul. Lorsque tous les points s’alignent approximativement selon une bande étroite oblique, cela suggère graphiquement un **ajustement affine (linéaire)** possible.',
     visualSchema: {
       type: 'custom_svg',
-      title: 'Série des $8$ exploitations agricoles (p.3–4)',
+      title: 'Série des $8$ exploitations agricoles',
       tableData: {
         headers: ['Superficie $X$ (ha)', '$2$', '$2$', '$3$', '$4$', '$5$', '$6$', '$7$', '$7{,}6$'],
         rows: [['Nombre d’exploitations $Y$', '$14$', '$26$', '$31$', '$29$', '$44$', '$40$', '$54$', '$50$']],
@@ -207,7 +207,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepKind: 'exemple',
     stepBadge: 'Exercice de fixation 1',
     stepTheme: 'slate',
-    stepTitle: 'Calculer le point moyen $G$ (Ex. 1 p.9)',
+    stepTitle: 'Calculer le point moyen $G$',
     paragraphText:
       'Soit la série à $5$ points de l’Exercice 1 p.9 : $x = (1 ; 4 ; 7 ; 8 ; 10)$ et $y = (2 ; 7 ; 8 ; 10 ; 13)$. On calcule : $\\bar{X} = \\frac{1+4+7+8+10}{5} = \\frac{30}{5} = 6$, et $\\bar{Y} = \\frac{2+7+8+10+13}{5} = \\frac{40}{5} = 8$. Le point moyen est donc $G(6 ; 8)$.',
     exercise: {
@@ -222,9 +222,9 @@ const p02Steps: StructuredLessonStep[] = [
   {
     stepNumber: 4,
     stepKind: 'methode',
-    stepBadge: 'Méthode de Mayer (Ex. 3)',
+    stepBadge: 'Méthode de Mayer',
     stepTheme: 'green',
-    stepTitle: 'Sous-nuages et points moyens partiels $G_1$ et $G_2$ (Ex. 3 p.9–10)',
+    stepTitle: 'Sous-nuages et points moyens partiels $G_1$ et $G_2$',
     paragraphText:
       'Dans l’Exercice 3 p.9 (Tension Artérielle Systolique selon l’âge : $(26;128), (39;126), (40;118), (50;136), (53;142), (56;145)$), on partage le nuage ordonné par $x$ croissant en deux groupes égaux : les $3$ plus jeunes donnent $G_1\\left(\\frac{26+39+40}{3} ; \\frac{128+126+118}{3}\\right) = G_1(35 ; 124)$, et les $3$ plus âgés donnent $G_2\\left(\\frac{50+53+56}{3} ; \\frac{136+142+145}{3}\\right) = G_2(53 ; 141)$. La droite $(G_1 G_2)$ constitue l’**ajustement de Mayer** et passe elle aussi par le point moyen global $G(44 ; 132{,}5)$ !',
     formula: {
@@ -234,7 +234,7 @@ const p02Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l11_stat_p02_q04',
       type: 'mcq',
-      prompt: 'Avec $G_1(35 ; 124)$ et $G_2(53 ; 141)$ (Ex. 3 p.9–10), quel est le coefficient directeur $a$ de la droite de Mayer $(G_1 G_2)$ ?',
+      prompt: 'Avec $G_1(35 ; 124)$ et $G_2(53 ; 141)$, quel est le coefficient directeur $a$ de la droite de Mayer $(G_1 G_2)$ ?',
       options: ['$\\frac{18}{17}$', '$\\frac{17}{18} \\approx 0{,}94$', '$1$', '$\\frac{141}{53}$'],
       correctAnswerIndex: 1,
       explanation: '$a = \\frac{y_{G_2} - y_{G_1}}{x_{G_2} - x_{G_1}} = \\frac{141 - 124}{53 - 35} = \\frac{17}{18} \\approx 0{,}94$.',
@@ -287,7 +287,7 @@ const p02Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Respecter les unités graphiques imposées pour le nuage',
     paragraphText:
-      'Lis attentivement l’échelle demandée (ex. Ex. 5 p.11 : $1\\text{ cm}$ pour $1$ travailleur en abscisse, $1\\text{ cm}$ pour $1\\text{ ha}$ en ordonnée ; parfois $1\\text{ cm}$ pour $10$ unités ou axes ne commençant pas à $0$). Place toujours $G$ d’une couleur distincte et indique ses coordonnées.',
+      'Lis attentivement l’échelle demandée ($1\\text{ cm}$ pour $1$ travailleur en abscisse, $1\\text{ cm}$ pour $1\\text{ ha}$ en ordonnée ; parfois $1\\text{ cm}$ pour $10$ unités ou axes ne commençant pas à $0$). Place toujours $G$ d’une couleur distincte et indique ses coordonnées.',
     exercise: {
       id: 'tc_m_num_l11_stat_p02_q07',
       type: 'mcq',
@@ -315,7 +315,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l11_stat_p03_q01',
       type: 'mcq',
-      prompt: 'Pour l’Ex. 1–2 p.9 ($x = (1, 4, 7, 8, 10)$, $y = (2, 7, 8, 10, 13)$, $\\bar{X} = 6$, $\\bar{Y} = 8$), que vaut $\\operatorname{Cov}(X, Y)$ ?',
+      prompt: 'Pour la série ($x = (1, 4, 7, 8, 10)$, $y = (2, 7, 8, 10, 13)$, $\\bar{X} = 6$, $\\bar{Y} = 8$), que vaut $\\operatorname{Cov}(X, Y)$ ?',
       options: ['$59{,}2$', '$11{,}2$', '$48$', '$12{,}4$'],
       correctAnswerIndex: 1,
       explanation: '$\\sum x_i y_i = 1\\times 2 + 4\\times 7 + 7\\times 8 + 8\\times 10 + 10\\times 13 = 2 + 28 + 56 + 80 + 130 = 296$. Donc $\\operatorname{Cov}(X,Y) = \\frac{296}{5} - 6\\times 8 = 59{,}2 - 48 = 11{,}2$.',
@@ -324,15 +324,15 @@ const p03Steps: StructuredLessonStep[] = [
   {
     stepNumber: 2,
     stepKind: 'exemple',
-    stepBadge: 'Correction du PDF p.5 !',
+    stepBadge: 'Application guidée',
     stepTheme: 'slate',
     stepTitle: 'Calculer $\\operatorname{Cov}(X, Y)$ pour les exploitations agricoles et les champs d’hévéa',
     paragraphText:
-      'Vérifions deux calculs du PDF avec attention : (1) Exploitations agricoles ($n = 8$, $\\bar{X} = 4{,}575$, $\\bar{Y} = 36$, p.5) : $\\sum x_i y_i = 28 + 52 + 93 + 116 + 220 + 240 + 378 + 380 = 1507$ (et non $1503$ écrit par coquille p.5 !), donc $\\frac{1507}{8} - 164{,}7 = 188{,}375 - 164{,}7 = 23{,}675$. (2) Hévéas (Ex. 5 p.11–12, $n = 8$, $\\bar{X} \\approx 5{,}63$, $\\bar{Y} = 7{,}75$) : $\\frac{392}{8} - 5{,}63\\times 7{,}75 = 49 - 43{,}6325 \\approx 5{,}37$ (la bonne valeur calculée p.12, et non $5{,}57$ de l’énoncé p.11).',
+      'Vérifions deux calculs classiques avec attention : (1) Exploitations agricoles : $\\sum x_i y_i = 28 + 52 + 93 + 116 + 220 + 240 + 378 + 380 = 1507$, donc $\\frac{1507}{8} - 164{,}7 = 188{,}375 - 164{,}7 = 23{,}675$. (2) Hévéas : $\\frac{392}{8} - 5{,}63\\times 7{,}75 = 49 - 43{,}6325 \\approx 5{,}37$.',
     exercise: {
       id: 'tc_m_num_l11_stat_p03_q02',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 4 p.10 ($n = 9$, $\\bar{X} = 4$, $\\bar{Y} = 60$, $\\sum x_i y_i = 1029$), quelle est la covariance $\\operatorname{Cov}(X, Y)$ arrondie à $10^{-2}$ ?',
+      prompt: 'Pour la série ($n = 9$, $\\bar{X} = 4$, $\\bar{Y} = 60$, $\\sum x_i y_i = 1029$), quelle est la covariance $\\operatorname{Cov}(X, Y)$ arrondie à $10^{-2}$ ?',
       options: ['$125{,}67$', '$-125{,}67$', '$-114{,}33$', '$114{,}33$'],
       correctAnswerIndex: 1,
       explanation: '$\\operatorname{Cov}(X, Y) = \\frac{1029}{9} - 4 \\times 60 = 114{,}333 - 240 = -125{,}67$ (négative : $Y$ décroît quand $X$ croît !).',
@@ -345,7 +345,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Calculer les variances $V(X)$ et $V(Y)$ sans erreur',
     paragraphText:
-      'Pour mesurer la dispersion de chaque variable et calculer ensuite $r$ et les droites de régression, on calcule les variances avec la formule de Koenig : $V(X) = \\frac{1}{n}\\sum_{i=1}^n x_i^2 - \\bar{X}^2 \\geqslant 0$ et $V(Y) = \\frac{1}{n}\\sum_{i=1}^n y_i^2 - \\bar{Y}^2 \\geqslant 0$. Exemple Ex. 4 p.10 ($n=9$, $\\bar{X}=4$) : $V(X) = \\frac{0+1+4+9+16+25+36+49+64}{9} - 16 = \\frac{204}{9} - 16 = \\frac{60}{9} \\approx 6{,}67$.',
+      'Pour mesurer la dispersion de chaque variable et calculer ensuite $r$ et les droites de régression, on calcule les variances avec la formule de Koenig : $V(X) = \\frac{1}{n}\\sum_{i=1}^n x_i^2 - \\bar{X}^2 \\geqslant 0$ et $V(Y) = \\frac{1}{n}\\sum_{i=1}^n y_i^2 - \\bar{Y}^2 \\geqslant 0$. Exemple ($n=9$, $\\bar{X}=4$) : $V(X) = \\frac{0+1+4+9+16+25+36+49+64}{9} - 16 = \\frac{204}{9} - 16 = \\frac{60}{9} \\approx 6{,}67$.',
     formula: {
       name: 'Variances de X et Y',
       formula: 'V(X) = \\frac{1}{n}\\sum_{i=1}^n x_i^2 - \\bar{X}^2 \\qquad ; \\qquad V(Y) = \\frac{1}{n}\\sum_{i=1}^n y_i^2 - \\bar{Y}^2',
@@ -374,7 +374,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l11_stat_p03_q04',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 4 p.10 ($\\operatorname{Cov}(X,Y) = -125{,}67$, $V(X) = 6{,}67$, $V(Y) = 2570$), que vaut $r$ ?',
+      prompt: 'Pour une série telle que $\\operatorname{Cov}(X,Y) = -125{,}67$, $V(X) = 6{,}67$ et $V(Y) = 2570$, que vaut $r$ ?',
       options: ['$r = +0{,}96$', '$r = -0{,}96$', '$r = -1{,}04$', '$r = -0{,}52$'],
       correctAnswerIndex: 1,
       explanation: '$r = \\frac{-125{,}67}{\\sqrt{6{,}67 \\times 2570}} \\approx \\frac{-125{,}67}{130{,}93} \\approx -0{,}96 \\in [-1 ; 1]$.',
@@ -387,7 +387,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Interpréter $|r|$ : forte corrélation lorsque $0{,}87 \\leqslant |r| \\leqslant 1$',
     paragraphText:
-      'Dans le programme officiel de Côte d’Ivoire : si $|r|$ est proche de $1$, en pratique **$0{,}87 \\leqslant r < 1$ ou $-1 < r \\leqslant -0{,}87$** (soit $0{,}87 \\leqslant |r| \\leqslant 1$), on conclut qu’il existe une **forte (ou bonne) corrélation linéaire** entre $X$ et $Y$, ce qui justifie pleinement un ajustement affine ! Si $r = \\pm 1$, tous les points du nuage sont exactement alignés.',
+      'En statistique : si $|r|$ est proche de $1$, en pratique **$0{,}87 \\leqslant r < 1$ ou $-1 < r \\leqslant -0{,}87$** (soit $0{,}87 \\leqslant |r| \\leqslant 1$), on conclut qu’il existe une **forte (ou bonne) corrélation linéaire** entre $X$ et $Y$, ce qui justifie pleinement un ajustement affine ! Si $r = \\pm 1$, tous les points du nuage sont exactement alignés.',
     formula: {
       name: 'Critère officiel de forte corrélation',
       formula: '0{,}87 \\leqslant |r| \\leqslant 1 \\implies \\text{forte corrélation linéaire}',
@@ -395,7 +395,7 @@ const p03Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l11_stat_p03_q05',
       type: 'mcq',
-      prompt: 'Si l’on obtient $r = -0{,}96$ (Ex. 4 p.10), quelle est l’interprétation officielle exacte ?',
+      prompt: 'Si l’on obtient $r = -0{,}96$, quelle est l’interprétation officielle exacte ?',
       options: [
         'Aucune corrélation car $r < 0$',
         'Forte corrélation linéaire (négative) entre $X$ et $Y$ car $-1 < -0{,}96 \\leqslant -0{,}87$',
@@ -436,11 +436,11 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'green',
     stepTitle: 'Astuce calculatoire : garder les fractions exactes avant l’arrondi',
     paragraphText:
-      'Dans les exercices longs (comme la Situation Complexe p.8 ou les hévéas p.12), arrondir $\\bar{X}$ trop tôt ($5{,}625 \\to 5{,}63$) modifie sensiblement $V(X) = \\frac{\\sum x_i^2}{n} - \\bar{X}^2$ et $\\operatorname{Cov}(X, Y)$ ! Sauf consigne contraire explicite (comme « on prendra $\\bar{X} = 5{,}63$ »), garde les valeurs exactes en mémoire jusqu’au dernier calcul.',
+      'Dans les exercices longs, arrondir $\\bar{X}$ trop tôt ($5{,}625 \\to 5{,}63$) modifie sensiblement $V(X) = \\frac{\\sum x_i^2}{n} - \\bar{X}^2$ et $\\operatorname{Cov}(X, Y)$ ! Sauf consigne contraire explicite (comme « on prendra $\\bar{X} = 5{,}63$ »), garde les valeurs exactes en mémoire jusqu’au dernier calcul.',
     exercise: {
       id: 'tc_m_num_l11_stat_p03_q07',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 5 (hévéas, $V(X) = 4{,}18$, $V(Y) = 8{,}44$, $\\operatorname{Cov}(X, Y) = 5{,}37$), que vaut $r$ à $10^{-2}$ près ?',
+      prompt: 'Pour une étude sur les champs d’hévéas ($V(X) = 4{,}18$, $V(Y) = 8{,}44$, $\\operatorname{Cov}(X, Y) = 5{,}37$), que vaut $r$ à $10^{-2}$ près ?',
       options: ['$r = 0{,}54$', '$r = 0{,}90$', '$r = 0{,}94$', '$r = 0{,}81$'],
       correctAnswerIndex: 1,
       explanation: '$r = \\frac{5{,}37}{\\sqrt{4{,}18 \\times 8{,}44}} = \\frac{5{,}37}{\\sqrt{35{,}2792}} \\approx \\frac{5{,}37}{5{,}94} \\approx 0{,}904 \\approx 0{,}90$.',
@@ -463,7 +463,7 @@ const p04Steps: StructuredLessonStep[] = [
     },
     visualSchema: {
       type: 'function_plot',
-      title: 'Droite des moindres carrés $(D) : y = 1{,}28x + 0{,}54$ (hévéas, Ex. 5)',
+      title: 'Droite des moindres carrés $(D) : y = 1{,}28x + 0{,}54$',
       caption: 'Ajustement linéaire passant par $G(5{,}63 ; 7{,}75)$.',
       plot: {
         xMin: 0,
@@ -515,7 +515,7 @@ const p04Steps: StructuredLessonStep[] = [
     exercise: {
       id: 'tc_m_num_l11_stat_p04_q02',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 4 p.10 ($\\bar{X} = 4$, $\\bar{Y} = 60$, $V(Y) = 2570$, $\\operatorname{Cov}(X, Y) = -125{,}67$), quelle est la droite $(D’)$ de régression de $X$ en $Y$ ?',
+      prompt: 'Pour une série telle que $\\bar{X} = 4$, $\\bar{Y} = 60$, $V(Y) = 2570$ et $\\operatorname{Cov}(X, Y) = -125{,}67$, quelle est la droite $(D’)$ de régression de $X$ en $Y$ ?',
       options: [
         '$x = -18{,}84y + 135{,}36$',
         '$x = -0{,}049y + 6{,}94$',
@@ -571,7 +571,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'orange',
     stepTitle: 'Ne pas inverser $V(X)$ et $V(Y)$ entre $(D)$ et $(D’)$ !',
     paragraphText:
-      'Moyen mnémotechnique infaillible : dans $y = ax + b$ (« $Y$ en fonction de $X$ »), on multiplie $x$ par $a$, donc on divise par **$V(X)$** : $a = \\frac{\\operatorname{Cov}(X,Y)}{V(X)}$. Dans $x = a’y + b’$ (« $X$ en fonction de $Y$ »), on multiplie $y$ par $a’$, donc on divise par **$V(Y)$** : $a’ = \\frac{\\operatorname{Cov}(X,Y)}{V(Y)}$. De plus, si $(D)$ sert à écrire $y = 1{,}28x + 0{,}54$ (Ex. 5 p.11), c’est bien la droite de **$Y$ en $X$** (le PDF p.11 avait écrit par étourderie « de $X$ en $Y$ »).',
+      'Moyen mnémotechnique infaillible : dans $y = ax + b$ (« $Y$ en fonction de $X$ »), on multiplie $x$ par $a$, donc on divise par **$V(X)$** : $a = \\frac{\\operatorname{Cov}(X,Y)}{V(X)}$. Dans $x = a’y + b’$ (« $X$ en fonction de $Y$ »), on multiplie $y$ par $a’$, donc on divise par **$V(Y)$** : $a’ = \\frac{\\operatorname{Cov}(X,Y)}{V(Y)}$. De plus, si $(D)$ sert à écrire $y = 1{,}28x + 0{,}54$, c’est bien la droite de **$Y$ en $X$**.',
     konanTip: 'Variable à droite du signe $=$ (celle qui porte la pente) $=$ variable dont la variance va au dénominateur !',
     exercise: {
       id: 'tc_m_num_l11_stat_p04_q05',
@@ -639,13 +639,13 @@ const p05Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Estimation de y ou x',
     stepTheme: 'green',
-    stepTitle: 'Prévoir une valeur avec la droite d’ajustement (correction p.7 & Ex. 5 Q6)',
+    stepTitle: 'Prévoir une valeur avec la droite d’ajustement',
     paragraphText:
-      'Une fois $(D)$ obtenue (lorsque $|r| \\geqslant 0{,}87$), on estime une valeur future : (1) Exploitations agricoles ($y = 5{,}69x + 9{,}97$, p.7) : pour $x = 9\\text{ ha}$, $y = 5{,}69 \\times 9 + 9{,}97 = 51{,}21 + 9{,}97 = 61{,}18$, soit environ **$61$ exploitations** (correction de la coquille $61{,}8 \\to 62$ du PDF). (2) Hévéas (Ex. 5 Q6 p.11–12, $y = 1{,}28x + 0{,}54$) : combien de travailleurs $x$ faut-il pour $y = 16\\text{ ha}$ ? On résout $1{,}28x + 0{,}54 = 16 \\implies x = \\frac{15{,}46}{1{,}28} \\approx 12{,}08$, soit **$12$ travailleurs** (arrondi d’ordre $0$).',
+      'Une fois $(D)$ obtenue (lorsque $|r| \\geqslant 0{,}87$), on estime une valeur future : (1) Exploitations agricoles : pour $x = 9\\text{ ha}$, $y = 5{,}69 \\times 9 + 9{,}97 = 51{,}21 + 9{,}97 = 61{,}18$, soit environ **$61$ exploitations**. (2) Hévéas : combien de travailleurs $x$ faut-il pour $y = 16\\text{ ha}$ ? On résout $1{,}28x + 0{,}54 = 16 \\implies x = \\frac{15{,}46}{1{,}28} \\approx 12{,}08$, soit **$12$ travailleurs** (arrondi d’ordre $0$).',
     exercise: {
       id: 'tc_m_num_l11_stat_p05_q01',
       type: 'mcq',
-      prompt: 'Dans l’Ex. 5 Q6 (hévéas, $(D) : y = 1{,}28x + 0{,}54$), quel nombre de travailleurs $x$ (arrondi à l’entier) estime-t-on pour une superficie de $y = 16\\text{ ha}$ ?',
+      prompt: 'Pour les champs d’hévéas ajustés par $(D) : y = 1{,}28x + 0{,}54$, quel nombre de travailleurs $x$ (arrondi à l’entier) estime-t-on pour une superficie de $y = 16\\text{ ha}$ ?',
       options: ['$21$ travailleurs', '$12$ travailleurs', '$13$ travailleurs', '$10$ travailleurs'],
       correctAnswerIndex: 1,
       explanation: '$16 = 1{,}28x + 0{,}54 \\iff x = \\frac{16 - 0{,}54}{1{,}28} = \\frac{15{,}46}{1{,}28} \\approx 12{,}08$, donc l’arrondi à l’ordre zéro est $12$ travailleurs.',
@@ -723,7 +723,7 @@ const p05Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Faut-il utiliser $(D)$ ou $(D’)$ pour estimer $x$ connaissant $y$ ?',
     paragraphText:
-      'En toute rigueur théorique, pour estimer $y$ à partir de $x$ on utilise $(D)$ ($y = ax + b$), et pour estimer $x$ à partir de $y$ on utilise $(D’)$ ($x = a’y + b’$). Cependant, quand l’énoncé ne fait calculer QUE $(D)$ (comme dans l’Ex. 5 Q6 ou la Situation Complexe), on réutilise cette unique droite $(D)$ en résolvant $ax + b = y_0$ ! Lis toujours précisément la question.',
+      'En toute rigueur théorique, pour estimer $y$ à partir de $x$ on utilise $(D)$ ($y = ax + b$), et pour estimer $x$ à partir de $y$ on utilise $(D’)$ ($x = a’y + b’$). Cependant, quand l’énoncé ne fait calculer QUE $(D)$, on réutilise cette unique droite $(D)$ en résolvant $ax + b = y_0$ ! Lis toujours précisément la question.',
     exercise: {
       id: 'tc_m_num_l11_stat_p05_q05',
       type: 'mcq',
@@ -745,7 +745,7 @@ const p05Steps: StructuredLessonStep[] = [
     stepTheme: 'orange',
     stepTitle: 'Attention aux extrapolations très loin du nuage de points !',
     paragraphText:
-      'Reprenons la Situation d’Apprentissage (météo, p.1) : avec $y = -3{,}36x + 94{,}55$, pour $x = 32\\text{ °C}$ (au-delà du maximum observé $28\\text{ °C}$), la formule affine donne $-13\\text{ mm}$ ! Or une pluviométrie négative est physiquement impossible ($0\\text{ mm}$, sécheresse). Une droite d’ajustement n’est fiable qu’au voisinage de la plage des données observées.',
+      'Reprenons la Situation d’Apprentissage : avec $y = -3{,}36x + 94{,}55$, pour $x = 32\\text{ °C}$ (au-delà du maximum observé $28\\text{ °C}$), la formule affine donne $-13\\text{ mm}$ ! Or une pluviométrie négative est physiquement impossible ($0\\text{ mm}$, sécheresse). Une droite d’ajustement n’est fiable qu’au voisinage de la plage des données observées.',
     exercise: {
       id: 'tc_m_num_l11_stat_p05_q06',
       type: 'mcq',
@@ -860,7 +860,7 @@ export const MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES: CurriculumChapter = {
         { name: 'Corrélation linéaire', formula: 'r = \\frac{\\operatorname{Cov}(X,Y)}{\\sqrt{V(X)}\\sqrt{V(Y)}} \\in [-1 ; 1]' },
       ],
       workedExample: {
-        title: 'Corrélation d’une série à 9 couples (Ex. 4)',
+        title: 'Corrélation d’une série à 9 couples',
         statement: 'Avec $\\bar{X}=4$, $\\bar{Y}=60$, $V(X)=6{,}67$, $V(Y)=2570$ et $\\operatorname{Cov}(X,Y)=-125{,}67$, calculer et interpréter $r$.',
         methodSteps: [
           '$r = \\frac{-125{,}67}{\\sqrt{6{,}67 \\times 2570}} \\approx -0{,}96$.',
@@ -885,7 +885,7 @@ export const MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES: CurriculumChapter = {
         { name: 'Lien avec r', formula: 'a\\,a’ = r^2' },
       ],
       workedExample: {
-        title: 'Droite (D) des champs d’hévéa (Ex. 5)',
+        title: 'Droite (D) des champs d’hévéa',
         statement: 'Pour $\\bar{X} = 5{,}63$, $\\bar{Y} = 7{,}75$, $V(X) = 4{,}18$ et $\\operatorname{Cov}(X, Y) = 5{,}37$, trouver $(D)$ de $Y$ en $X$.',
         methodSteps: [
           '$a = \\frac{5{,}37}{4{,}18} \\approx 1{,}28$.',

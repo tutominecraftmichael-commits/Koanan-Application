@@ -288,7 +288,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
       summary:
         'Expliquer la réaction de l’alcootest entre l’éthanol et les ions dichromate orange (Cr₂O₇²⁻ → Cr³⁺ vert) en solution acidifiée.',
       conceptExplanation:
-        "L’**alcootest** utilisé par les forces de l’ordre (Situation d’apprentissage p. 1 et p. 2–3) repose sur la réduction des ions **dichromate** ($\\mathrm{Cr_2O_7^{2-}}$, **orange**) en ions **chrome III** ($\\mathrm{Cr^{3+}}$, **vert**) par l’**éthanol** en milieu acide :\n\n1. **Réduction des ions dichromate** ($\\mathrm{Cr_2O_7^{2-}/Cr^{3+}}$, $E^0 = +1{,}33\\text{ V}$) :\n   $$\\mathrm{Cr_2O_7^{2-} + 14\\,H^+ + 6\\,e^- \\longrightarrow 2\\,Cr^{3+} + 7\\,H_2O}$$\n2. **Oxydation de l’éthanol en acide éthanoïque** ($\\mathrm{CH_3COOH/CH_3CH_2OH}$, $E^0 = +0{,}04\\text{ V}$) :\n   $$\\mathrm{CH_3CH_2OH + H_2O \\longrightarrow CH_3COOH + 4\\,H^+ + 4\\,e^-}$$\n3. **Équation-bilan** ($2 \\times \\text{réduction} + 3 \\times \\text{oxydation}$, soit $12\\,e^-$ échangés) :\n   $$2\\,\\mathrm{Cr_2O_7^{2-} + 16\\,H^+ + 3\\,CH_3CH_2OH \\longrightarrow 4\\,Cr^{3+} + 11\\,H_2O + 3\\,CH_3COOH}$$\n   Avec les ions $\\mathrm{H_3O^+}$ ($+16\\,\\mathrm{H_2O}$) :\n   $$2\\,\\mathrm{Cr_2O_7^{2-} + 16\\,H_3O^+ + 3\\,CH_3CH_2OH \\longrightarrow 4\\,Cr^{3+} + 27\\,H_2O + 3\\,CH_3COOH}$$",
+        "L’**alcootest** utilisé par les forces de l’ordre repose sur la réduction des ions **dichromate** ($\\mathrm{Cr_2O_7^{2-}}$, **orange**) en ions **chrome III** ($\\mathrm{Cr^{3+}}$, **vert**) par l’**éthanol** en milieu acide :\n\n1. **Réduction des ions dichromate** ($\\mathrm{Cr_2O_7^{2-}/Cr^{3+}}$, $E^0 = +1{,}33\\text{ V}$) :\n $$\\mathrm{Cr_2O_7^{2-} + 14\\,H^+ + 6\\,e^- \\longrightarrow 2\\,Cr^{3+} + 7\\,H_2O}$$\n2. **Oxydation de l’éthanol en acide éthanoïque** ($\\mathrm{CH_3COOH/CH_3CH_2OH}$, $E^0 = +0{,}04\\text{ V}$) :\n $$\\mathrm{CH_3CH_2OH + H_2O \\longrightarrow CH_3COOH + 4\\,H^+ + 4\\,e^-}$$\n3. **Équation-bilan** ($2 \\times \\text{réduction} + 3 \\times \\text{oxydation}$, soit $12\\,e^-$ échangés) :\n $$2\\,\\mathrm{Cr_2O_7^{2-} + 16\\,H^+ + 3\\,CH_3CH_2OH \\longrightarrow 4\\,Cr^{3+} + 11\\,H_2O + 3\\,CH_3COOH}$$\n Avec les ions $\\mathrm{H_3O^+}$ ($+16\\,\\mathrm{H_2O}$) :\n $$2\\,\\mathrm{Cr_2O_7^{2-} + 16\\,H_3O^+ + 3\\,CH_3CH_2OH \\longrightarrow 4\\,Cr^{3+} + 27\\,H_2O + 3\\,CH_3COOH}$$",
       keyRule:
         'Dans l’alcootest, les ions dichromate orange Cr₂O₇²⁻ (E° = 1,33 V) oxydent l’éthanol en acide éthanoïque (E° = 0,04 V) et virent au vert (ions Cr³⁺) : 2 Cr₂O₇²⁻ + 16 H⁺ + 3 CH₃CH₂OH → 4 Cr³⁺ + 3 CH₃COOH + 11 H₂O.',
       formulas: [
@@ -304,7 +304,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Retrouver l’équation-bilan de l’oxydation de l’éthanol (Exercice 2 p. 6)',
+        title: 'Retrouver l’équation-bilan de l’oxydation de l’éthanol',
         statement:
           'Complète $\\mathrm{CH_3CH_2OH + \\dots \\longrightarrow CH_3COOH + \\dots}$ puis écris l’équation-bilan de sa réaction avec $\\mathrm{Cr_2O_7^{2-}}$ en milieu acide.',
         methodSteps: [
@@ -373,7 +373,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l08_couples_redox_dosage_p02_q3',
             type: 'mcq',
-            prompt: 'Quelle est la demi-équation électronique de l’oxydation de l’éthanol en acide éthanoïque (Ex 2 p. 6) ?',
+            prompt: 'Quelle est la demi-équation électronique de l’oxydation de l’éthanol en acide éthanoïque ?',
             options: [
               '$\\mathrm{CH_3CH_2OH + H_2O \\longrightarrow CH_3COOH + 4\\,H^+ + 4\\,e^-}$',
               '$\\mathrm{CH_3CH_2OH \\longrightarrow CH_3COOH + 2\\,H^+ + 2\\,e^-}$',
@@ -419,7 +419,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l08_couples_redox_dosage_p02_q5',
             type: 'mcq',
-            prompt: 'Lors de l’oxydation de l’éthanol en éthanal par le permanganate de potassium en milieu acide sulfurique (Activité p. 4), quelle équation-bilan est correcte ?',
+            prompt: 'Lors de l’oxydation de l’éthanol en éthanal par le permanganate de potassium en milieu acide sulfurique, quelle équation-bilan est correcte ?',
             options: [
               '$2\\,\\mathrm{MnO_4^-} + 5\\,\\mathrm{CH_3CH_2OH} + 6\\,\\mathrm{H^+} \\longrightarrow 2\\,\\mathrm{Mn^{2+}} + 5\\,\\mathrm{CH_3CHO} + 8\\,\\mathrm{H_2O}$',
               '$\\mathrm{MnO_4^-} + \\mathrm{CH_3CH_2OH} + 6\\,\\mathrm{H^+} \\longrightarrow \\mathrm{Mn^{2+}} + \\mathrm{CH_3CHO} + \\mathrm{H_2O}$',
@@ -487,7 +487,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l08_couples_redox_dosage_p02_q3',
           type: 'mcq',
-          prompt: 'Quelle est la demi-équation électronique de l’oxydation de l’éthanol en acide éthanoïque (Ex 2 p. 6) ?',
+          prompt: 'Quelle est la demi-équation électronique de l’oxydation de l’éthanol en acide éthanoïque ?',
           options: [
             '$\\mathrm{CH_3CH_2OH + H_2O \\longrightarrow CH_3COOH + 4\\,H^+ + 4\\,e^-}$',
             '$\\mathrm{CH_3CH_2OH \\longrightarrow CH_3COOH + 2\\,H^+ + 2\\,e^-}$',
@@ -515,7 +515,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l08_couples_redox_dosage_p02_q5',
           type: 'mcq',
-          prompt: 'Lors de l’oxydation de l’éthanol en éthanal par le permanganate de potassium en milieu acide sulfurique (Activité p. 4), quelle équation-bilan est correcte ?',
+          prompt: 'Lors de l’oxydation de l’éthanol en éthanal par le permanganate de potassium en milieu acide sulfurique, quelle équation-bilan est correcte ?',
           options: [
             '$2\\,\\mathrm{MnO_4^-} + 5\\,\\mathrm{CH_3CH_2OH} + 6\\,\\mathrm{H^+} \\longrightarrow 2\\,\\mathrm{Mn^{2+}} + 5\\,\\mathrm{CH_3CHO} + 8\\,\\mathrm{H_2O}$',
             '$\\mathrm{MnO_4^-} + \\mathrm{CH_3CH_2OH} + 6\\,\\mathrm{H^+} \\longrightarrow \\mathrm{Mn^{2+}} + \\mathrm{CH_3CHO} + \\mathrm{H_2O}$',
@@ -553,7 +553,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
       summary:
         'Appliquer la méthode rigoureuse en 4 étapes (élément principal, O avec H₂O, H avec H⁺, charges avec e⁻) à des couples complexes comme HIO₃/I₂ et Cl₂/Cl⁻.',
       conceptExplanation:
-        "En solution aqueuse acide, on équilibre systématiquement une demi-équation $\\text{Ox}/\\text{Red}$ en **4 étapes dans l’ordre** :\n\n1. **Élément principal** (autre que H et O) : ex. $2\\,\\mathrm{HIO_3}$ pour $\\mathrm{I_2}$, ou $2\\,\\mathrm{Cl^-}$ pour $\\mathrm{Cl_2}$.\n2. **Élément oxygène ($\\mathrm{O}$)** : compléter le côté déficitaire avec des molécules d’eau $\\mathrm{H_2O}$.\n3. **Élément hydrogène ($\\mathrm{H}$)** : compléter avec des ions $\\mathrm{H^+}$.\n4. **Charge électrique globale** : ajouter des électrons $e^-$ du côté le plus positif (toujours du côté de l’oxydant).\n\n- **Application corrigée (Exercice 1 p. 6)** : oxydation du diiode $\\mathrm{I_2}$ en acide iodique $\\mathrm{HIO_3}$ par le dichlore $\\mathrm{Cl_2}$ (réduit en $\\mathrm{Cl^-}$) :\n  - Oxydation de $\\mathrm{I_2}$ : $\\mathrm{I_2 + 6\\,H_2O \\longrightarrow 2\\,HIO_3 + 10\\,H^+ + 10\\,e^-}$\n  - Réduction de $\\mathrm{Cl_2}$ : $\\mathrm{Cl_2 + 2\\,e^- \\longrightarrow 2\\,Cl^-}$ (multipliée par $5$)\n  - Équation-bilan : $\\mathrm{I_2 + 5\\,Cl_2 + 6\\,H_2O \\longrightarrow 2\\,HIO_3 + 10\\,Cl^- + 10\\,H^+}$",
+        "En solution aqueuse acide, on équilibre systématiquement une demi-équation $\\text{Ox}/\\text{Red}$ en **4 étapes dans l’ordre** :\n\n1. **Élément principal** (autre que H et O) : ex. $2\\,\\mathrm{HIO_3}$ pour $\\mathrm{I_2}$, ou $2\\,\\mathrm{Cl^-}$ pour $\\mathrm{Cl_2}$.\n2. **Élément oxygène ($\\mathrm{O}$)** : compléter le côté déficitaire avec des molécules d’eau $\\mathrm{H_2O}$.\n3. **Élément hydrogène ($\\mathrm{H}$)** : compléter avec des ions $\\mathrm{H^+}$.\n4. **Charge électrique globale** : ajouter des électrons $e^-$ du côté le plus positif (toujours du côté de l’oxydant).\n\n- **Application corrigée** : oxydation du diiode $\\mathrm{I_2}$ en acide iodique $\\mathrm{HIO_3}$ par le dichlore $\\mathrm{Cl_2}$ (réduit en $\\mathrm{Cl^-}$) :\n - Oxydation de $\\mathrm{I_2}$ : $\\mathrm{I_2 + 6\\,H_2O \\longrightarrow 2\\,HIO_3 + 10\\,H^+ + 10\\,e^-}$\n - Réduction de $\\mathrm{Cl_2}$ : $\\mathrm{Cl_2 + 2\\,e^- \\longrightarrow 2\\,Cl^-}$ (multipliée par $5$)\n - Équation-bilan : $\\mathrm{I_2 + 5\\,Cl_2 + 6\\,H_2O \\longrightarrow 2\\,HIO_3 + 10\\,Cl^- + 10\\,H^+}$",
       keyRule:
         'Ordre obligatoire pour équilibrer en milieu acide : (1) atome principal, (2) oxygène par H₂O, (3) hydrogène par H⁺, (4) charges par e⁻ (côté oxydant).',
       formulas: [
@@ -564,7 +564,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Équilibrer l’oxydation de I₂ en HIO₃ par Cl₂ (Exercice 1 p. 6 rectifié)',
+        title: 'Équilibrer l’oxydation de I₂ en HIO₃ par Cl₂',
         statement:
           'Écris la demi-équation du couple $\\mathrm{HIO_3/I_2}$, celle de $\\mathrm{Cl_2/Cl^-}$, puis l’équation-bilan de l’oxydation du diiode par un excès d’eau de chlore.',
         methodSteps: [
@@ -814,7 +814,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
       summary:
         'Utiliser les potentiels normaux E° pour prévoir une réaction totale (E₁° − E₂° ≥ 0,3 V) et déterminer concentrations ou masse consommée après réaction.',
       conceptExplanation:
-        "À partir des **potentiels normaux** $E_1^0$ et $E_2^0$ de deux couples $\\text{Ox}_1/\\text{Red}_1$ et $\\text{Ox}_2/\\text{Red}_2$ (p. 3) :\n\n- Si $E_1^0 > E_2^0$, alors l’oxydant $\\text{Ox}_1$ **oxyde spontanément** le réducteur $\\text{Red}_2$ selon la **règle du gamma** ($\\gamma$) :\n  $$\\text{Ox}_1 + \\text{Red}_2 \\longrightarrow \\text{Red}_1 + \\text{Ox}_2$$\n- La réaction peut être considérée comme **totale** dès que :\n  $$E_1^0 - E_2^0 \\ge 0{,}3\\text{ V}$$\n\n**Applications quantitatives (Ex 3 et Ex 4 p. 6–8) :**\n- **Réaction totale entre $\\mathrm{Fe^{3+}}$ ($+0{,}77\\text{ V}$) et $\\mathrm{Fe}$ ($-0{,}44\\text{ V}$)** : $2\\,\\mathrm{Fe^{3+} + Fe \\longrightarrow 3\\,Fe^{2+}}$.\n- Attention lors d’un mélange de deux solutions (Ex 3 p. 6–7) : la concentration finale doit toujours être divisée par le **volume total** $V_{\\text{total}} = V_1 + V_2$, après avoir repéré le réactif limitant.\n- Attention dans Ex 4 p. 7–8 : si $[\\mathrm{Fe^{3+}}] = 0{,}5\\text{ mol/L}$ dans $V = 0{,}1\\text{ L}$, alors $n(\\mathrm{Fe^{3+}}) = 0{,}5 \\times 0{,}1 = 0{,}05\\text{ mol}$ (et non $0{,}5\\text{ mol}$ !), ce qui consomme $n(\\mathrm{Fe}) = 0{,}025\\text{ mol}$, soit $\\Delta m(\\mathrm{Fe}) = 0{,}025 \\times 56 = 1{,}4\\text{ g}$.",
+        "À partir des **potentiels normaux** $E_1^0$ et $E_2^0$ de deux couples $\\text{Ox}_1/\\text{Red}_1$ et $\\text{Ox}_2/\\text{Red}_2$ :\n\n- Si $E_1^0 > E_2^0$, alors l’oxydant $\\text{Ox}_1$ **oxyde spontanément** le réducteur $\\text{Red}_2$ selon la **règle du gamma** ($\\gamma$) :\n $$\\text{Ox}_1 + \\text{Red}_2 \\longrightarrow \\text{Red}_1 + \\text{Ox}_2$$\n- La réaction peut être considérée comme **totale** dès que :\n $$E_1^0 - E_2^0 \\ge 0{,}3\\text{ V}$$\n\n**Applications quantitatives :**\n- **Réaction totale entre $\\mathrm{Fe^{3+}}$ ($+0{,}77\\text{ V}$) et $\\mathrm{Fe}$ ($-0{,}44\\text{ V}$)** : $2\\,\\mathrm{Fe^{3+} + Fe \\longrightarrow 3\\,Fe^{2+}}$.\n- Attention lors d’un mélange de deux solutions : la concentration finale doit toujours être divisée par le **volume total** $V_{\\text{total}} = V_1 + V_2$, après avoir repéré le réactif limitant.\n- Attention dans Ex 4 p. 7–8 : si $[\\mathrm{Fe^{3+}}] = 0{,}5\\text{ mol/L}$ dans $V = 0{,}1\\text{ L}$, alors $n(\\mathrm{Fe^{3+}}) = 0{,}5 \\times 0{,}1 = 0{,}05\\text{ mol}$ (et non $0{,}5\\text{ mol}$ !), ce qui consomme $n(\\mathrm{Fe}) = 0{,}025\\text{ mol}$, soit $\\Delta m(\\mathrm{Fe}) = 0{,}025 \\times 56 = 1{,}4\\text{ g}$.",
       keyRule:
         'Si E₁° > E₂°, Ox₁ oxyde Red₂ (totale si E₁° − E₂° ≥ 0,3 V). Pour les concentrations finales après réaction, identifier le réactif limitant puis diviser la quantité de matière formée par le volume total V₁ + V₂.',
       formulas: [
@@ -825,7 +825,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Réaction de Fe₂(SO₄)₃ avec le fer en excès (Exercice 4 p. 7–8 rectifié)',
+        title: 'Réaction de Fe₂(SO₄)₃ avec le fer en excès',
         statement:
           'On dissout $10\\text{ g}$ de sulfate de fer III $\\mathrm{Fe_2(SO_4)_3}$ ($M = 400\\text{ g/mol}$) dans $V = 100\\text{ mL}$ d’eau, puis on ajoute de la limaille de fer en excès ($E^0(\\mathrm{Fe^{3+}/Fe^{2+}}) = 0{,}77\\text{ V}$, $E^0(\\mathrm{Fe^{2+}/Fe}) = -0{,}44\\text{ V}$, $M(\\mathrm{Fe}) = 56\\text{ g/mol}$). Calcule $[\\mathrm{Fe^{3+}}]$ initial, la masse de fer dissoute $\\Delta m$ et $[\\mathrm{Fe^{2+}}]$ final.',
         methodSteps: [
@@ -858,7 +858,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
             ],
             correctAnswerIndex: 0,
             explanation:
-              'La règle du cours indique que Ox₁ oxyde Red₂ dès que E₁° > E₂°, et que la transformation est pratiquement totale lorsque E₁° − E₂° ≥ 0,3 V.',
+              'En électrochimie, Ox₁ oxyde Red₂ dès que E₁° > E₂°, et que la transformation est pratiquement totale lorsque E₁° − E₂° ≥ 0,3 V.',
           },
         },
         {
@@ -872,7 +872,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l08_couples_redox_dosage_p04_q2',
             type: 'mcq',
-            prompt: 'On mélange les couples $\\mathrm{I_2/I^-}$ ($0{,}54\\text{ V}$) et $\\mathrm{S_4O_6^{2-}/S_2O_3^{2-}}$ ($0{,}08\\text{ V}$). Quelle réaction totale a lieu (Activité p. 3) ?',
+            prompt: 'On mélange les couples $\\mathrm{I_2/I^-}$ ($0{,}54\\text{ V}$) et $\\mathrm{S_4O_6^{2-}/S_2O_3^{2-}}$ ($0{,}08\\text{ V}$). Quelle réaction totale a lieu ?',
             options: [
               '$\\mathrm{I_2 + 2\\,S_2O_3^{2-} \\longrightarrow 2\\,I^- + S_4O_6^{2-}}$',
               '$\\mathrm{S_4O_6^{2-} + 2\\,I^- \\longrightarrow I_2 + 2\\,S_2O_3^{2-}}$',
@@ -918,7 +918,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l08_couples_redox_dosage_p04_q4',
             type: 'mcq',
-            prompt: 'On dissout $10\\text{ g}$ de $\\mathrm{Fe_2(SO_4)_3}$ ($M = 400\\text{ g/mol}$) dans $100\\text{ mL}$ d’eau (Ex 4 p. 7). Que valent $[\\mathrm{Fe^{3+}}]$ et $[\\mathrm{SO_4^{2-}}]$ ?',
+            prompt: 'On dissout $10\\text{ g}$ de $\\mathrm{Fe_2(SO_4)_3}$ ($M = 400\\text{ g/mol}$) dans $100\\text{ mL}$ d’eau. Que valent $[\\mathrm{Fe^{3+}}]$ et $[\\mathrm{SO_4^{2-}}]$ ?',
             options: [
               '$[\\mathrm{Fe^{3+}}] = 0{,}50\\text{ mol/L}$ et $[\\mathrm{SO_4^{2-}}] = 0{,}75\\text{ mol/L}$',
               '$[\\mathrm{Fe^{3+}}] = 0{,}25\\text{ mol/L}$ et $[\\mathrm{SO_4^{2-}}] = 0{,}50\\text{ mol/L}$',
@@ -990,12 +990,12 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           ],
           correctAnswerIndex: 0,
           explanation:
-            'La règle du cours indique que Ox₁ oxyde Red₂ dès que E₁° > E₂°, et que la transformation est pratiquement totale lorsque E₁° − E₂° ≥ 0,3 V.',
+            'En électrochimie, Ox₁ oxyde Red₂ dès que E₁° > E₂°, et que la transformation est pratiquement totale lorsque E₁° − E₂° ≥ 0,3 V.',
         },
         {
           id: 'premiere_c_chimie_l08_couples_redox_dosage_p04_q2',
           type: 'mcq',
-          prompt: 'On mélange les couples $\\mathrm{I_2/I^-}$ ($0{,}54\\text{ V}$) et $\\mathrm{S_4O_6^{2-}/S_2O_3^{2-}}$ ($0{,}08\\text{ V}$). Quelle réaction totale a lieu (Activité p. 3) ?',
+          prompt: 'On mélange les couples $\\mathrm{I_2/I^-}$ ($0{,}54\\text{ V}$) et $\\mathrm{S_4O_6^{2-}/S_2O_3^{2-}}$ ($0{,}08\\text{ V}$). Quelle réaction totale a lieu ?',
           options: [
             '$\\mathrm{I_2 + 2\\,S_2O_3^{2-} \\longrightarrow 2\\,I^- + S_4O_6^{2-}}$',
             '$\\mathrm{S_4O_6^{2-} + 2\\,I^- \\longrightarrow I_2 + 2\\,S_2O_3^{2-}}$',
@@ -1023,7 +1023,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l08_couples_redox_dosage_p04_q4',
           type: 'mcq',
-          prompt: 'On dissout $10\\text{ g}$ de $\\mathrm{Fe_2(SO_4)_3}$ ($M = 400\\text{ g/mol}$) dans $100\\text{ mL}$ d’eau (Ex 4 p. 7). Que valent $[\\mathrm{Fe^{3+}}]$ et $[\\mathrm{SO_4^{2-}}]$ ?',
+          prompt: 'On dissout $10\\text{ g}$ de $\\mathrm{Fe_2(SO_4)_3}$ ($M = 400\\text{ g/mol}$) dans $100\\text{ mL}$ d’eau. Que valent $[\\mathrm{Fe^{3+}}]$ et $[\\mathrm{SO_4^{2-}}]$ ?',
           options: [
             '$[\\mathrm{Fe^{3+}}] = 0{,}50\\text{ mol/L}$ et $[\\mathrm{SO_4^{2-}}] = 0{,}75\\text{ mol/L}$',
             '$[\\mathrm{Fe^{3+}}] = 0{,}25\\text{ mol/L}$ et $[\\mathrm{SO_4^{2-}}] = 0{,}50\\text{ mol/L}$',
@@ -1075,7 +1075,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
       summary:
         'Définir un titrage colorimétrique, citer les 3 qualités d’une réaction de dosage (totale, rapide, spécifique) et repérer l’équivalence dans le dosage Fe²⁺ / MnO₄⁻.',
       conceptExplanation:
-        "**Doser** (ou titrer) une espèce chimique consiste à déterminer sa **concentration molaire** inconnue en solution (p. 3–4 et Documentation p. 8–9) :\n\n- **Conditions sur la réaction support du titrage** : elle doit impérativement être **totale**, **rapide** et **spécifique** (univoque) de l’espèce titrée.\n- **Protocole expérimental** :\n  1. Dans le **bécher** placé sur un agitateur magnétique : un volume connu $V_r$ de la **solution titrée** (concentration inconnue $C_r$, ex. ions $\\mathrm{Fe^{2+}}$).\n  2. Dans la **burette graduée** : la **solution titrante** (concentration connue $C_0$, ex. $\\mathrm{KMnO_4}$ acidifié).\n  3. Verser goutte à goutte la solution titrante jusqu’au changement de couleur marquant l’**équivalence** (pour $\\mathrm{MnO_4^-}$, apparition d’une **teinte violette persistante** à la goutte près, sans besoin d’indicateur externe).\n- **Définition de l’équivalence** : état où les réactifs titré et titrant ont été introduits exactement dans les **proportions stœchiométriques** de l’équation-bilan.",
+        "**Doser** (ou titrer) une espèce chimique consiste à déterminer sa **concentration molaire** inconnue en solution :\n\n- **Conditions sur la réaction support du titrage** : elle doit impérativement être **totale**, **rapide** et **spécifique** (univoque) de l’espèce titrée.\n- **Protocole expérimental** :\n 1. Dans le **bécher** placé sur un agitateur magnétique : un volume connu $V_r$ de la **solution titrée** (concentration inconnue $C_r$, ex. ions $\\mathrm{Fe^{2+}}$).\n 2. Dans la **burette graduée** : la **solution titrante** (concentration connue $C_0$, ex. $\\mathrm{KMnO_4}$ acidifié).\n 3. Verser goutte à goutte la solution titrante jusqu’au changement de couleur marquant l’**équivalence** (pour $\\mathrm{MnO_4^-}$, apparition d’une **teinte violette persistante** à la goutte près, sans besoin d’indicateur externe).\n- **Définition de l’équivalence** : état où les réactifs titré et titrant ont été introduits exactement dans les **proportions stœchiométriques** de l’équation-bilan.",
       keyRule:
         'Une réaction de dosage doit être totale, rapide et spécifique. À l’équivalence, les réactifs sont mélangés dans les proportions stœchiométriques ; avec MnO₄⁻ dans la burette, l’équivalence est repérée par une teinte violette persistante.',
       formulas: [
@@ -1086,11 +1086,11 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Doser une solution de Fe²⁺ par KMnO₄ (Exercice 5 p. 8)',
+        title: 'Doser une solution de Fe²⁺ par KMnO₄',
         statement:
           'On prépare $100\\text{ mL}$ de solution de $\\mathrm{KMnO_4}$ ($M = 158\\text{ g/mol}$) en dissolvant $0{,}20\\text{ g}$ de solide. On dose ensuite $V_r = 12\\text{ mL}$ d’une solution de $\\mathrm{Fe^{2+}}$ : la teinte violette persiste pour $V_{\\text{éq}} = 16{,}5\\text{ mL}$ de $\\mathrm{KMnO_4}$ versé. Calcule $C_0$ puis $C(\\mathrm{Fe^{2+}})$.',
         methodSteps: [
-          '1) Concentration titrante : C₀ = m / (M·V) = 0,20 / (158 × 0,100) ≈ 0,01266 mol/L (noté 0,0126 mol/L dans le cours).',
+          '1) Concentration titrante : C₀ = m / (M·V) = 0,20 / (158 × 0,100) ≈ 0,01266 mol/L (soit 0,0126 mol/L).',
           '2) Relation à l’équivalence (5 Fe²⁺ + MnO₄⁻ + 8 H⁺ → 5 Fe³⁺ + Mn²⁺ + 4 H₂O) : C_red·V_red = 5 C₀·V_éq.',
           '3) Application numérique : C_red = (5 × 0,0126 × 16,5) / 12 ≈ 0,087 mol/L.',
         ],
@@ -1132,7 +1132,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l08_couples_redox_dosage_p05_q1',
             type: 'mcq',
-            prompt: 'Quelles trois propriétés doit impérativement vérifier la réaction support d’un dosage (Documentation p. 9) ?',
+            prompt: 'Quelles trois propriétés doit impérativement vérifier la réaction support d’un dosage ?',
             options: [
               'Être totale, rapide et spécifique (sélective) de l’espèce titrée',
               'Être lente, réversible et limitée à 67 %',
@@ -1264,7 +1264,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l08_couples_redox_dosage_p05_q1',
           type: 'mcq',
-          prompt: 'Quelles trois propriétés doit impérativement vérifier la réaction support d’un dosage (Documentation p. 9) ?',
+          prompt: 'Quelles trois propriétés doit impérativement vérifier la réaction support d’un dosage ?',
           options: [
             'Être totale, rapide et spécifique (sélective) de l’espèce titrée',
             'Être lente, réversible et limitée à 67 %',
@@ -1354,11 +1354,11 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
     {
       id: 'premiere_c_chimie_l08_couples_redox_dosage_p06',
       order: 6,
-      title: 'Dosage en deux étapes : iodométrie du dichromate (Situation p. 4–6)',
+      title: 'Dosage en deux étapes : iodométrie du dichromate',
       summary:
         'Exploiter un dosage indirect en deux réactions successives (Cr₂O₇²⁻ + I⁻ → I₂ puis I₂ + S₂O₃²⁻) pour remonter à la concentration inconnue de dichromate.',
       conceptExplanation:
-        "Dans la **Situation d’évaluation (p. 4–6)**, on détermine la concentration $C$ d’un volume $V = 20\\text{ mL}$ de dichromate de potassium par une méthode en **deux étapes** (iodométrie) :\n\n1. **Expérience 1 (production de diiode)** : on ajoute un excès d’iodure de potassium ($20\\text{ mL}$ à $0{,}4\\text{ mol/L}$). Tout le dichromate est réduit en $\\mathrm{Cr^{3+}}$ (vert) et libère du **diiode $\\mathrm{I_2}$** (couleur **brun jaune** en solution) :\n   $$\\mathrm{Cr_2O_7^{2-} + 6\\,I^- + 14\\,H^+ \\longrightarrow 2\\,Cr^{3+} + 3\\,I_2 + 7\\,H_2O}$$\n2. **Expérience 2 (dosage du $\\mathrm{I_2}$ formé)** : on verse $V_2 = 10\\text{ mL}$ de thiosulfate de sodium ($C_2 = 0{,}2\\text{ mol/L}$) jusqu’à disparition du diiode brun (teinte verte due aux seuls ions $\\mathrm{Cr^{3+}}$) :\n   $$\\mathrm{I_2 + 2\\,S_2O_3^{2-} \\longrightarrow 2\\,I^- + S_4O_6^{2-}}$$\n3. **Chaîne stœchiométrique** :\n   $$n(\\mathrm{I_2}) = \\frac{n(\\mathrm{S_2O_3^{2-}})}{2} = \\frac{C_2 V_2}{2} \\qquad \\text{et} \\qquad n(\\mathrm{Cr_2O_7^{2-}}) = \\frac{n(\\mathrm{I_2})}{3} \\implies C = \\frac{C_2 V_2}{6\\,V}$$",
+        "Dans la **Situation d’évaluation**, on détermine la concentration $C$ d’un volume $V = 20\\text{ mL}$ de dichromate de potassium par une méthode en **deux étapes** (iodométrie) :\n\n1. **Expérience 1 (production de diiode)** : on ajoute un excès d’iodure de potassium ($20\\text{ mL}$ à $0{,}4\\text{ mol/L}$). Tout le dichromate est réduit en $\\mathrm{Cr^{3+}}$ (vert) et libère du **diiode $\\mathrm{I_2}$** (couleur **brun jaune** en solution) :\n $$\\mathrm{Cr_2O_7^{2-} + 6\\,I^- + 14\\,H^+ \\longrightarrow 2\\,Cr^{3+} + 3\\,I_2 + 7\\,H_2O}$$\n2. **Expérience 2 (dosage du $\\mathrm{I_2}$ formé)** : on verse $V_2 = 10\\text{ mL}$ de thiosulfate de sodium ($C_2 = 0{,}2\\text{ mol/L}$) jusqu’à disparition du diiode brun (teinte verte due aux seuls ions $\\mathrm{Cr^{3+}}$) :\n $$\\mathrm{I_2 + 2\\,S_2O_3^{2-} \\longrightarrow 2\\,I^- + S_4O_6^{2-}}$$\n3. **Chaîne stœchiométrique** :\n $$n(\\mathrm{I_2}) = \\frac{n(\\mathrm{S_2O_3^{2-}})}{2} = \\frac{C_2 V_2}{2} \\qquad \\text{et} \\qquad n(\\mathrm{Cr_2O_7^{2-}}) = \\frac{n(\\mathrm{I_2})}{3} \\implies C = \\frac{C_2 V_2}{6\\,V}$$",
       keyRule:
         'Dans le dosage iodométrique de Cr₂O₇²⁻ : 1 Cr₂O₇²⁻ produit 3 I₂ (Exp. 1), et 1 I₂ consomme 2 S₂O₃²⁻ (Exp. 2) ; donc 1 Cr₂O₇²⁻ équivaut à 6 S₂O₃²⁻, soit C = (C₂·V₂)/(6·V).',
       formulas: [
@@ -1369,7 +1369,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Résoudre la Situation d’évaluation (p. 4–6)',
+        title: 'Résoudre la Situation d’évaluation',
         statement:
           'On dose $V = 20\\text{ mL}$ de $\\mathrm{K_2Cr_2O_7}$ par excès de $\\mathrm{KI}$, puis on titre le diiode formé par $V_2 = 10\\text{ mL}$ de thiosulfate à $C_2 = 0{,}2\\text{ mol/L}$. Calcule $n(\\mathrm{I_2})$ puis $C(\\mathrm{Cr_2O_7^{2-}})$.',
         methodSteps: [
@@ -1507,7 +1507,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l08_couples_redox_dosage_p06_q6',
             type: 'mcq',
-            prompt: 'Pourquoi contrôle-t-on régulièrement la concentration en ions fer ou métaux dans les eaux souterraines (Documentation p. 8) ?',
+            prompt: 'Pourquoi contrôle-t-on régulièrement la concentration en ions fer ou métaux dans les eaux souterraines ?',
             options: [
               'Parce que selon leur concentration, certains éléments métalliques passent d’essentiels à toxiques pour l’homme',
               'Parce que le fer rend l’eau totalement dépourvue de conductivité',
@@ -1594,7 +1594,7 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l08_couples_redox_dosage_p06_q6',
           type: 'mcq',
-          prompt: 'Pourquoi contrôle-t-on régulièrement la concentration en ions fer ou métaux dans les eaux souterraines (Documentation p. 8) ?',
+          prompt: 'Pourquoi contrôle-t-on régulièrement la concentration en ions fer ou métaux dans les eaux souterraines ?',
           options: [
             'Parce que selon leur concentration, certains éléments métalliques passent d’essentiels à toxiques pour l’homme',
             'Parce que le fer rend l’eau totalement dépourvue de conductivité',

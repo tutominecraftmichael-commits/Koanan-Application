@@ -545,7 +545,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'slate',
     stepTitle: 'Le rôle de médiation d’U Thant en octobre 1962',
     paragraphText:
-      'Lors de la crise de Cuba, le Secrétaire général de l’ONU U Thant envoie des appels urgents à Kennedy et Khrouchtchev pour suspendre le face-à-face naval dans les Caraïbes, offrant une porte de sortie honorable aux deux dirigeants.\nC’est un exemple clé à réutiliser aussi dans la leçon sur les succès diplomatiques de l’ONU.',
+      'Lors de la crise de Cuba, le Secrétaire général de l’ONU U Thant envoie des appels urgents à Kennedy et Khrouchtchev pour suspendre le face-à-face naval dans les Caraïbes, offrant une porte de sortie honorable aux deux dirigeants.\nC’est un exemple clé à réutiliser aussi pour illustrer les succès diplomatiques de l’ONU.',
     exercise: {
       id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q6',
       type: 'mcq',

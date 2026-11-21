@@ -480,7 +480,7 @@ export const PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE: CurriculumChapter 
               "e = 250 V"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "e = B * ℓ * v = 1,0 * 0,25 * 10 = 2,5 V (conforme à l'exercice 3 du PDF officiel p. 11)."
+            "explanation": "E = B * ℓ * v = 1,0 * 0,25 * 10 = 2,5 V."
           }
         },
         {
@@ -598,7 +598,7 @@ export const PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE: CurriculumChapter 
             "e = 250 V"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "e = B * ℓ * v = 1,0 * 0,25 * 10 = 2,5 V (conforme à l'exercice 3 du PDF officiel p. 11)."
+          "explanation": "E = B * ℓ * v = 1,0 * 0,25 * 10 = 2,5 V."
         },
         {
           "id": "terminale_d_physique_l07_induction_p02_q5",
@@ -860,7 +860,7 @@ export const PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE: CurriculumChapter 
               "Une onde sinusoïdale pure"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "La dérivée d'une fonction linéaire par morceaux est une fonction constante par morceaux : la f.é.m. e = -k di/dt prend l'allure de créneaux rectangulaires (conforme à l'exercice 4 p. 12 du PDF officiel)."
+            "explanation": "La dérivée d'une fonction linéaire par morceaux est une fonction constante par morceaux : la f.é.m. e = -k di/dt prend l'allure de créneaux rectangulaires."
           }
         }
       ],
@@ -954,7 +954,7 @@ export const PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE: CurriculumChapter 
             "Une onde sinusoïdale pure"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "La dérivée d'une fonction linéaire par morceaux est une fonction constante par morceaux : la f.é.m. e = -k di/dt prend l'allure de créneaux rectangulaires (conforme à l'exercice 4 p. 12 du PDF officiel)."
+          "explanation": "La dérivée d'une fonction linéaire par morceaux est une fonction constante par morceaux : la f.é.m. e = -k di/dt prend l'allure de créneaux rectangulaires."
         }
       ]
     },

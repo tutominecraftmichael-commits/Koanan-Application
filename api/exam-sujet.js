@@ -130,14 +130,20 @@ export function buildSujetPrompt({ template, classe, gradeId, matiere, chapitres
   const exemples = (template.exemples || []).length
     ? `\nEXEMPLES DE SUJETS OFFICIELS (modèles de style, ne pas recopier) :\n${template.exemples.map((x, i) => `--- Exemple ${i + 1} ---\n${x}`).join('\n')}`
     : '';
+  const isLmd = String(gradeId || '').startsWith('lmd_') || String(template.source || '').includes('universitaire');
+  const styleRules = isLmd
+    ? COMMON_STYLE_RULES.filter((r) => !/APC|lycées/i.test(r))
+    : COMMON_STYLE_RULES;
   return [
-    `Tu es un professeur de ${template.matiere} en Côte d'Ivoire. Rédige un SUJET DE DEVOIR SURVEILLÉ de ${template.duree} pour la classe de ${classe}, noté sur 20.`,
-    `Format officiel à respecter EXACTEMENT (${template.source}) :`,
+    isLmd
+      ? `Tu es un enseignant-chercheur universitaire en ${template.matiere}. Rédige un SUJET D'EXAMEN / DEVOIR SURVEILLÉ de ${template.duree} pour la filière ${classe}, noté sur 20.`
+      : `Tu es un professeur de ${template.matiere} en Côte d'Ivoire. Rédige un SUJET DE DEVOIR SURVEILLÉ de ${template.duree} pour la classe de ${classe}, noté sur 20.`,
+    `Structure et barème à respecter EXACTEMENT (${template.source}) :`,
     structure,
     noteClasse ? `Niveau : ${noteClasse}` : '',
-    `Chapitres au programme de CE devoir (choisis par l'élève) :\n${programme}`,
+    `Chapitres au programme de CE devoir (choisis par l'étudiant) :\n${programme}`,
     'Règles de rédaction :',
-    ...COMMON_STYLE_RULES.map((r) => `- ${r}`),
+    ...styleRules.map((r) => `- ${r}`),
     ...(template.reglesMatiere || []).map((r) => `- ${r} (règle propre à la matière : elle passe avant les règles générales)`),
     exemples,
     '',

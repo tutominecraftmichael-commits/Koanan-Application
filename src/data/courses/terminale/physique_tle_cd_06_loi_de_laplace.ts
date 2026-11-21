@@ -503,7 +503,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
               "F = 0,42 N"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "F = 12 * 0,40 * 0,25 * sin 45° = 1,20 * 0,7071 ≈ 0,85 N (conforme à l'exercice 1 du PDF officiel)."
+            "explanation": "F = 12 * 0,40 * 0,25 * sin 45° = 1,20 * 0,7071 ≈ 0,85 N."
           }
         },
         {
@@ -613,7 +613,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
             "F = 0,42 N"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "F = 12 * 0,40 * 0,25 * sin 45° = 1,20 * 0,7071 ≈ 0,85 N (conforme à l'exercice 1 du PDF officiel)."
+          "explanation": "F = 12 * 0,40 * 0,25 * sin 45° = 1,20 * 0,7071 ≈ 0,85 N."
         },
         {
           "id": "terminale_d_physique_l06_loi_de_laplace_p02_q6",
@@ -778,7 +778,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
               "m = 0,0012 kg"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "m = (I * ℓ * B) / g = (8 * 0,03 * 0,5) / 10 = 0,12 / 10 = 0,012 kg = 12 g (conforme à l'exercice 2 du PDF officiel)."
+            "explanation": "m = (I * ℓ * B) / g = (8 * 0,03 * 0,5) / 10 = 0,12 / 10 = 0,012 kg = 12 g."
           }
         },
         {
@@ -799,7 +799,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
               "B ≈ 4,64 T"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "k = g / (ℓ B) => B = g / (k * ℓ) = 10 / (1600 * 0,029) = 10 / 46,4 ≈ 0,2155 T ≈ 0,215 T (conforme à l'exercice 4 du PDF officiel)."
+            "explanation": "k = g / (ℓ B) => B = g / (k * ℓ) = 10 / (1600 * 0,029) = 10 / 46,4 ≈ 0,2155 T ≈ 0,215 T."
           }
         },
         {
@@ -904,7 +904,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
             "m = 0,0012 kg"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "m = (I * ℓ * B) / g = (8 * 0,03 * 0,5) / 10 = 0,12 / 10 = 0,012 kg = 12 g (conforme à l'exercice 2 du PDF officiel)."
+          "explanation": "m = (I * ℓ * B) / g = (8 * 0,03 * 0,5) / 10 = 0,12 / 10 = 0,012 kg = 12 g."
         },
         {
           "id": "terminale_d_physique_l06_loi_de_laplace_p03_q4",
@@ -917,7 +917,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
             "B ≈ 4,64 T"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "k = g / (ℓ B) => B = g / (k * ℓ) = 10 / (1600 * 0,029) = 10 / 46,4 ≈ 0,2155 T ≈ 0,215 T (conforme à l'exercice 4 du PDF officiel)."
+          "explanation": "k = g / (ℓ B) => B = g / (k * ℓ) = 10 / (1600 * 0,029) = 10 / 46,4 ≈ 0,2155 T ≈ 0,215 T."
         },
         {
           "id": "terminale_d_physique_l06_loi_de_laplace_p03_q5",
@@ -981,7 +981,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
         {
           "name": "Angle d'inclinaison (force perpendiculaire à la tige)",
           "formula": "\\sin\\alpha = \\frac{I\\,\\ell\\,B}{m\\,g}",
-          "note": "Formulation du PDF officiel Côte d'Ivoire (p. 7)"
+          "note": "Formulation de référence"
         }
       ],
       "workedExample": {
@@ -1134,7 +1134,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
               "I ≈ 5,50 A"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "I = (0,020 * 10 * sin 20°) / (2 * 0,05 * 0,5) = (0,20 * 0,342) / 0,05 = 0,0684 / 0,05 ≈ 1,368 A ≈ 1,37 A (conforme à l'exercice 5 du PDF officiel p. 11)."
+            "explanation": "I = (0,020 * 10 * sin 20°) / (2 * 0,05 * 0,5) = (0,20 * 0,342) / 0,05 = 0,0684 / 0,05 ≈ 1,368 A ≈ 1,37 A."
           }
         },
         {
@@ -1244,7 +1244,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
             "I ≈ 5,50 A"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "I = (0,020 * 10 * sin 20°) / (2 * 0,05 * 0,5) = (0,20 * 0,342) / 0,05 = 0,0684 / 0,05 ≈ 1,368 A ≈ 1,37 A (conforme à l'exercice 5 du PDF officiel p. 11)."
+          "explanation": "I = (0,020 * 10 * sin 20°) / (2 * 0,05 * 0,5) = (0,20 * 0,342) / 0,05 = 0,0684 / 0,05 ≈ 1,368 A ≈ 1,37 A."
         },
         {
           "id": "terminale_d_physique_l06_loi_de_laplace_p04_q6",

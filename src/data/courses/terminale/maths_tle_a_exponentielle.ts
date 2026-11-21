@@ -14,7 +14,7 @@ export const MATHS_TLE_A_L04_EXPONENTIELLE: CurriculumChapter = {
   "summary": "Définition et règles de calcul, limites, dérivée de e puissance u, équations et inéquations.",
   "officialVolumeHours": 10,
   "contentVersion": 2,
-  "source": "Programme de Terminale A fourni par l'équipe KONAN (pas de PDF officiel), vérifié et corrigé",
+  "source": "Programme de Terminale A fourni par l'équipe KONAN, vérifié et corrigé",
   "points": [
     {
       "id": "terminale_a_maths_numerique_l04_exponentielle_p01",

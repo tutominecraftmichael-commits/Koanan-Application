@@ -32,7 +32,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         { name: 'Critère d’unicité', formula: '(S) \\text{ admet une unique solution} \\iff D \\neq 0' },
       ],
       workedExample: {
-        title: 'Déterminer le nombre de solutions de deux systèmes (p. 2-3)',
+        title: 'Déterminer le nombre de solutions de deux systèmes',
         statement:
           'Étudie le nombre de solutions de $(S_1) : \\begin{cases} 3x + 15y + 2 = 0 \\\\ 2x + 10y - 6 = 0 \\end{cases}$ et de $(S_2) : \\begin{cases} x + 2y - 5 = 0 \\\\ 3x - y + 2 = 0 \\end{cases}$.',
         methodSteps: [
@@ -256,7 +256,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         { name: 'Solution unique', formula: 'x = \\frac{D_x}{D}, \\quad y = \\frac{D_y}{D} \\quad (D \\neq 0)' },
       ],
       workedExample: {
-        title: 'Résoudre (S₂) par les déterminants de Cramer (p. 3)',
+        title: 'Résoudre (S₂) par les déterminants de Cramer',
         statement: 'Résous dans $\\mathbb{R}^2$ le système $(S_2) : \\begin{cases} x + 2y - 5 = 0 \\\\ 3x - y + 2 = 0 \\end{cases}$.',
         methodSteps: [
           'On place d’abord les constantes à droite : $\\begin{cases} x + 2y = 5 \\\\ 3x - y = -2 \\end{cases}$.',
@@ -492,7 +492,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         },
       },
       workedExample: {
-        title: 'Tester si trois droites sont concourantes (Exercice 5 p. 8)',
+        title: 'Tester si trois droites sont concourantes',
         statement:
           'On donne $(AB): x - y = -4$, $(CD): 2x + 3y = 8$ et $(EF): x + 3y = 8$. Ces trois droites sont-elles concourantes ?',
         methodSteps: [
@@ -510,7 +510,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepTheme: 'Intersection de deux droites',
           stepTitle: 'Lire graphiquement la solution d’un système',
           paragraphText:
-            'Dans l’Exemple 2 du cours, $(D): x + 2y - 5 = 0$ et $(D\'): x - y + 1 = 0$ se coupent en $A(1; 2)$ : c’est l’unique couple vérifiant simultanément les deux équations.',
+            'Par exemple, $(D): x + 2y - 5 = 0$ et $(D\'): x - y + 1 = 0$ se coupent en $A(1; 2)$ : c’est l’unique couple vérifiant simultanément les deux équations.',
           exercise: {
             id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p03_q1',
             type: 'mcq',
@@ -711,7 +711,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         { name: 'Système triangulaire', formula: '\\begin{cases} ax + by + cz = m \\\\ b\'y + c\'z = m\' \\\\ c\'\'z = m\'\' \\end{cases}' },
       ],
       workedExample: {
-        title: 'Résoudre (Σ₁) par substitution (p. 4)',
+        title: 'Résoudre (Σ₁) par substitution',
         statement:
           'Résous dans $\\mathbb{R}^3$ par substitution : $(\\Sigma_1) : \\begin{cases} x - 2y - 3z = -9 \\\\ 2x + 5y - 3z = 0 \\\\ x + y + 2z = 9 \\end{cases}$.',
         methodSteps: [
@@ -768,7 +768,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p04_q3',
             type: 'mcq',
-            prompt: 'Quel est le triplet solution du système triangulaire $\\begin{cases} x - y + 3z = 2 \\\\ 2y + 4z = 0 \\\\ 3z = 6 \\end{cases}$ (Exemple p. 3) ?',
+            prompt: 'Quel est le triplet solution du système triangulaire $\\begin{cases} x - y + 3z = 2 \\\\ 2y + 4z = 0 \\\\ 3z = 6 \\end{cases}$ ?',
             options: ['$(-8; -4; 2)$', '$(0; 4; 2)$', '$(-4; -4; 2)$', '$(-8; 4; 2)$'],
             correctAnswerIndex: 0,
             explanation: '$3z = 6 \\implies z = 2$, puis $2y + 8 = 0 \\implies y = -4$, puis $x - (-4) + 6 = 2 \\implies x + 10 = 2 \\implies x = -8$.',
@@ -826,7 +826,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepTheme: 'Vérifier un triplet solution dans R^3',
           stepTitle: 'Contrôler toutes les composantes avant de conclure',
           paragraphText:
-            'Dans l’Exemple $(\\Sigma_1)$ du cours, la solution annoncée est $(2; 1; 3)$. Vérifier les trois équations garantit l’absence d’erreur de calcul.',
+            'Pour le système $(\\Sigma_1)$ dont la solution annoncée est $(2; 1; 3)$, vérifier les trois équations garantit l’absence d’erreur de calcul.',
           exercise: {
             id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p04_q6',
             type: 'mcq',
@@ -857,7 +857,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         {
           id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p04_q3',
           type: 'mcq',
-          prompt: 'Quel est le triplet solution du système triangulaire $\\begin{cases} x - y + 3z = 2 \\\\ 2y + 4z = 0 \\\\ 3z = 6 \\end{cases}$ (Exemple p. 3) ?',
+          prompt: 'Quel est le triplet solution du système triangulaire $\\begin{cases} x - y + 3z = 2 \\\\ 2y + 4z = 0 \\\\ 3z = 6 \\end{cases}$ ?',
           options: ['$(-8; -4; 2)$', '$(0; 4; 2)$', '$(-4; -4; 2)$', '$(-8; 4; 2)$'],
           correctAnswerIndex: 0,
           explanation: '$3z = 6 \\implies z = 2$, puis $2y + 8 = 0 \\implies y = -4$, puis $x - (-4) + 6 = 2 \\implies x + 10 = 2 \\implies x = -8$.',
@@ -918,7 +918,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         { name: 'Détection d’incompatibilité', formula: '0x + 0y + 0z = k \\ (k \\neq 0) \\implies S = \\emptyset' },
       ],
       workedExample: {
-        title: 'Résoudre (Σ₂) par le pivot de Gauss (p. 4)',
+        title: 'Résoudre (Σ₂) par le pivot de Gauss',
         statement:
           'Résous par la méthode du pivot de Gauss : $(\\Sigma_2) : \\begin{cases} x - 5y - 7z = 3 & (L_1) \\\\ 5x + 3y + z = 3 & (L_2) \\\\ 3x + y - 2z = -1 & (L_3) \\end{cases}$.',
         methodSteps: [
@@ -998,7 +998,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepTheme: 'Système sans solution en R^3',
           stepTitle: 'Reconnaître une contradiction à la dernière étape (Exercice 3f)',
           paragraphText:
-            'Dans l’Exercice 3f, $\\begin{cases} x + y - 2z = 1 & (L_1) \\\\ x - 2y + 7z = 1 & (L_2) \\\\ -2x + y + z = 1 & (L_3) \\end{cases}$, l’élimination de $x$ donne $L_1 - L_2 : 3y - 9z = 0$ et $2L_1 + L_3 : 3y - 3z = 3$ ? Vérifions soigneusement : $L_1-L_2$ vaut $(y - (-2y)) + (-2z - 7z) = 3y - 9z = 0$, ou avec $2L_1 + L_3$: $(2y + y) + (-4z + z) = 3y - 3z = 3$, et en réalité l’énoncé du cours conduit à une contradiction $0 = 3$ si deux combinaisons donnent $3y - 3z = 0$ et $3y - 3z = 3$.',
+            'Pour le système $\\begin{cases} x + y - 2z = 1 & (L_1) \\\\ x - 2y + 7z = 1 & (L_2) \\\\ -2x + y + z = 1 & (L_3) \\end{cases}$, l’élimination de $x$ donne $L_1 - L_2 : 3y - 9z = 0$ et $2L_1 + L_3 : 3y - 3z = 3$ ? Vérifions soigneusement : $L_1-L_2$ vaut $(y - (-2y)) + (-2z - 7z) = 3y - 9z = 0$, ou avec $2L_1 + L_3$: $(2y + y) + (-4z + z) = 3y - 3z = 3$, et en réalité un tel système conduit à une contradiction $0 = 3$ si deux combinaisons donnent $3y - 3z = 0$ et $3y - 3z = 3$.',
           exercise: {
             id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p05_q4',
             type: 'mcq',
@@ -1043,7 +1043,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepTheme: 'Pivot de Gauss avec fractions évitées',
           stepTitle: 'Multiplier chaque ligne par des entiers pour garder des calculs exacts',
           paragraphText:
-            'Dans le cours, plutôt que de diviser par $16$ ou $14$, on préfère calculer $14(L_3\') - 16(L_2\')$ pour rester entièrement en nombres entiers jusqu’à la toute fin.',
+            ', plutôt que de diviser par $16$ ou $14$, on préfère calculer $14(L_3\') - 16(L_2\')$ pour rester entièrement en nombres entiers jusqu’à la toute fin.',
           exercise: {
             id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p05_q6',
             type: 'mcq',
@@ -1158,7 +1158,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         { name: 'Nombre à trois chiffres c d u', formula: 'N = 100c + 10d + u' },
       ],
       workedExample: {
-        title: 'Les canards, les lapins et les dromadaires du fermier (Situation complexe p. 5)',
+        title: 'Les canards, les lapins et les dromadaires du fermier',
         statement:
           'Un fermier élève des canards ($x$), des lapins ($y$) et des dromadaires ($z$). Il compte $130$ entre les pattes des canards, celles des lapins et les bosses des dromadaires. Il compte $46$ têtes, puis $38$ oreilles de lapins et dromadaires ($y \\ge 16$). Détermine $x, y, z$.',
         methodSteps: [
@@ -1198,7 +1198,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepNumber: 2,
           stepKind: 'methode',
           stepBadge: 'Méthode',
-          stepTheme: 'Équation d’une parabole (Exercice 4 p. 8)',
+          stepTheme: 'Équation d’une parabole',
           stepTitle: 'Traduire A ∈ (P), B ∈ (P), C ∈ (P) en système 3×3 en (a, b, c)',
           paragraphText:
             'Si $(P): y = ax^2 + bx + c$ passe par $A(1; 0)$, $B(2; -5)$ et $C(3; -12)$, on remplace $(x; y)$ dans $y = ax^2 + bx + c$ : on obtient $\\begin{cases} a + b + c = 0 \\\\ 4a + 2b + c = -5 \\\\ 9a + 3b + c = -12 \\end{cases}$.',
@@ -1221,7 +1221,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepNumber: 3,
           stepKind: 'methode',
           stepBadge: 'Méthode',
-          stepTheme: 'Numération décimale (Exercice 6 p. 9)',
+          stepTheme: 'Numération décimale',
           stepTitle: 'Écrire un nombre de trois chiffres : 100z + 10y + x',
           paragraphText:
             'Soient $x$ le chiffre des unités, $y$ celui des dizaines et $z$ celui des centaines. Le nombre vaut $100z + 10y + x$. Si on permute dizaines et centaines, il devient $100y + 10z + x$ et augmente de $180$, soit $90(y - z) = 180 \\implies y - z = 2$.',
@@ -1265,7 +1265,7 @@ export const MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           stepTheme: 'Inverser l’ordre des chiffres x, y, z dans la réponse finale',
           stepTitle: 'Attention : si x est les unités et z les centaines, le nombre est zyx, pas xyz !',
           paragraphText:
-            'Dans l’Exercice 6, l’énoncé du cours a posé $x$ = unités, $y$ = dizaines et $z$ = centaines, puis trouvé $x = 2, y = 7, z = 5$. Le nombre est $100z + 10y + x = 572$, et surtout pas $275$ !',
+            'Dans un problème à trois chiffres où l’on pose $x$ = unités, $y$ = dizaines et $z$ = centaines, puis trouvé $x = 2, y = 7, z = 5$. Le nombre est $100z + 10y + x = 572$, et surtout pas $275$ !',
           exercise: {
             id: 'premiere_c_maths_numerique_l13_systemes_equations_lineaires_p06_q5',
             type: 'mcq',

@@ -1367,7 +1367,7 @@ export const SVT_TLE_A_L02_ACTIVITE_CEREBRALE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l02_activite_cerebrale_p06_q2",
             "type": "mcq",
-            "prompt": "Vous vous rappelez une chanson que vous venez d'écouter. Selon le cours, l'information persiste dans des « circuits réverbérants ». De quelle phase de la mémoire s'agit-il ?",
+            "prompt": "Vous vous rappelez une chanson que vous venez d'écouter. l'information persiste dans des « circuits réverbérants ». De quelle phase de la mémoire s'agit-il ?",
             "options": [
               "L'acquisition",
               "La restitution",
@@ -1388,7 +1388,7 @@ export const SVT_TLE_A_L02_ACTIVITE_CEREBRALE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l02_activite_cerebrale_p06_q3",
             "type": "mcq",
-            "prompt": "Selon le cours, sur quoi repose la consolidation d'un souvenir dans la mémoire à long terme ?",
+            "prompt": "Sur quoi repose la consolidation d'un souvenir dans la mémoire à long terme ?",
             "options": [
               "Sur la mise en place de nouveaux circuits de neurones et la fabrication de protéines spécifiques",
               "Sur la sécrétion d'adrénaline",
@@ -1501,7 +1501,7 @@ export const SVT_TLE_A_L02_ACTIVITE_CEREBRALE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l02_activite_cerebrale_p06_q2",
           "type": "mcq",
-          "prompt": "Vous vous rappelez une chanson que vous venez d'écouter. Selon le cours, l'information persiste dans des « circuits réverbérants ». De quelle phase de la mémoire s'agit-il ?",
+          "prompt": "Vous vous rappelez une chanson que vous venez d'écouter. l'information persiste dans des « circuits réverbérants ». De quelle phase de la mémoire s'agit-il ?",
           "options": [
             "L'acquisition",
             "La restitution",
@@ -1514,7 +1514,7 @@ export const SVT_TLE_A_L02_ACTIVITE_CEREBRALE: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l02_activite_cerebrale_p06_q3",
           "type": "mcq",
-          "prompt": "Selon le cours, sur quoi repose la consolidation d'un souvenir dans la mémoire à long terme ?",
+          "prompt": "Sur quoi repose la consolidation d'un souvenir dans la mémoire à long terme ?",
           "options": [
             "Sur la mise en place de nouveaux circuits de neurones et la fabrication de protéines spécifiques",
             "Sur la sécrétion d'adrénaline",

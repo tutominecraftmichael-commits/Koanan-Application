@@ -1,6 +1,6 @@
 // ============================================================================
 // MODULE OFFICIEL : CHIMIE 2de A (PHYSIQUE-CHIMIE)
-// Ministère de l'Éducation Nationale et de l'Alphabétisation (MENA - Côte d'Ivoire)
+// Programme structuré KONAN
 // Thème 3 : La matière et ses transformations
 // Leçon 3 : Classification périodique des éléments chimiques
 // Leçon 4 : Ions et molécules
@@ -187,7 +187,7 @@ Dans toute transformation chimique normale, les éléments chimiques présents d
         {
           name: "Définition officielle de l'élément chimique",
           formula: "Élément = entité commune à un corps simple et à tous ses composés",
-          note: "Définition universelle du programme officiel MENA."
+          note: "Définition fondamentale."
         },
         {
           name: 'Conservation des éléments',
@@ -1033,7 +1033,7 @@ export const chimie2deAClassificationPeriodiqueChapter: CurriculumChapter = {
         },
       ],
       keyRule:
-        "Règle d'or MENA : Pour situer un élément dans le tableau, écris d'abord sa formule électronique. Le nombre de couches donne la période (ligne) et le nombre d'électrons sur la dernière couche donne la colonne (groupe).",
+        "Règle d'or : Pour situer un élément dans le tableau, écris d'abord sa formule électronique. Le nombre de couches donne la période (ligne) et le nombre d'électrons sur la dernière couche donne la colonne (groupe).",
       workedExample: {
         title: "Situation d'évaluation officielle : Localiser le Soufre S (Z = 16) et le Chlore Cl (Z = 17)",
         statement: "Écrire la formule électronique du soufre (Z = 16) et du chlore (Z = 17), puis déterminer leur ligne et leur colonne dans le tableau simplifié.",
@@ -1345,7 +1345,7 @@ export const chimie2deAClassificationPeriodiqueChapter: CurriculumChapter = {
         },
       ],
       keyRule:
-        "Vocabulaire officiel MENA : 'Halogène' signifie étymologiquement 'générateur de sel'. 'Gaz noble' ou 'gaz rare' traduit l'inertie chimique liée à une couche de valence saturée d'un octet d'électrons.",
+        "Vocabulaire essentiel : 'Halogène' signifie étymologiquement 'générateur de sel'. 'Gaz noble' ou 'gaz rare' traduit l'inertie chimique liée à une couche de valence saturée d'un octet d'électrons.",
       workedExample: {
         title: "Situation d'évaluation officielle : L'élément dans le dentifrice (Z = 9)",
         statement: "Le principe actif de certains dentifrices contient un élément X de numéro atomique Z = 9. Déterminer sa formule électronique, sa position, son nom et sa famille.",
@@ -2163,7 +2163,7 @@ export const chimie2deAMoleEtGrandeursMolairesChapter: CurriculumChapter = {
         "Elle s'exprime en grammes par mole, notée g/mol ou g·mol⁻¹.\n\n" +
         "2. Masse molaire atomique :\n" +
         "C'est la masse d'une mole d'atomes de l'élément considéré. Elle est inscrite dans chaque case de la classification périodique.\n" +
-        "Valeurs usuelles officielles MENA :\n" +
+        "Valeurs usuelles de référence :\n" +
         "- Hydrogène : M(H) = 1 g/mol\n" +
         "- Carbone : M(C) = 12 g/mol\n" +
         "- Azote : M(N) = 14 g/mol\n" +
@@ -2379,7 +2379,7 @@ export const chimie2deAMoleEtGrandeursMolairesChapter: CurriculumChapter = {
       keyRule:
         "Attention aux conversions de volume : 1 L = 1 dm³ = 1 000 cm³ = 1 000 mL. Donc pour convertir des cm³ ou mL en litres, divise par 1 000 (ex : 44,8 cm³ = 0,0448 L).",
       workedExample: {
-        title: "Situation officielle MENA : Volume de dioxygène recueilli à l'électrolyse",
+        title: "Situation d'application : Volume de dioxygène recueilli à l'électrolyse",
         statement: "Lors d'une électrolyse de l'eau, on recueille V = 44,8 cm³ de dioxygène O₂ dans les CNTP (Vm = 22,4 L/mol). Calculer la quantité de matière n(O₂) puis sa masse.",
         methodSteps: [
           "Étape 1 : Convertir le volume en litres : V = 44,8 cm³ = 44,8 × 10⁻³ L = 0,0448 L.",
@@ -2857,7 +2857,7 @@ Exemple : Combustion complète du propane gazeux : C₃H₈ (gaz) + 5 O₂ (gaz)
       conceptExplanation:
 `Dans l'industrie chimique, maîtriser les bilans stœchiométriques permet d'éviter les pertes de réactifs coûteux et de calculer avec précision le rendement d'une synthèse.
 
-1. La réaction d'aluminothermie (Situation d'évaluation officielle MENA) :
+1. La réaction d'aluminothermie :
 L'aluminothermie est un procédé spectaculaire utilisé pour souder les rails de chemin de fer. On mélange de la rouille (oxyde de fer III Fe₂O₃) et de la poudre d'aluminium (Al) :
   Fe₂O₃ + 2 Al -> 2 Fe + Al₂O₃
 Cette réaction dégage une chaleur si intense que le fer produit est obtenu à l'état liquide incandescent (environ 2 000 °C) !
@@ -3380,7 +3380,7 @@ En associant les deux demi-équations :
   2 H₂O + 2 (Na⁺ + Cl⁻) -> H₂ + Cl₂ + 2 (Na⁺ + OH⁻)
 Produits formés : du dihydrogène H₂, du dichlore Cl₂ et une solution concentrée d'hydroxyde de sodium (soude NaOH) !
 
-4. Applications industrielles majeures de l'électrolyse (Programme officiel MENA) :
+4. Applications industrielles majeures de l'électrolyse :
 - Industrie savonnière : la soude caustique (NaOH) produite est la matière première indispensable pour fabriquer le savon à partir d'huiles végétales.
 - Protection des métaux contre la corrosion : l'électrozingage consiste à recouvrir le fer d'une fine couche de zinc protecteur (le fer est placé à la cathode).
 - Décoration et orfèvrerie : argenture (dépôt d'argent sur des couverts en laiton), dorure de bijoux et chromage de pièces automobiles.
@@ -3924,7 +3924,7 @@ Cette technique analytique rapide est également le principe utilisé pour produ
       keyRule:
         "Différence cruciale d'examen : AgCl et BaSO₄ sont tous les deux des précipités blancs ! Pour les distinguer : le précipité de chlorure d'argent AgCl noircit rapidement à la lumière, tandis que le précipité de sulfate de baryum BaSO₄ reste parfaitement blanc et inaltérable.",
       workedExample: {
-        title: "Situation officielle MENA : TP d'identification d'une eau minérale",
+        title: "Situation d'application : TP d'identification d'une eau minérale",
         statement: "Sur une eau minérale, on effectue 2 tests : 1. L'addition de Ba²⁺ donne un précipité blanc. 2. L'addition d'acide provoque un dégagement qui trouble l'eau de chaux. Quels anions sont présents ?",
         methodSteps: [
           "Étape 1 : Le test au baryum Ba²⁺ donnant un précipité blanc caractérise l'ion sulfate SO₄²⁻ (Ba²⁺ + SO₄²⁻ -> BaSO₄).",

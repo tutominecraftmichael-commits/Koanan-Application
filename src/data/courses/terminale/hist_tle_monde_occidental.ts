@@ -518,7 +518,7 @@ export const HIST_TLE_T3_L01_MONDE_OCCIDENTAL: CurriculumChapter = {
           "stepTitle": "1689 ou 1690 ?",
           "stepTheme": "1689 ou 1690 ?",
           "stepBadge": "1689 ou 1690 ?",
-          "paragraphText": "Le PDF parle d'une « déclaration des droits de 1690 (John Locke) ».\nPrécision : la Déclaration des droits (Bill of Rights) date de 1689 ; c'est le Traité du gouvernement civil de John Locke qui paraît en 1690.\nPour Locke, la souveraineté appartient au peuple, pas au roi.",
+          "paragraphText": "Attention aux dates concernant la Déclaration des droits et John Locke (1689 vs 1690).\nPrécision : la Déclaration des droits (Bill of Rights) date de 1689 ; c'est le Traité du gouvernement civil de John Locke qui paraît en 1690.\nPour Locke, la souveraineté appartient au peuple, pas au roi.",
           "exercise": {
             "id": "terminale_hg_histoire_t3_l01_croyances_valeurs_monde_occidental_p03_q2",
             "type": "mcq",
@@ -1418,7 +1418,7 @@ export const HIST_TLE_T3_L01_MONDE_OCCIDENTAL: CurriculumChapter = {
       "order": 7,
       "title": "Entraînement type BAC",
       "summary": "S'entraîner aux consignes sur le monde occidental.",
-      "conceptExplanation": "Consigne 1 : nommer le problème (l'influence de la civilisation occidentale, les limites de la démocratie libérale…).\nConsigne 2 : expliquer avec des faits du cours.\nConsigne 3 : prendre position avec nuance : l'Occident influence fortement le monde, mais d'autres civilisations émergent, et sa démocratie a des limites.",
+      "conceptExplanation": "Consigne 1 : nommer le problème (l'influence de la civilisation occidentale, les limites de la démocratie libérale…).\nConsigne 2 : expliquer avec des faits précis.\nConsigne 3 : prendre position avec nuance : l'Occident influence fortement le monde, mais d'autres civilisations émergent, et sa démocratie a des limites.",
       "keyRule": "Sur l'Occident, une réponse nuancée reconnaît son influence et ses limites.",
       "formulas": [],
       "workedExample": {
@@ -1428,7 +1428,7 @@ export const HIST_TLE_T3_L01_MONDE_OCCIDENTAL: CurriculumChapter = {
           "En partie : téléphones, Internet, vêtements, cinéma et musique occidentaux sont partout.",
           "Mais chaque peuple garde ses cultures, et d'autres puissances (Chine, Inde) influencent à leur tour le monde."
         ],
-        "conclusion": "L'influence occidentale est forte mais pas totale : la conclusion du cours note qu'elle diminue avec l'émergence d'autres sociétés."
+        "conclusion": "L'influence occidentale est forte mais pas totale : elle diminue progressivement avec l'émergence d'autres sociétés."
       },
       "structuredSteps": [
         {
@@ -1479,7 +1479,7 @@ export const HIST_TLE_T3_L01_MONDE_OCCIDENTAL: CurriculumChapter = {
           "stepTitle": "Nuancer l'influence occidentale",
           "stepTheme": "Nuancer l'influence occidentale",
           "stepBadge": "Nuancer l'influence occidentale",
-          "paragraphText": "Arguments de nuance :\n• chaque peuple conserve sa culture et ses croyances ;\n• d'autres sociétés émergent et influencent le monde (Chine, Inde, Corée du Sud) ;\n• la conclusion du cours note que l'Occident influence de moins en moins le reste du monde.",
+          "paragraphText": "Arguments de nuance :\n• chaque peuple conserve sa culture et ses croyances ;\n• d'autres sociétés émergent et influencent le monde (Chine, Inde, Corée du Sud) ;\n• l'Occident influence de moins en moins le reste du monde.",
           "exercise": {
             "id": "terminale_hg_histoire_t3_l01_croyances_valeurs_monde_occidental_p07_q3",
             "type": "mcq",

@@ -10,7 +10,7 @@ export const MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES: CurriculumChapter = {
   summary: "Étude théorique et appliquée des équations différentielles : équations linéaires du premier ordre homogènes y' + ay = 0 et avec second membre y' + ay = b ou g(x), équations linéaires du second ordre y'' + my = 0 (selon le signe de m : m = 0, m < 0 et m > 0), conditions initiales et modélisations interdisciplinaires (loi de refroidissement de Newton, dynamique des populations et oscillateurs harmoniques).",
   officialVolumeHours: 6,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - Mathématiques Terminale D / C",
+  source: "Programme KONAN — Mathématiques Terminale D / C",
   points: [
     {
       id: "pt1_notion_equations_premier_ordre_homogene",
@@ -132,7 +132,7 @@ export const MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES: CurriculumChapter = {
             "Aucune solution si y₀ est négatif"
           ],
           correctAnswerIndex: 0,
-          explanation: "D'après le théorème de Cauchy-Lipschitz (Propriété 3 du programme officiel), pour tout couple (x₀ ; y₀) ∈ ℝ², il existe une unique solution vérifiant la condition initiale y(x₀) = y₀."
+          explanation: "D'après le théorème de Cauchy-Lipschitz (Propriété 3 du programme), pour tout couple (x₀ ; y₀) ∈ ℝ², il existe une unique solution vérifiant la condition initiale y(x₀) = y₀."
         }
       ]
     },
@@ -217,7 +217,7 @@ export const MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES: CurriculumChapter = {
             "A = 0 et B = 1"
           ],
           correctAnswerIndex: 0,
-          explanation: "g'(x) = A e^(-2x) - 2(Ax + B)e^(-2x). Donc g'(x) + 2g(x) = A e^(-2x). Pour que g soit solution de (E), il faut A e^(-2x) = e^(-2x) ⟺ A = 1. La fonction g(x) = (x + 1)e^(-2x) du cours officiel convient parfaitement avec A = 1."
+          explanation: "G'(x) = A e^(-2x) - 2(Ax + B)e^(-2x). Donc g'(x) + 2g(x) = A e^(-2x). Pour que g soit solution de (E), il faut A e^(-2x) = e^(-2x) ⟺ A = 1. La fonction g(x) = (x + 1)e^(-2x) convient parfaitement avec A = 1."
         },
         {
           id: "tle_d_maths_c12_p2_ex4",
@@ -265,7 +265,7 @@ export const MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES: CurriculumChapter = {
       order: 3,
       title: "Équations différentielles linéaires du second ordre y'' + my = 0",
       summary: "Résolution méthodique de l'équation y'' + my = 0 selon le signe du réel m : cas m = 0 (droites affines), cas m < 0 (exponentielles) et cas m > 0 (fonctions trigonométriques), et unicité sous deux conditions initiales.",
-      conceptExplanation: "L'équation différentielle linéaire homogène du second ordre à coefficients constants étudiée en Terminale D est de la forme :\n(E) : y'' + my = 0, où m est un nombre réel fixé.\n\nLa nature et la forme des solutions dépendent exclusivement du SIGNE de m :\n\n1. Premier cas : m = 0\nL'équation devient y'' = 0.\n- La dérivée seconde étant nulle, la dérivée première y' est une fonction constante (y'(x) = a).\n- En intégrant une seconde fois, les solutions sur ℝ sont les fonctions affines :\n  x ⟼ ax + b, avec a ∈ ℝ et b ∈ ℝ.\n\n2. Deuxième cas : m < 0\nComme m est strictement négatif, on peut poser m = -ω², avec ω ∈ ℝ* (ω > 0).\nL'équation s'écrit alors : y'' - ω²y = 0.\n- Propriété :\n  Les solutions sur ℝ de l'équation y'' - ω²y = 0 sont les fonctions de la forme :\n  x ⟼ a · e^(-ωx) + b · e^(ωx), avec a ∈ ℝ et b ∈ ℝ.\n- Exemple du cours officiel : y'' - 4y = 0\n  Ici -ω² = -4 ⟺ ω² = 4 ⟺ ω = 2.\n  Les solutions sont les fonctions : x ⟼ a · e^(-2x) + b · e^(2x) (a, b ∈ ℝ).\n\n3. Troisième cas : m > 0\nComme m est strictement positif, on peut poser m = ω², avec ω ∈ ℝ* (ω > 0).\nL'équation s'écrit alors : y'' + ω²y = 0.\n- Propriété :\n  Les solutions sur ℝ de l'équation y'' + ω²y = 0 sont les fonctions de la forme :\n  x ⟼ a · cos(ωx) + b · sin(ωx), avec a ∈ ℝ et b ∈ ℝ.\n- Exemple du cours officiel : y'' + 4y = 0 ⟺ y'' + 2²y = 0 (ω = 2).\n  Les solutions sont les fonctions : x ⟼ a · cos(2x) + b · sin(2x) (a, b ∈ ℝ).\n- Exemple : y'' + 25y = 0 ⟺ y'' + 5²y = 0 (ω = 5).\n  Les solutions sont les fonctions : x ⟼ a · cos(5x) + b · sin(5x) (a, b ∈ ℝ).\n\n4. Solutions vérifiant des conditions initiales (Propriété fondamentale) :\nPour tout triplet de réels (x₀ ; y₀ ; z₀), l'équation différentielle y'' + my = 0 admet une UNIQUE solution f sur ℝ telle que :\n  f(x₀) = y₀   et   f'(x₀) = z₀.\nPour déterminer les deux constantes réelles a et b, on pose le système formé par f(x₀) = y₀ et f'(x₀) = z₀ en calculant soigneusement la dérivée première f'(x).",
+      conceptExplanation: "L'équation différentielle linéaire homogène du second ordre à coefficients constants étudiée en Terminale D est de la forme :\n(E) : y'' + my = 0, où m est un nombre réel fixé.\n\nLa nature et la forme des solutions dépendent exclusivement du SIGNE de m :\n\n1. Premier cas : m = 0\nL'équation devient y'' = 0.\n- La dérivée seconde étant nulle, la dérivée première y' est une fonction constante (y'(x) = a).\n- En intégrant une seconde fois, les solutions sur ℝ sont les fonctions affines :\n x ⟼ ax + b, avec a ∈ ℝ et b ∈ ℝ.\n\n2. Deuxième cas : m < 0\nComme m est strictement négatif, on peut poser m = -ω², avec ω ∈ ℝ* (ω > 0).\nL'équation s'écrit alors : y'' - ω²y = 0.\n- Propriété :\n Les solutions sur ℝ de l'équation y'' - ω²y = 0 sont les fonctions de la forme :\n x ⟼ a · e^(-ωx) + b · e^(ωx), avec a ∈ ℝ et b ∈ ℝ.\n- Exemple : y'' - 4y = 0\n Ici -ω² = -4 ⟺ ω² = 4 ⟺ ω = 2.\n Les solutions sont les fonctions : x ⟼ a · e^(-2x) + b · e^(2x) (a, b ∈ ℝ).\n\n3. Troisième cas : m > 0\nComme m est strictement positif, on peut poser m = ω², avec ω ∈ ℝ* (ω > 0).\nL'équation s'écrit alors : y'' + ω²y = 0.\n- Propriété :\n Les solutions sur ℝ de l'équation y'' + ω²y = 0 sont les fonctions de la forme :\n x ⟼ a · cos(ωx) + b · sin(ωx), avec a ∈ ℝ et b ∈ ℝ.\n- Exemple : y'' + 4y = 0 ⟺ y'' + 2²y = 0 (ω = 2).\n Les solutions sont les fonctions : x ⟼ a · cos(2x) + b · sin(2x) (a, b ∈ ℝ).\n- Exemple : y'' + 25y = 0 ⟺ y'' + 5²y = 0 (ω = 5).\n Les solutions sont les fonctions : x ⟼ a · cos(5x) + b · sin(5x) (a, b ∈ ℝ).\n\n4. Solutions vérifiant des conditions initiales (Propriété fondamentale) :\nPour tout triplet de réels (x₀ ; y₀ ; z₀), l'équation différentielle y'' + my = 0 admet une UNIQUE solution f sur ℝ telle que :\n f(x₀) = y₀ et f'(x₀) = z₀.\nPour déterminer les deux constantes réelles a et b, on pose le système formé par f(x₀) = y₀ et f'(x₀) = z₀ en calculant soigneusement la dérivée première f'(x).",
       keyRule: "y'' + my = 0 : si m = 0, y = ax + b ; si m = -ω² < 0, y = a e^(-ωx) + b e^(ωx) ; si m = ω² > 0, y = a cos(ωx) + b sin(ωx). Deux conditions initiales (position et dérivée) fixent de manière unique le couple (a, b).",
       formulas: [
         {

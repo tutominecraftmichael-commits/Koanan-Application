@@ -338,12 +338,12 @@ export const CHIMIE_1RE_CD_L03_ALCENES_ALCYNES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Nommer un alcène et un alcyne ramifiés (Exemples et Ex 1 p. 9)',
+        title: 'Nommer un alcène et un alcyne ramifiés',
         statement:
           'Donne le nom IUPAC des molécules suivantes : (A) $\\mathrm{CH_3-CH(CH_3)-CH=CH-CH(C_2H_5)-CH_3}$ et (B) $\\mathrm{CH_3-C\\equiv C-CH(CH_3)-CH_2-CH_2-CH_3}$.',
         methodSteps: [
           '1) Pour (A) : en dépliant le groupe -C₂H₅ terminal à droite, la chaîne la plus longue contenant C=C compte 7 carbones (heptène) — attention : vérifions la chaîne réelle ! De gauche à droite : C1(CH₃)–C2H(CH₃)–C3H=C4H–C5H(CH₂CH₃)–C6H₃ donne 6 C jusqu’à C6, ou 7 C en continuant sur le C₂H₅ (-CH₂-CH₃) ! Numérotons depuis la droite : C1(CH₃)–C2H₂–C3H(CH₃)–C4H=C5H–C6H(CH₃)–C7H₃ → C=C entre 4 et 5 ; depuis la gauche : C1–C2–C3=C4–C5–C6–C7 → C=C entre 3 et 4 (plus petit !). Donc 2,5-diméthylhept-3-ène.',
-          '2) Pour la molécule du cours CH₃-CH₂-CH(CH₃)-CH=CH-CH₂-CH₂-CH₃ (8 C) : en numérotant depuis la gauche, C=C est en 4-5 et le méthyle en 3 ; depuis la droite, C=C est en 4-5 (même indice) mais le méthyle serait en 6. On choisit donc la numérotation donnant le plus petit indice au méthyle : 3-méthyloct-4-ène.',
+          '2) Pour la molécule CH₃-CH₂-CH(CH₃)-CH=CH-CH₂-CH₂-CH₃ (8 C) : en numérotant depuis la gauche, C=C est en 4-5 et le méthyle en 3 ; depuis la droite, C=C est en 4-5 (même indice) mais le méthyle serait en 6. On choisit donc la numérotation donnant le plus petit indice au méthyle : 3-méthyloct-4-ène.',
           '3) Pour (B) : chaîne à 7 carbones (heptyne). Depuis la gauche, C≡C est en 2 (contre 5 depuis la droite) et le méthyle est en 4 → 4-méthylhept-2-yne.',
         ],
         conclusion:
@@ -601,7 +601,7 @@ export const CHIMIE_1RE_CD_L03_ALCENES_ALCYNES: CurriculumChapter = {
       summary:
         'Comprendre l’origine de la stéréoisomérie Z/E (absence de rotation libre autour de C=C), vérifier la condition d’existence et nommer (Z) ou (E) un alcène.',
       conceptExplanation:
-        "Contrairement à une liaison simple $\\mathrm{C-C}$, la **double liaison $\\mathrm{C=C}$ ne permet pas la libre rotation** d’un carbone par rapport à l’autre : les 4 groupes liés aux deux carbones de $\\mathrm{C=C}$ sont bloqués dans un même plan.\n\n- **Condition nécessaire et suffisante d’existence** : un alcène $\\mathrm{A_1(B_1)C=C(A_2)B_2}$ présente deux stéréoisomères $(Z)$ et $(E)$ **si et seulement si chacun des deux carbones de la double liaison porte deux atomes ou groupes d’atomes différents** ($A_1 \\neq B_1$ **et** $A_2 \\neq B_2$).\n- **Stéréoisomère $(Z)$** (de l’allemand *zusammen* = ensemble ; dit aussi *cis* lorsque deux groupes identiques sont concernés) : les deux atomes d’hydrogène (ou les deux groupes principaux / substituants prioritaires) sont situés **du même côté** de l’axe de la double liaison $\\mathrm{C=C}$. Exemple : $(Z)\\text{-but-}2\\text{-ène}$ et $(Z)\\text{-hex-}2\\text{-ène}$.\n- **Stéréoisomère $(E)$** (de l’allemand *entgegen* = opposé ; dit aussi *trans*) : les deux atomes d’hydrogène (ou les deux groupes principaux) sont situés **de part et d’autre** de l’axe de la double liaison $\\mathrm{C=C}$. Exemple : $(E)\\text{-but-}2\\text{-ène}$ et $(E)\\text{-hex-}2\\text{-ène}$.\n- **Contre-exemples fondamentaux (Exercice 2 p. 9)** : le `but-1-ène` ($\\mathrm{CH_2=CH-CH_2-CH_3}$) et le `2-méthylpropène` ($\\mathrm{CH_2=C(CH_3)_2}$) **n’ont pas d’isomérie Z/E** car le premier carbone porte deux atomes H identiques.",
+        "Contrairement à une liaison simple $\\mathrm{C-C}$, la **double liaison $\\mathrm{C=C}$ ne permet pas la libre rotation** d’un carbone par rapport à l’autre : les 4 groupes liés aux deux carbones de $\\mathrm{C=C}$ sont bloqués dans un même plan.\n\n- **Condition nécessaire et suffisante d’existence** : un alcène $\\mathrm{A_1(B_1)C=C(A_2)B_2}$ présente deux stéréoisomères $(Z)$ et $(E)$ **si et seulement si chacun des deux carbones de la double liaison porte deux atomes ou groupes d’atomes différents** ($A_1 \\neq B_1$ **et** $A_2 \\neq B_2$).\n- **Stéréoisomère $(Z)$** (de l’allemand *zusammen* = ensemble ; dit aussi *cis* lorsque deux groupes identiques sont concernés) : les deux atomes d’hydrogène (ou les deux groupes principaux / substituants prioritaires) sont situés **du même côté** de l’axe de la double liaison $\\mathrm{C=C}$. Exemple : $(Z)\\text{-but-}2\\text{-ène}$ et $(Z)\\text{-hex-}2\\text{-ène}$.\n- **Stéréoisomère $(E)$** (de l’allemand *entgegen* = opposé ; dit aussi *trans*) : les deux atomes d’hydrogène (ou les deux groupes principaux) sont situés **de part et d’autre** de l’axe de la double liaison $\\mathrm{C=C}$. Exemple : $(E)\\text{-but-}2\\text{-ène}$ et $(E)\\text{-hex-}2\\text{-ène}$.\n- **Contre-exemples fondamentaux** : le `but-1-ène` ($\\mathrm{CH_2=CH-CH_2-CH_3}$) et le `2-méthylpropène` ($\\mathrm{CH_2=C(CH_3)_2}$) **n’ont pas d’isomérie Z/E** car le premier carbone porte deux atomes H identiques.",
       keyRule:
         'Un alcène possède une stéréoisomérie Z/E ssi chacun des deux carbones de C=C porte deux substituants différents ; (Z) = groupes principaux du même côté, (E) = de part et d’autre de l’axe C=C.',
       formulas: [
@@ -612,7 +612,7 @@ export const CHIMIE_1RE_CD_L03_ALCENES_ALCYNES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Tester l’existence de stéréoisomères Z/E parmi les isomères de C₄H₈ (Ex 2 p. 9)',
+        title: 'Tester l’existence de stéréoisomères Z/E parmi les isomères de C₄H₈',
         statement:
           'Parmi les 3 alcènes isomères de formule brute $\\mathrm{C_4H_8}$ (`but-1-ène`, `but-2-ène`, `2-méthylpropène`), lesquels donnent une stéréoisomérie $(Z)/(E)$ ?',
         methodSteps: [
@@ -1181,7 +1181,7 @@ export const CHIMIE_1RE_CD_L03_ALCENES_ALCYNES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Résoudre un schéma réactionnel et un dosage gravimétrique (Ex 4 & Ex 5 p. 10–11)',
+        title: 'Résoudre un schéma réactionnel et un dosage gravimétrique',
         statement:
           'Un alcyne B ($M_B = 26\\text{ g/mol}$) subit une hydrogénation sur Pd désactivé pour donner A. A réagit avec $\\mathrm{HCl}$ pour donner C et avec $\\mathrm{H_2O}$ pour donner E ; B hydraté en présence de $\\mathrm{Hg^{2+}}$ donne D. De plus, on hydrogène complètement $20\\text{ cm}^3$ de B ($V_m = 22{,}4\\text{ L/mol}$) pour obtenir de l’éthane. Calcule la masse d’éthane obtenue et identifie A, B, C, D, E.',
         methodSteps: [
@@ -1431,7 +1431,7 @@ export const CHIMIE_1RE_CD_L03_ALCENES_ALCYNES: CurriculumChapter = {
       summary:
         'Définir la polyaddition (monomère, motif, polymère, degré de polymérisation n), connaître PE, PVC et PS ainsi que leurs usages, et situer les enjeux des polymères biodégradables.',
       conceptExplanation:
-        "Une **polymérisation (polyaddition)** est une réaction d’addition répétée d’un très grand nombre $n$ de molécules insaturées identiques appelées **monomères** pour former une macromolécule appelée **polymère** (sans élimination de sous-produit) :\n\n$$n\\;\\mathrm{CH_2=CH-X} \\longrightarrow \\big(-\\mathrm{CH_2-CHX}-\\big)_n$$\n\n- **Motif** : unité structurale $-\\mathrm{CH_2-CHX}-$ qui se répète $n$ fois dans la chaîne macromoléculaire ; sa masse molaire $M_{\\text{motif}}$ est égale à celle du monomère $M_{\\text{monomère}}$.\n- **Degré (ou indice) de polymérisation $n$** : nombre moyen de motifs par chaîne de polymère, donné par :\n  $$n = \\frac{M_{\\text{polymère}}}{M_{\\text{motif}}}$$\n- **Principaux polymères dérivés d’alcènes** :\n  1. **Polyéthylène (`PE`)** : monomère **éthylène** ($\\mathrm{CH_2=CH_2}$, $M = 28\\text{ g/mol}$), motif $-\\mathrm{CH_2-CH_2}-$ (sachets, emballages, jouets, bouteilles).\n  2. **Polychlorure de vinyle (`PVC`)** : monomère **chlorure de vinyle** ou chloroéthylène ($\\mathrm{CH_2=CHCl}$, $M = 62{,}5\\text{ g/mol}$), motif $-\\mathrm{CH_2-CHCl}-$ (tuyauterie, gaines, profilés).\n  3. **Polystyrène (`PS`)** : monomère **styrène** ($\\mathrm{C_6H_5-CH=CH_2}$, $M = 104\\text{ g/mol}$), motif $-\\mathrm{CH(C_6H_5)-CH_2}-$ (emballages anti-chocs, pots de yaourt).\n- **Environnement (Documentation p. 12)** : la plupart des matières plastiques issues du pétrole sont **non biodégradables** et s’accumulent dans les sols et les océans ; d’où la nécessité du **recyclage** et du développement de **polymères biodégradables** (biomatériaux, par ex. à base d’amidon).",
+        "Une **polymérisation (polyaddition)** est une réaction d’addition répétée d’un très grand nombre $n$ de molécules insaturées identiques appelées **monomères** pour former une macromolécule appelée **polymère** (sans élimination de sous-produit) :\n\n$$n\\;\\mathrm{CH_2=CH-X} \\longrightarrow \\big(-\\mathrm{CH_2-CHX}-\\big)_n$$\n\n- **Motif** : unité structurale $-\\mathrm{CH_2-CHX}-$ qui se répète $n$ fois dans la chaîne macromoléculaire ; sa masse molaire $M_{\\text{motif}}$ est égale à celle du monomère $M_{\\text{monomère}}$.\n- **Degré (ou indice) de polymérisation $n$** : nombre moyen de motifs par chaîne de polymère, donné par :\n $$n = \\frac{M_{\\text{polymère}}}{M_{\\text{motif}}}$$\n- **Principaux polymères dérivés d’alcènes** :\n 1. **Polyéthylène (`PE`)** : monomère **éthylène** ($\\mathrm{CH_2=CH_2}$, $M = 28\\text{ g/mol}$), motif $-\\mathrm{CH_2-CH_2}-$ (sachets, emballages, jouets, bouteilles).\n 2. **Polychlorure de vinyle (`PVC`)** : monomère **chlorure de vinyle** ou chloroéthylène ($\\mathrm{CH_2=CHCl}$, $M = 62{,}5\\text{ g/mol}$), motif $-\\mathrm{CH_2-CHCl}-$ (tuyauterie, gaines, profilés).\n 3. **Polystyrène (`PS`)** : monomère **styrène** ($\\mathrm{C_6H_5-CH=CH_2}$, $M = 104\\text{ g/mol}$), motif $-\\mathrm{CH(C_6H_5)-CH_2}-$ (emballages anti-chocs, pots de yaourt).\n- **Environnement** : la plupart des matières plastiques issues du pétrole sont **non biodégradables** et s’accumulent dans les sols et les océans ; d’où la nécessité du **recyclage** et du développement de **polymères biodégradables** (biomatériaux, par ex. à base d’amidon).",
       keyRule:
         'En polyaddition, la masse molaire du motif égale celle du monomère ; l’indice de polymérisation vaut n = M(polymère) / M(motif). Les polymères majeurs sont PE (C₂H₄), PVC (CH₂=CHCl) et PS (C₆H₅–CH=CH₂).',
       formulas: [
@@ -1442,7 +1442,7 @@ export const CHIMIE_1RE_CD_L03_ALCENES_ALCYNES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Calculer l’indice de polymérisation d’un polymère halogéné (Ex 3 p. 10)',
+        title: 'Calculer l’indice de polymérisation d’un polymère halogéné',
         statement:
           'On polymérise le $1,1$-dichloroéthylène ($\\mathrm{CH_2=CCl_2}$) pour obtenir le polychlorure de vinylidène (PVDC) de masse molaire moyenne $M_{\\text{polymère}} = 85\\text{ kg/mol}$. Écris la formule du motif et calcule le degré de polymérisation $n$ ($M(\\mathrm{C})=12$, $M(\\mathrm{H})=1$, $M(\\mathrm{Cl})=35{,}5\\text{ g/mol}$).',
         methodSteps: [

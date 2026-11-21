@@ -1,6 +1,6 @@
 // ============================================================================
 // MODULE OFFICIEL : SVT 2de C (SCIENCES DE LA VIE ET DE LA TERRE)
-// Ministère de l'Éducation Nationale et de l'Alphabétisation (MENA - Côte d'Ivoire)
+// Programme structuré KONAN
 //
 // THÈME 1 : GÉOLOGIE DE LA CÔTE D'IVOIRE ET DEVENIR DES ROCHES (Leçons 1 à 5)
 // - Leçon 1 : La structure géologique de la Côte d'Ivoire (4h)
@@ -55,7 +55,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "note": "Le socle précambrien domine quasi-totalement le territoire."
         }
       ],
-      "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+      "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
       "workedExample": {
         "title": "Identification sur carte muette",
         "statement": "Une carte présente deux zones A (97,5 %) et B (2,5 % au Sud). Nommer A et B.",
@@ -64,7 +64,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Identifier la bande littorale de 2,5 % au Sud : c'est le bassin sédimentaire côtier.",
           "Étape 3 : Conclure sur la qualification de pays de socle."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -182,10 +182,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Proportion du socle cristallin",
             "formula": "Socle cristallin : 97,5 % | Bassin côtier : 2,5 %",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens 97,5 % pour le socle cristallin !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex1",
             "type": "mcq",
@@ -209,10 +209,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Localisation géographique du bassin sédimentaire",
             "formula": "Bassin côtier : Bande littorale Sud (Fresco à Assinie)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le bassin sédimentaire est uniquement au Sud en bordure de mer !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex2",
             "type": "mcq",
@@ -236,10 +236,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Appartenance au craton ouest-africain",
             "formula": "Territoire ivoirien : Craton Ouest-Africain (Dorsale de Man)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens le terme officiel : Craton Ouest-Africain (Dorsale de Man) !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex3",
             "type": "mcq",
@@ -263,10 +263,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Différence d'âge entre socle et bassin",
             "formula": "Socle précambrien (4 000 - 540 Ma) vs Bassin côtier (135 - 0 Ma)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le socle est très ancien (Précambrien), le bassin est récent (Secondaire à Quaternaire) !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex4",
             "type": "mcq",
@@ -290,10 +290,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les deux domaines du socle cristallin",
             "formula": "Socle précambrien = Domaine Archéen (Ouest) + Domaine Protérozoïque (Est)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens les 2 domaines : Archéen à l'Ouest, Protérozoïque à l'Est !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex5",
             "type": "mcq",
@@ -317,10 +317,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La faille de Sassandra, frontière du socle",
             "formula": "Domaine Archéen (Ouest) | Faille de Sassandra | Domaine Protérozoïque (Est)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille de Sassandra est Nord-Sud et sépare l'Ouest de l'Est !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex6",
             "type": "mcq",
@@ -344,10 +344,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Pétrographie dominante du socle",
             "formula": "Roches du socle = Roches magmatiques + Roches métamorphiques",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Socle cristallin = roches magmatiques + roches métamorphiques !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex7",
             "type": "mcq",
@@ -371,10 +371,10 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La Côte d'Ivoire, pays de socle",
             "formula": "Côte d'Ivoire : Pays de socle (97,5 % de socle précambrien)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La Côte d'Ivoire est un pays de socle car le socle occupe 97,5 % du territoire !",
-          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "keyRule": "Chiffres clés à retenir : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
           "exercise": {
             "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex8",
             "type": "mcq",
@@ -413,7 +413,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Rappeler la fourchette chronologique officielle : 4 000 à 2 500 Ma.",
           "Étape 3 : Conclure sur l'appartenance au Précambrien inférieur (Archéen)."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -518,7 +518,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
             "Le domaine Guinéen côtier"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Dans tous les manuels de SVT du MENA, le domaine archéen est nommé « domaine de Kéniéma-Man »."
+          "explanation": "Dans tous les manuels de SVT du programme, le domaine archéen est nommé « domaine de Kéniéma-Man »."
         }
       ],
       "structuredSteps": [
@@ -531,7 +531,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Localisation du domaine Archéen à l'Ouest",
             "formula": "Domaine Archéen = Région Ouest (Man, Danané, Guiglo, Tabou)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Archéen = Ouest = Man, Danané et Guiglo !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -558,7 +558,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Âge absolu du domaine Archéen",
             "formula": "Âge Archéen : 4 000 à 2 500 Ma (Précambrien inférieur)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens 4 000 à 2 500 Ma pour l'Archéen !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -585,7 +585,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les orogenèses léonnienne et libérienne",
             "formula": "Orogenèse léonnienne (3 000 Ma) -> Orogenèse libérienne (2 600 Ma)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens les 2 orogenèses : Léonnien puis Libérien !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -612,7 +612,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Morphologie et relief du domaine Archéen",
             "formula": "Domaine Archéen : Relief montagneux culminant (Mont Tonkoui, Monts Nimba)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Domaine Archéen = Région des dix-huit montagnes de Man !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -639,7 +639,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Métamorphisme catazonal de haut degré",
             "formula": "Métamorphisme archéen : Catazonal (Hautes T et P -> Faciès granulite)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Archéen = métamorphisme de haut degré (catazonal / granulite) !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -666,7 +666,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Cratonisation et stabilité du bloc de Man",
             "formula": "Cratonisation libérienne (2 500 Ma) -> Stabilité continentale définitive",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le domaine archéen est stable depuis 2 500 millions d'années !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -693,7 +693,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Man, cœur géologique du domaine Archéen",
             "formula": "Ville de Man = Cœur du domaine Archéen de Côte d'Ivoire",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Ville de Man = Métropole de l'Archéen !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -720,7 +720,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Appellation officielle : domaine de Kéniéma-Man",
             "formula": "Domaine Archéen = Domaine de Kéniéma-Man",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Domaine Archéen = Domaine de Kéniéma-Man !",
           "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
@@ -735,7 +735,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
               "Le domaine Guinéen côtier"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Dans tous les manuels de SVT du MENA, le domaine archéen est nommé « domaine de Kéniéma-Man »."
+            "explanation": "Dans tous les manuels de SVT du programme, le domaine archéen est nommé « domaine de Kéniéma-Man »."
           }
         }
       ]
@@ -762,7 +762,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Conclure sur la nature pétrographique : charnockite.",
           "Étape 3 : Attribuer au domaine Archéen de Kéniéma-Man."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -880,7 +880,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La charnockite, roche archéenne emblématique",
             "formula": "Charnockite = Granitoïde à hypersthène formé en faciès granulite",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Charnockite = roche magmatique caractéristique de Man !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -907,7 +907,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les itabirites ou quartzites ferrugineux",
             "formula": "Itabirites = Quartzites ferrugineux rubanés (Quartz + Oxydes de Fer)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Itabirites = quartzites ferrugineux = gisements de fer de Man et Nimba !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -934,7 +934,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "L'hypersthène, marqueur minéralogique",
             "formula": "Minéral repère archéen : Hypersthène (Pyroxène de haute T)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Hypersthène = minéral clé de la charnockite de Man !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -961,7 +961,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Gisements de fer du Mont Klahoyo et du Mont Gao",
             "formula": "Gisements de Klahoyo et Gao : Itabirites archéennes de Man",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Fer de Klahoyo et Gao = itabirites archéennes !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -988,7 +988,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le faciès des granulites",
             "formula": "Faciès granulite : Température > 700 °C et Pression > 8 kbar",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Archéen = Faciès granulite (températures et pressions extrêmes) !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -1015,7 +1015,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les migmatites et l'anatexie",
             "formula": "Anatexie crustale -> Migmatite (Fusion partielle de la roche)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Migmatite = roche issue de la fusion partielle en profondeur !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -1042,7 +1042,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Texture granoblastique des roches profondes",
             "formula": "Roches catazonales -> Texture granoblastique polygonale",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Granulites et charnockites = texture granoblastique polygonale !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -1069,7 +1069,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Propriétés mécaniques des roches archéennes",
             "formula": "Charnockite & Granite archéen -> Haute résistance mécanique",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Charnockite et granite = roches très dures et compactes !",
           "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
@@ -1112,7 +1112,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 3 : Noter le passage au domaine oriental : Protérozoïque d'âge Précambrien supérieur (2 500 à 540 Ma).",
           "Étape 4 : Conclure que la faille fait passer d'un socle très ancien à un socle plus jeune de plus d'un milliard d'années."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -1230,7 +1230,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Orientation subméridienne Nord-Sud",
             "formula": "Direction de la faille de Sassandra : Subméridienne (Nord-Sud)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Faille de Sassandra = direction Nord-Sud (subméridienne) !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1257,7 +1257,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Rôle de frontière et de suture tectonique",
             "formula": "Faille de Sassandra = Frontière tectonique majeure du socle ivoirien",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille sépare l'Archéen à l'Ouest du Protérozoïque à l'Est !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1284,7 +1284,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Contraste d'âge de part et d'autre de la faille",
             "formula": "Ouest : Archéen (> 2 500 Ma) | Est : Protérozoïque (< 2 500 Ma)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : L'Ouest (Archéen) est plus vieux que l'Est (Protérozoïque) !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1311,7 +1311,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Guidage hydrographique du fleuve Sassandra",
             "formula": "Réseau hydrographique : Le fleuve Sassandra est guidé par la faille éponyme",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le cours du fleuve Sassandra est guidé par la faille de Sassandra !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1338,7 +1338,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Mylonitisation et roches broyées",
             "formula": "Zone de cisaillement ductile -> Formation de mylonites",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Mylonite = roche broyée et cisaillée le long de la faille !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1365,7 +1365,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Aboutissement littoral à Sassandra",
             "formula": "Terminaison méridionale : Ville littorale de Sassandra",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille aboutit au littoral au niveau de la ville de Sassandra !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1392,7 +1392,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Rejeu ductile lors de l'Éburnéen",
             "formula": "Orogenèse éburnéenne -> Rejeu en décrochement ductile de la faille de Sassandra",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille de Sassandra a rejoué en cisaillement lors du cycle éburnéen !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1419,7 +1419,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Manifestation sur le terrain",
             "formula": "Indice de terrain : Foliations mylonitiques verticales d'orientation Nord-Sud",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Sur le terrain : couloir de roches cisaillées (mylonites) d'orientation Nord-Sud !",
           "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
@@ -1461,7 +1461,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Rappeler que toute la zone à l'Est de la faille appartient au domaine Protérozoïque (Birrimien / Baoulé-Mossi).",
           "Étape 3 : Conclure que ces villes reposent sur le socle protérozoïque façonné par l'orogenèse éburnéenne."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -1579,7 +1579,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Étendue géographique du domaine Protérozoïque",
             "formula": "Domaine Protérozoïque : Centre + Nord + Est (2/3 du socle)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Protérozoïque = Centre, Nord et Est de la Côte d'Ivoire !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1606,7 +1606,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Âge absolu du domaine Protérozoïque",
             "formula": "Âge Protérozoïque : 2 500 à 540 Ma (Précambrien supérieur)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens 2 500 à 540 Ma pour le Protérozoïque !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1633,7 +1633,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "L'orogenèse éburnéenne (2 100 Ma)",
             "formula": "Cycle orogénique éburnéen (2 100 Ma) -> Structuration du Birrimien",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : L'Éburnéen (2 100 Ma) a façonné tout le Protérozoïque ivoirien !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1660,7 +1660,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Appellation Baoulé-Mossi / Birrimien",
             "formula": "Domaine Protérozoïque = Domaine Baoulé-Mossi = Birrimien",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Protérozoïque = Domaine Baoulé-Mossi ou Birrimien !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1687,7 +1687,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Villes du domaine Protérozoïque",
             "formula": "Villes birrimiennes : Bouaké, Yamoussoukro, Korhogo, Bondoukou, Daloa",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Bouaké, Yamoussoukro, Korhogo = Domaine Protérozoïque !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1714,7 +1714,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Relief de plateaux et pénéplaines birrimiennes",
             "formula": "Relief Protérozoïque : Pénéplaines ondulées + Inselbergs granitiques",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Protérozoïque = plateaux ondulés et inselbergs (relief moins abrupt que Man) !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1741,7 +1741,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Métamorphisme épizonal à mésozonal",
             "formula": "Métamorphisme birrimien : Épizone à Mésozone (Faciès schistes verts)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Birrimien = métamorphisme épizonal (schistes verts) moins poussé que l'Archéen !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1768,7 +1768,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Origine du nom du mégacycle Éburnéen",
             "formula": "Cycle Éburnéen : Défini en Côte d'Ivoire (Costa Eburnea)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Éburnéen vient de Costa Eburnea (Côte d'Ivoire en latin) !",
           "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
@@ -1810,7 +1810,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Rappeler que les minéralisations aurifères hydrothermales se sont mises en place lors de l'Éburnéen (2 100 Ma).",
           "Étape 3 : Conclure que les ceintures de roches vertes birrimiennes renferment la quasi-totalité des filons d'or ivoiriens."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -1928,7 +1928,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les schistes birrimiens",
             "formula": "Sillons birrimiens : Schistes argileux métamorphisés (Micaschistes)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Schistes birrimiens = roches métamorphiques feuilletées du Protérozoïque !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -1955,7 +1955,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les ceintures de roches vertes (greenstone belts)",
             "formula": "Ceintures de roches vertes : Métavulcanites + Schistes (Minéraux verts : Chlorite, Épidote)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Ceintures de roches vertes = anciennes roches volcaniques et sédimentaires birrimiennes !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -1982,7 +1982,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Métallogénie de l'or birrimien",
             "formula": "Birrimien ivoirien -> Principale province aurifère d'Afrique de l'Ouest",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Birrimien = domaine de prédilection des mines d'or ivoiriennes !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -2009,7 +2009,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Granites concordants vs discordants",
             "formula": "Granites concordants (Syntectoniques) vs Granites discordants (Tarditectoniques)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Concordants = parallèles aux couches ; Discordants = recoupent les couches !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -2036,7 +2036,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Mines d'or industrielles birrimiennes",
             "formula": "Mines d'or en activité : Tongon, Yaouré, Bonikro, Agbaou, Sissingué",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Tongon, Yaouré et Bonikro = grandes mines d'or du Birrimien !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -2063,7 +2063,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Les filons de quartz aurifère",
             "formula": "Vecteur aurifère : Filons de quartz hydrothermal (SiO2) à or natif",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le quartz en filon est la roche mère porteuse de l'or !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -2090,7 +2090,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Gisements de manganèse birrimien",
             "formula": "Métallogénie birrimienne complémentaire : Gisements de manganèse (Mn)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Manganèse de Lauzoua et Bondoukou = ressource métallique birrimienne !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -2117,7 +2117,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Auréoles de métamorphisme de contact",
             "formula": "Intrusion magmatique chaude -> Auréole de contact (Cornéennes)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Intrusion de granite = métamorphisme de contact (cornéennes) !",
           "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
@@ -2159,7 +2159,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Rappeler l'âge récent Crétacé à Quaternaire (135 Ma à nos jours).",
           "Étape 3 : Noter que ce bassin n'a jamais été enfoui en profondeur ni soumis à une orogenèse compressive : les couches sont restées meubles ou diagénétiques."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -2277,7 +2277,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Limites géographiques du bassin côtier",
             "formula": "Bassin côtier ivoirien : S'étend de Fresco (Ouest) à Assinie (Est)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Bassin côtier = de Fresco à Assinie le long du littoral atlantique !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2304,7 +2304,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Âge de mise en place du bassin",
             "formula": "Âge du bassin côtier : Crétacé (135 Ma, Mésozoïque)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens 135 millions d'années (Crétacé) pour le bassin sédimentaire !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2331,7 +2331,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Rifting et ouverture de l'océan Atlantique Sud",
             "formula": "Ouverture de l'océan Atlantique Sud -> Rifting et transgression marine côtière",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le bassin est né de l'ouverture de l'océan Atlantique Sud au Crétacé !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2358,7 +2358,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Absence de plissement et de métamorphisme",
             "formula": "Couches sédimentaires côtières : Subhorizontales, non plissées et non métamorphisées",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Bassin côtier = couches horizontales régulières non plissées !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2385,7 +2385,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Lithologie sédimentaire détritique",
             "formula": "Roches du bassin : Sables + Argiles + Grès ferrugineux + Calcaires",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Sables, argiles et grès = roches du bassin sédimentaire côtier !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2412,7 +2412,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Abidjan sur le bassin sédimentaire",
             "formula": "Métropole du bassin côtier : Abidjan et son agglomération lagunaire",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Abidjan repose entièrement sur le bassin sédimentaire côtier !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2439,7 +2439,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le Continental Terminal",
             "formula": "Formation superficielle d'Abidjan : Continental Terminal (Tertiaire)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Continental Terminal = sables et argiles rouges des plateaux d'Abidjan !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2466,7 +2466,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "L'aquifère majeur d'Abidjan",
             "formula": "Aquifère côtier -> Approvisionnement exclusif en eau potable d'Abidjan",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La nappe d'eau potable d'Abidjan se trouve dans le bassin sédimentaire !",
           "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
@@ -2508,7 +2508,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Calculer la différence d'altitude du toit du socle : 5 000 m - 0 m = 5 000 m.",
           "Étape 3 : Conclure que la faille normale des lagunes a un rejet vertical de 5 000 m."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -2626,7 +2626,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Orientation Est-Ouest de la faille des lagunes",
             "formula": "Direction : Est-Ouest (parallèle à la côte du golfe de Guinée)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Faille des lagunes = direction Est-Ouest (parallèle au littoral) !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2653,7 +2653,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Rejet vertical colossal de 5 000 mètres",
             "formula": "Rejet vertical de la faille des lagunes : Rejet vertical jusqu'à 5 000 m",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Retiens 5 000 mètres de rejet vertical pour la faille des lagunes !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2680,7 +2680,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Gisements de pétrole et gaz naturel offshore",
             "formula": "Ressource stratégique côtière : Pétrole et Gaz naturel offshore",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Pétrole et gaz naturel = ressources majeures du bassin côtier !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2707,7 +2707,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le champ pétrolier Baleine",
             "formula": "Gisement géant offshore : Champ Baleine (puits à plus de 3 000 m)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Champ pétrolier Baleine = gisement géant découvert au large de la Côte d'Ivoire !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2734,7 +2734,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Compartiments de la faille des lagunes",
             "formula": "Nord : Socle soulevé | Sud : Bassin sédimentaire effondré (5 000 m)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Nord = socle soulevé ; Sud = bassin sédimentaire affaissé vers la mer !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2761,7 +2761,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Alignement morphologique des lagunes",
             "formula": "Tectonique côtière -> Morphologie linéaire Est-Ouest du réseau lagunaire",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille des lagunes a guidé l'alignement Est-Ouest de nos lagunes !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2788,7 +2788,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Risque d'intrusion saline (biseau salé)",
             "formula": "Surpompage des forages -> Avancée du biseau d'eau salée dans l'aquifère",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le risque majeur est l'intrusion d'eau salée dans la nappe d'eau potable !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2815,7 +2815,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Mécanisme de faille normale distensive",
             "formula": "Extension tectonique crustale -> Faille normale avec compartiment effondré",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Faille des lagunes = faille normale distensive !",
           "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
@@ -2857,7 +2857,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Constater que le toit descend : c'est le mouvement typique d'une extension de terrain.",
           "Étape 3 : Conclure qu'il s'agit d'une faille normale liée à un régime tectonique de distension."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -2975,7 +2975,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Définition d'une faille tectonique",
             "formula": "Faille = Fracture crustale + Déplacement relatif des compartiments (Rejet)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Une faille est une cassure AVEC déplacement des compartiments !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3002,7 +3002,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le miroir de faille et les stries",
             "formula": "Plan de fracture poli -> Miroir de faille (avec stries de frottement)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le plan poli et strié est le miroir de faille !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3029,7 +3029,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Mécanisme de la faille normale",
             "formula": "Régime de distension (Écartement) -> Faille normale",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Distension (écartement) = faille normale !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3056,7 +3056,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Mécanisme de la faille inverse",
             "formula": "Régime de compression (Poussée) -> Faille inverse",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Compression (rapprochement) = faille inverse !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3083,7 +3083,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le décrochement tectonique",
             "formula": "Coulissage horizontal pur -> Décrochement tectonique",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Décrochement = coulissage horizontal des compartiments !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3110,7 +3110,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le rejet de faille",
             "formula": "Déplacement mesuré des blocs = Rejet de la faille",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le déplacement des blocs se nomme le rejet de la faille !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3137,7 +3137,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Exemple ivoirien de décrochement",
             "formula": "Faille de Sassandra : Couloir de décrochement lors de l'Éburnéen",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille de Sassandra est l'exemple type de décrochement dans notre socle !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3164,7 +3164,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Discontinuité et saut de couche",
             "formula": "Présence de faille -> Décalage visible et discontinuité de la couche repère",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille interrompt et décale nettement la couche géologique !",
           "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
@@ -3206,7 +3206,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 2 : Constater que les couches du cœur sont les plus anciennes.",
           "Étape 3 : Conclure que la structure est un anticlinal (les couches anciennes occupent le centre de la courbure convexe)."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -3324,7 +3324,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Définition d'un pli géologique",
             "formula": "Pli = Déformation continue et souple (Ductile) sans fracture",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Un pli est une déformation souple et continue SANS cassure !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3351,7 +3351,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "L'anticlinal (courbure convexe vers le haut)",
             "formula": "Courbure convexe vers le haut -> Anticlinal (Couches anciennes au cœur)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Anticlinal = courbure en bosse convexe vers le haut !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3378,7 +3378,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le synclinal (courbure concave vers le haut)",
             "formula": "Courbure concave vers le haut -> Synclinal (Couches récentes au cœur)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Synclinal = courbure en creux concave vers le haut !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3405,7 +3405,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La charnière d'un pli",
             "formula": "Zone de courbure maximale = Charnière du pli",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La ligne de courbure maximale est la charnière du pli !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3432,7 +3432,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Régime de compression plissante",
             "formula": "Forces compressives horizontales -> Plissement des séries sédimentaires ductiles",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Les plis sont causés par des forces de compression horizontale !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3459,7 +3459,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Plis dans les schistes birrimiens",
             "formula": "Schistes birrimiens éburnéens -> Présence massive de plis anticlinaux et synclinaux",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Les schistes birrimiens sont plissés par l'orogenèse éburnéenne !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3486,7 +3486,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Absence d'orogenèse plissante au Sud",
             "formula": "Marge passive distensive -> Absence de plissement dans le bassin côtier",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le bassin côtier est en distension calme : zéro plissement orogénique !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3513,7 +3513,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le plan axial du pli",
             "formula": "Symétrie du pli = Plan axial",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Le plan axial divise le pli en deux flancs symétriques !",
           "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
@@ -3556,7 +3556,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 3 : Émersion au-dessus de l'eau et érosion météorique rabotant les sommets des plis.",
           "Étape 4 : Retour de la mer (transgression) déposant de nouvelles couches sédimentaires horizontales sur la surface érodée."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -3674,7 +3674,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Définition d'une discordance stratigraphique",
             "formula": "Discordance = Couches récentes horizontales sur couches anciennes plissées et érodées",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Discordance = couches neuves reposant sur des couches anciennes plissées et érodées !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3701,7 +3701,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La surface de discordance ou paléosurface d'érosion",
             "formula": "Limite entre les deux ensembles = Surface de discordance (Paléosurface d'érosion)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La ligne de séparation est la surface de discordance ou surface d'érosion !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3728,7 +3728,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Première étape : Sédimentation ancienne",
             "formula": "Étape 1 : Sédimentation initiale en couches horizontales",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Étape 1 = dépôt sédimentaire horizontal des couches anciennes !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3755,7 +3755,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Deuxième étape : Compression et plissement orogénique",
             "formula": "Étape 2 : Compression orogénique -> Plissement des couches anciennes",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Étape 2 = orogenèse compressive qui plisse et redresse les couches anciennes !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3782,7 +3782,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Troisième étape : Émersion et érosion de surface",
             "formula": "Étape 3 : Émersion au-dessus de l'eau et rabotage érosif des plis",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Étape 3 = émersion et érosion qui rabotent les sommets des plis !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3809,7 +3809,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Quatrième étape : Transgression marine nouvelle",
             "formula": "Étape 4 : Transgression marine -> Nouvelle sédimentation concordante",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Étape 4 = transgression marine qui redépose des couches sédimentaires horizontales !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3836,7 +3836,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le conglomérat de base transgressif",
             "formula": "Base de la nouvelle série = Conglomérat de base à galets remaniés",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Un conglomérat de base (galets cimentés) souligne la surface de discordance !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3863,7 +3863,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Importance chronologique des discordances",
             "formula": "Discordance = Marqueur absolu de rupture de cycle dans l'histoire de la Terre",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La discordance sépare deux cycles complets de l'histoire géologique !",
           "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
@@ -3906,7 +3906,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "Étape 3 : Dépôt en discordance des sédiments détritiques du Tarkwaïen (conglomérats et grès à Kokumbo).",
           "Étape 4 : Conclure que Kokumbo est la localité type de la discordance éburnéenne ivoirienne."
         ],
-        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+        "conclusion": "Cette démarche méthodique rigoureuse garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
@@ -4024,7 +4024,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La discordance géologique de Kokumbo",
             "formula": "Site officiel de discordance : Kokumbo (Région du Bélier / Toumodi)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Discordance majeure ivoirienne = Kokumbo (près de Toumodi) !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4051,7 +4051,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Le Tarkwaïen en discordance sur le Birrimien",
             "formula": "Série discordante à Kokumbo : Grès et Conglomérats du Tarkwaïen",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : À Kokumbo : les grès et conglomérats du Tarkwaïen reposent sur le Birrimien !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4078,7 +4078,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La discordance Abronienne (Bondoukou)",
             "formula": "Discordance orientale : Discordance Abronienne (Bondoukou / Bouna)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Discordance de l'Est ivoirien = Discordance Abronienne (Bondoukou) !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4105,7 +4105,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Rôle de l'orogenèse éburnéenne",
             "formula": "Orogenèse responsable : Mégacycle Éburnéen (2 100 Ma)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : L'orogenèse éburnéenne a plissé les roches avant la discordance de Kokumbo !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4132,7 +4132,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Chronologie absolue des trois ensembles",
             "formula": "Ordre chronologique : Archéen (> 2 500 Ma) -> Birrimien (2 100 Ma) -> Bassin côtier (135 Ma)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Chronologie : 1. Archéen -> 2. Protérozoïque (Birrimien) -> 3. Bassin côtier !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4159,7 +4159,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "Synthèse métallogénique de la Côte d'Ivoire",
             "formula": "Synthèse : Archéen (Fer) | Birrimien (Or, Manganèse) | Bassin côtier (Pétrole, Gaz, Eau)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Archéen = Fer de Man ; Birrimien = Or et Manganèse ; Bassin = Pétrole et Eau !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4186,7 +4186,7 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "formula": {
             "name": "La faille des lagunes, ultime cicatrice tectonique",
             "formula": "Ultime accident majeur : Faille des lagunes (Crétacé - 135 Ma)",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : La faille des lagunes a achevé la géométrie de notre façade maritime !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
@@ -4209,11 +4209,11 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
           "stepBadge": "Étape 8/8 · Gestion durable des ressources de la Terre",
           "stepTheme": "Gestion durable des ressources de la Terre",
           "stepTitle": "Gestion durable des ressources de la Terre",
-          "paragraphText": "L'apprentissage des SVT selon le programme MENA forme des citoyens éclairés capables de protéger le patrimoine national.",
+          "paragraphText": "L'apprentissage des SVT en SVT forme des citoyens éclairés capables de protéger le patrimoine national.",
           "formula": {
             "name": "Gestion durable des ressources de la Terre",
             "formula": "Citoyenneté scientifique : Valorisation et protection durable du sous-sol national",
-            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+            "note": "Notion essentielle de SVT 2de C."
           },
           "konanTip": "L'Astuce du Professeur Konan : Maîtriser la géologie pour valoriser et protéger durablement nos ressources nationales !",
           "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",

@@ -454,7 +454,7 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Système de deux lentilles accolées (Ex 3 p. 8 corrigé)',
+        title: 'Système de deux lentilles accolées',
         statement:
           'On accole une lentille $(L_1)$ de vergence $C_1 = -5\\,\\delta$ et une lentille convergente $(L_2)$ de distance focale $f\'_2 = +20\\,\\mathrm{cm}$. Déterminer la vergence $C$ du système accolé.',
         methodSteps: [
@@ -594,7 +594,7 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
       summary:
         'Tracer l’image A′B′ d’un objet AB à l’aide des trois rayons particuliers (convergente et divergente) et identifier trois instruments optiques courants.',
       conceptExplanation:
-        "Pour trouver graphiquement l’image $B'$ d’un point objet $B$ hors de l’axe (avec $AB \\perp$ à l’axe optique), deux des trois **rayons particuliers** suffisent (le 3e sert de vérification) :\n\n1. **Rayon passant par le centre optique $O$** : il traverse la lentille **sans déviation**.\n2. **Rayon incident parallèle à l’axe optique** : il émerge en passant par le foyer image $F'$ (lentille convergente) ou en semblant provenir de $F'$ (lentille divergente).\n3. **Rayon incident passant par $F$ (convergente) ou dirigé vers $F$ (divergente)** : il émerge **parallèle à l’axe optique**.\n\n- **Trois configurations classiques du cours** :\n  - **Appareil photographique** (lentille convergente, objet au-delà de $2f'$, $|\\overline{OA}| > 2f'$) : image **réelle**, **renversée** et **plus petite** que l’objet.\n  - **Loupe** (lentille convergente, objet placé entre $F$ et $O$, $|\\overline{OA}| < f'$) : les rayons émergents divergent ; leurs prolongements donnent une image **virtuelle**, **droite** et **agrandie** (observée à travers la lentille).\n  - **Lunette de myope** (lentille divergente, objet réel devant la lentille) : image **virtuelle**, **droite** et **plus petite** située entre $F'$ et $O$.",
+        "Pour trouver graphiquement l’image $B'$ d’un point objet $B$ hors de l’axe (avec $AB \\perp$ à l’axe optique), deux des trois **rayons particuliers** suffisent (le 3e sert de vérification) :\n\n1. **Rayon passant par le centre optique $O$** : il traverse la lentille **sans déviation**.\n2. **Rayon incident parallèle à l’axe optique** : il émerge en passant par le foyer image $F'$ (lentille convergente) ou en semblant provenir de $F'$ (lentille divergente).\n3. **Rayon incident passant par $F$ (convergente) ou dirigé vers $F$ (divergente)** : il émerge **parallèle à l’axe optique**.\n\n- **Trois configurations classiques** :\n - **Appareil photographique** (lentille convergente, objet au-delà de $2f'$, $|\\overline{OA}| > 2f'$) : image **réelle**, **renversée** et **plus petite** que l’objet.\n - **Loupe** (lentille convergente, objet placé entre $F$ et $O$, $|\\overline{OA}| < f'$) : les rayons émergents divergent ; leurs prolongements donnent une image **virtuelle**, **droite** et **agrandie** (observée à travers la lentille).\n - **Lunette de myope** (lentille divergente, objet réel devant la lentille) : image **virtuelle**, **droite** et **plus petite** située entre $F'$ et $O$.",
       keyRule:
         'Deux rayons particuliers suffisent pour placer B′ : (1) par O sans déviation ; (2) parallèle à l’axe -> passe par F′ (ou semble venir de F′) ; (3) par F (ou vers F) -> parallèle à l’axe.',
       formulas: [
@@ -655,7 +655,7 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
         caption: 'En haut : image réelle renversée (|OA| > f′). En bas : effet loupe avec image virtuelle droite agrandie (|OA| < f′).',
       },
       workedExample: {
-        title: 'Construction d’une image avec une loupe (Ex 6 p. 10)',
+        title: 'Construction d’une image avec une loupe',
         statement:
           'Un objet $AB$ de $2\\,\\mathrm{cm}$ de hauteur est placé $4\\,\\mathrm{cm}$ devant une lentille convergente de distance focale $f\' = +10\\,\\mathrm{cm}$. Décrire la construction graphique de $A\'B\'$.',
         methodSteps: [
@@ -911,7 +911,7 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
           stepTheme: 'Loupe de distance focale 10 cm',
           stepTitle: 'Calcul algébrique pour une loupe',
           paragraphText:
-            'Dans l’exercice d’application du cours (Ex 6), une lentille convergente de focale $f\' = 10\\,\\mathrm{cm}$ observe un objet de $2\\,\\mathrm{cm}$ placé à $4\\,\\mathrm{cm}$ ($\\overline{OA} = -4\\,\\mathrm{cm}$). La relation de Descartes donne $\\overline{OA\'} = -20/3\\,\\mathrm{cm}$ et $\\gamma = +5/3$.',
+            'Par exemple, une lentille convergente de focale $f\' = 10\\,\\mathrm{cm}$ observe un objet de $2\\,\\mathrm{cm}$ placé à $4\\,\\mathrm{cm}$ ($\\overline{OA} = -4\\,\\mathrm{cm}$). La relation de Descartes donne $\\overline{OA\'} = -20/3\\,\\mathrm{cm}$ et $\\gamma = +5/3$.',
           exercise: {
             id: 'physique_1re_cd_l06_p05_q04',
             type: 'mcq',
@@ -983,7 +983,7 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
       summary:
         'Traiter un objet virtuel ou un système de deux lentilles accolées et connaître les règles d’hygiène et d’usage des lentilles de contact (Documentation).',
       conceptExplanation:
-        "En pratique et dans les exercices approfondis (Ex 4, Ex 7 et Documentation p. 11–14), on rencontre des objets virtuels, des lentilles accolées ainsi que des applications oculaires.\n\n- **Objet virtuel ($\\overline{OA} > 0$) et image réelle** : un objet est **virtuel** lorsque les rayons incidents convergent vers un point $A$ situé **après** la lentille ($\\overline{OA} > 0$), généralement parce qu’une première lentille forme déjà une image intermédiaire après la seconde lentille.\n  - Une lentille **convergente** transforme toujours un objet virtuel en une **image réelle, droite et plus petite**, située entre $O$ et $F'$.\n  - Une lentille **divergente** peut donner d’un objet virtuel une **image réelle** si cet objet virtuel est placé entre $O$ et $F$ ($0 < \\overline{OA} < |f'|$) ; sinon ($\\overline{OA} > |f'|$), l’image est virtuelle.\n- **Effet d’un accolement correcteur** : si l’on accole une lentille divergente de forte vergence ($C_2 = -15\\,\\delta$) à une lentille convergente ($C_1 = +10\\,\\delta$), la vergence résultante devient négative ($C = -5\\,\\delta$) : l’image d’un objet réel à $8\\,\\mathrm{cm}$ devient alors **virtuelle, droite et rétrécie** ($\\overline{OA'} \\approx -5{,}71\\,\\mathrm{cm}$, $\\gamma \\approx +0{,}71$).\n- **Lentilles de contact (Documentation p. 13–14)** : ce sont des lentilles minces correctrices (myopie, hypermétropie, presbytie) posées directement sur le film lacrymal de la cornée. Règles essentielles d’hygiène :\n  - Se laver et sécher soigneusement les mains avant toute manipulation.\n  - Ne **jamais** utiliser d’eau du robinet ni de salive pour nettoyer ou mouiller une lentille (risque d’infections oculaires graves) ; utiliser uniquement une solution d’entretien adaptée.\n  - Ne **jamais** dormir avec ses lentilles sauf avis médical spécifique pour des lentilles prévues à cet effet, et ne jamais prêter ses lentilles.",
+        "En pratique et dans les exercices approfondis, on rencontre des objets virtuels, des lentilles accolées ainsi que des applications oculaires.\n\n- **Objet virtuel ($\\overline{OA} > 0$) et image réelle** : un objet est **virtuel** lorsque les rayons incidents convergent vers un point $A$ situé **après** la lentille ($\\overline{OA} > 0$), généralement parce qu’une première lentille forme déjà une image intermédiaire après la seconde lentille.\n - Une lentille **convergente** transforme toujours un objet virtuel en une **image réelle, droite et plus petite**, située entre $O$ et $F'$.\n - Une lentille **divergente** peut donner d’un objet virtuel une **image réelle** si cet objet virtuel est placé entre $O$ et $F$ ($0 < \\overline{OA} < |f'|$) ; sinon ($\\overline{OA} > |f'|$), l’image est virtuelle.\n- **Effet d’un accolement correcteur** : si l’on accole une lentille divergente de forte vergence ($C_2 = -15\\,\\delta$) à une lentille convergente ($C_1 = +10\\,\\delta$), la vergence résultante devient négative ($C = -5\\,\\delta$) : l’image d’un objet réel à $8\\,\\mathrm{cm}$ devient alors **virtuelle, droite et rétrécie** ($\\overline{OA'} \\approx -5{,}71\\,\\mathrm{cm}$, $\\gamma \\approx +0{,}71$).\n- **Lentilles de contact** : ce sont des lentilles minces correctrices (myopie, hypermétropie, presbytie) posées directement sur le film lacrymal de la cornée. Règles essentielles d’hygiène :\n - Se laver et sécher soigneusement les mains avant toute manipulation.\n - Ne **jamais** utiliser d’eau du robinet ni de salive pour nettoyer ou mouiller une lentille (risque d’infections oculaires graves) ; utiliser uniquement une solution d’entretien adaptée.\n - Ne **jamais** dormir avec ses lentilles sauf avis médical spécifique pour des lentilles prévues à cet effet, et ne jamais prêter ses lentilles.",
       keyRule:
         'Objet virtuel (OA > 0) : une lentille divergente peut donner une image réelle si 0 < OA < OF. Pour les lentilles de contact : mains propres, solution stérile dédiée uniquement (jamais d’eau du robinet ni de salive), jamais de prêt.',
       formulas: [
@@ -1032,7 +1032,7 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
           stepKind: 'exemple',
           stepBadge: 'Synthèse',
           stepTheme: 'Modification par lentille accolée',
-          stepTitle: 'Transformation d’une loupe en système divergent (Ex 4)',
+          stepTitle: 'Transformation d’une loupe en système divergent',
           paragraphText:
             'Une lentille $(L_1)$ de focale $f\'_1 = +10\\,\\mathrm{cm}$ ($C_1 = +10\\,\\delta$) donne d’un objet à $8\\,\\mathrm{cm}$ une image virtuelle agrandie ($\\gamma = +5$). Si on lui accole $(L_2)$ de vergence $C_2 = -15\\,\\delta$, le système a pour vergence $C = -5\\,\\delta$.',
           exercise: {
@@ -1100,11 +1100,11 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
           stepTheme: 'Lentilles de contact (Documentation)',
           stepTitle: 'Précautions indispensables pour les lentilles de contact',
           paragraphText:
-            'D’après la documentation du cours (p. 13–14), les lentilles de contact sont en contact direct avec l’œil : un mauvais entretien expose à des infections graves de la cornée.',
+            'Les lentilles de contact sont en contact direct avec l’œil : un mauvais entretien expose à des infections graves de la cornée.',
           exercise: {
             id: 'physique_1re_cd_l06_p06_q05',
             type: 'mcq',
-            prompt: 'Selon les règles d’hygiène de la documentation du cours sur les lentilles de contact, quelle pratique est strictement **interdite** ?',
+            prompt: 'Selon les règles d’hygiène des lentilles de contact, quelle pratique est strictement **interdite** ?',
             options: [
               'Rincer ses lentilles à l’eau du robinet ou avec de la salive',
               'Se laver soigneusement les mains avant de poser les lentilles',

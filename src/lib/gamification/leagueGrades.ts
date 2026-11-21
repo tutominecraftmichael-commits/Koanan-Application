@@ -10,7 +10,7 @@
 
 /** La classe a-t-elle des cours guidés dans KONAN (donc l'entraînement) ? */
 export function gradeHasCourses(gradeLevel?: string | null): boolean {
-  return /^(seconde|premiere|terminale)_/.test(String(gradeLevel || ''));
+  return /^(seconde|premiere|terminale|lmd)_/.test(String(gradeLevel || ''));
 }
 
 /** La classe est-elle admise dans la ligue ? */

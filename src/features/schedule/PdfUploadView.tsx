@@ -42,6 +42,7 @@ import type {
 } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { soundFX } from '../../lib/audioEffects';
+import { LMD_PROGRAMS, LMD_TRACKS, getLmdProgramByGrade, isLmdTrackGrade } from '../../lib/curriculum/lmdTracks';
 import { 
   parseStructuredScheduleTruth, 
   harmonizeAndDeduplicateSlots, 
@@ -90,10 +91,11 @@ export interface PdfUploadViewProps {
   onUpgradeToPro?: () => void;
 }
 
-const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; fileName: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
+const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; mobile: string; fileName: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
   lmd: {
     label: 'LMD (Université / Grandes Écoles)',
     short: 'Système LMD',
+    mobile: 'LMD',
     fileName: 'Emploi_du_Temps_LMD.txt',
     icon: <GraduationCap className="w-4 h-4" />,
     demoId: 'pdf-esatic-entd2',
@@ -102,6 +104,7 @@ const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; 
   tpcm: {
     label: 'BTS / Technique (CM · TD · TP)',
     short: 'Système BTS',
+    mobile: 'BTS',
     fileName: 'Emploi_du_Temps_BTS.txt',
     icon: <Cpu className="w-4 h-4" />,
     demoId: 'pdf-cs-l3',
@@ -110,6 +113,7 @@ const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; 
   scolaire: {
     label: 'Scolaire (Lycée / Collège)',
     short: 'Lycée / Scolaire',
+    mobile: 'Lycée',
     fileName: 'Emploi_du_Temps_Lycee.txt',
     icon: <School className="w-4 h-4" />,
     demoId: 'pdf-lycee-john-wesley',
@@ -151,7 +155,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   }, [initialGradeLevel, initialAcademicLevel]);
 
   const initialFormat: ScheduleFormatType = useMemo(() => {
-    if (resolvedInitialGrade === 'superieur_lmd') return 'lmd';
+    if (resolvedInitialGrade === 'superieur_lmd' || isLmdTrackGrade(resolvedInitialGrade)) return 'lmd';
     if (resolvedInitialGrade === 'superieur_bts') return 'tpcm';
     return 'scolaire';
   }, [resolvedInitialGrade]);
@@ -160,12 +164,17 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>(initialFormat);
   const [selectedGradeLevel, setSelectedGradeLevel] = useState<CurriculumGradeLevel>(resolvedInitialGrade);
   const [customFiliere, setCustomFiliere] = useState<string>(() => {
+    const lmdProg = getLmdProgramByGrade(resolvedInitialGrade);
+    if (lmdProg) return lmdProg.displayLabel;
     if (initialAcademicLevel && (resolvedInitialGrade === 'superieur_lmd' || resolvedInitialGrade === 'superieur_bts')) {
       return initialAcademicLevel;
     }
     return '';
   });
-  const [selectedLmdLevel, setSelectedLmdLevel] = useState<string>('Licence 3 (L3)');
+  const [selectedLmdLevel, setSelectedLmdLevel] = useState<string>(() => {
+    const lmdProg = getLmdProgramByGrade(resolvedInitialGrade);
+    return lmdProg ? lmdProg.levelFull : 'Licence 1 (L1)';
+  });
   const [scheduleText, setScheduleText] = useState<string>('');
   // Résultat de la dernière lecture par l'IA : classes trouvées dans le document et points à vérifier
   const [extraction, setExtraction] = useState<StructuredTimetableResult | null>(null);
@@ -230,7 +239,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const handleFormatChange = (newFormat: ScheduleFormatType) => {
     setSelectedFormat(newFormat);
     if (newFormat === 'scolaire') {
-      if (selectedGradeLevel === 'superieur_bts' || selectedGradeLevel === 'superieur_lmd') {
+      if (selectedGradeLevel === 'superieur_bts' || selectedGradeLevel === 'superieur_lmd' || isLmdTrackGrade(selectedGradeLevel)) {
         setSelectedGradeLevel('seconde_c');
       }
     } else if (newFormat === 'tpcm') {
@@ -239,9 +248,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         setCustomFiliere("BTS Informatique Développeur d'Application (IDA)");
       }
     } else if (newFormat === 'lmd') {
-      setSelectedGradeLevel('superieur_lmd');
-      if (!customFiliere) {
-        setCustomFiliere('ESATIC (Abidjan)');
+      const currentProg = getLmdProgramByGrade(selectedGradeLevel) || LMD_PROGRAMS[0];
+      if (currentProg) {
+        setSelectedGradeLevel(currentProg.gradeLevel);
+        setSelectedLmdLevel(currentProg.levelFull);
+        setCustomFiliere(currentProg.displayLabel);
+      } else {
+        setSelectedGradeLevel('superieur_lmd');
       }
     }
 
@@ -762,7 +775,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   ? "Extraction & Catégorisation de l'EDT" 
                   : "Configuration des Matières & Méthodes"}
               </h1>
-              <span className="bg-sky-100 text-sky-800 border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] border dark:border-[#6366F1]/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+              <span className="bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 border dark:border-sky-400/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
                 {currentStep === 'upload' ? 'Étape 1/2' : 'Étape 2/2'}
               </span>
             </div>
@@ -829,7 +842,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             <label className="text-xs font-semibold text-slate-300">
               Catégorie académique (définit la structure du fichier texte extrait)
             </label>
-            <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
               {(Object.keys(FORMAT_CONFIG) as ScheduleFormatType[]).map((fmt) => {
                 const config = FORMAT_CONFIG[fmt];
                 const isSelected = selectedFormat === fmt;
@@ -837,15 +850,18 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <button
                     key={fmt}
                     type="button"
+                    title={config.short}
+                    aria-label={config.short}
                     onClick={() => handleFormatChange(fmt)}
-                    className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`py-2 px-1.5 sm:px-3 min-w-0 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
                       isSelected 
                         ? 'bg-sky-400 text-slate-950 shadow-sm font-semibold' 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                     }`}
                   >
-                    {config.icon}
-                    <span className="truncate">{config.short}</span>
+                    <span className="shrink-0">{config.icon}</span>
+                    <span className="sm:hidden whitespace-nowrap">{config.mobile}</span>
+                    <span className="hidden sm:inline whitespace-nowrap">{config.short}</span>
                   </button>
                 );
               })}
@@ -1084,85 +1100,55 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             {/* SYSTÈME LMD : NIVEAU & UNIVERSITÉ */}
             {selectedFormat === 'lmd' && (
               <div className="space-y-3">
-                <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block mb-1.5 dark:text-sky-300">
-                    1. Degré d'étude universitaire :
-                  </label>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
-                    {['Licence 1 (L1)', 'Licence 2 (L2)', 'Licence 3 (L3)', 'Master 1 (M1)', 'Master 2 (M2)', 'Doctorat'].map(deg => {
-                      const isSelected = selectedLmdLevel === deg;
-                      return (
-                        <button
-                          key={deg}
-                          type="button"
-                          onClick={() => {
-                            soundFX.playCheckmarkPop();
-                            setSelectedLmdLevel(deg);
-                            setSelectedGradeLevel('superieur_lmd');
-                          }}
-                          className={`py-1.5 px-2 rounded-lg text-xs font-bold text-center transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-sky-400 text-slate-950 shadow-sm'
-                              : 'bg-slate-800/60 text-slate-300 hover:bg-slate-800 border border-slate-700/60'
-                          }`}
-                        >
-                          {deg.split(' ')[0]} {deg.match(/\((.*?)\)/)?.[0] || ''}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block mb-1.5 dark:text-sky-300">
-                    2. Établissement / Filière de référence :
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                    {[
-                      'ESATIC (Abidjan)',
-                      'INP-HB (Yamoussoukro)',
-                      'UFHB (Cocody)',
-                      'UNA (Abobo-Adjamé)',
-                      'UVCI (Virtuelle)',
-                      'Autre Grande École',
-                    ].map(school => {
-                      const isSelected = customFiliere.startsWith(school);
-                      return (
-                        <button
-                          key={school}
-                          type="button"
-                          onClick={() => {
-                            soundFX.playCheckmarkPop();
-                            setCustomFiliere(school === 'Autre Grande École' ? '' : school);
-                            setSelectedGradeLevel('superieur_lmd');
-                          }}
-                          className={`p-2 rounded-lg text-xs font-medium text-left truncate transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-slate-950/80 border border-sky-400 text-sky-200'
-                              : 'bg-slate-800/40 text-slate-300 border border-slate-700/60 hover:bg-slate-800'
-                          }`}
-                        >
-                          {school}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 mb-1">
-                    Filière ou mention exacte :
-                  </label>
-                  <input
-                    type="text"
-                    value={customFiliere}
-                    onChange={(e) => {
-                      setCustomFiliere(e.target.value);
-                      setSelectedGradeLevel('superieur_lmd');
-                    }}
-                    placeholder="Ex: ESATIC — SRIT L3, INP-HB Informatique, UFHB Math-Info..."
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-medium text-white focus:outline-none focus:border-sky-400"
-                  />
+                <label className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block dark:text-sky-300">
+                  Choisis ta filière LMD et ton niveau (prédéfinis) :
+                </label>
+                <div className="space-y-2.5">
+                  {LMD_TRACKS.map((track) => (
+                    <div
+                      key={track.id}
+                      className="p-3 rounded-xl bg-slate-900/70 border border-slate-700/80 space-y-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-md bg-sky-400/20 text-sky-300 text-[10px] font-black uppercase">
+                          {track.code}
+                        </span>
+                        <span className="text-xs font-extrabold text-white">
+                          {track.name}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {track.levels.map((lvl) => {
+                          const isSelected = selectedGradeLevel === lvl.gradeLevel;
+                          const label = `${track.code} — ${lvl.fullLabel}`;
+                          return (
+                            <button
+                              key={lvl.gradeLevel}
+                              type="button"
+                              onClick={() => {
+                                soundFX.playCheckmarkPop();
+                                setSelectedGradeLevel(lvl.gradeLevel);
+                                setSelectedLmdLevel(lvl.fullLabel);
+                                setCustomFiliere(label);
+                              }}
+                              className={`py-1.5 px-3 rounded-lg text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                                isSelected
+                                  ? 'bg-sky-400 text-slate-950 shadow-sm'
+                                  : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800 border border-slate-700/70'
+                              }`}
+                            >
+                              <span>{lvl.fullLabel}</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-black ${
+                                isSelected ? 'bg-slate-950/15 text-slate-950' : 'bg-emerald-500/20 text-emerald-300'
+                              }`}>
+                                {lvl.subjectIds.length} matières
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -1376,7 +1362,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 <Sliders className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
                 <span>1. Coefficients & Notes Cibles de vos Matières</span>
               </h2>
-              <span className="text-xs font-mono font-bold text-sky-700 dark:text-[#818CF8] shrink-0">
+              <span className="text-xs font-mono font-bold text-sky-700 dark:text-sky-400 shrink-0">
                 {editableSubjects.filter(s => s.enabled).length} / {editableSubjects.length} actives
               </span>
             </div>
@@ -1451,7 +1437,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       </button>
                       <div className="px-1 text-center min-w-[50px]">
                         <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-mono leading-none">COEFF</span>
-                        <span className="text-xs font-bold text-sky-700 dark:text-[#818CF8] leading-tight">{subject.coefficient}</span>
+                        <span className="text-xs font-bold text-sky-700 dark:text-sky-400 leading-tight">{subject.coefficient}</span>
                       </div>
                       <button
                         type="button"
@@ -1501,7 +1487,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
             {/* BANNIÈRE DE RECOMMANDATION CONTEXTUELLE */}
             {planTier !== 'free' ? (
-              <div className="rounded-xl bg-gradient-to-r from-sky-50 via-white to-sky-50 border border-sky-200 dark:from-sky-400/60 dark:via-slate-900/80 dark:to-blue-950/40 dark:border-sky-400/20 p-4 sm:p-5 shadow-sm dark:shadow-lg dark:shadow-sky-400/30 space-y-3">
+              <div className="rounded-2xl bg-sky-50/80 border border-sky-200 dark:bg-[#0F172A] dark:border-sky-400/25 p-4 sm:p-5 shadow-sm dark:shadow-lg dark:shadow-slate-950/40 space-y-3">
                 {(() => {
                   const targetPacings = pacingRecommendation.recommendedIds && pacingRecommendation.recommendedIds.length > 0
                     ? pacingRecommendation.recommendedIds
@@ -1511,20 +1497,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   return (
                     <div className="space-y-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="p-2 rounded-xl bg-sky-100 text-sky-700 border border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] dark:border-[#6366F1]/30 shrink-0 mt-0.5">
-                          <BarChart2 className="w-4 h-4 text-sky-700 dark:text-[#818CF8]" />
+                        <div className="p-2 rounded-xl bg-sky-100 text-sky-700 border border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 shrink-0 mt-0.5">
+                          <BarChart2 className="w-4 h-4 text-sky-700 dark:text-sky-300" />
                         </div>
                         <div className="min-w-0 flex-1 space-y-1.5">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-xs font-black uppercase tracking-wider text-sky-800 dark:text-[#818CF8]">
+                            <span className="text-xs font-black uppercase tracking-wider text-sky-800 dark:text-sky-400">
                               RECOMMANDATION KONAN
                             </span>
                             {targetPacings.map(id => (
-                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] font-bold border dark:border-[#6366F1]/30">
+                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 font-bold border dark:border-sky-400/30">
                                 {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
                               </span>
                             ))}
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 border dark:border-slate-700">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-700 border-slate-200 dark:bg-slate-800/90 dark:text-slate-300 border dark:border-slate-700">
                               {pacingRecommendation.contextTag}
                             </span>
                           </div>
@@ -1539,7 +1525,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                             <button
                               type="button"
                               onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
-                              className="text-xs font-bold text-sky-800 hover:text-sky-900 dark:text-[#818CF8] dark:hover:text-white mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                              className="text-xs font-bold text-sky-700 hover:text-sky-900 dark:text-sky-400 dark:hover:text-sky-300 mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
                             >
                               {showFullDiagnostic ? 'Voir moins ▴' : 'Voir plus ▾'}
                             </button>
@@ -1558,7 +1544,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           onClick={() => {
                             setSelectedPacings(targetPacings);
                           }}
-                          className="bg-[#6366F1] hover:bg-[#5558E6] text-white py-3 px-6 rounded-xl font-bold w-full transition shadow-md shadow-sky-400/25 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                          className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white py-3 px-6 rounded-xl font-bold w-full transition shadow-md shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                         >
                           <Check className="w-4 h-4" />
                           <span>Appliquer la recommandation</span>
@@ -1601,7 +1587,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
                     className={`group p-4 rounded-xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-sky-50 border-sky-400 dark:bg-[#131B2E]/70 dark:border-[#6366F1] shadow-md dark:shadow-slate-950/50 ring-1 ring-sky-400/40 dark:ring-[#6366F1]/50'
+                        ? 'bg-sky-50 border-sky-400 dark:bg-[#131B2E]/80 dark:border-sky-400 shadow-md dark:shadow-slate-950/50 ring-1 ring-sky-400/40'
                         : isPrimaryRec
                         ? 'bg-white border-sky-400 hover:border-sky-500 dark:bg-[#131B2E]/50 dark:border-sky-500/40'
                         : isAllowed
@@ -1622,7 +1608,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       {/* Badges */}
                       <div className="flex flex-wrap items-center justify-end gap-1 shrink-0">
                         {isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] border dark:border-[#6366F1]/30">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 border dark:border-sky-400/30">
                              Recommandé
                           </span>
                         )}
@@ -1634,7 +1620,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         {isAllowed ? (
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                             isSelected
-                              ? 'bg-[#6366F1] text-white shadow-xs'
+                              ? 'bg-sky-500 text-white shadow-xs'
                               : 'bg-slate-100 border border-slate-200 text-slate-700 dark:bg-white/5 dark:border-white/10 dark:text-slate-300 dark:hover:text-white'
                           }`}>
                             {isSelected 
@@ -1713,7 +1699,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     }}
                     className={`group p-3 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-2 active:scale-95 ${
                       isSelected
-                        ? 'bg-gradient-to-r from-sky-400 to-violet-600 border-sky-400 text-white shadow-md shadow-sky-400/30 ring-2 ring-sky-400/40 font-bold scale-[1.01]'
+                        ? 'bg-gradient-to-r from-sky-500 to-blue-600 border-sky-400 text-white shadow-md shadow-sky-500/25 ring-2 ring-sky-400/35 font-bold scale-[1.01]'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 dark:bg-transparent dark:border-white/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5 dark:hover:border-white/10'
                     }`}
                   >
@@ -1735,7 +1721,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 soundFX.playSuccessChime();
                 handleFinalSubmit();
               }}
-              className="w-full py-4 px-6 text-sm sm:text-base font-bold text-white rounded-2xl cursor-pointer bg-gradient-to-r from-[#6366F1] to-[#0369A1] hover:from-[#5558E6] hover:to-[#0369A1] shadow-xl shadow-sky-400/30 hover:shadow-sky-400/40 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]"
+              className="w-full py-4 px-6 text-sm sm:text-base font-bold text-white rounded-2xl cursor-pointer bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 shadow-xl shadow-sky-500/25 hover:shadow-sky-500/35 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]"
             >
               <Calendar className="w-5 h-5 text-white shrink-0" />
               <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières) </span>

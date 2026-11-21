@@ -14,7 +14,7 @@ export const MATHS_TLE_A_L01_LIMITES_DERIVATION: CurriculumChapter = {
   "summary": "Limites à l'infini des fonctions de référence, des polynômes et des fonctions rationnelles, asymptotes, dérivées usuelles et sens de variation.",
   "officialVolumeHours": 12,
   "contentVersion": 2,
-  "source": "Programme de Terminale A fourni par l'équipe KONAN (pas de PDF officiel), vérifié et corrigé",
+  "source": "Programme de Terminale A fourni par l'équipe KONAN, vérifié et corrigé",
   "points": [
     {
       "id": "terminale_a_maths_numerique_l01_limites_derivation_p01",

@@ -67,7 +67,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_histoire_t3_l02_seconde_guerre_mondiale_p01_q2",
             "type": "mcq",
-            "prompt": "Quelle est la première cause de la Seconde Guerre mondiale selon le cours ?",
+            "prompt": "Quelle est la première cause de la Seconde Guerre mondiale ?",
             "options": [
               "Le refus allemand du traité de Versailles",
               "L'attentat de Sarajevo en 1914",
@@ -201,7 +201,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_histoire_t3_l02_seconde_guerre_mondiale_p01_q2",
           "type": "mcq",
-          "prompt": "Quelle est la première cause de la Seconde Guerre mondiale selon le cours ?",
+          "prompt": "Quelle est la première cause de la Seconde Guerre mondiale ?",
           "options": [
             "Le refus allemand du traité de Versailles",
             "L'attentat de Sarajevo en 1914",
@@ -1063,7 +1063,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
       "order": 5,
       "title": "Un traumatisme humain énorme",
       "summary": "50 à 60 millions de morts, dont la moitié de civils.",
-      "conceptExplanation": "La Seconde Guerre mondiale est la plus meurtrière de l'histoire : entre 50 et 60 millions de morts, environ six fois plus que la Première.\n\nQuelques bilans (document du cours) :\n- URSS : environ 20 millions de morts, dont 11 millions de civils ;\n- Pologne : 5,8 millions, presque tous civils ;\n- Allemagne : environ 5 millions ;\n- Chine : 6 à 8 millions ;\n- France : environ 600 000 ;\n- États-Unis : environ 300 000.\n\nPour la première fois, environ la moitié des victimes sont des civils (bombardements, faim, froid, massacres). La guerre provoque :\n- le génocide des Juifs (environ 6 millions de morts) et des Tziganes ;\n- environ 30 millions de déplacés et réfugiés ;\n- les bombardements atomiques américains sur Hiroshima (6 août 1945) et Nagasaki (9 août 1945), qui anéantissent ces deux villes japonaises ;\n- des orphelins, des blessés, des mutilés et un choc moral considérable.\n\nLes tirailleurs africains, dont des Ivoiriens, ont combattu pour la libération de la France.",
+      "conceptExplanation": "La Seconde Guerre mondiale est la plus meurtrière de l'histoire : entre 50 et 60 millions de morts, environ six fois plus que la Première.\n\nQuelques bilans humains :\n- URSS : environ 20 millions de morts, dont 11 millions de civils ;\n- Pologne : 5,8 millions, presque tous civils ;\n- Allemagne : environ 5 millions ;\n- Chine : 6 à 8 millions ;\n- France : environ 600 000 ;\n- États-Unis : environ 300 000.\n\nPour la première fois, environ la moitié des victimes sont des civils (bombardements, faim, froid, massacres). La guerre provoque :\n- le génocide des Juifs (environ 6 millions de morts) et des Tziganes ;\n- environ 30 millions de déplacés et réfugiés ;\n- les bombardements atomiques américains sur Hiroshima (6 août 1945) et Nagasaki (9 août 1945), qui anéantissent ces deux villes japonaises ;\n- des orphelins, des blessés, des mutilés et un choc moral considérable.\n\nLes tirailleurs africains, dont des Ivoiriens, ont combattu pour la libération de la France.",
       "keyRule": "50 à 60 millions de morts (moitié de civils), URSS 20 millions, Shoah (6 millions de Juifs), 30 millions de déplacés, bombes atomiques sur Hiroshima et Nagasaki (août 1945).",
       "formulas": [],
       "workedExample": {
@@ -1199,7 +1199,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
               "Environ 60 millions"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "Le texte du cours écrit 1,4 million, mais son propre tableau donne 600 000."
+            "explanation": "Le bilan français est estimé à environ 600 000 morts."
           }
         },
         {
@@ -1220,7 +1220,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
               "Causes de la guerre"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est l'activité d'application n°2 du cours."
+            "explanation": "Cette notion est un point clé à maîtriser."
           }
         }
       ],
@@ -1301,7 +1301,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
             "Environ 60 millions"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Le texte du cours écrit 1,4 million, mais son propre tableau donne 600 000."
+          "explanation": "Le bilan français est estimé à environ 600 000 morts."
         },
         {
           "id": "premiere_a1_hg_histoire_t3_l02_seconde_guerre_mondiale_p05_q7",
@@ -1314,7 +1314,7 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
             "Causes de la guerre"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est l'activité d'application n°2 du cours."
+          "explanation": "Cette notion est un point clé à maîtriser."
         }
       ]
     },

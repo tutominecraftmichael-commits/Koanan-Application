@@ -316,7 +316,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Répondre à une demande d’information sur le raffinage (Situation p. 2)',
+        title: 'Répondre à une demande d’information sur le raffinage',
         statement:
           'Un documentaire explique que le pétrole brut sortant des puits est inutilisable et doit être raffiné. Explique à un élève pourquoi et nomme les opérations de base.',
         methodSteps: [
@@ -591,7 +591,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
       summary:
         'Définir le craquage, écrire et équilibrer ses équations-bilans (dont la déshydrogénation et la rupture de chaîne du butane) et calculer les pourcentages massiques des produits.',
       conceptExplanation:
-        "Le **craquage** est une transformation chimique qui permet de casser les molécules d’**hydrocarbures lourds** (à longue chaîne carbonée) en **hydrocarbures légers** (alcanes plus courts, alcènes très réactifs utiles en pétrochimie et parfois dihydrogène).\n\n- **Conservation des atomes** : dans toute équation de craquage, le nombre total d’atomes de carbone et d’hydrogène reste strictement identique avant et après réaction.\n- **Exemple officiel du craquage du butane ($\\mathrm{C_4H_{10}}$)** (Exercice 4 du cours) :\n  - Réaction 1 (déshydrogénation, 60 % des moles de butane) : $\\mathrm{C_4H_{10} \\longrightarrow C_4H_8 + H_2}$ (formation de méthylpropène $\\mathrm{CH_2=C(CH_3)-CH_3}$ et de dihydrogène).\n  - Réaction 2 (coupure de chaîne, 40 % des moles de butane) : $\\mathrm{C_4H_{10} \\longrightarrow C_3H_6 + CH_4}$ (formation de propène $\\mathrm{CH_3-CH=CH_2}$ et de méthane).",
+        "Le **craquage** est une transformation chimique qui permet de casser les molécules d’**hydrocarbures lourds** (à longue chaîne carbonée) en **hydrocarbures légers** (alcanes plus courts, alcènes très réactifs utiles en pétrochimie et parfois dihydrogène).\n\n- **Conservation des atomes** : dans toute équation de craquage, le nombre total d’atomes de carbone et d’hydrogène reste strictement identique avant et après réaction.\n- **Exemple officiel du craquage du butane ($\\mathrm{C_4H_{10}}$)** :\n - Réaction 1 (déshydrogénation, 60 % des moles de butane) : $\\mathrm{C_4H_{10} \\longrightarrow C_4H_8 + H_2}$ (formation de méthylpropène $\\mathrm{CH_2=C(CH_3)-CH_3}$ et de dihydrogène).\n - Réaction 2 (coupure de chaîne, 40 % des moles de butane) : $\\mathrm{C_4H_{10} \\longrightarrow C_3H_6 + CH_4}$ (formation de propène $\\mathrm{CH_3-CH=CH_2}$ et de méthane).",
       keyRule:
         'Le craquage brise des hydrocarbures lourds en hydrocarbures légers (souvent un alcane plus court et un alcène) avec conservation de la masse et du nombre d’atomes.',
       formulas: [
@@ -611,7 +611,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Pourcentages massiques des produits du craquage du butane (Exercice 4 p. 3–4)',
+        title: 'Pourcentages massiques des produits du craquage du butane',
         statement:
           'Le craquage de 100 mol de butane ($M = 58\\text{ g/mol}$) suit deux réactions : 60 % donnent du méthylpropène ($\\mathrm{C_4H_8}$) et du dihydrogène ($\\mathrm{H_2}$) ; 40 % donnent du propène ($\\mathrm{C_3H_6}$) et du méthane ($\\mathrm{CH_4}$). Détermine la composition massique finale.',
         methodSteps: [
@@ -1136,7 +1136,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Classer des produits entre dérivés du pétrole et autres produits (Exercice 3 p. 3)',
+        title: 'Classer des produits entre dérivés du pétrole et autres produits',
         statement:
           'Classe les substances suivantes en deux catégories (dérivés du pétrole / autres produits) : éthylène, nitroglycérine, bitume, gasoil, hexachlorocyclohexane, essence, acide sulfurique, carburant turboréacteur, alcool éthylique, butane, propane, acide nitrique.',
         methodSteps: [
@@ -1281,7 +1281,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
           stepTheme: 'Confusion gaz/essence',
           stepTitle: 'Ne pas confondre carburant avion et alcool éthylique',
           paragraphText:
-            'L’aviation utilise le carburant turboréacteur (kérosène), fraction moyenne issue du pétrole brut. En revanche, l’alcool éthylique (éthanol) issu de la fermentation végétale n’est pas classé parmi les produits dérivés du pétrole dans l’exercice du cours.',
+            'L’aviation utilise le carburant turboréacteur (kérosène), fraction moyenne issue du pétrole brut. En revanche, l’alcool éthylique (éthanol) issu de la fermentation végétale n’est pas classé parmi les produits dérivés du pétrole.',
           exercise: {
             id: 'premiere_c_chimie_l01_petrole_gaz_naturels_p05_q6',
             type: 'mcq',
@@ -1406,7 +1406,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Analyser l’impact environnemental des dérivés pétroliers (Exercice 2 p. 3)',
+        title: 'Analyser l’impact environnemental des dérivés pétroliers',
         statement:
           'Cite trois impacts écologiques majeurs liés à l’exploitation, au transport et à l’utilisation des produits dérivés du pétrole.',
         methodSteps: [
@@ -1471,7 +1471,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
           stepTheme: 'Pétrochimie agricole',
           stepTitle: 'Impact des insecticides et phytosanitaires',
           paragraphText:
-            'Comme le rappelle l’Exercice 2 du cours, les insecticides et produits phytosanitaires issus de la pétrochimie s’infiltrent dans l’environnement, polluent les nappes et appauvrissent la biodiversité des sols.',
+            'En chimie environnementale, les insecticides et produits phytosanitaires issus de la pétrochimie s’infiltrent dans l’environnement, polluent les nappes et appauvrissent la biodiversité des sols.',
           exercise: {
             id: 'premiere_c_chimie_l01_petrole_gaz_naturels_p06_q3',
             type: 'mcq',
@@ -1494,7 +1494,7 @@ export const CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS: CurriculumChapter = {
           stepTheme: 'Surconsommation',
           stepTitle: 'Pourquoi les réserves mondiales s’épuisent-elles ?',
           paragraphText:
-            'D’après le document d’analyse du cours, la consommation mondiale dépasse aujourd’hui le renouvellement naturel (nul à l’échelle humaine) et l’extraction peine à suivre la demande à long terme, menant à l’épuisement futur des gisements.',
+            'À l’échelle mondiale, la consommation mondiale dépasse aujourd’hui le renouvellement naturel (nul à l’échelle humaine) et l’extraction peine à suivre la demande à long terme, menant à l’épuisement futur des gisements.',
           exercise: {
             id: 'premiere_c_chimie_l01_petrole_gaz_naturels_p06_q4',
             type: 'mcq',

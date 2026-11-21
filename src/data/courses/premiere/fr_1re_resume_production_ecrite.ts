@@ -2019,7 +2019,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q1",
             "type": "mcq",
-            "prompt": "Selon le cours, combien de paragraphes argumentatifs le développement de la production écrite doit-il compter au minimum ?",
+            "prompt": "Combien de paragraphes argumentatifs le développement de la production écrite doit-il compter au minimum ?",
             "options": [
               "Trois",
               "Un seul",
@@ -2161,7 +2161,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q1",
           "type": "mcq",
-          "prompt": "Selon le cours, combien de paragraphes argumentatifs le développement de la production écrite doit-il compter au minimum ?",
+          "prompt": "Combien de paragraphes argumentatifs le développement de la production écrite doit-il compter au minimum ?",
           "options": [
             "Trois",
             "Un seul",

@@ -300,7 +300,7 @@ export const CHIMIE_1RE_CD_L05_ETHANOL: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Combustion complète de 4,5 g d’éthanol (Exercice 5 p. 5)',
+        title: 'Combustion complète de 4,5 g d’éthanol',
         statement:
           'On réalise la combustion complète de $m = 4{,}5\\text{ g}$ d’éthanol ($M = 46\\text{ g/mol}$) dans le dioxygène ($V_m = 22{,}4\\text{ L/mol}$). Calcule le volume $V_{\\mathrm{O_2}}$ nécessaire ainsi que les masses $m_{\\mathrm{CO_2}}$ ($M = 44\\text{ g/mol}$) et $m_{\\mathrm{H_2O}}$ ($M = 18\\text{ g/mol}$) obtenues.',
         methodSteps: [
@@ -1084,7 +1084,7 @@ export const CHIMIE_1RE_CD_L05_ETHANOL: CurriculumChapter = {
       summary:
         'Résoudre des suites réactionnelles (acétylène → éthylène → éthanol → éthanal → acide éthanoïque) et identifier des composés oxygénés par leur masse molaire.',
       conceptExplanation:
-        "En chimie organique de 1ère CD, l’éthanol est au cœur d’une chaîne classique de transformations :\n\n$$\\mathrm{HC\\equiv CH} \\;(\\text{acétylène}) \\xrightarrow{+\\mathrm{H_2}} \\mathrm{CH_2=CH_2} \\;(\\text{éthylène}) \\xrightarrow{+\\mathrm{H_2O}} \\mathrm{CH_3-CH_2-OH} \\;(\\text{éthanol}) \\xrightarrow{+\\frac{1}{2}\\mathrm{O_2}} \\mathrm{CH_3-CHO} \\;(\\text{éthanal}) \\xrightarrow{+\\frac{1}{2}\\mathrm{O_2}} \\mathrm{CH_3-COOH} \\;(\\text{acide éthanoïque})$$\n\n- **Méthode d’identification inversée (Situation p. 2, Ex 2 et Ex 4 p. 3–4)** :\n  - Si un acide carboxylique saturé $\\mathrm{C_nH_{2n}O_2}$ a pour masse molaire $M_C = 60\\text{ g/mol}$, alors $14n + 32 = 60 \\implies n = 2$ : c’est l’**acide éthanoïque** ($\\mathrm{C_2H_4O_2}$).\n  - L’aldéhyde $\\mathrm{C_nH_{2n}O}$ qui lui a donné naissance par oxydation ménagée conserve le même $n = 2$ : c’est l’**éthanal** ($\\mathrm{CH_3-CHO}$), lui-même issu de l’**éthanol** ($\\mathrm{CH_3-CH_2-OH}$).",
+        "En chimie organique de 1ère CD, l’éthanol est au cœur d’une chaîne classique de transformations :\n\n$$\\mathrm{HC\\equiv CH} \\;(\\text{acétylène}) \\xrightarrow{+\\mathrm{H_2}} \\mathrm{CH_2=CH_2} \\;(\\text{éthylène}) \\xrightarrow{+\\mathrm{H_2O}} \\mathrm{CH_3-CH_2-OH} \\;(\\text{éthanol}) \\xrightarrow{+\\frac{1}{2}\\mathrm{O_2}} \\mathrm{CH_3-CHO} \\;(\\text{éthanal}) \\xrightarrow{+\\frac{1}{2}\\mathrm{O_2}} \\mathrm{CH_3-COOH} \\;(\\text{acide éthanoïque})$$\n\n- **Méthode d’identification inversée** :\n - Si un acide carboxylique saturé $\\mathrm{C_nH_{2n}O_2}$ a pour masse molaire $M_C = 60\\text{ g/mol}$, alors $14n + 32 = 60 \\implies n = 2$ : c’est l’**acide éthanoïque** ($\\mathrm{C_2H_4O_2}$).\n - L’aldéhyde $\\mathrm{C_nH_{2n}O}$ qui lui a donné naissance par oxydation ménagée conserve le même $n = 2$ : c’est l’**éthanal** ($\\mathrm{CH_3-CHO}$), lui-même issu de l’**éthanol** ($\\mathrm{CH_3-CH_2-OH}$).",
       keyRule:
         'Toutes les étapes d’hydratation et d’oxydation ménagée autour de l’éthylène/éthanol conservent le squelette à 2 atomes de carbone ; M = 60 g/mol identifie C₂H₄O₂ (acide éthanoïque) et M = 46 g/mol identifie C₂H₆O (éthanol).',
       formulas: [
@@ -1095,7 +1095,7 @@ export const CHIMIE_1RE_CD_L05_ETHANOL: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Résoudre une suite de 4 réactions (Exercice 1 & Exercice 2 p. 3)',
+        title: 'Résoudre une suite de 4 réactions',
         statement:
           '(1) Identifie A, B, C, D dans : $A + \\mathrm{H_2} \\to \\text{éthylène}$ ; $\\text{éthylène} + \\mathrm{H_2O} \\to B$ ; $B + \\frac{1}{2}\\mathrm{O_2} \\to C + \\mathrm{H_2O}$ ; $C + \\frac{1}{2}\\mathrm{O_2} \\to D$ (acide éthanoïque). (2) Un composé X ($\\mathrm{C_nH_{2n}O}$) donne par oxydation sur cuivre un acide de masse molaire $M = 60\\text{ g/mol}$ : quel est X ?',
         methodSteps: [
@@ -1345,11 +1345,11 @@ export const CHIMIE_1RE_CD_L05_ETHANOL: CurriculumChapter = {
       summary:
         'Connaître les effets sanitaires de l’éthanol (troubles de mémoire, cirrhose, diabète, risque fœtal), son absorption/élimination par le foie et l’usage routier de l’alcootest.',
       conceptExplanation:
-        "Présent dans toutes les boissons alcoolisées (vin, bière, liqueurs, *koutoukou*), l’**éthanol** est une substance psychoactive toxique à forte dose ou en consommation régulière :\n\n1. **Risques pour la santé (cours p. 2 & 5–6)** :\n   - À court terme : baisse de la vigilance, ralentissement des réflexes, troubles de la coordination (accidents de la route).\n   - À moyen et long terme : **troubles de la mémoire**, **diabète**, **cirrhose du foie**.\n   - Chez la femme enceinte : l’éthanol **franchit facilement la barrière placentaire**, exposant le fœtus à des concentrations proches de celles de la mère.\n2. **Absorption et élimination dans l’organisme** :\n   - $70$ à $80\\%$ de l’éthanol est absorbé au niveau de l’intestin grêle (duodénum et jéjunum) ; la prise d’alcool **pendant un repas ralentit l’absorption** (pic atteint en $\\approx 90\\text{ min}$ contre $\\approx 45\\text{ min}$ à jeun).\n   - L’éthanol est **éliminé essentiellement par le foie ($95\\%$)** et pour les **$5\\%$ restants** par les reins, la peau, les poumons et la salive.\n   - Un **verre standard** contient environ **$10\\text{ g}$ d’alcool pur**, quelle que soit la boisson.\n3. **Contrôle routier** : les forces de sécurité utilisent l’**alcootest** pour dépister l’excès d’éthanol dans l’air expiré des conducteurs.",
+        "Présent dans toutes les boissons alcoolisées (vin, bière, liqueurs, *koutoukou*), l’**éthanol** est une substance psychoactive toxique à forte dose ou en consommation régulière :\n\n1. **Risques pour la santé** :\n - À court terme : baisse de la vigilance, ralentissement des réflexes, troubles de la coordination (accidents de la route).\n - À moyen et long terme : **troubles de la mémoire**, **diabète**, **cirrhose du foie**.\n - Chez la femme enceinte : l’éthanol **franchit facilement la barrière placentaire**, exposant le fœtus à des concentrations proches de celles de la mère.\n2. **Absorption et élimination dans l’organisme** :\n - $70$ à $80\\%$ de l’éthanol est absorbé au niveau de l’intestin grêle (duodénum et jéjunum) ; la prise d’alcool **pendant un repas ralentit l’absorption** (pic atteint en $\\approx 90\\text{ min}$ contre $\\approx 45\\text{ min}$ à jeun).\n - L’éthanol est **éliminé essentiellement par le foie ($95\\%$)** et pour les **$5\\%$ restants** par les reins, la peau, les poumons et la salive.\n - Un **verre standard** contient environ **$10\\text{ g}$ d’alcool pur**, quelle que soit la boisson.\n3. **Contrôle routier** : les forces de sécurité utilisent l’**alcootest** pour dépister l’excès d’éthanol dans l’air expiré des conducteurs.",
       keyRule:
         'L’éthanol est éliminé à 95 % par le foie (responsable de la cirrhose en cas d’abus) et passe la barrière placentaire ; 1 verre standard ≈ 10 g d’éthanol pur, dépisté dans l’air expiré par l’alcootest.',
       workedExample: {
-        title: 'Comparer deux situations d’absorption d’alcool (Documentation p. 5–6)',
+        title: 'Comparer deux situations d’absorption d’alcool',
         statement:
           'Une personne consomme un verre standard ($10\\text{ g}$ d’éthanol pur) à jeun ou pendant un repas. Quelle différence observe-t-on sur la cinétique d’absorption et quel organe élimine l’essentiel de cet alcool ?',
         methodSteps: [

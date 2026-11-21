@@ -304,7 +304,7 @@ const p02Steps: StructuredLessonStep[] = [
   {
     stepNumber: 6,
     stepKind: 'exemple',
-    stepBadge: 'Exercice du cours',
+    stepBadge: 'Exercice',
     stepTheme: 'blue',
     stepTitle: 'Équation $\\ln(2x - 3) = 2\\ln(6 - x) - \\ln x$',
     paragraphText:
@@ -1098,7 +1098,7 @@ export const MATHS_TLE_C_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
     'Définition de ln, propriétés algébriques, nombre e, équations et inéquations logarithmiques, limites de référence, dérivée u′/u, primitives, logarithme de base a et décimal, études de fonctions.',
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l05_logarithme_neperien_p01',

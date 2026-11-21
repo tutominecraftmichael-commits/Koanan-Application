@@ -276,6 +276,7 @@ export interface NavbarProps {
   friendNotices?: FriendNotice[];
   incomingFriends?: FriendCard[];
   onRespondFriend?: (konanId: string, accept: boolean) => Promise<void>;
+  onClearFriendNotices?: () => Promise<void>;
   onOpenFriends?: () => void;
   onOpenProfile?: () => void;
   /** Avatar animé personnalisé de l'élève */
@@ -344,6 +345,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   friendNotices = [],
   incomingFriends = [],
   onRespondFriend,
+  onClearFriendNotices,
   onOpenFriends,
   onOpenProfile,
   avatarConfig = null,
@@ -495,12 +497,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [friendNotices, incomingFriends]);
 
   const totalPendingCount = activePendingInvitations.length + incomingQuests.length + incomingFriends.length;
+  const hasClearableFriendNotices = effectiveFriendNotices.some((n) => !(n.kind === 'request' && n.from.relation === 'incoming'));
 
-  const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
+  // Les demandes en attente (amis, quêtes, invitations) gardent toujours le point rouge actif tant qu'elles ne sont pas traitées.
+  const hasUnreadNotifications = totalPendingCount > 0
     || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
     || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
-    || effectiveFriendNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
-    || effectiveQuestNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+    || effectiveFriendNotices.some(n => n?.id && !(n.kind === 'request' && n.from.relation === 'incoming') && !seenNotificationIds.has(n.id))
+    || effectiveQuestNotices.some(n => n?.id && !n.pending && !seenNotificationIds.has(n.id));
 
   // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
   useEffect(() => {
@@ -517,16 +521,18 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [hasUnreadNotifications, isNotificationsOpen]);
 
-  // Opening the panel marks every visible notification as read
+  // Opening the panel marks informational (non-pending) notifications as read
   useEffect(() => {
-    if (!isNotificationsOpen || !hasUnreadNotifications) return;
+    if (!isNotificationsOpen) return;
+    const toMark: string[] = [];
+    normalizedOwnerNotifications.forEach(notif => notif?.id && !seenNotificationIds.has(notif.id) && toMark.push(notif.id));
+    paymentNotices.forEach(n => n?.id && !seenNotificationIds.has(n.id) && toMark.push(n.id));
+    effectiveFriendNotices.forEach(n => n?.id && !(n.kind === 'request' && n.from.relation === 'incoming') && !seenNotificationIds.has(n.id) && toMark.push(n.id));
+    effectiveQuestNotices.forEach(n => n?.id && !n.pending && !seenNotificationIds.has(n.id) && toMark.push(n.id));
+    if (!toMark.length) return;
     setSeenNotificationIds(prev => {
       const next = new Set(prev);
-      activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
-      normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
-      paymentNotices.forEach(n => n?.id && next.add(n.id));
-      effectiveFriendNotices.forEach(n => n?.id && next.add(n.id));
-      effectiveQuestNotices.forEach(n => n?.id && next.add(n.id));
+      toMark.forEach(id => next.add(id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -534,7 +540,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, effectiveFriendNotices, effectiveQuestNotices]);
+  }, [isNotificationsOpen, seenNotificationIds, normalizedOwnerNotifications, paymentNotices, effectiveFriendNotices, effectiveQuestNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -824,11 +830,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <Bell className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                           Notifications & Invitations
                         </span>
-                        {totalPendingCount > 0 && (
-                          <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
-                            {totalPendingCount} en attente
-                          </span>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {hasClearableFriendNotices && onClearFriendNotices && (
+                            <button
+                              type="button"
+                              onClick={() => { onClearFriendNotices(); }}
+                              className="text-[10px] font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer transition-colors"
+                            >
+                              Effacer les lues
+                            </button>
+                          )}
+                          {totalPendingCount > 0 && (
+                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
+                              {totalPendingCount} en attente
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && effectiveFriendNotices.length === 0 && effectiveQuestNotices.length === 0 ? (
@@ -989,6 +1006,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                             Notifications & Invitations
                           </span>
                           <div className="flex items-center gap-2">
+                            {hasClearableFriendNotices && onClearFriendNotices && (
+                              <button
+                                type="button"
+                                onClick={() => { onClearFriendNotices(); }}
+                                className="text-[10px] font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer transition-colors"
+                              >
+                                Effacer
+                              </button>
+                            )}
                             {totalPendingCount > 0 && (
                               <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
                                 {totalPendingCount} en attente

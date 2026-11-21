@@ -17,7 +17,7 @@ import { verifyFirebaseIdToken } from './_firebaseToken.js';
 import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
-import { friendsState, konanIdFromUid, normalizeKonanId, publicProfile, removeFriend, respondFriendRequest, savePrivacy, sendFriendRequest } from './_friends.js';
+import { clearFriendNotices, friendsState, konanIdFromUid, normalizeKonanId, publicProfile, removeFriend, respondFriendRequest, savePrivacy, sendFriendRequest } from './_friends.js';
 import {
   cancelFriendQuest, claimQuestReward, ensureUserGold, getQuestState, nudgeQuestPartner, proposeFriendQuest, recordQuestXp, respondFriendQuest,
 } from './_quests.js';
@@ -134,8 +134,8 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
     const snap = await tx.get(playerRef);
     const prev = snap.exists ? snap.data() : { uid, division: 1, reputation: 100 };
     if (prev.weekId && prev.weekId !== weekId) prev.groupId = null; // nouvelle semaine : nouveau groupe
-    // Énergie vérifiée seulement quand la formule est sûre (paiement allumé) ; pendant le gel, une leçon vaut +3 %
-    const xpOpts = { nowMs, planTier, enforceEnergy: paymentsEnabled(), lessonRepCredit: isFrozen(prev) ? 3 : 1 };
+    // Énergie vérifiée seulement quand la formule est sûre (paiement allumé) ; pendant le gel, une leçon vaut +5 %
+    const xpOpts = { nowMs, planTier, enforceEnergy: paymentsEnabled(), lessonRepCredit: isFrozen(prev) ? 5 : 1 };
     const counted = applyXpEvents(prev, body.events, xpOpts);
     // Réputation : chaque séance ou série vérifiée donne un crédit de hausse, gardé pour plus tard
     // (l'appli compte parfois le +1 % d'une séance le lendemain). Première fois après la correction : reprise telle quelle.
@@ -230,7 +230,7 @@ export default async function handler(req, res) {
   }
 
   // Amis (2026-11-17) : mêmes contrôles (élève connecté), sans toucher à la ligue
-  const FRIEND_ACTIONS = ['friends', 'profile', 'friend_request', 'friend_respond', 'friend_remove', 'privacy'];
+  const FRIEND_ACTIONS = ['friends', 'profile', 'friend_request', 'friend_respond', 'friend_remove', 'friend_clear_notices', 'privacy'];
   if (FRIEND_ACTIONS.includes(body?.action)) {
     try {
       const db = await getDb();
@@ -241,6 +241,7 @@ export default async function handler(req, res) {
       else if (body.action === 'friend_request') out = await sendFriendRequest(db, uid, id);
       else if (body.action === 'friend_respond') out = await respondFriendRequest(db, uid, id, body.accept === true);
       else if (body.action === 'friend_remove') out = await removeFriend(db, uid, id);
+      else if (body.action === 'friend_clear_notices') out = await clearFriendNotices(db, uid);
       else out = await savePrivacy(db, uid, { allowRequests: body.allowRequests, profileVisibility: body.profileVisibility });
       if (out?.error) return send(res, out.error === 'NOT_FOUND' ? 404 : 400, { success: false, error: out.error });
       return send(res, 200, { success: true, ...out });

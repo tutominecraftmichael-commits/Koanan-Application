@@ -16,11 +16,59 @@ import { applyIllustrations } from '../../data/illustrations';
 // Toute lecture des cours doit être précédée de `await loadCurriculumFor(classe, [matières])` ;
 // les scripts de contrôle appellent loadAllCurriculum().
 // ============================================================================
-export type CurriculumLevel = 'seconde' | 'premiere' | 'terminale';
-const LEVELS: CurriculumLevel[] = ['seconde', 'premiere', 'terminale'];
-const SUBJECT_ORDER: StemSubjectId[] = ['maths', 'physique_chimie', 'svt', 'francais', 'histoire_geo', 'philosophie'];
-type PackKey = `${CurriculumLevel}_${StemSubjectId}`;
-/** Paquets existants (src/data/coursePacks/<niveau>_<matière>.ts). */
+export type CurriculumLevel = 'seconde' | 'premiere' | 'terminale' | 'lmd_entd_l1';
+const LEVELS: CurriculumLevel[] = ['seconde', 'premiere', 'terminale', 'lmd_entd_l1'];
+const SUBJECT_ORDER: StemSubjectId[] = [
+  'maths', 'physique_chimie', 'svt', 'francais', 'histoire_geo', 'philosophie',
+  'lmd_algorithmique', 'lmd_algebre', 'lmd_analyse', 'lmd_logique_math', 'lmd_stat_descriptive', 'lmd_reseaux',
+  'lmd_intro_eco_num', 'lmd_modele_dev_eco_num', 'lmd_macroeconomie', 'lmd_microeconomie', 'lmd_banque', 'lmd_assurance',
+  'lmd_compta_generale', 'lmd_compta_analytique', 'lmd_oge', 'lmd_intro_management', 'lmd_intro_marketing', 'lmd_intro_droit_num', 'lmd_droit_numerique',
+  'lmd_bureautique', 'lmd_init_info', 'lmd_tef', 'lmd_ecriture_creative', 'lmd_dev_perso',
+];
+
+type LmdEntdPackKey =
+  | 'lmd_entd_l1_maths_info'
+  | 'lmd_entd_l1_eco_finance'
+  | 'lmd_entd_l1_gestion_droit'
+  | 'lmd_entd_l1_comm_bureau';
+type LyceePackKey = `${'seconde' | 'premiere' | 'terminale'}_${'maths' | 'physique_chimie' | 'svt' | 'francais' | 'histoire_geo' | 'philosophie'}`;
+type PackKey = LyceePackKey | LmdEntdPackKey;
+
+const LMD_ENTD_L1_SUBJECT_PACK: Partial<Record<StemSubjectId, LmdEntdPackKey>> = {
+  lmd_algorithmique: 'lmd_entd_l1_maths_info',
+  lmd_algebre: 'lmd_entd_l1_maths_info',
+  lmd_analyse: 'lmd_entd_l1_maths_info',
+  lmd_logique_math: 'lmd_entd_l1_maths_info',
+  lmd_stat_descriptive: 'lmd_entd_l1_maths_info',
+  lmd_reseaux: 'lmd_entd_l1_maths_info',
+  lmd_intro_eco_num: 'lmd_entd_l1_eco_finance',
+  lmd_modele_dev_eco_num: 'lmd_entd_l1_eco_finance',
+  lmd_macroeconomie: 'lmd_entd_l1_eco_finance',
+  lmd_microeconomie: 'lmd_entd_l1_eco_finance',
+  lmd_banque: 'lmd_entd_l1_eco_finance',
+  lmd_assurance: 'lmd_entd_l1_eco_finance',
+  lmd_compta_generale: 'lmd_entd_l1_gestion_droit',
+  lmd_compta_analytique: 'lmd_entd_l1_gestion_droit',
+  lmd_oge: 'lmd_entd_l1_gestion_droit',
+  lmd_intro_management: 'lmd_entd_l1_gestion_droit',
+  lmd_intro_marketing: 'lmd_entd_l1_gestion_droit',
+  lmd_intro_droit_num: 'lmd_entd_l1_gestion_droit',
+  lmd_droit_numerique: 'lmd_entd_l1_gestion_droit',
+  lmd_bureautique: 'lmd_entd_l1_comm_bureau',
+  lmd_init_info: 'lmd_entd_l1_comm_bureau',
+  lmd_tef: 'lmd_entd_l1_comm_bureau',
+  lmd_ecriture_creative: 'lmd_entd_l1_comm_bureau',
+  lmd_dev_perso: 'lmd_entd_l1_comm_bureau',
+};
+
+const ALL_PACK_ORDER: PackKey[] = [
+  'seconde_maths', 'seconde_physique_chimie', 'seconde_svt', 'seconde_francais', 'seconde_histoire_geo',
+  'premiere_maths', 'premiere_physique_chimie', 'premiere_svt', 'premiere_francais', 'premiere_histoire_geo', 'premiere_philosophie',
+  'terminale_maths', 'terminale_physique_chimie', 'terminale_svt', 'terminale_francais', 'terminale_histoire_geo', 'terminale_philosophie',
+  'lmd_entd_l1_maths_info', 'lmd_entd_l1_eco_finance', 'lmd_entd_l1_gestion_droit', 'lmd_entd_l1_comm_bureau',
+];
+
+/** Paquets existants (src/data/coursePacks/<niveau>_<matière|groupe>.ts). */
 const PACK_LOADERS: Partial<Record<PackKey, () => Promise<{ CHAPTERS: CurriculumChapter[] }>>> = {
   seconde_maths: () => import('../../data/coursePacks/seconde_maths'),
   seconde_physique_chimie: () => import('../../data/coursePacks/seconde_physique_chimie'),
@@ -39,12 +87,16 @@ const PACK_LOADERS: Partial<Record<PackKey, () => Promise<{ CHAPTERS: Curriculum
   terminale_francais: () => import('../../data/coursePacks/terminale_francais'),
   terminale_histoire_geo: () => import('../../data/coursePacks/terminale_histoire_geo'),
   terminale_philosophie: () => import('../../data/coursePacks/terminale_philosophie'),
+  lmd_entd_l1_maths_info: () => import('../../data/coursePacks/lmd_entd_l1_maths_info'),
+  lmd_entd_l1_eco_finance: () => import('../../data/coursePacks/lmd_entd_l1_eco_finance'),
+  lmd_entd_l1_gestion_droit: () => import('../../data/coursePacks/lmd_entd_l1_gestion_droit'),
+  lmd_entd_l1_comm_bureau: () => import('../../data/coursePacks/lmd_entd_l1_comm_bureau'),
 };
 const loadedPacks = new Map<PackKey, CurriculumChapter[]>();
 const pendingPacks = new Map<PackKey, Promise<void>>();
 let AUTHORED_CHAPTERS: CurriculumChapter[] = [];
 
-/** Niveau (paquet de cours) d'une classe : seconde_c → 'seconde', premiere_a1 → 'premiere'… */
+/** Niveau (paquet de cours) d'une classe : seconde_c → 'seconde', premiere_a1 → 'premiere', lmd_entd_l1 → 'lmd_entd_l1'… */
 export function curriculumLevelOf(gradeLevel?: string | null): CurriculumLevel | null {
   const g = String(gradeLevel || '');
   return LEVELS.find((l) => g.startsWith(l)) ?? null;
@@ -53,6 +105,15 @@ export function curriculumLevelOf(gradeLevel?: string | null): CurriculumLevel |
 function packKeysFor(gradeLevel?: string | null, subjects?: readonly StemSubjectId[]): PackKey[] {
   const level = curriculumLevelOf(gradeLevel);
   if (!level) return [];
+  if (level === 'lmd_entd_l1') {
+    if (!subjects?.length) {
+      return ['lmd_entd_l1_maths_info', 'lmd_entd_l1_eco_finance', 'lmd_entd_l1_gestion_droit', 'lmd_entd_l1_comm_bureau'];
+    }
+    const keys = subjects
+      .map((s) => LMD_ENTD_L1_SUBJECT_PACK[s])
+      .filter((k): k is LmdEntdPackKey => Boolean(k));
+    return [...new Set(keys)];
+  }
   return (subjects?.length ? subjects : SUBJECT_ORDER)
     .map((s) => `${level}_${s}` as PackKey)
     .filter((k) => PACK_LOADERS[k]);
@@ -65,8 +126,8 @@ function loadPack(key: PackKey): Promise<void> {
     pending = PACK_LOADERS[key]!()
       .then((m) => {
         loadedPacks.set(key, m.CHAPTERS);
-        // Ordre stable : niveau puis matière
-        AUTHORED_CHAPTERS = LEVELS.flatMap((l) => SUBJECT_ORDER.flatMap((s) => loadedPacks.get(`${l}_${s}`) || []));
+        // Ordre stable : niveau puis matière / paquet
+        AUTHORED_CHAPTERS = ALL_PACK_ORDER.flatMap((k) => loadedPacks.get(k) || []);
       })
       .finally(() => pendingPacks.delete(key));
     pendingPacks.set(key, pending);

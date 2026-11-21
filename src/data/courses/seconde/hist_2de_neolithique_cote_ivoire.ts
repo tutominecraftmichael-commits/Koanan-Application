@@ -86,7 +86,7 @@ export const HIST_2DE_T3_L01_NEOLITHIQUE_CI: CurriculumChapter = {
           "exercise": {
             "id": "seconde_a_hg_histoire_t3_l01_neolithique_ci_p01_q3",
             "type": "mcq",
-            "prompt": "Quelles sont les bornes du néolithique en Côte d'Ivoire selon le cours ?",
+            "prompt": "Quelles sont les bornes du néolithique en Côte d'Ivoire ?",
             "options": [
               "D'environ -3000 à l'an 1000",
               "Du VIIe au XVe siècle",
@@ -212,7 +212,7 @@ export const HIST_2DE_T3_L01_NEOLITHIQUE_CI: CurriculumChapter = {
         {
           "id": "seconde_a_hg_histoire_t3_l01_neolithique_ci_p01_q3",
           "type": "mcq",
-          "prompt": "Quelles sont les bornes du néolithique en Côte d'Ivoire selon le cours ?",
+          "prompt": "Quelles sont les bornes du néolithique en Côte d'Ivoire ?",
           "options": [
             "D'environ -3000 à l'an 1000",
             "Du VIIe au XVe siècle",

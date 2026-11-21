@@ -1,5 +1,5 @@
 // ============================================================================
-// MODULE OFFICIEL : PHYSIQUE 2de C (MENA CÔTE D'IVOIRE)
+// MODULE OFFICIEL : PHYSIQUE 2de C
 // Volet : Physique | Classe : Seconde C
 // Leçon 1 approfondie : Le mouvement (12 Mini-Leçons distinctes, 96 questions uniques)
 // ============================================================================
