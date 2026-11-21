@@ -1,10 +1,10 @@
-import type { 
-  Subject, 
-  ClassSlot, 
-  StudyPreferences, 
-  StudySession, 
-  SessionType, 
-  DayOfWeek 
+import type {
+  Subject,
+  ClassSlot,
+  StudyPreferences,
+  StudySession,
+  SessionType,
+  DayOfWeek
 } from '../types';
 import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom, isNonAcademicSubject, stripWeekAnnotations, normalizeSubjectKey } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
@@ -240,10 +240,10 @@ export function generateOptimizedStudyPlan(
   if (revisableSubjects.length === 0) return [];
 
   // Contrôle de sécurité strict Backend / Serveur : vérifie les permissions de palier
-  const userContext = typeof userOrTier === 'string' 
-    ? { planTier: userOrTier } 
+  const userContext = typeof userOrTier === 'string'
+    ? { planTier: userOrTier }
     : userOrTier;
-  
+
   const resolvedTier: PlanTier = (userContext?.planTier || (userContext as any)?.tier) ?? 'free';
   // Fonction devoirs/examens : réservée à Pro/Plus, et ouverte seulement pour certaines classes
   const isExamFeatureAllowed = (resolvedTier === 'pro' || resolvedTier === 'plus') && isExamPrepOpenFor(examGrade);
@@ -348,8 +348,8 @@ export function generateOptimizedStudyPlan(
   const totalScore = subjectScores.reduce((acc, curr) => acc + curr.score, 0);
 
   // Déterminer les jours d'étude actifs
-  const daysToSchedule: DayOfWeek[] = preferences.weekendStudyEnabled 
-    ? [0, 1, 2, 3, 4, 5, 6] 
+  const daysToSchedule: DayOfWeek[] = preferences.weekendStudyEnabled
+    ? [0, 1, 2, 3, 4, 5, 6]
     : [0, 1, 2, 3, 4];
 
   // Objectif maximal de sessions par jour (plafond théorique sur journée libre)
@@ -408,8 +408,8 @@ export function generateOptimizedStudyPlan(
     item.minGap = item.mode === 'review'
       ? review.gaps[0]
       : item.targetSessions <= 1
-      ? 3
-      : Math.max(2, Math.min(3, Math.floor(daysToSchedule.length / item.targetSessions)));
+        ? 3
+        : Math.max(2, Math.min(3, Math.floor(daysToSchedule.length / item.targetSessions)));
     if (item.mode === 'review' && item.lastStudiedDaysAgo !== null) {
       item.nextAllowedAhead = Math.max(0, review.gaps[0] - item.lastStudiedDaysAgo);
     }
@@ -837,8 +837,8 @@ export function generateOptimizedStudyPlan(
         const pedagogicalGoal = bestCandidate.taughtDays.has(tomorrowDay)
           ? 'Anticipation cours & TD de demain'
           : bestCandidate.taughtDays.has(day)
-          ? 'Consolidation à chaud du cours du jour'
-          : topicName;
+            ? 'Consolidation à chaud du cours du jour'
+            : topicName;
 
         // Titres et descriptions contextualisés selon la méthode d'étude retenue
         let sessionTitle = '';
@@ -914,7 +914,7 @@ export function generateOptimizedStudyPlan(
           priority = 'maintenance';
         }
 
-        const energy: 'high' | 'medium' | 'low' = 
+        const energy: 'high' | 'medium' | 'low' =
           subject.difficulty >= 4 ? 'high' : subject.difficulty === 3 ? 'medium' : 'low';
 
         let finalTitle = sessionTitle;
@@ -1017,7 +1017,7 @@ export function mergePreservingCompletedSessions(
   // 1. Indexer les séances complétées par ID et par clé Matière-Jour
   const completedById = new Map<string, StudySession>();
   const completedByKey = new Map<string, StudySession>();
-  
+
   completedSessions.forEach(s => {
     completedById.set(s.id, s);
     const key = `${s.subjectId || s.title}-${s.dayOfWeek}`;
