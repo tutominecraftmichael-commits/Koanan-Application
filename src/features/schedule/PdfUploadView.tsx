@@ -91,10 +91,11 @@ export interface PdfUploadViewProps {
   onUpgradeToPro?: () => void;
 }
 
-const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; fileName: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
+const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; mobile: string; fileName: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
   lmd: {
     label: 'LMD (Université / Grandes Écoles)',
     short: 'Système LMD',
+    mobile: 'LMD',
     fileName: 'Emploi_du_Temps_LMD.txt',
     icon: <GraduationCap className="w-4 h-4" />,
     demoId: 'pdf-esatic-entd2',
@@ -103,6 +104,7 @@ const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; 
   tpcm: {
     label: 'BTS / Technique (CM · TD · TP)',
     short: 'Système BTS',
+    mobile: 'BTS',
     fileName: 'Emploi_du_Temps_BTS.txt',
     icon: <Cpu className="w-4 h-4" />,
     demoId: 'pdf-cs-l3',
@@ -111,6 +113,7 @@ const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; 
   scolaire: {
     label: 'Scolaire (Lycée / Collège)',
     short: 'Lycée / Scolaire',
+    mobile: 'Lycée',
     fileName: 'Emploi_du_Temps_Lycee.txt',
     icon: <School className="w-4 h-4" />,
     demoId: 'pdf-lycee-john-wesley',
@@ -839,7 +842,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             <label className="text-xs font-semibold text-slate-300">
               Catégorie académique (définit la structure du fichier texte extrait)
             </label>
-            <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
               {(Object.keys(FORMAT_CONFIG) as ScheduleFormatType[]).map((fmt) => {
                 const config = FORMAT_CONFIG[fmt];
                 const isSelected = selectedFormat === fmt;
@@ -847,15 +850,18 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <button
                     key={fmt}
                     type="button"
+                    title={config.short}
+                    aria-label={config.short}
                     onClick={() => handleFormatChange(fmt)}
-                    className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`py-2 px-1.5 sm:px-3 min-w-0 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
                       isSelected 
                         ? 'bg-sky-400 text-slate-950 shadow-sm font-semibold' 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                     }`}
                   >
-                    {config.icon}
-                    <span className="truncate">{config.short}</span>
+                    <span className="shrink-0">{config.icon}</span>
+                    <span className="sm:hidden whitespace-nowrap">{config.mobile}</span>
+                    <span className="hidden sm:inline whitespace-nowrap">{config.short}</span>
                   </button>
                 );
               })}

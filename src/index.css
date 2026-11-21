@@ -1337,35 +1337,18 @@ select,
 
 
 /* ============================================================================
-   AVATARS ANIMÉS KONAN (yeux qui bougent + clignement naturel, 100 % GPU CSS)
+   AVATARS ANIMÉS KONAN (clignement naturel léger, 100 % GPU CSS)
    ============================================================================ */
-@keyframes konan-av-look {
-  0%, 18% { transform: translate3d(0px, 0px, 0); }
-  24%, 40% { transform: translate3d(-1.7px, 0.2px, 0); }
-  47%, 62% { transform: translate3d(0px, 0px, 0); }
-  69%, 85% { transform: translate3d(1.7px, -0.2px, 0); }
-  92%, 100% { transform: translate3d(0px, 0px, 0); }
-}
-
 @keyframes konan-av-blink {
-  0%, 91%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.08); }
+  0%, 94%, 100% { transform: scaleY(1); }
+  96.5% { transform: scaleY(0.1); }
 }
 
-.konan-av-pupils {
-  animation-name: konan-av-look;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  will-change: transform;
-}
-
-.konan-av-eyelids {
-  transform-box: fill-box;
-  transform-origin: center;
+.konan-av-eye {
+  transform-box: view-box;
   animation-name: konan-av-blink;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
-  will-change: transform;
 }
 
 @keyframes goldShimmer {
@@ -1393,8 +1376,7 @@ select,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .konan-av-pupils,
-  .konan-av-eyelids,
+  .konan-av-eye,
   .konan-gold-shimmer-beam,
   .konan-gold-sparkle {
     animation: none !important;

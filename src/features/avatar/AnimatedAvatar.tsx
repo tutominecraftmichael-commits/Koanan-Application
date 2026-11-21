@@ -39,12 +39,14 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
   showCustomizeBadge = false,
   alt = 'Avatar KONAN',
 }) => {
-  const clipId = useId();
+  const clipId = 'kav' + useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const c: AvatarConfig = config || defaultAvatarForSeed(seed);
   const hairColor = c.hairColor || '#141414';
   const hairHighlight = shadeHex(hairColor, 1.38);
+  const hairOutline = shadeHex(hairColor, 0.6);
   const eyeColor = c.eyeColor || '#111111';
   const skinShadow = shadeHex(c.skinColor, 0.84);
+  const outline = shadeHex(c.skinColor, 0.62);
   const bg = c.bgColor || '#1E3A5F';
   const isFemale = c.gender === 'female';
   const isProGoldOutfit = c.outfit === PRO_ONLY_OUTFIT_ID;
@@ -60,10 +62,8 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
 
   // Décalages déterministes par utilisateur : dans une ligue de 30 joueurs, personne ne cligne en même temps
   const h = hashAvatarSeed(seed);
-  const blinkDuration = `${(3.5 + ((h % 16) / 10)).toFixed(1)}s`;
+  const blinkDuration = `${(5.5 + ((h % 30) / 10)).toFixed(1)}s`;
   const blinkDelay = `-${((h % 47) / 10).toFixed(1)}s`;
-  const lookDuration = `${(6.4 + (((h >> 4) % 28) / 10)).toFixed(1)}s`;
-  const lookDelay = `-${(((h >> 8) % 62) / 10).toFixed(1)}s`;
 
   const shoulderL = isFemale ? 22 : 17;
   const shoulderR = isFemale ? 78 : 83;
@@ -74,7 +74,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
     switch (c.hair) {
       case 'hair_afro':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <circle cx="50" cy="40" r="29" />
             <circle cx="26" cy="46" r="12.5" />
             <circle cx="74" cy="46" r="12.5" />
@@ -85,7 +85,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
         );
       case 'hair_afro_big':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <circle cx="50" cy="39" r="35" />
             <circle cx="20" cy="44" r="15" />
             <circle cx="80" cy="44" r="15" />
@@ -99,21 +99,21 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_star_puffs':
         return (
           <g>
-            <circle cx="23" cy="26" r="15" fill={hairColor} />
-            <circle cx="77" cy="26" r="15" fill={hairColor} />
+            <circle cx="23" cy="26" r="15" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} />
+            <circle cx="77" cy="26" r="15" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} />
             <path d="M29 36 L36 39" stroke="#F5C451" strokeWidth="3.2" strokeLinecap="round" />
             <path d="M71 36 L64 39" stroke="#F5C451" strokeWidth="3.2" strokeLinecap="round" />
-            <ellipse cx="50" cy="44" rx="25" ry="24" fill={hairColor} />
+            <ellipse cx="50" cy="44" rx="25" ry="24" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} />
           </g>
         );
       case 'hair_braids':
       case 'hair_crown_braids':
         return (
           <g>
-            <ellipse cx="50" cy="44" rx="26" ry="25" fill={hairColor} />
+            <ellipse cx="50" cy="44" rx="26" ry="25" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} />
             {[26, 32, 68, 74].map((x, idx) => (
               <g key={x}>
-                <rect x={x - 3} y="44" width="6" height="36" rx="3" fill={hairColor} />
+                <rect x={x - 3} y="44" width="6" height="36" rx="3" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
                 {c.hair === 'hair_crown_braids' && (
                   <>
                     <rect x={x - 3.2} y={56 + (idx % 2) * 5} width="6.4" height="3" rx="1" fill="#F5C451" />
@@ -128,7 +128,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_flame_locs':
         return (
           <g>
-            <ellipse cx="50" cy="42" rx="26" ry="24" fill={hairColor} />
+            <ellipse cx="50" cy="42" rx="26" ry="24" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} />
             {[25, 31, 69, 75].map((x) => (
               <g key={x}>
                 <rect
@@ -138,6 +138,9 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
                   height={c.hair === 'hair_flame_locs' ? '40' : '28'}
                   rx="3.2"
                   fill={hairColor}
+                  stroke={hairOutline}
+                  strokeWidth={0.9}
+                  strokeLinejoin="round"
                 />
                 {c.hair === 'hair_flame_locs' && (
                   <rect x={x - 3} y="70" width="6" height="12" rx="3" fill="#F59E0B" />
@@ -149,36 +152,36 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_bun':
         return (
           <g fill={hairColor}>
-            <circle cx="50" cy="17" r="12" />
+            <circle cx="50" cy="17" r="12" stroke={hairOutline} strokeWidth={0.9} />
             <ellipse cx="50" cy="25" rx="10" ry="3.5" fill="#F5C451" />
-            <ellipse cx="50" cy="44" rx="24" ry="23" />
+            <ellipse cx="50" cy="44" rx="24" ry="23" stroke={hairOutline} strokeWidth={0.9} />
           </g>
         );
       case 'hair_bob':
         return (
-          <path d="M24 44 C24 22 76 22 76 44 L78 72 Q70 76 64 72 L36 72 Q30 76 22 72 Z" fill={hairColor} />
+          <path d="M24 44 C24 22 76 22 76 44 L78 72 Q70 76 64 72 L36 72 Q30 76 22 72 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
         );
       case 'hair_waves':
         return (
-          <path d="M22 44 C22 20 78 20 78 44 C82 58 79 72 82 86 L18 86 C21 72 18 58 22 44 Z" fill={hairColor} />
+          <path d="M22 44 C22 20 78 20 78 44 C82 58 79 72 82 86 L18 86 C21 72 18 58 22 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
         );
       case 'hair_ponytail':
         return (
           <g>
-            <path d="M64 24 C84 20 92 42 84 68 C80 74 74 72 74 63 C77 48 73 35 63 32 Z" fill={hairColor} />
+            <path d="M64 24 C84 20 92 42 84 68 C80 74 74 72 74 63 C77 48 73 35 63 32 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
             <ellipse cx="66" cy="27" rx="4.5" ry="3" fill="#F5C451" transform="rotate(28 66 27)" />
-            <ellipse cx="50" cy="44" rx="24" ry="23" fill={hairColor} />
+            <ellipse cx="50" cy="44" rx="24" ry="23" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} />
           </g>
         );
       case 'hair_anime_spiky':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <path d="M20 45 L16 32 L26 30 L24 16 L38 22 L48 9 L58 21 L72 14 L70 28 L84 30 L78 45 Z" />
           </g>
         );
       case 'hair_curly':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <circle cx="32" cy="30" r="10" />
             <circle cx="44" cy="24" r="11" />
             <circle cx="56" cy="24" r="11" />
@@ -446,28 +449,28 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
     switch (c.eyes) {
       case 'eyes_determined':
         return (
-          <g stroke={browColor} strokeWidth="2.6" strokeLinecap="round" fill="none">
+          <g stroke={browColor} strokeWidth="2.9" strokeLinecap="round" fill="none">
             <path d="M33 41 L44 43.5" />
             <path d="M67 41 L56 43.5" />
           </g>
         );
       case 'eyes_fierce':
         return (
-          <g stroke={browColor} strokeWidth="2.9" strokeLinecap="round" fill="none">
+          <g stroke={browColor} strokeWidth="3.2" strokeLinecap="round" fill="none">
             <path d="M32 39.5 L44.5 44" />
             <path d="M68 39.5 L55.5 44" />
           </g>
         );
       case 'eyes_happy':
         return (
-          <g stroke={browColor} strokeWidth="2.2" strokeLinecap="round" fill="none">
+          <g stroke={browColor} strokeWidth="2.5" strokeLinecap="round" fill="none">
             <path d="M33 42 Q39 38.5 44 41.5" />
             <path d="M56 41.5 Q61 38.5 67 42" />
           </g>
         );
       case 'eyes_focused':
         return (
-          <g stroke={browColor} strokeWidth="2.4" strokeLinecap="round" fill="none">
+          <g stroke={browColor} strokeWidth="2.7" strokeLinecap="round" fill="none">
             <path d="M33 42 L44 42" />
             <path d="M56 42 L67 42" />
           </g>
@@ -475,7 +478,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'eyes_classic':
       default:
         return (
-          <g stroke={browColor} strokeWidth="2.3" strokeLinecap="round" fill="none">
+          <g stroke={browColor} strokeWidth="2.6" strokeLinecap="round" fill="none">
             <path d="M33.5 42 Q39 40 44 41.8" />
             <path d="M56 41.8 Q61 40 66.5 42" />
           </g>
@@ -483,44 +486,48 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
     }
   };
 
-  // Yeux animés (iris coloré dynamique + pupilles qui bougent + clignement naturel des paupières)
+  // Yeux animés (regard fixe centré + clignement doux indépendant par œil)
   const renderAnimatedEyes = () => {
     const eyeRy = c.eyes === 'eyes_focused' ? 4.3 : c.eyes === 'eyes_fierce' ? 4.6 : 5.3;
     const eyeRx = 4.9;
+    const irisStroke = shadeHex(eyeColor, 0.6);
     return (
       <g>
         {renderBrows()}
+        {/* Œil gauche */}
         <g
-          className="konan-av-eyelids"
-          style={{ animationDuration: blinkDuration, animationDelay: blinkDelay }}
+          className="konan-av-eye"
+          style={{ transformOrigin: '39px 50px', animationDuration: blinkDuration, animationDelay: blinkDelay }}
         >
-          {/* Sclères */}
-          <ellipse cx="39" cy="50" rx={eyeRx} ry={eyeRy} fill="#FFFFFF" />
-          <ellipse cx="61" cy="50" rx={eyeRx} ry={eyeRy} fill="#FFFFFF" />
-
-          {/* Iris coloré + pupilles animées (regard gauche / centre / droite) */}
-          <g
-            className="konan-av-pupils"
-            style={{ animationDuration: lookDuration, animationDelay: lookDelay }}
-          >
-            {/* Œil gauche */}
-            <circle cx="39" cy="50" r="3.1" fill={eyeColor} />
-            <circle cx="39" cy="50" r="1.5" fill="#090D16" />
-            <circle cx="37.9" cy="48.8" r="0.95" fill="#FFFFFF" />
-            <circle cx="40.1" cy="51.1" r="0.4" fill="#FFFFFF" opacity="0.65" />
-
-            {/* Œil droit */}
-            <circle cx="61" cy="50" r="3.1" fill={eyeColor} />
-            <circle cx="61" cy="50" r="1.5" fill="#090D16" />
-            <circle cx="59.9" cy="48.8" r="0.95" fill="#FFFFFF" />
-            <circle cx="62.1" cy="51.1" r="0.4" fill="#FFFFFF" opacity="0.65" />
-          </g>
-
-          {/* Cils discrets pour le modèle Femme */}
+          <ellipse cx="39" cy="50" rx={eyeRx} ry={eyeRy} fill="#FFFFFF" stroke="#1F1210" strokeWidth="0.9" strokeOpacity="0.55" />
+          <circle cx="39" cy="50" r="3.2" fill={eyeColor} stroke={irisStroke} strokeWidth="0.6" />
+          <circle cx="39" cy="50" r="1.6" fill="#090D16" />
+          <circle cx="37.8" cy="48.8" r="1.0" fill="#FFFFFF" />
+          <circle cx="40.1" cy="51.1" r="0.45" fill="#FFFFFF" opacity="0.65" />
+          <path d="M34.2 47.2 Q39 44.2 43.8 47.2" fill="none" stroke="#1F1210" strokeWidth="1.3" strokeLinecap="round" />
           {isFemale && (
             <g stroke="#0F172A" strokeWidth="1.5" strokeLinecap="round" fill="none">
-              <path d="M33.8 47.6 L32 46" />
-              <path d="M66.2 47.6 L68 46" />
+              <path d="M33.8 47.6 L31.8 45.8" />
+              <path d="M35.2 46.2 L33.6 44.2" />
+            </g>
+          )}
+        </g>
+
+        {/* Œil droit */}
+        <g
+          className="konan-av-eye"
+          style={{ transformOrigin: '61px 50px', animationDuration: blinkDuration, animationDelay: blinkDelay }}
+        >
+          <ellipse cx="61" cy="50" rx={eyeRx} ry={eyeRy} fill="#FFFFFF" stroke="#1F1210" strokeWidth="0.9" strokeOpacity="0.55" />
+          <circle cx="61" cy="50" r="3.2" fill={eyeColor} stroke={irisStroke} strokeWidth="0.6" />
+          <circle cx="61" cy="50" r="1.6" fill="#090D16" />
+          <circle cx="59.8" cy="48.8" r="1.0" fill="#FFFFFF" />
+          <circle cx="62.1" cy="51.1" r="0.45" fill="#FFFFFF" opacity="0.65" />
+          <path d="M56.2 47.2 Q61 44.2 65.8 47.2" fill="none" stroke="#1F1210" strokeWidth="1.3" strokeLinecap="round" />
+          {isFemale && (
+            <g stroke="#0F172A" strokeWidth="1.5" strokeLinecap="round" fill="none">
+              <path d="M66.2 47.6 L68.2 45.8" />
+              <path d="M64.8 46.2 L66.4 44.2" />
             </g>
           )}
         </g>
@@ -530,29 +537,36 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
 
   // Expressions de la bouche
   const renderMouth = () => {
+    const lipHintColor = shadeHex(c.skinColor, 0.75);
     switch (c.mouth) {
       case 'mouth_confident':
         return (
-          <path d="M44 63 Q51 65.5 58 60.5" fill="none" stroke="#1F1210" strokeWidth="2.3" strokeLinecap="round" />
+          <g>
+            <path d="M44 63 Q51 65.5 58 60.5" fill="none" stroke="#1F1210" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M47.5 65.8 Q50.5 66.8 53.5 65.3" fill="none" stroke={lipHintColor} strokeWidth="1.3" strokeLinecap="round" opacity="0.6" />
+          </g>
         );
       case 'mouth_focused':
         return (
-          <path d="M45 62.8 L55 62.8" fill="none" stroke="#1F1210" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M45 62.8 L55 62.8" fill="none" stroke="#1F1210" strokeWidth="2.4" strokeLinecap="round" />
         );
       case 'mouth_playful':
         return (
           <g>
-            <path d="M43 61.5 Q50 67.5 57.5 61.5 Z" fill="#FFFFFF" stroke="#1F1210" strokeWidth="1.7" strokeLinejoin="round" />
+            <path d="M43 61.5 Q50 67.5 57.5 61.5 Z" fill="#FFFFFF" stroke="#1F1210" strokeWidth="1.9" strokeLinejoin="round" />
           </g>
         );
       case 'mouth_determined':
         return (
-          <path d="M44.5 63.5 Q50 61.5 55.5 63.5" fill="none" stroke="#1F1210" strokeWidth="2.3" strokeLinecap="round" />
+          <path d="M44.5 63.5 Q50 61.5 55.5 63.5" fill="none" stroke="#1F1210" strokeWidth="2.5" strokeLinecap="round" />
         );
       case 'mouth_smile':
       default:
         return (
-          <path d="M43.5 61.5 Q50 67 56.5 61.5" fill="none" stroke="#1F1210" strokeWidth="2.4" strokeLinecap="round" />
+          <g>
+            <path d="M43.5 61.5 Q50 67 56.5 61.5" fill="none" stroke="#1F1210" strokeWidth="2.6" strokeLinecap="round" />
+            <path d="M47 67 Q50 68.3 53 67" fill="none" stroke={lipHintColor} strokeWidth="1.3" strokeLinecap="round" opacity="0.6" />
+          </g>
         );
     }
   };
@@ -562,22 +576,28 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
     switch (c.hair) {
       case 'hair_short_fade':
         return (
-          <path d="M27 44 C27 24 73 24 73 44 C70 34 62 32 50 32 C38 32 30 34 27 44 Z" fill={hairColor} />
+          <g>
+            <path d="M27 44 C27 24 73 24 73 44 C70 34 62 32 50 32 C38 32 30 34 27 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
+            <path d="M36 28.5 Q50 25 64 28.5" fill="none" stroke={hairHighlight} strokeWidth="1.8" strokeLinecap="round" opacity="0.5" />
+          </g>
         );
       case 'hair_buzz':
         return (
-          <path d="M28 43 C28 26 72 26 72 43 C68 35 60 33.5 50 33.5 C40 33.5 32 35 28 43 Z" fill={hairColor} opacity="0.92" />
+          <g>
+            <path d="M28 43 C28 26 72 26 72 43 C68 35 60 33.5 50 33.5 C40 33.5 32 35 28 43 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" opacity="0.92" />
+            <path d="M37 30 Q50 27.5 63 30" fill="none" stroke={hairHighlight} strokeWidth="1.6" strokeLinecap="round" opacity="0.5" />
+          </g>
         );
       case 'hair_quiff':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <path d="M26 44 C25 22 44 14 66 22 C74 25 75 36 73 44 C68 33 60 31 48 32 C38 33 30 36 26 44 Z" />
             <path d="M36 23 Q50 18 65 24" fill="none" stroke={hairHighlight} strokeWidth="2" strokeLinecap="round" opacity="0.55" />
           </g>
         );
       case 'hair_high_top':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <rect x="29" y="16" width="42" height="20" rx="5" />
             <path d="M27 43 C27 31 32 28 36 28 L64 28 C68 28 73 31 73 43 C69 35 61 33 50 33 C39 33 31 35 27 43 Z" />
           </g>
@@ -585,7 +605,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_cyber_fade':
         return (
           <g>
-            <path d="M26 44 C26 22 74 22 74 44 C70 33 61 31 50 31 C39 31 30 33 26 44 Z" fill={hairColor} />
+            <path d="M26 44 C26 22 74 22 74 44 C70 33 61 31 50 31 C39 31 30 33 26 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
             <path d="M62 29 L67 34 L64 35 L69 40" fill="none" stroke="#38BDF8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M38 25 Q50 22 62 25" fill="none" stroke={hairHighlight} strokeWidth="2" strokeLinecap="round" opacity="0.6" />
           </g>
@@ -593,7 +613,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_gold_taper':
         return (
           <g>
-            <path d="M26 44 C26 20 74 20 74 44 C69 32 60 30.5 50 30.5 C40 30.5 31 32 26 44 Z" fill={hairColor} />
+            <path d="M26 44 C26 20 74 20 74 44 C69 32 60 30.5 50 30.5 C40 30.5 31 32 26 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
             <path d="M62 29 L71 33" fill="none" stroke="#F5C451" strokeWidth="2" strokeLinecap="round" />
             <path d="M64 33 L72 36.5" fill="none" stroke="#F5C451" strokeWidth="1.6" strokeLinecap="round" />
           </g>
@@ -601,14 +621,15 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_ponytail':
         return (
           <g fill={hairColor}>
-            <path d="M27 44 C27 24 73 24 73 44 C66 34 58 32 50 32 C42 32 34 34 27 44 Z" />
+            <path d="M27 44 C27 24 73 24 73 44 C66 34 58 32 50 32 C42 32 34 34 27 44 Z" stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
+            <path d="M36 28.5 Q50 25 64 28.5" fill="none" stroke={hairHighlight} strokeWidth="1.8" strokeLinecap="round" opacity="0.5" />
             <path d="M28 42 Q26 48 29 52" fill="none" stroke={hairColor} strokeWidth="2" strokeLinecap="round" />
             <path d="M72 42 Q74 48 71 52" fill="none" stroke={hairColor} strokeWidth="2" strokeLinecap="round" />
           </g>
         );
       case 'hair_anime_spiky':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <path d="M25 44 L31 33 L38 39 L44 30 L50 39 L56 29 L63 39 L69 33 L75 44 C73 25 62 21 50 21 C38 21 27 25 25 44 Z" />
             <path d="M38 24 L46 21 M54 21 L63 24" stroke={hairHighlight} strokeWidth="1.8" strokeLinecap="round" opacity="0.55" />
           </g>
@@ -616,13 +637,14 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_afro':
       case 'hair_afro_big':
         return (
-          <path d="M26 42 Q34 31 50 31 Q66 31 74 42 Q68 27 50 27 Q32 27 26 42 Z" fill={hairColor} />
+          <path d="M26 42 Q34 31 50 31 Q66 31 74 42 Q68 27 50 27 Q32 27 26 42 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
         );
       case 'hair_braids':
       case 'hair_crown_braids':
         return (
           <g>
-            <path d="M27 43 C27 24 73 24 73 43 C66 34 58 32 50 33 C42 32 34 34 27 43 Z" fill={hairColor} />
+            <path d="M27 43 C27 24 73 24 73 43 C66 34 58 32 50 33 C42 32 34 34 27 43 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
+            <path d="M36 28.5 Q50 25 64 28.5" fill="none" stroke={hairHighlight} strokeWidth="1.8" strokeLinecap="round" opacity="0.5" />
             {c.hair === 'hair_crown_braids' && (
               <path d="M31 33 Q50 25 69 33" fill="none" stroke="#F5C451" strokeWidth="2.6" strokeDasharray="3 3" strokeLinecap="round" />
             )}
@@ -631,7 +653,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_locs':
       case 'hair_flame_locs':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <path d="M27 43 C27 24 73 24 73 43 C67 34 58 33 50 33 C42 33 33 34 27 43 Z" />
             <rect x="33" y="29" width="5" height="12" rx="2.5" />
             <rect x="42" y="27" width="5" height="11" rx="2.5" />
@@ -648,15 +670,18 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
       case 'hair_bun':
       case 'hair_star_puffs':
         return (
-          <path d="M27 44 C27 25 73 25 73 44 C66 34 58 32 50 32 C42 32 34 34 27 44 Z" fill={hairColor} />
+          <path d="M27 44 C27 25 73 25 73 44 C66 34 58 32 50 32 C42 32 34 34 27 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
         );
       case 'hair_bob':
         return (
-          <path d="M26 44 C26 23 74 23 74 44 C67 34 56 32 45 34 C36 35 30 39 26 44 Z" fill={hairColor} />
+          <g>
+            <path d="M26 44 C26 23 74 23 74 44 C67 34 56 32 45 34 C36 35 30 39 26 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
+            <path d="M35 28 Q49 24.5 64 28.5" fill="none" stroke={hairHighlight} strokeWidth="1.8" strokeLinecap="round" opacity="0.5" />
+          </g>
         );
       case 'hair_curly':
         return (
-          <g fill={hairColor}>
+          <g fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round">
             <circle cx="35" cy="33" r="6" />
             <circle cx="45" cy="30" r="6.5" />
             <circle cx="55" cy="30" r="6.5" />
@@ -665,7 +690,10 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
         );
       case 'hair_waves':
         return (
-          <path d="M26 44 C26 23 74 23 74 44 C67 33 56 32 48 34 C39 36 31 38 26 44 Z" fill={hairColor} />
+          <g>
+            <path d="M26 44 C26 23 74 23 74 44 C67 33 56 32 48 34 C39 36 31 38 26 44 Z" fill={hairColor} stroke={hairOutline} strokeWidth={0.9} strokeLinejoin="round" />
+            <path d="M35 28 Q50 24.5 64 28.5" fill="none" stroke={hairHighlight} strokeWidth="1.8" strokeLinecap="round" opacity="0.5" />
+          </g>
         );
       default:
         return null;
@@ -920,6 +948,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
         width={size}
         height={size}
         viewBox="0 0 100 100"
+        shapeRendering="geometricPrecision"
         className="rounded-full overflow-hidden block"
       >
         <defs>
@@ -929,6 +958,10 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
           <radialGradient id={`${clipId}-bg`} cx="50%" cy="35%" r="65%">
             <stop offset="0%" stopColor={shadeHex(bg, 1.35)} />
             <stop offset="100%" stopColor={bg} />
+          </radialGradient>
+          <radialGradient id={`${clipId}-face`} cx="45%" cy="38%" r="62%">
+            <stop offset="0%" stopColor={shadeHex(c.skinColor, 1.08)} />
+            <stop offset="100%" stopColor={c.skinColor} />
           </radialGradient>
           {isProGoldOutfit && (
             <>
@@ -960,22 +993,24 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
 
           {/* Tenue / épaules (inclut l'animation Or Massif KONAN Pro) */}
           {renderOutfit()}
+          <path d={bodyPath} fill="none" stroke="#0B1220" strokeOpacity={0.45} strokeWidth={1.1} />
+          <path d="M40 76.5 Q50 82 60 76.5" fill="none" stroke="#0B1220" strokeOpacity={0.18} strokeWidth={2.2} strokeLinecap="round" />
 
           {/* Cou + ombre sous le menton */}
-          <rect x="43" y="65" width="14" height="15" rx="6" fill={c.skinColor} />
+          <rect x="43" y="65" width="14" height="15" rx="6" fill={c.skinColor} stroke={outline} strokeWidth={1.1} />
           <ellipse cx="50" cy="72" rx="7" ry="4" fill={skinShadow} opacity="0.55" />
 
           {/* Oreilles */}
-          <circle cx="27" cy="52" r="5" fill={c.skinColor} />
-          <circle cx="27" cy="52" r="2.5" fill={skinShadow} opacity="0.5" />
-          <circle cx="73" cy="52" r="5" fill={c.skinColor} />
-          <circle cx="73" cy="52" r="2.5" fill={skinShadow} opacity="0.5" />
+          <circle cx="27" cy="52" r="5" fill={c.skinColor} stroke={outline} strokeWidth={1.1} />
+          <path d="M26 49.5 Q24.5 52 26.2 54.5" fill="none" stroke={skinShadow} strokeWidth="1.1" strokeLinecap="round" />
+          <circle cx="73" cy="52" r="5" fill={c.skinColor} stroke={outline} strokeWidth={1.1} />
+          <path d="M74 49.5 Q75.5 52 73.8 54.5" fill="none" stroke={skinShadow} strokeWidth="1.1" strokeLinecap="round" />
 
           {/* Visage */}
           {isFemale ? (
-            <path d="M28 48 C28 31 36 27 50 27 C64 27 72 31 72 48 C72 64 62 72 50 72 C38 72 28 64 28 48 Z" fill={c.skinColor} />
+            <path d="M28 48 C28 31 36 27 50 27 C64 27 72 31 72 48 C72 64 62 72 50 72 C38 72 28 64 28 48 Z" fill={`url(#${clipId}-face)`} stroke={outline} strokeWidth={1.1} />
           ) : (
-            <rect x="27.5" y="27" width="45" height="45" rx="20" fill={c.skinColor} />
+            <rect x="27.5" y="27" width="45" height="45" rx="20" fill={`url(#${clipId}-face)`} stroke={outline} strokeWidth={1.1} />
           )}
 
           {/* Légère touche de joues */}
@@ -983,9 +1018,10 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
           <ellipse cx="65.5" cy="57.5" rx="4" ry="2.2" fill="#F43F5E" opacity="0.16" />
 
           {/* Nez discret */}
-          <path d="M49 52.5 Q51.2 55.5 48.8 57" fill="none" stroke={skinShadow} strokeWidth="2" strokeLinecap="round" />
+          <path d="M48.6 52 Q51.6 55.8 48.6 57.4" fill="none" stroke={skinShadow} strokeWidth="1.8" strokeLinecap="round" />
+          <circle cx="48.5" cy="56.7" r="0.6" fill={skinShadow} opacity="0.7" />
 
-          {/* Yeux & sourcils animés (iris dynamique + regard + clignement) */}
+          {/* Yeux & sourcils animés */}
           {renderAnimatedEyes()}
 
           {/* Bouche / expression */}
