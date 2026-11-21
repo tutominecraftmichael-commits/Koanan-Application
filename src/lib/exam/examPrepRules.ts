@@ -13,17 +13,15 @@
  */
 import type { ExamPrepMode, Subject } from '../../types';
 import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
+import { LMD_SUBJECT_IDS } from '../curriculum/types';
 
 /**
- * Classes où la préparation aux devoirs est ouverte (il y a des cours et des QCM).
- * Terminale A / A1 / A2 : sujets au format du BAC (modèles TERMINALE_A_TEMPLATES dans api/_examTemplates.js).
- * Terminale D : sujets et séries de 30 questions selon le programme officiel complet.
- * Terminale C (formats du BAC série C) et Premières A1, A2, C, D (ouvertes le 2026-11-14).
+ * Classes où la préparation aux devoirs et examens est ouverte (cours, séries de 30 QCM et sujets complets 2 h).
  */
 export const EXAM_PREP_GRADES = [
   'seconde_a',
   'seconde_c',
-  'premiere_a', // ancien identifiant « 1ère A » sans numéro (= 1re A1) : ces élèves n'avaient pas de devoirs
+  'premiere_a', // ancien identifiant « 1ère A » sans numéro (= 1re A1)
   'premiere_a1',
   'premiere_a2',
   'premiere_c',
@@ -33,16 +31,30 @@ export const EXAM_PREP_GRADES = [
   'terminale_a',
   'terminale_c',
   'terminale_d',
+  'lmd_entd_l1',
 ] as const;
 
 /**
- * Matières qui ont un modèle de sujet de 2 h (api/_examTemplates.js).
- * La Philosophie a un modèle en Première et en Terminale (pas en Seconde, où elle n'est pas enseignée).
+ * Matières qui ont un modèle de sujet de 2 h (api/_examTemplates.js + api/_examTemplatesLmd.js).
  */
-export const SUJET_TEMPLATE_SUBJECTS = ['maths', 'physique_chimie', 'svt', 'histoire_geo', 'francais', 'philosophie'] as const;
+export const SUJET_TEMPLATE_SUBJECTS = [
+  'maths',
+  'physique_chimie',
+  'svt',
+  'histoire_geo',
+  'francais',
+  'philosophie',
+  ...LMD_SUBJECT_IDS,
+] as const;
 
 /** Matières littéraires : le sujet s'affiche en texte simple (sans moteur de formules), lignes numérotées. */
-export const LITERARY_EXAM_SUBJECTS = ['francais', 'histoire_geo', 'philosophie'] as const;
+export const LITERARY_EXAM_SUBJECTS = [
+  'francais',
+  'histoire_geo',
+  'philosophie',
+  'lmd_tef',
+  'lmd_ecriture_creative',
+] as const;
 
 /** Fenêtre de préparation : KONAN prépare l'épreuve à partir de J-14. */
 export const EXAM_PREP_HORIZON_DAYS = 14;
@@ -80,8 +92,11 @@ export function subjectHasExamCourse(subject: Pick<Subject, 'examChapterIds'>): 
  */
 export function examSubjectKeyOf(subject: Pick<Subject, 'examSubjectKey'> & { name?: string }): string | undefined {
   if (subject.examSubjectKey) return subject.examSubjectKey;
-  const match = subject.name ? matchSubjectToStemCurriculum(subject.name) : null;
-  return match?.isStemSubject ? match.stemSubjectId : undefined;
+  if (!subject.name) return undefined;
+  const direct = matchSubjectToStemCurriculum(subject.name);
+  if (direct.isStemSubject && direct.stemSubjectId) return direct.stemSubjectId;
+  const lmd = matchSubjectToStemCurriculum(subject.name, 'lmd_entd_l1');
+  return lmd.isStemSubject ? lmd.stemSubjectId : undefined;
 }
 
 export function examPrepModeFor(
@@ -124,7 +139,7 @@ export function examPrepSessionText(
   if (mode === 'sujet2h') {
     return {
       title: `${examLabel} ${when} : sujet complet de ${subjectName} (2 h)`,
-      description: `Sujet complet au format officiel ivoirien, à traiter sur une copie en 2 h. Prends ensuite ta copie en photo : KONAN la corrige et te donne ta note sur 20.`,
+      description: `Sujet complet noté sur 20, à traiter sur une copie en 2 h. Prends ensuite ta copie en photo : KONAN la corrige et te donne ta note sur 20.`,
       objectives: [
         'Traiter le sujet sur une feuille de copie, comme le jour J',
         'Respecter les 2 h (tu peux rendre plus tôt)',

@@ -23,6 +23,8 @@
  * KONAN s'en sert comme modèle de style (formulation, présentation) sans le recopier.
  */
 
+import { LMD_ENTD_L1_TEMPLATES } from './_examTemplatesLmd.js';
+
 /** Règles communes à tous les sujets ivoiriens (APC). */
 export const COMMON_STYLE_RULES = [
   "Rédige en français, en tutoyant l'élève (« Calcule », « Détermine », « Justifie », « Recopie… »), comme les sujets officiels APC de Côte d'Ivoire.",
@@ -745,6 +747,9 @@ export function canonicalExamGrade(gradeId) {
 
 export function getExamTemplate(subjectKey, gradeId0) {
   const gradeId = canonicalExamGrade(gradeId0);
+  if ((gradeId === 'lmd_entd_l1' || String(subjectKey || '').startsWith('lmd_')) && LMD_ENTD_L1_TEMPLATES[subjectKey]) {
+    return LMD_ENTD_L1_TEMPLATES[subjectKey];
+  }
   if (TERMINALE_D_GRADES.includes(gradeId) && TERMINALE_D_TEMPLATES[subjectKey]) {
     return TERMINALE_D_TEMPLATES[subjectKey];
   }

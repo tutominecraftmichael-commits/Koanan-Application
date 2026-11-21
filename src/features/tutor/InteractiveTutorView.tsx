@@ -1867,18 +1867,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
         )}
 
-        {/* Enjeu pour devoirs et examens */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/70 dark:bg-slate-950/40 border border-sky-200/80 dark:border-slate-800/60 text-left space-y-2 shadow-xs">
-          <div className="flex items-center gap-2 text-sky-900 dark:text-sky-200 font-black text-xs sm:text-sm">
-            <Target className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
-            <span>Pourquoi cette notion est essentielle pour tes devoirs & examens ?</span>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            Cette notion est un classique incontournable au programme officiel et aux examens nationaux (BEPC / BAC).
-            La comprendre en profondeur dès aujourd'hui te permet de poser la démarche attendue par les correcteurs et d'obtenir tous les points dès la première lecture de ton sujet.
-          </p>
-        </div>
-
         {/* Objectifs clés */}
         <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left space-y-3 shadow-xs">
           <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
