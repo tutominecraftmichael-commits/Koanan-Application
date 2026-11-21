@@ -711,6 +711,9 @@ export interface FunctionPlotSpec {
   /** Pas des graduations (1 par défaut). */
   xStep?: number;
   yStep?: number;
+  /** Symboles optionnels des axes (inférés automatiquement sinon, ex: x₁/x₂, Q/P, Y/i). */
+  xLabel?: string;
+  yLabel?: string;
   curves: FunctionPlotCurve[];
   points?: { x: number; y: number; label?: string; filled?: boolean; color?: SketchColor }[];
   /** Droites verticales en pointillés (ex: x = 0,25). */

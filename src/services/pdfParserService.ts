@@ -5,7 +5,7 @@ import type {
   ExtractedClassCandidate, 
   ExtractedPdfSchedule 
 } from '../types';
-import { generateId, parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject, extractRealAcademicDiscipline } from '../lib/utils';
+import { generateId, parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject, extractRealAcademicDiscipline, stripWeekAnnotations, normalizeSubjectKey } from '../lib/utils';
 import { extractDetailedTextFromImage } from './ocrService';
 
 // Lecteur PDF (≈ 750 Ko) chargé SEULEMENT au moment où l'élève importe un PDF, pas au démarrage de l'appli.
@@ -56,6 +56,15 @@ const PALETTE = [
 ];
 
 export const KNOWN_ACADEMIC_ECUE_MAP: Record<string, { name: string; professor?: string; coefficient?: number; difficulty?: 1 | 2 | 3 | 4 | 5 }> = {
+  // ESATIC — Licence 1 (ENTD 1 — Semestre 2)
+  '1LAN3250': { name: 'Anglais', professor: 'M. FADIGA LANCINE ABOUBAKAR', coefficient: 3, difficulty: 2 },
+  '1MAN3250': { name: 'Microéconomie 2', professor: 'Dr KOUAKOU INNOCENT', coefficient: 5, difficulty: 4 },
+  '2MAN3250': { name: 'Macroéconomie 2', professor: 'Dr KADJO ASSANDE PIERRE', coefficient: 5, difficulty: 4 },
+  '3MAN3250': { name: 'Modèle de Développement en Économie Numérique', professor: "Dr N'GUESSAN BI ZAMBE SERGE", coefficient: 5, difficulty: 4 },
+  '1MAN3251': { name: 'Comptabilité générale II', professor: 'Dr BOLLE OBLOU ROMAIN', coefficient: 6, difficulty: 4 },
+  '2MAN3251': { name: "Organisation et gestion de l'entreprise", professor: 'M. SILUE YACOUBA', coefficient: 6, difficulty: 3 },
+  '2IRE3250': { name: 'Réseaux', professor: 'M. ANGUE-ANGO PATRICK-ERNEST', coefficient: 5, difficulty: 4 },
+  // ESATIC — Licence 2 (ENTD 2 — Semestre 3)
   '1MAN3350': { name: 'Fondamentaux de la Finance', professor: 'Dr KADJO ASSANDE PIERRE', coefficient: 6, difficulty: 4 },
   '1INF3350': { name: "Développement d'Applications 1", professor: 'M. KONE ZANA', coefficient: 6, difficulty: 4 },
   '2INF3350': { name: 'Conception web et administration des SI', professor: 'M. MEYER JEAN-MARC', coefficient: 6, difficulty: 4 },
@@ -942,7 +951,7 @@ export function cleanSubjectTitle(
   dynamicEcueMap?: Map<string, { name: string; professor?: string }>,
   _format?: ScheduleFormatType
 ): string {
-  let trimmed = text.trim();
+  let trimmed = stripWeekAnnotations(text.trim());
 
   // 0. Filter out non-academic schedule breaks or table header tokens (time slot, plage horaire, etc.)
   if (isNonAcademicSubject(trimmed)) {
@@ -950,9 +959,11 @@ export function cleanSubjectTitle(
   }
 
   // Remove leading time interval or line bullets e.g. "- 07:30 - 10:00 :" or "08h00 - 10h00 :"
-  trimmed = trimmed
-    .replace(/^[-*•\s]*\d{1,2}[h:H:]\d{0,2}\s*[-–—àaA/to]+\s*\d{1,2}[h:H:]\d{0,2}\s*[:|-]?\s*/i, '')
-    .replace(/^[-*•\s]+/, '');
+  trimmed = stripWeekAnnotations(
+    trimmed
+      .replace(/^[-*•\s]*\d{1,2}[h:H:]\d{0,2}\s*[-–—àaA/to]+\s*\d{1,2}[h:H:]\d{0,2}\s*[:|-]?\s*/i, '')
+      .replace(/^[-*•\s]+/, '')
+  );
 
   // 0.bis Si le créneau mentionne une évaluation avec matière (ex: "Devoir de Mathématiques", "DS Physique"), extraire la vraie matière
   const extractedDiscipline = extractRealAcademicDiscipline(trimmed);
@@ -1072,7 +1083,7 @@ export function cleanSubjectTitle(
     .replace(/\b(lun|mar|mer|jeu|ven|sam|dim|mon|tue|wed|thu|fri|sat|sun)\.?\b/gi, ' ')
     .replace(/\b\d{1,2}[/-]\d{1,2}([/-]\d{2,4})?\b/g, ' ')
     .replace(/\b\d{1,2}\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\b/gi, ' ')
-    .replace(/\b(semaine|sem|semestre)\s*\d+\b/gi, ' ')
+    .replace(/\b(semaines?|sem\.?|semestres?)\s*[\d,\s\-–—àaet/]+\b/gi, ' ')
     .replace(/\b\d{1,2}[h:H]\d{2}\b/g, ' ')
     .replace(/\b\d{1,2}[h:H]\b/g, ' ')
     .replace(/\b\d{1,2}:\d{2}\b/g, ' ')
@@ -1081,12 +1092,12 @@ export function cleanSubjectTitle(
     .replace(/\b(Amphi(?:théâtre)?|Salle|Labo?|Laboratoire|Bâtiment|Bat|Room|Auditorium|Campus|Site|UFR|Département|Faculté)\s*[A-Za-z0-9_-]*/gi, ' ')
     .replace(/\b(Professeur|Prof\.?|Pr\.?|Docteur|Dr\.?|Monsieur|M\.|Madame|Mme\.?|Mister|Mr\.?|Mrs\.?|Enseignant|Intervenant)\s+[A-Za-zÀ-ÿ-]+/gi, ' ')
     .replace(/\b(Emploi du temps|Planning|Horaire|Horaires|Matière|Discipline|Année|Promo|Promotion|Niveau|Licence|Master|PASS|L1|L2|L3|M1|M2)\b/gi, ' ')
-    .replace(/[|:;•\-_~*#<>\[\]()\\/]+/g, ' ')
+    .replace(/[|:;•\-–—_~*#<>\[\]()\\/]+/g, ' ')
     .replace(/\s{2,}/g, ' ')
     .trim();
 
   // Strip leading single letter/digit or trailing isolated single letter (PRESERVE trailing course numbers like "Algèbres 2", "Analyse 2", "Applications 1")
-  cleaned = cleaned.replace(/^[0-9A-Za-z]\s+/, '').replace(/\s+[A-Za-z]$/, '').trim();
+  cleaned = stripWeekAnnotations(cleaned).replace(/^[0-9A-Za-z]\s+/, '').replace(/\s+[A-Za-z]$/, '').trim();
   cleaned = cleaned.replace(/\s+(de|d'|des|du|et|en|à)$/i, '').trim();
 
   while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(cleaned)) {
@@ -1329,12 +1340,10 @@ export function harmonizeAndDeduplicateSlots<T extends HarmonizableSlot>(slots: 
       const isDuplicate = cleanDaySlots.some(existing => {
         const extStart = parseTimeToMinutes(existing.startTime);
         const extEnd = parseTimeToMinutes(existing.endTime);
-        const nameA = (current.subjectName || current.rawSubject || '').toLowerCase().trim();
-        const nameB = (existing.subjectName || existing.rawSubject || '').toLowerCase().trim();
+        const keyA = normalizeSubjectKey(current.subjectName || current.rawSubject || '');
+        const keyB = normalizeSubjectKey(existing.subjectName || existing.rawSubject || '');
         const hasIds = Boolean(current.subjectId && existing.subjectId);
-        const sameSubject = hasIds
-          ? current.subjectId === existing.subjectId
-          : (nameA.length > 0 && nameB.length > 0 && nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, ''));
+        const sameSubject = (keyA.length > 0 && keyB.length > 0 && keyA === keyB) || (hasIds && current.subjectId === existing.subjectId);
 
         if (sameSubject && Math.abs(curStart - extStart) <= 15 && Math.abs(curEnd - extEnd) <= 15) {
           if (!existing.room && current.room) existing.room = current.room;
@@ -1352,12 +1361,10 @@ export function harmonizeAndDeduplicateSlots<T extends HarmonizableSlot>(slots: 
       const prevStart = parseTimeToMinutes(prev.startTime);
       const prevEnd = parseTimeToMinutes(prev.endTime);
 
-      const nameA = (current.subjectName || current.rawSubject || '').toLowerCase().trim();
-      const nameB = (prev.subjectName || prev.rawSubject || '').toLowerCase().trim();
+      const keyA = normalizeSubjectKey(current.subjectName || current.rawSubject || '');
+      const keyB = normalizeSubjectKey(prev.subjectName || prev.rawSubject || '');
       const hasIds = Boolean(current.subjectId && prev.subjectId);
-      const sameSubject = hasIds
-        ? current.subjectId === prev.subjectId
-        : (nameA.length > 0 && nameB.length > 0 && nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, ''));
+      const sameSubject = (keyA.length > 0 && keyB.length > 0 && keyA === keyB) || (hasIds && current.subjectId === prev.subjectId);
 
       // Fusion seulement si les deux cours se touchent vraiment (≤ 5 min) : deux heures séparées par
       // une récréation ou une pause de 15 min restent deux créneaux distincts.
@@ -2100,11 +2107,12 @@ export function parseTimetableText(
     };
   }
 
-  // 4. Clean & Deduplicate Subject Names
+  // 4. Clean & Deduplicate Subject Names (tout en comptant la fréquence multi-semaines réelle de chaque matière)
   const subjectClusterMap = new Map<string, string>();
+  const rawFrequencyByCanonical = new Map<string, number>();
 
   detectedSlots.forEach(slot => {
-    let raw = slot.rawSubject;
+    let raw = stripWeekAnnotations(slot.rawSubject);
     const upper = raw.toUpperCase().trim();
 
     if (KNOWN_ACADEMIC_ECUE_MAP[upper]) {
@@ -2114,37 +2122,27 @@ export function parseTimetableText(
       if (entry.professor && !slot.professor) slot.professor = entry.professor;
     } else if (dynamicEcueMap.has(upper)) {
       const entry = dynamicEcueMap.get(upper)!;
-      raw = entry.name;
+      raw = stripWeekAnnotations(entry.name);
       if (!slot.code) slot.code = upper;
       if (entry.professor && !slot.professor) slot.professor = entry.professor;
     } else {
-      raw = cleanSubjectTitle(slot.rawSubject, dynamicEcueMap, format);
+      raw = stripWeekAnnotations(cleanSubjectTitle(slot.rawSubject, dynamicEcueMap, format));
     }
 
     let canonical = raw;
-
-    const normalizeForCluster = (s: string) => {
-      return s
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/\b(?:cours|cm|td|tp|magistral|seance|amphi|salle|labo)\b/gi, '')
-        .replace(/[^a-z0-9]/g, '')
-        .trim();
-    };
-
-    const normA = normalizeForCluster(raw);
+    const normA = normalizeSubjectKey(raw);
 
     if (normA.length >= 2) {
       for (const existingCanonical of Array.from(new Set(subjectClusterMap.values()))) {
-        const normB = normalizeForCluster(existingCanonical);
+        const normB = normalizeSubjectKey(existingCanonical);
         if (normB.length < 2) continue;
 
         const isExact = normA === normB;
-        const isPrefix = (normA.length >= 5 && normB.length >= 5) && (normA.startsWith(normB) || normB.startsWith(normA));
-        const isContained = (normA.length >= 7 && normB.length >= 7) && (normA.includes(normB) || normB.includes(normA));
+        // Ne fusionner par préfixe que si ce ne sont pas deux tomes distincts (ex. Macroéconomie 2 vs Microéconomie 2)
+        const hasDiffTrailingNumber = /\d+$/.test(normA) && /\d+$/.test(normB) && normA.slice(-1) !== normB.slice(-1);
+        const isPrefix = !hasDiffTrailingNumber && (normA.length >= 6 && normB.length >= 6) && (normA.startsWith(normB) || normB.startsWith(normA));
 
-        if (isExact || isPrefix || isContained) {
+        if (isExact || isPrefix) {
           canonical = existingCanonical.length <= raw.length ? existingCanonical : raw;
           break;
         }
@@ -2153,6 +2151,9 @@ export function parseTimetableText(
 
     subjectClusterMap.set(raw, canonical);
     slot.rawSubject = canonical;
+    if (canonical) {
+      rawFrequencyByCanonical.set(canonical, (rawFrequencyByCanonical.get(canonical) || 0) + 1);
+    }
   });
 
   // Re-run harmonization AFTER canonicalizing subjects to merge contiguous blocks (e.g. 2h blocks)

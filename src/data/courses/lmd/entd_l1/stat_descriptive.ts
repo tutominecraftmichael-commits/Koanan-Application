@@ -1332,11 +1332,11 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
                 '<circle cx="378" cy="88" r="6" fill="#F59E0B" stroke="#B45309" stroke-width="2"/>' +
                 '<line x1="122" y1="36" x2="258" y2="36" stroke="#059669" stroke-width="1.8" stroke-dasharray="4 3"/>' +
                 '<text x="190" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#047857">IQR = Q₃ − Q₁ (50 % centraux)</text>' +
-                '<text x="56" y="134" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Min adj.</text>' +
-                '<text x="122" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#0369A1">Q₁ (25%)</text>' +
-                '<text x="176" y="142" text-anchor="middle" font-size="11" font-weight="800" fill="#6D28D9">Me (50%)</text>' +
-                '<text x="258" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#0369A1">Q₃ (75%)</text>' +
-                '<text x="328" y="134" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Max adj.</text>' +
+                '<text x="56" y="135" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Min adj.</text>' +
+                '<text x="122" y="135" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369A1">Q₁ (25%)</text>' +
+                '<text x="182" y="149" text-anchor="middle" font-size="10.5" font-weight="800" fill="#6D28D9">Me (50%)</text>' +
+                '<text x="258" y="135" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369A1">Q₃ (75%)</text>' +
+                '<text x="328" y="135" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Max adj.</text>' +
                 '<text x="378" y="68" text-anchor="middle" font-size="10" font-weight="700" fill="#B45309">Outlier</text>' +
                 '<text x="214" y="176" text-anchor="middle" font-size="10" fill="#475569">Échelle graduée de la variable quantitative X</text>' +
                 '</svg>',

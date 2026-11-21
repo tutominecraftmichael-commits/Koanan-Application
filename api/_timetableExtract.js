@@ -43,22 +43,41 @@ const SUBJECT_ALIASES = new Map(
     'Musique': ['mus', 'musique', 'education musicale', 'educ mus'],
     'Informatique': ['info', 'informatique', 'tice', 'tic'],
     'Latin': ['latin'],
+    'Microéconomie 2': ['1man3250', 'microeconomie 2'],
+    'Macroéconomie 2': ['2man3250', 'macroeconomie 2'],
+    'Modèle de Développement en Économie Numérique': ['3man3250', 'modele de developpement en economie numerique'],
+    'Comptabilité générale II': ['1man3251', 'comptabilite generale ii', 'comptabilite generale 2'],
+    "Organisation et gestion de l'entreprise": ['2man3251', 'organisation et gestion de l entreprise', 'oge'],
+    'Réseaux': ['2ire3250', 'reseaux'],
+    'Fondamentaux de la Finance': ['1man3350'],
+    "Développement d'Applications 1": ['1inf3350'],
+    'Conception web et administration des SI': ['2inf3350'],
+    'Algèbres 2': ['1mth3350'],
+    'Analyse 2': ['2mth3350'],
+    'Économie du Développement': ['1man3351'],
+    'Droit de la Protection des données': ['1man3352'],
   }).flatMap(([name, keys]) => keys.map((k) => [k, name])),
 );
 
-/** Mots qui ne sont pas des cours : pauses, administration, évaluations sans matière. */
-const NON_COURSE = /^(recre(ation)?|pause( dejeuner| midi)?|dejeuner|repas|midi|interclasse|etude( surveillee)?|permanence|vie de classe|heure de vie de classe|conseil de classe|conseil|reunion|libre|temps libre|ferie|conge|vacances?|devoir( surveille)?|ds|dst|examens?|evaluation|interrogation|composition|bac blanc|bepc blanc|rattrapage|partiels?|surveillance|tutorat|autonomie|semaines? pedagogiques?|plages?|horaires?|jours?)$/;
+/** Mots qui ne sont pas des cours : pauses, sport/coaching, administration, jours fériés, évaluations sans matière. */
+const NON_COURSE = /^(recre(ation)?|pause( dejeuner| midi)?|dejeuner|repas|midi|interclasse|etude( surveillee)?|permanence|vie de classe|heure de vie de classe|conseil de classe|conseil|reunion|libre|temps libre|ferie|jour ferie|conges?( de paques)?|paques|pentecote|lundi de pentecote|ascension|fete du travail|vacances?|devoirs?( surveilles?)?|devoirs? et cours de rattrapages?|cours de rattrapages?|ds|dst|examens?( deuxieme partie( semestres? (pairs?|impairs?))?)?|evaluation|interrogation|composition|bac blanc|bepc blanc|rattrapages?|partiels?|surveillance|tutorat|autonomie|coaching|sport|eps|e p s|education physique( et sportive)?|semaines? pedagogiques?|plages?|horaires?|jours?)$/;
+
+const stripWeeks = (s) =>
+  String(s || '')
+    .replace(/\s*(?:[-–—|/,;:(]+\s*)?\b(?:semaines?|sem\.?|weeks?)\s*(?:n[°o]?\s*)?[\d,\s\-–—àaet/]+(?:\))?/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 /** Nom standard d'une matière à partir du nom proposé par l'IA et du texte écrit dans la case. */
 export function canonicalSubject(subject, label) {
   for (const candidate of [subject, label]) {
-    const key = strip(candidate)
+    const key = strip(stripWeeks(candidate))
       .replace(/^(tp|td|cm|cours( de)?|devoir( de| d)?|ds( de)?)\s+/, '')
       .replace(/\s+(tp|td|cm)$/, '');
     if (!key) continue;
     if (SUBJECT_ALIASES.has(key)) return SUBJECT_ALIASES.get(key);
   }
-  const clean = String(subject || label || '').replace(/\s+/g, ' ').trim();
+  const clean = stripWeeks(subject || label || '');
   // Écrit tout en majuscules (« DROIT CIVIL ») : on garde les sigles courts tels quels (« CS », « CF 1 »), sinon casse normale
   if (clean.length > 4 && clean === clean.toUpperCase() && /[A-Z]{4,}/.test(clean)) {
     return clean.toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, p, c) => p + c.toUpperCase()).replace(/\b(De|Du|Des|Et|La|Le|Les|En|À|Au|Aux|D'|L')\b/g, (w) => w.toLowerCase());
@@ -67,8 +86,9 @@ export function canonicalSubject(subject, label) {
 }
 
 export function isNonCourseLabel(text) {
-  const k = strip(String(text || '').replace(/\([^)]*\)/g, ' '));
+  const k = strip(stripWeeks(String(text || '')).replace(/\([^)]*\)/g, ' '));
   if (!k || NON_COURSE.test(k)) return true;
+  if (/^(devoirs? et cours de rattrapage|conges? de paques|examens? deuxieme partie|lundi de pentecote|fete du travail)\b/.test(k)) return true;
   // « Devoir surveillé toutes disciplines », « DS commun », « Examen blanc » : évaluation sans matière précise
   const evalHead = /^(devoir|ds|dst|examen|evaluation|interrogation|composition|controle|bac blanc|bepc blanc)( surveille| commun| blanc)?\b\s*(.*)$/.exec(k);
   if (evalHead) {
@@ -239,16 +259,44 @@ function cleanClassCells(cells, legend) {
     });
   }
 
-  // Tri, doublons exacts, cours identiques collés (écart ≤ 5 min) fusionnés
-  slots.sort((a, b) => DAYS.indexOf(a.day) - DAYS.indexOf(b.day) || toMin(a.start) - toMin(b.start) || toMin(b.end) - toMin(a.end));
-  const merged = [];
+  // 1. Tri, doublons exacts, cours identiques collés (écart ≤ 5 min) fusionnés au sein d'une même semaine
+  slots.sort((a, b) => DAYS.indexOf(a.day) - DAYS.indexOf(b.day) || toMin(a.start) - toMin(b.start) || toMin(a.end) - toMin(a.end));
+  const mergedByWeek = [];
   for (const s of slots) {
-    const prev = merged[merged.length - 1];
+    const prev = mergedByWeek[mergedByWeek.length - 1];
     const same = prev && prev.day === s.day && norm(prev.subject) === norm(s.subject) && prev.weeks === s.weeks && prev.group === s.group;
     if (same && toMin(s.start) <= toMin(prev.end) + 5) {
       if (toMin(s.end) > toMin(prev.end)) prev.end = s.end;
       prev.room ||= s.room; prev.teacher ||= s.teacher; prev.code ||= s.code;
       if (s.type && prev.type !== s.type) prev.type = prev.type || s.type;
+      continue;
+    }
+    mergedByWeek.push({ ...s });
+  }
+
+  // 2. Consolidation multi-semaines : lorsqu'un emploi du temps est une grille à colonnes de semaines
+  //    (ex. Semaines 1 à 10 à l'ESATIC), un même créneau hebdomadaire (même jour, même matière, mêmes heures)
+  //    est fusionné en UN SEUL créneau hebdomadaire canonique pour éviter de créer 7 matières ou 7 cours doublons.
+  const merged = [];
+  for (const s of mergedByWeek) {
+    const existing = merged.find(
+      (m) =>
+        m.day === s.day &&
+        norm(m.subject) === norm(s.subject) &&
+        m.group === s.group &&
+        Math.abs(toMin(m.start) - toMin(s.start)) <= 10 &&
+        Math.abs(toMin(m.end) - toMin(s.end)) <= 10,
+    );
+    if (existing) {
+      existing.room ||= s.room;
+      existing.teacher ||= s.teacher;
+      existing.code ||= s.code;
+      existing.type ||= s.type;
+      if (s.weeks && existing.weeks && !existing.weeks.split(',').map((w) => w.trim()).includes(s.weeks)) {
+        existing.weeks = `${existing.weeks}, ${s.weeks}`;
+      } else {
+        existing.weeks ||= s.weeks;
+      }
       continue;
     }
     merged.push({ ...s });
@@ -267,7 +315,7 @@ function cleanClassCells(cells, legend) {
   return { slots: merged, warnings };
 }
 
-/** Réécrit les créneaux d'une classe dans le format texte de Konan. */
+/** Réécrit les créneaux d'une classe dans le format texte de Konan (sans polluer le nom de matière avec les numéros de semaines). */
 export function serializeSlots(slots, format) {
   const lines = [];
   for (const day of DAYS) {
@@ -275,7 +323,7 @@ export function serializeSlots(slots, format) {
     if (!daySlots.length) continue;
     lines.push(`JOUR: ${day}`);
     for (const s of daySlots) {
-      let name = s.subject;
+      let name = stripWeeks(s.subject);
       if (format === 'lmd') {
         if (s.type && !new RegExp(`\\b${s.type}\\b`, 'i').test(name)) name = `${s.type} ${name}`;
         if (s.code) name += ` [${s.code}]`;
@@ -285,7 +333,6 @@ export function serializeSlots(slots, format) {
         name = `${s.type || 'CM'} ${name}`;
         if (s.room) name += ` (${s.room})`;
       }
-      if (s.weeks) name += ` — semaines ${s.weeks}`;
       lines.push(`- ${s.start} - ${s.end} : ${name}`);
     }
     lines.push('');

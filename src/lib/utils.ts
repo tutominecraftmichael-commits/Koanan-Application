@@ -136,6 +136,34 @@ export function formatNotificationTime(isoString?: string): string {
 }
 
 /**
+ * Retire toute mention de semaines ou de numéros de semaines accrochée au nom d'une matière
+ * (ex: "Macroéconomie 3 — semaines 1" -> "Macroéconomie 3", "Réseaux - semaine 4-9" -> "Réseaux").
+ */
+export function stripWeekAnnotations(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/\s*(?:[-–—|/,;:(]+\s*)?\b(?:semaines?|sem\.?|weeks?)\s*(?:n[°o]?\s*)?[\d,\s\-–—àaet/]+(?:\))?/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s*[-–—|,:;]+\s*$/, '')
+    .trim();
+}
+
+/**
+ * Clé normalisée d'une matière pour détecter avec certitude deux matières identiques
+ * même si elles avaient des suffixes de semaines, d'espaces ou de casse différents.
+ */
+export function normalizeSubjectKey(name?: string): string {
+  if (!name) return '';
+  return stripWeekAnnotations(name)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\b(?:cours|cm|td|tp|magistral|seance|amphi|salle|labo)\b/gi, '')
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
+/**
  * Extrait la véritable discipline académique d'un intitulé composite.
  * Exemples :
  * - "Devoir de Mathématiques" -> "Mathématiques"
@@ -146,7 +174,7 @@ export function formatNotificationTime(isoString?: string): string {
  */
 export function extractRealAcademicDiscipline(rawName: string): string {
   if (!rawName) return '';
-  let cleaned = rawName.trim();
+  let cleaned = stripWeekAnnotations(rawName.trim());
 
   // Nettoyer les préfixes d'évaluation
   cleaned = cleaned
@@ -166,11 +194,11 @@ export function extractRealAcademicDiscipline(rawName: string): string {
  * ou non disciplinaire qui ne doit JAMAIS constituer une matière d'étude :
  * - Types d'épreuves orphelines : "devoir", "examen", "examen de semestre impair", "ds", "partiel", etc.
  * - Pauses & interruptions : "récréation", "pause", "pause déjeuner", "repas", "midi", etc.
- * - Créneaux administratifs ou libres : "permanence", "étude surveillée", "vie de classe", "tutorat", etc.
+ * - Créneaux administratifs, sportifs ou libres : "permanence", "étude surveillée", "sport", "EPS", "coaching", etc.
  */
 export function isNonAcademicSubject(name?: string): boolean {
   if (!name) return true;
-  const n = name
+  const n = stripWeekAnnotations(name)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Retire les accents pour une comparaison infaillible
@@ -179,6 +207,24 @@ export function isNonAcademicSubject(name?: string): boolean {
     .trim();
 
   if (!n || n.length < 2) return true;
+
+  // 0. Sport, EPS, Coaching et activités physiques non révisables
+  if (
+    n === 'eps' ||
+    n === 'e p s' ||
+    n === 'sport' ||
+    n === 'sports' ||
+    n === 'coaching' ||
+    n === 'education physique' ||
+    n === 'education physique et sportive' ||
+    n === 'education physique sportive' ||
+    n === 'activites physiques' ||
+    n === 'activite physique' ||
+    n.startsWith('education physique') ||
+    n.startsWith('sport ')
+  ) {
+    return true;
+  }
 
   // 1. Pauses, repas et récréations
   if (
@@ -207,6 +253,10 @@ export function isNonAcademicSubject(name?: string): boolean {
     n === 'devoir' ||
     n === 'devoirs' ||
     n === 'devoir surveille' ||
+    n === 'devoirs et cours de rattrapage' ||
+    n === 'devoir et cours de rattrapage' ||
+    n === 'cours de rattrapage' ||
+    n === 'devoirs et rattrapage' ||
     n === 'ds' ||
     n === 'dst' ||
     n === 'interro' ||
@@ -230,16 +280,17 @@ export function isNonAcademicSubject(name?: string): boolean {
     n === 'bac blanc' ||
     n === 'brevet blanc' ||
     n === 'concours blanc' ||
-    // "examen de semestre impair", "examen de semestre pair", "examen semestriel", etc.
-    /^examen\s+de\s+semestre(?:\s+(?:impair|pair|[0-9]+))?$/i.test(n) ||
+    // "examen de semestre impair", "examens deuxieme partie semestres pairs", etc.
+    /^examens?\s+(?:de\s+)?(?:deuxieme\s+partie\s+)?semestres?(?:\s+(?:impairs?|pairs?|[0-9]+))?$/i.test(n) ||
     /^examens?\s+(?:semestriels?|terminaux|finaux|blancs?)$/i.test(n) ||
     /^session\s+d?\s*examens?$/i.test(n) ||
-    /^devoirs?\s+surveill[eé]s?$/i.test(n)
+    /^devoirs?\s+surveill[eé]s?$/i.test(n) ||
+    /^devoirs?\s+et\s+cours\s+de\s+rattrapages?$/i.test(n)
   ) {
     return true;
   }
 
-  // 3. Créneaux administratifs, permanences, vie scolaire et temps libre
+  // 3. Créneaux administratifs, permanences, jours fériés, congés, vie scolaire et temps libre
   if (
     n === 'permanence' ||
     n === 'perm' ||
@@ -262,9 +313,18 @@ export function isNonAcademicSubject(name?: string): boolean {
     n === 'travail personnel' ||
     n === 'travail en autonomie' ||
     n === 'ferie' ||
+    n === 'jour ferie' ||
     n === 'vacances' ||
     n === 'fermeture' ||
-    n === 'conges'
+    n === 'conge' ||
+    n === 'conges' ||
+    n === 'conge de paques' ||
+    n === 'conges de paques' ||
+    n === 'paques' ||
+    n === 'pentecote' ||
+    n === 'lundi de pentecote' ||
+    n === 'ascension' ||
+    n === 'fete du travail'
   ) {
     return true;
   }

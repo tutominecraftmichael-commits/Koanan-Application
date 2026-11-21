@@ -4,7 +4,7 @@ import type {
   StudyPreferences, 
   DayOfWeek 
 } from '../types';
-import { parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject } from '../lib/utils';
+import { parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject, stripWeekAnnotations, normalizeSubjectKey } from '../lib/utils';
 import { withoutPausedExamPrep } from '../lib/featureFlags';
 
 export interface RescheduleResult {
@@ -321,13 +321,35 @@ export function evaluateDailyCatchup(
       return a.startTime.localeCompare(b.startTime);
     });
 
+  // RÈGLE ANTI-BURNOUT & ANTI-DOUBLON EN RATTRAPAGE :
+  // 1. Ne jamais programmer deux rattrapages de la MÊME matière dans la même soirée.
+  // 2. Plafonner le nombre de séances actives en soirée (rattrapages + séances prévues restantes) à 2 maximum
+  //    afin d'éviter l'empilement de 3 blocs de 75 min jusqu'à 23h20.
+  const activeSubjectKeysTonight = new Set<string>();
+  let activeFutureSessionsTonight = 0;
+
+  for (const s of todaysSessions) {
+    if (s.completed || s.isExpired) continue;
+    const endMin = parseTimeToMinutes(s.endTime);
+    const startMin = parseTimeToMinutes(s.startTime);
+    const isStillUpcoming = !((currentMinute >= endMin) || (currentMinute >= startMin + 15)) || Boolean(s.isRescheduledToday);
+    if (isStillUpcoming) {
+      activeFutureSessionsTonight++;
+      const sub = subjects.find(sub => sub.id === s.subjectId);
+      const key = normalizeSubjectKey(sub?.name || s.title);
+      if (key) activeSubjectKeysTonight.add(key);
+    }
+  }
+
+  const MAX_ACTIVE_EVENING_SESSIONS = 2;
+
   // Traiter toutes les sessions non complétées dont l'heure de fin est dépassée
   for (const session of todaysSessions) {
     // Si la session est déjà terminée ou expirée, rien à adapter
     if (session.completed || session.isExpired) continue;
 
     // RÈGLE STRICTE KONAN AI :
-    // 1. Ne JAMAIS rattraper une matière non académique (ex: EPS, Sport, devoirs, permanence)
+    // 1. Ne JAMAIS rattraper une matière non académique (ex: EPS, Sport, Coaching, devoirs, permanence)
     if (isNonAcademicSubject(session.title)) continue;
 
     // 2. Ne JAMAIS rattraper une matière qui n'existe pas dans l'emploi du temps actif de l'étudiant !
@@ -377,17 +399,26 @@ export function evaluateDailyCatchup(
     const isMissed = (currentMinute >= sessionEndMin) || (currentMinute >= sessionStartMin + 15);
 
     if (isMissed) {
+      const subKey = normalizeSubjectKey(matchingSubject?.name || session.title);
+
+      // Interdiction de replacer deux fois la même matière le même jour ou de dépasser le plafond anti-burnout du soir
+      if ((subKey && activeSubjectKeysTonight.has(subKey)) || activeFutureSessionsTonight >= MAX_ACTIVE_EVENING_SESSIONS) {
+        continue;
+      }
+
       // Trouver les autres sessions d'aujourd'hui pour éviter tout conflit (incluant celles déjà replacées)
       const otherSessions = updatedSessions.filter(
         s => s.dayOfWeek === todayDayOfWeek && s.id !== session.id
       );
 
       // Pour les devoirs : TOUJOURS 45 minutes même au jour 1 !
+      // En soirée tardive (>= 20h00), un bloc de 75 min est condensé à 45 min pour éviter la surcharge nocturne.
       const isDevoir = session.examType === 'devoir' || 
         matchingSubject?.examType === 'devoir' || 
         /\b(devoir|ds)\b/i.test(session.title) || 
         (matchingSubject && /\b(devoir|ds)\b/i.test(matchingSubject.name));
-      const targetDuration = isDevoir ? 45 : session.durationMinutes;
+      const baseDuration = isDevoir ? 45 : session.durationMinutes;
+      const targetDuration = (!isDevoir && currentMinute >= 1200 && baseDuration > 45) ? 45 : baseDuration;
 
       // Même créneau que celui annoncé dans la notification : il est calculé au moment où la séance
       // devient « manquée » (début + 16 min). Si l'élève ouvre l'appli plus tard et que ce créneau
@@ -410,17 +441,19 @@ export function evaluateDailyCatchup(
       }
 
       // RÈGLE ABSOLUE : Le créneau de rattrapage doit être STRICTEMENT dans le futur (dateDebut > maintenant)
-      if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > currentMinute) {
+      // et ne pas démarrer après 22h15 (1335 min) pour préserver le sommeil.
+      if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > currentMinute && parseTimeToMinutes(freeSlot.startTime) <= 1335) {
         // Enregistrer l'horaire d'origine uniquement si la session n'avait pas déjà été déplacée
         const originalStart = session.originalStartTime || session.startTime;
         const originalEnd = session.originalEndTime || session.endTime;
-        const subjectName = matchingSubject?.name || session.title;
+        const subjectName = stripWeekAnnotations(matchingSubject?.name || session.title);
         const isExamSession = Boolean(session.isExamPrep || session.type === 'exam_simulation' || isDevoir);
 
         const sessionIndex = updatedSessions.findIndex(s => s.id === session.id);
         if (sessionIndex !== -1) {
           const adaptedSession: StudySession = {
             ...updatedSessions[sessionIndex],
+            title: stripWeekAnnotations(updatedSessions[sessionIndex].title),
             startTime: freeSlot.startTime,
             endTime: freeSlot.endTime,
             durationMinutes: freeSlot.durationMinutes,
@@ -432,18 +465,19 @@ export function evaluateDailyCatchup(
             rappelEnvoye: false,
             notifRattrapageEnvoyee: false,
             rescheduledReason: isExamSession
-              ? `🎯 Préparation ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime} (fin max à minuit 00:00)`
-              : `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime} (fin max à minuit 00:00)`,
+              ? `🎯 Préparation ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime}`
+              : `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime}`,
           };
 
           updatedSessions[sessionIndex] = adaptedSession;
           rescheduledSessions.push(adaptedSession);
           rescheduledCount++;
+          activeFutureSessionsTonight++;
+          if (subKey) activeSubjectKeysTonight.add(subKey);
         }
       } else {
-        // RÈGLE SUPRÊME : À partir de minuit 00:00, si la séance n'a pas été rattrapée,
-        // on passe au lendemain sans dette. Toutes les matières déjà faites sont comptées,
-        // et la séance restante est simplement oubliée.
+        // RÈGLE SUPRÊME : Au-delà de la limite raisonnable de soirée ou à partir de minuit 00:00,
+        // on passe au lendemain sans dette accumulée pour protéger l'étudiant du burn-out.
       }
     }
   }

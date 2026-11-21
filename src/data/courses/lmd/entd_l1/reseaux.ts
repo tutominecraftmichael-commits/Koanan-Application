@@ -2954,15 +2954,18 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
                 '<text x="375" y="29" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#14532D">SERVEUR</text>' +
                 '<line x1="85" y1="40" x2="85" y2="215" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5,4"/>' +
                 '<line x1="375" y1="40" x2="375" y2="215" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5,4"/>' +
-                '<line x1="88" y1="62" x2="368" y2="82" stroke="#2563EB" stroke-width="2.3"/>' +
-                '<polygon points="373,82 363,76 364,87" fill="#2563EB"/>' +
-                '<text x="230" y="64" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#1D4ED8">1. SYN (seq = x)</text>' +
-                '<line x1="372" y1="98" x2="92" y2="118" stroke="#16A34A" stroke-width="2.3"/>' +
-                '<polygon points="87,118 97,112 96,123" fill="#16A34A"/>' +
-                '<text x="230" y="101" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#15803D">2. SYN-ACK (seq = y, ack = x+1)</text>' +
-                '<line x1="88" y1="134" x2="368" y2="152" stroke="#7C3AED" stroke-width="2.3"/>' +
-                '<polygon points="373,152 363,146 364,157" fill="#7C3AED"/>' +
-                '<text x="230" y="137" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#6D28D9">3. ACK (seq = x+1, ack = y+1)</text>' +
+                '<line x1="88" y1="68" x2="368" y2="86" stroke="#2563EB" stroke-width="2.3"/>' +
+                '<polygon points="373,86 363,80 364,91" fill="#2563EB"/>' +
+                '<rect x="155" y="48" width="150" height="17" rx="4" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>' +
+                '<text x="230" y="60" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#1D4ED8">1. SYN (seq = x)</text>' +
+                '<line x1="372" y1="106" x2="92" y2="124" stroke="#16A34A" stroke-width="2.3"/>' +
+                '<polygon points="87,124 97,118 96,129" fill="#16A34A"/>' +
+                '<rect x="115" y="88" width="230" height="17" rx="4" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1"/>' +
+                '<text x="230" y="100" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#15803D">2. SYN-ACK (seq = y, ack = x+1)</text>' +
+                '<line x1="88" y1="142" x2="368" y2="158" stroke="#7C3AED" stroke-width="2.3"/>' +
+                '<polygon points="373,158 363,152 364,163" fill="#7C3AED"/>' +
+                '<rect x="130" y="125" width="200" height="17" rx="4" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>' +
+                '<text x="230" y="137" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#6D28D9">3. ACK (seq = x+1, ack = y+1)</text>' +
                 '<rect x="115" y="164" width="230" height="22" rx="6" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.5"/>' +
                 '<text x="230" y="179" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14532D">Session ESTABLISHED — Échange de données</text>' +
                 '<rect x="145" y="193" width="170" height="20" rx="5" fill="#FFF7ED" stroke="#EA580C" stroke-width="1.3"/>' +

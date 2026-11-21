@@ -21,7 +21,7 @@ import {
   invitationBroadcastChannel
 } from './services/storage';
 
-import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns, setPlannerWorkload, replanFromToday, PLANNER_VERSION } from './services/plannerAlgorithm';
+import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns, setPlannerWorkload, replanFromToday, sanitizePollutedScheduleState, PLANNER_VERSION } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import {
@@ -384,11 +384,18 @@ export function App() {
         const before = new Map(prevSig.split('|').filter(Boolean).map((x) => { const i = x.lastIndexOf(':'); return [x.slice(0, i), x.slice(i + 1)] as const; }));
         const justFinished = Object.keys(map).filter((id) => map[id].newLessonsLeft === 0 && before.get(id) === 'new');
         const outdatedPlan = prevVer < PLANNER_VERSION;
+        const pollutionCheck = sanitizePollutedScheduleState(st.subjects, st.classSlots, st.studySessions);
         try { localStorage.setItem(sigKey, sig); localStorage.setItem(verKey, String(PLANNER_VERSION)); } catch { /* rien */ }
-        if ((outdatedPlan || justFinished.length) && st.subjects.length && st.classSlots.length && st.currentWeekMonday) {
+        if ((outdatedPlan || justFinished.length || pollutionCheck.hadPollution) && st.subjects.length && st.classSlots.length && st.currentWeekMonday) {
           setState((prev) => {
-            const fresh = generateOptimizedStudyPlan(prev.subjects, prev.classSlots, prev.preferences, tierForPlanRef.current);
-            const next: AppState = { ...prev, studySessions: replanFromToday(prev.studySessions, fresh) };
+            const clean = sanitizePollutedScheduleState(prev.subjects, prev.classSlots, prev.studySessions);
+            const fresh = generateOptimizedStudyPlan(clean.subjects, clean.classSlots, prev.preferences, tierForPlanRef.current);
+            const next: AppState = {
+              ...prev,
+              subjects: clean.subjects,
+              classSlots: clean.classSlots,
+              studySessions: replanFromToday(clean.studySessions, fresh),
+            };
             if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
             return next;
           });
@@ -2003,6 +2010,20 @@ export function App() {
       // Ignorer
     }
 
+    const cleanPayload = sanitizePollutedScheduleState(
+      payload.subjects,
+      payload.classSlots,
+      payload.studySessions
+    );
+    const sanitizedSessions = cleanPayload.hadPollution
+      ? generateOptimizedStudyPlan(
+          cleanPayload.subjects,
+          cleanPayload.classSlots,
+          payload.preferences,
+          payload.planTier || state.planTier || state.userAccount?.planTier || 'free'
+        )
+      : cleanPayload.studySessions;
+
     // Mettre aussi à jour pendingAuth si la modale de confidentialité est ouverte lors d'une première inscription
     setPendingAuth(prevPending => {
       if (!prevPending) return null;
@@ -2012,10 +2033,10 @@ export function App() {
         ...prevPending.initialState,
         academicLevel: payload.preferences.academicLevel || prevPending.initialState.academicLevel,
         planTier: effectiveTier,
-        subjects: payload.subjects,
-        classSlots: payload.classSlots,
+        subjects: cleanPayload.subjects,
+        classSlots: cleanPayload.classSlots,
         preferences: payload.preferences,
-        studySessions: payload.studySessions,
+        studySessions: sanitizedSessions,
         pdfImportsCount: nextPdfCount,
         completedOnboarding: true,
         userAccount: prevPending.initialState.userAccount
@@ -2041,14 +2062,14 @@ export function App() {
         ...prev,
         academicLevel: effectiveAcademicLevel,
         planTier: effectiveTier,
-        subjects: payload.subjects,
-        classSlots: payload.classSlots,
+        subjects: cleanPayload.subjects,
+        classSlots: cleanPayload.classSlots,
         preferences: {
           ...payload.preferences,
           academicLevel: effectiveAcademicLevel,
           gradeLevel: effectiveGradeLevel,
         },
-        studySessions: payload.studySessions,
+        studySessions: sanitizedSessions,
         logs: [],
         pdfImportsCount: nextPdfCount,
         userAccount: prev.userAccount ? {
