@@ -1070,7 +1070,13 @@ export function App() {
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [subscriptionAccount, reloadFriends, reloadQuests, reloadAvatar]);
-  const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
+  // Paiement manuel en vérification, ou paiement SasPay commencé : on revérifie souvent
+  const subscriptionPending = Boolean(subscriptionInfo?.status?.pending || subscriptionInfo?.status?.saspayPending);
+  // Retour de la page de paiement SasPay (return_url « /?paiement=saspay ») : on ouvre la fiche d'abonnement,
+  // dont la lecture fait vérifier le paiement par le serveur auprès de SasPay (Pro seulement si SUCCESS)
+  const saspayReturnRef = useRef<boolean>((() => {
+    try { return new URLSearchParams(window.location.search).get('paiement') === 'saspay'; } catch { return false; }
+  })());
   const refreshSubscription = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
     setSubscriptionLoading(true);
@@ -1088,8 +1094,17 @@ export function App() {
       setSubscriptionInfo(null);
       return;
     }
+    if (saspayReturnRef.current) {
+      saspayReturnRef.current = false;
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('paiement');
+        window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+      } catch { /* adresse laissée telle quelle */ }
+      setIsSubscriptionOpen(true);
+    }
     const first = setTimeout(refreshSubscription, 1500);
-    // Paiement en attente : on regarde chaque minute si l'administrateur a répondu (message dans l'onglet notifications)
+    // Paiement en attente : on regarde chaque minute si le paiement a été confirmé (message dans l'onglet notifications)
     const every = setInterval(refreshSubscription, subscriptionPending ? 60 * 1000 : 10 * 60 * 1000);
     const onVisible = () => { if (document.visibilityState === 'visible') refreshSubscription(); };
     document.addEventListener('visibilitychange', onVisible);
@@ -3381,7 +3396,7 @@ export function App() {
                   return next;
                 });
                 setIsSubscriptionOpen(false);
-                showToast('Bienvenue dans KONAN Pro ! Ton paiement sera vérifié.');
+                showToast(info.status.provisional ? 'Bienvenue dans KONAN Pro ! Ton paiement sera vérifié.' : 'Paiement confirmé : bienvenue dans KONAN Pro !');
                 setActiveView('pro-wizard');
               }
             }}

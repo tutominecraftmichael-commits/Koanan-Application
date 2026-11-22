@@ -125,6 +125,25 @@ export function validateDeclaration(body, existing, { nowMs, sellable = SELLABLE
 }
 
 /**
+ * Démarrage d'un paiement SasPay (page de paiement hébergée). Mêmes règles que la déclaration manuelle
+ * pour la formule, le pays et la classe ; pas de numéro de transaction à recopier (SasPay le fournit).
+ * `sessionsLast24h` = nombre de sessions SasPay créées par l'élève ces dernières 24 h.
+ */
+export function validateSaspayStart(body, existing, { nowMs, sessionsLast24h = 0, maxPerDay = 8, sellable = SELLABLE_TIERS } = {}) {
+  const tier = String(body?.tier || 'pro');
+  const period = String(body?.period || '');
+  if (!PRICES[tier] || !sellable.includes(tier)) return { ok: false, error: 'TIER_NOT_SOLD' };
+  if (tier === 'pro' && !proAvailableForCountry(body?.country)) return { ok: false, error: 'PRO_NOT_FOR_COUNTRY' };
+  if (tier === 'pro' && !proAvailableForGrade(body?.gradeLevel)) return { ok: false, error: 'PRO_NOT_FOR_GRADE' };
+  if (!PERIOD_DAYS[period]) return { ok: false, error: 'BAD_PERIOD' };
+  const list = Array.isArray(existing) ? existing : [];
+  const ent = computeEntitlement(list, nowMs);
+  if (ent.tier !== 'free' && ent.tier !== tier) return { ok: false, error: 'OTHER_TIER_ACTIVE' };
+  if (sessionsLast24h >= maxPerDay) return { ok: false, error: 'TOO_MANY' };
+  return { ok: true, clean: { tier, period, amount: expectedAmount(tier, period) } };
+}
+
+/**
  * Un élève dont un paiement a été REFUSÉ n'est plus activé avant vérification :
  * ses paiements suivants attendent la confirmation de l'administrateur.
  */

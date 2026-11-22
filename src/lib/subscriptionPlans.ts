@@ -159,7 +159,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     tagline: 'Pour progresser vite',
     prices: { monthly: 2500, semester: 9950 },
     includesLabel: 'Tout le Gratuit, plus :',
-    note: 'Paiement par Wave',
+    note: 'Mobile money ou carte',
     available: true,
     recommended: true,
     features: [

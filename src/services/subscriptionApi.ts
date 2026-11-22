@@ -8,6 +8,8 @@ import { getAdminAuthorizationHeader } from '../lib/adminAuth';
 export type PaidTier = 'pro' | 'plus';
 export type PaidPeriod = 'mois' | 'semestre';
 export type PaymentProvider = 'wave' | 'orange';
+/** Moyen enregistré sur un paiement (les paiements SasPay sont vérifiés automatiquement). */
+export type PaymentSource = PaymentProvider | 'saspay';
 
 export interface SubscriptionOffer { tier: PaidTier; period: PaidPeriod; days: number; amount: number; normalAmount: number }
 export interface SubscriptionConfig {
@@ -16,9 +18,14 @@ export interface SubscriptionConfig {
   receiverName: string;
   receivers: Partial<Record<PaymentProvider, { label: string; number: string }>>;
   offers: SubscriptionOffer[];
+  /** Paiement automatique par SasPay (Wave, Orange Money, carte) : plus de numéro à recopier */
+  saspay?: boolean;
+  /** SasPay en bac à sable (clé de test : aucun argent réel) */
+  saspaySandbox?: boolean;
 }
+export interface SaspayPending { sessionId: string; period: PaidPeriod; amount: number; createdAt: string; checkoutUrl: string | null }
 export interface PaymentView {
-  id: string; tier: PaidTier; period: PaidPeriod; provider: PaymentProvider; ref: string; amount: number;
+  id: string; tier: PaidTier; period: PaidPeriod; provider: PaymentSource; ref: string; amount: number;
   status: 'pending' | 'confirmed' | 'rejected'; declaredAt: string; checkedAt: string | null; rejectMessage: string | null;
 }
 export interface SubscriptionStatus {
@@ -32,6 +39,8 @@ export interface SubscriptionStatus {
   pending: PaymentView | null;
   lastRejected: PaymentView | null;
   history: PaymentView[];
+  /** Paiement SasPay commencé mais pas encore confirmé */
+  saspayPending?: SaspayPending | null;
 }
 export interface SubscriptionInfo { config: SubscriptionConfig; status: SubscriptionStatus | null }
 
@@ -51,6 +60,9 @@ export function subscriptionErrorText(code?: string): string {
     case 'TOO_MANY': return 'Trop d’essais aujourd’hui. Réessaie demain.';
     case 'BAD_PROVIDER': return 'Choisis Wave ou Orange Money.';
     case 'PAYMENTS_DISABLED': return 'Le paiement n’est pas encore ouvert.';
+    case 'SASPAY_NOT_CONFIGURED': return 'Le paiement en ligne n’est pas encore ouvert. Reviens bientôt.';
+    case 'SASPAY_UNAVAILABLE': return 'Le service de paiement ne répond pas pour le moment. Réessaie dans quelques minutes : tu n’as rien payé.';
+    case 'NO_EMAIL': return 'Ton compte n’a pas d’adresse e-mail : elle est nécessaire pour le reçu de paiement.';
     case 'UNAUTHORIZED': case 'TOKEN_EXPIRED': return 'Reconnecte-toi à ton compte, puis réessaie.';
     case 'NETWORK': return 'Pas de connexion Internet. Réessaie dans un instant.';
     default: return 'Une erreur est survenue. Réessaie dans un instant.';
@@ -90,6 +102,21 @@ export async function fetchSubscription(): Promise<{ success: true; info: Subscr
 export async function declarePayment(input: { tier: PaidTier; period: PaidPeriod; provider: PaymentProvider; ref: string; payerPhone: string; gradeLevel: string; country: string }):
   Promise<{ success: true; info: SubscriptionInfo } | { success: false; error: string }> {
   const r = await asStudent({ action: 'declare', ...input });
+  if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+  return { success: true, info: { config: r.json.config, status: r.json.status } };
+}
+
+/** Ouvre une page de paiement SasPay (le prix est fixé par le serveur). */
+export async function startSaspayPayment(input: { period: PaidPeriod; gradeLevel: string; country: string }):
+  Promise<{ success: true; checkoutUrl: string; sessionId: string } | { success: false; error: string }> {
+  const r = await asStudent({ action: 'saspay_start', tier: 'pro', ...input });
+  if (!r.ok || !r.json?.checkoutUrl) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+  return { success: true, checkoutUrl: String(r.json.checkoutUrl), sessionId: String(r.json.sessionId || '') };
+}
+
+/** Demande au serveur de revérifier auprès de SasPay (Pro activé seulement si le paiement est réussi). */
+export async function checkSaspayPayment(): Promise<{ success: true; info: SubscriptionInfo } | { success: false; error: string }> {
+  const r = await asStudent({ action: 'saspay_check' });
   if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
   return { success: true, info: { config: r.json.config, status: r.json.status } };
 }

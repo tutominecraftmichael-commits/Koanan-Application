@@ -182,8 +182,8 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
           {PAYMENTS_OPEN && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             {[
-              { icon: Smartphone, title: 'Paiement par Wave', text: 'Tu paies depuis ton téléphone.' },
-              { icon: Zap, title: 'Activé tout de suite', text: 'Tu deviens Pro dès ton paiement déclaré.' },
+              { icon: Smartphone, title: 'Mobile money ou carte', text: 'Wave, Orange Money… sur la page sécurisée de SasPay.' },
+              { icon: Zap, title: 'Activé tout de suite', text: 'Tu deviens Pro dès que ton paiement est confirmé.' },
               { icon: ShieldCheck, title: 'Sans engagement', text: 'Tu paies seulement la période choisie.' },
             ].map(({ icon: Icon, title, text }) => (
               <div key={title} className="flex items-start gap-2.5 rounded-2xl px-3.5 py-3 bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/5">

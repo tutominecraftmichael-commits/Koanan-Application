@@ -11,7 +11,7 @@ import { adminPayments, PERIOD_LABEL, type AdminPayment, type RejectReason } fro
 const fcfa = (n: number) => `${Number(n || 0).toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`;
 const when = (iso?: string) => (iso ? new Date(iso).toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '');
 const phoneFmt = (p: string) => String(p || '').replace(/(\d{2})(?=\d)/g, '$1 ');
-const PROVIDER: Record<string, string> = { wave: 'Wave', orange: 'Orange Money' };
+const PROVIDER: Record<string, string> = { wave: 'Wave', orange: 'Orange Money', saspay: 'SasPay (vérifié automatiquement)' };
 const REASONS: Array<{ id: RejectReason; label: string }> = [
   { id: 'not_received', label: 'Argent pas reçu' },
   { id: 'wrong_amount', label: 'Mauvais montant' },
