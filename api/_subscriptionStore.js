@@ -244,9 +244,10 @@ async function settleSaspaySession(db, session, { nowMs, env, sp, fetchImpl }) {
       checkedBy: 'saspay',
       saspaySessionId: session.id,
       saspayTransactionId: st.data.transaction_id,
-      network: String(verify?.network || '').slice(0, 30),
-      netAmount: verify?.net_amount ?? null,
-      debitedAmount: verify?.debited_amount ?? null,
+      network: String(verify?.network_code || '').slice(0, 30), // « wave_ci », « orange_ci »…
+      netAmount: verify?.net_amount ?? null, // ce qui revient à KONAN
+      debitedAmount: verify?.debited_amount ?? null, // ce que l'élève a payé (frais compris)
+      fee: verify?.amounts?.fee ?? verify?.client_fee ?? null,
       studentName: session.studentName || '',
       studentEmail: session.studentEmail || '',
       testMode: !isProduction(env) || Boolean(session.sandbox),

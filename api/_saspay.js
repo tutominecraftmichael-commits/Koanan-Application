@@ -81,6 +81,10 @@ export function judgeSaspay({ session, status, verify }) {
   if (verify?.id && String(verify.id).toLowerCase() !== String(status.transaction_id).toLowerCase()) {
     return { outcome: 'failed', reason: 'ID_MISMATCH' };
   }
+  // La vérification réelle indique aussi la session d'origine (vu le 2026-11-22) : elle doit être la nôtre
+  if (verify?.checkout_session && session?.id && String(verify.checkout_session).toLowerCase() !== String(session.id).toLowerCase()) {
+    return { outcome: 'failed', reason: 'SESSION_MISMATCH' };
+  }
   // Le prix est fixé par NOTRE serveur à la création de la session ; contrôle en plus du montant demandé
   const asked = Number(verify?.requested_amount);
   if (Number.isFinite(asked) && asked + 0.5 < Number(session?.amount || 0)) return { outcome: 'failed', reason: 'AMOUNT_TOO_LOW' };
