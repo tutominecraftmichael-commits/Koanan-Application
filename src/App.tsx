@@ -86,12 +86,14 @@ import type { AvatarConfig } from './lib/avatar/avatarCatalog';
 import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
 import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
+import { getTutorStatus, type TutorContext, type TutorStatus } from './services/tutorApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
 import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
 import { getDisplayAvatar } from './lib/avatar';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
+import { TutorFab } from './features/tutor/TutorFab';
 import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
@@ -125,6 +127,7 @@ const loadMiniGamesHubView = () => import('./features/gamification/MiniGamesHubV
 const MiniGamesHubView = lazyView(loadMiniGamesHubView);
 const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorModal').then((m) => m.AvatarEditorModal));
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
+const TutorChat = lazyView(() => import('./features/tutor/TutorChat').then((m) => m.TutorChat));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
@@ -916,6 +919,19 @@ export function App() {
   const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode
     ? (state.userAccount.googleId || auth?.currentUser?.uid || '')
     : '';
+
+  // Mode « Je ne comprends pas » (professeur particulier, KONAN Pro payant). Le serveur dit s'il est allumé
+  // (KONAN_TUTOR=on), si l'élève y a droit et combien de messages il lui reste aujourd'hui.
+  const [tutorStatus, setTutorStatus] = useState<TutorStatus | null>(null);
+  const [tutorOpen, setTutorOpen] = useState<{ context?: TutorContext } | null>(null);
+  const subscriptionTierKey = `${subscriptionInfo?.status?.tier || ''}|${subscriptionInfo?.status?.endsAt || ''}`;
+  useEffect(() => {
+    if (!subscriptionAccount) { setTutorStatus(null); return; }
+    let alive = true;
+    getTutorStatus().then((s) => { if (alive) setTutorStatus(s); });
+    return () => { alive = false; };
+  }, [subscriptionAccount, subscriptionTierKey]);
+  const tutorAvailable = Boolean(tutorStatus?.enabled && (tutorStatus.paid || proSellableForClass));
 
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
@@ -3066,6 +3082,8 @@ export function App() {
             }}
             // KONAN Pro : « Explique à KONAN » (Feynman) après chaque mini-leçon ; il faut un compte connecté (serveur)
             canExplain={(effectivePlanTier === 'pro' || effectivePlanTier === 'plus') && Boolean(state.userAccount?.isLoggedIn) && !state.isDemoMode}
+            // « Je ne comprends pas » dans la leçon : KONAN part de cette notion et de ce que dit le cours
+            onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
           />
         )}
 
@@ -3167,6 +3185,28 @@ export function App() {
       {/* Bouton flottant jaune des Mini-Jeux KONAN (XP à gogo, etc., avec charges ⚡) */}
       {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
+      )}
+      {/* Bouton « Je ne comprends pas » (au-dessus des mini-jeux quand ils sont là) */}
+      {tutorAvailable && !tutorOpen && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
+        <TutorFab
+          raised={gamificationEnabled && gradeHasGuidedCourses}
+          onOpen={() => setTutorOpen({})}
+        />
+      )}
+      {tutorOpen && tutorStatus && subscriptionAccount && (
+        <Suspense fallback={null}>
+          <TutorChat
+            uid={subscriptionAccount}
+            classe={effectiveClassLabel || ''}
+            context={tutorOpen.context}
+            paid={tutorStatus.paid}
+            remaining={tutorStatus.remaining}
+            limit={tutorStatus.limit}
+            onRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, remaining: n } : s))}
+            onSubscribe={proSellableForClass ? () => { setTutorOpen(null); setIsSubscriptionOpen(true); } : undefined}
+            onClose={() => setTutorOpen(null)}
+          />
+        </Suspense>
       )}
       {isExerciseOpen && (
         <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>

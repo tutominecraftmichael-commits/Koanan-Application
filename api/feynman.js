@@ -169,6 +169,13 @@ export default async function handler(req, res) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
   }
 
+  // Mode « Je ne comprends pas » (professeur particulier) : même fonction serveur, Vercel gratuit = 12 fonctions au plus
+  if (body?.action === 'tutor' || body?.action === 'tutor_status') {
+    const { handleTutorAction } = await import('./_tutor.js');
+    const { status, data } = await handleTutorAction({ body, uid, getDb });
+    return send(res, status, data);
+  }
+
   // Feynman = KONAN Pro. Quand le paiement est ouvert, seul un abonnement payé (vérifié par le serveur) y donne accès.
   if (paymentsEnabled()) {
     try {

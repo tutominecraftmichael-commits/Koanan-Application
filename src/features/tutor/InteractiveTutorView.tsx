@@ -21,8 +21,10 @@ import {
   Shapes,
   Landmark,
   Globe,
-  Mic
+  Mic,
+  HelpCircle
 } from 'lucide-react';
+import type { TutorContext } from '../../services/tutorApi';
 import type {
   CurriculumChapter,
   CurriculumGradeLevel,
@@ -80,6 +82,8 @@ export interface InteractiveTutorViewProps {
   onSessionCompleted: (sessionId?: string, stats?: { mistakes: number }) => void;
   /** KONAN Pro : bouton « Explique à KONAN » (méthode Feynman) à la fin de chaque mini-leçon. */
   canExplain?: boolean;
+  /** Mode « Je ne comprends pas » (KONAN Pro) : ouvre la discussion avec KONAN sur l'étape affichée. */
+  onNotUnderstood?: (context: TutorContext) => void;
 }
 
 /** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
@@ -348,6 +352,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   onExit,
   onSessionCompleted,
   canExplain = false,
+  onNotUnderstood,
 }) => {
   // Feynman à la demande (Pro) : mini-leçons déjà expliquées à KONAN pendant cette séance
   const [explainedPointIds, setExplainedPointIds] = useState<Set<string>>(() => new Set());
@@ -2095,6 +2100,26 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
             )}
           </div>
+          )}
+
+          {/* Mode « Je ne comprends pas » : KONAN réexplique CETTE étape du cours, en discussion */}
+          {showCourseCard && onNotUnderstood && (
+            <button
+              type="button"
+              onClick={() => {
+                const point = (phase === 'warmup' ? warmupItem?.point : undefined) || currentPoint;
+                const reference = [
+                  activeCourseSlice.paragraphText,
+                  activeCourseSlice.formula ? `${activeCourseSlice.formula.name} : ${activeCourseSlice.formula.formula}` : '',
+                  activeCourseSlice.keyRule,
+                  point?.summary,
+                ].filter(Boolean).join('\n').slice(0, 1800);
+                onNotUnderstood({ matiere: subjectTitle, notion: point?.title || subjectTitle, reference });
+              }}
+              className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/40 bg-white dark:bg-slate-900 text-sky-800 dark:text-sky-200 text-sm font-extrabold hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+            >
+              <HelpCircle className="w-4 h-4" strokeWidth={2.4} /> Je ne comprends pas cette étape
+            </button>
           )}
 
           {/* PARTIE 2 (charte Excellence, comme la maquette) : la mascotte pose la question, réponses A-D à relief */}
