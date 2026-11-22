@@ -14,6 +14,7 @@ import { Card } from '../../components/ui/Card';
 import { getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes } from '../../lib/utils';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
+import { WhatsAppCommunityCard } from '../../components/common/WhatsAppCommunityCard';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { 
@@ -338,6 +339,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </span>
           </button>
         )}
+
+        {/* Groupe WhatsApp officiel (caché si le lien n'est pas valable) */}
+        <WhatsAppCommunityCard />
 
       </div>
 
