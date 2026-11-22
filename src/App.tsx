@@ -82,7 +82,6 @@ import {
   type FriendsState,
   type QuestState,
 } from './services/friendsApi';
-import { FriendQuestCard } from './features/gamification/FriendQuestCard';
 import type { AvatarConfig } from './lib/avatar/avatarCatalog';
 import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
@@ -913,7 +912,7 @@ export function App() {
   const [friendsError, setFriendsError] = useState('');
   // Or (Gold), Quêtes d'XP en duo & Avatars animés personnalisables
   const [questState, setQuestState] = useState<QuestState | null>(null);
-  const [questLoading, setQuestLoading] = useState(false);
+  const [_questLoading, setQuestLoading] = useState(false);
   const [userGold, setUserGold] = useState<number>(() => (typeof state.gold === 'number' && Number.isFinite(state.gold) ? state.gold : 100));
   const [avatarConfig, setAvatarConfig] = useState<AvatarConfig | null>(() => state.avatarConfig || null);
   const [unlockedItems, setUnlockedItems] = useState<string[]>(() => (Array.isArray(state.unlockedItems) ? state.unlockedItems : []));
@@ -2882,19 +2881,6 @@ export function App() {
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze', frozen: Boolean(leagueBoard?.frozen) }
                 : null}
               reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
-              friendQuestSlot={subscriptionAccount ? (
-                <FriendQuestCard
-                  questState={questState}
-                  friends={friendsData?.friends || []}
-                  loading={questLoading}
-                  isFrozen={leagueBoard?.frozen ?? ((leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) <= 80)}
-                  reputation={leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation}
-                  onRefresh={reloadQuests}
-                  onGoldUpdated={setUserGold}
-                  onOpenFriends={() => setProfileScreen('friends')}
-                  onToast={showToast}
-                />
-              ) : null}
             />
             </>
           ) : (
@@ -3109,19 +3095,6 @@ export function App() {
             }}
             onRefresh={handleRefreshLeagueAndQuests}
             onOpenPlayer={setPlayerCardId}
-            questSection={subscriptionAccount ? (
-              <FriendQuestCard
-                questState={questState}
-                friends={friendsData?.friends || []}
-                loading={questLoading}
-                isFrozen={leagueBoard?.frozen ?? ((leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) <= 80)}
-                reputation={leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation}
-                onRefresh={reloadQuests}
-                onGoldUpdated={setUserGold}
-                onOpenFriends={() => setProfileScreen('friends')}
-                onToast={showToast}
-              />
-            ) : null}
           />
         )}
 

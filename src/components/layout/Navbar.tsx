@@ -3,13 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Clock,
   ShieldCheck, 
-  Upload, 
-  Download, 
-  RotateCcw,
   GraduationCap,
-  FileText,
-  Settings2,
-  ChevronDown,
   Bell,
   Crown,
   Check,
@@ -28,7 +22,6 @@ import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
-import { isLocalAdminEnvironment } from '../../lib/adminAccess';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../common/AdminGoogleLoginButton';
 import { 
@@ -325,10 +318,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   userAccount,
   konanId: _konanId,
   planTier,
-  onOpenPresetModal,
-  onExportData,
-  onImportData,
-  onResetData,
+  onOpenPresetModal: _onOpenPresetModal,
+  onExportData: _onExportData,
+  onImportData: _onImportData,
+  onResetData: _onResetData,
   onLogout: _onLogout,
   onOpenSettings,
   totalStudySessions: _totalStudySessions,
@@ -363,7 +356,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenExercises,
 }) => {
   const [lang] = useLanguage();
-  const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
   const [adminPasswordInput, setAdminPasswordInput] = useState<string>('');
@@ -382,7 +374,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
   const [isBellRinging, setIsBellRinging] = useState(false);
-  const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
   const mobileNotificationsMenuRef = useRef<HTMLDivElement>(null);
 
@@ -425,9 +416,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (toolsMenuRef.current && !toolsMenuRef.current.contains(target)) {
-        setIsToolsOpen(false);
-      }
       const insideDesktop = notificationsMenuRef.current?.contains(target);
       const insideMobile = mobileNotificationsMenuRef.current?.contains(target);
       if (!insideDesktop && !insideMobile) {
@@ -697,99 +685,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             {activeView !== 'landing' && activeView !== 'auth' ? (
               <>
                 {/* Les paramètres sont désormais accessibles depuis la page Profil (façon Duolingo) */}
-
-                {/* Secondary Tools Menu (Data Export, Import, Reset) */}
-                <div className="relative hidden sm:block" ref={toolsMenuRef}>
-                  <button
-                    onClick={() => setIsToolsOpen(!isToolsOpen)}
-                    title={t('navTools', lang)}
-                    className="group p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-900/70 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
-                  >
-                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-sky-700 dark:group-hover:text-sky-400 group-active:scale-90" />
-                    <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-300 ${isToolsOpen ? 'rotate-180 text-slate-900 dark:text-white' : 'group-hover:translate-y-0.5'}`} />
-                  </button>
-
-                  {isToolsOpen && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1 dark:bg-slate-950 dark:border-slate-800">
-                      <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider border-b border-slate-200 dark:border-slate-800/60">
-                        {t('navTools', lang)}
-                      </div>
-
-                      {/* Importer un emploi du temps */}
-                      {!isDemoMode && (
-                        <button
-                          onClick={() => {
-                            if (!userAccount?.isLoggedIn) {
-                              onNavigate('auth');
-                            } else {
-                              onNavigate('upload-schedule');
-                            }
-                            setIsToolsOpen(false);
-                          }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
-                        >
-                          <FileText className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
-                          <span>{t('navImport', lang)}</span>
-                        </button>
-                      )}
-
-                      {/* Exemples de filières: ONLY visible in Demo mode */}
-                      {isDemoMode && (
-                        <button
-                          onClick={() => { onOpenPresetModal(); setIsToolsOpen(false); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-sky-700 hover:text-sky-900 hover:bg-sky-50 dark:text-sky-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
-                        >
-                          <GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
-                          <span>Exemples d'EDT Démo</span>
-                        </button>
-                      )}
-
-                      <div className="my-1 border-t border-slate-200 dark:border-slate-800/60" />
-                      
-                      <button
-                        onClick={() => { onExportData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
-                      >
-                        <Download className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
-                        <span>{t('exportConfig', lang)}</span>
-                      </button>
-
-                      <button
-                        onClick={() => { onImportData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
-                      >
-                        <Upload className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
-                        <span>{t('importConfig', lang)}</span>
-                      </button>
-
-                      <button
-                        onClick={() => { onResetData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:text-rose-400 dark:hover:text-rose-300 dark:hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer text-left group/rst"
-                      >
-                        <RotateCcw className="w-3.5 h-3.5 transition-transform duration-500 group-hover/rst:-rotate-180" />
-                        <span>{t('resetDefault', lang)}</span>
-                      </button>
-
-                      {/* Console Administrateur : seulement en local, jamais visible des élèves en ligne */}
-                      {isLocalAdminEnvironment() && (<>
-                      <div className="my-1 border-t border-slate-200 dark:border-slate-800/60" />
-
-                      <button
-                        onClick={() => {
-                          setIsToolsOpen(false);
-                          setShowAdminModal(true);
-                          setAdminError(null);
-                          setAdminPasswordInput('');
-                        }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-500/10 rounded-xl transition-colors cursor-pointer text-left font-bold"
-                      >
-                        <ShieldCheck className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
-                        <span>Console Administrateur</span>
-                      </button>
-                      </>)}
-                    </div>
-                  )}
-                </div>
 
                 {/*  Notifications & Invitations Tab */}
                 <div className="relative" ref={notificationsMenuRef}>

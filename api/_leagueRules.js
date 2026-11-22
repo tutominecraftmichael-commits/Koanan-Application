@@ -3,8 +3,9 @@
  *
  * - Semaine de ligue : du lundi 00:00 au dimanche 23:59 (heure d'Abidjan = UTC).
  * - Groupes de 30 élèves de même division (classes et pays mélangés).
- * - Fin de semaine : les 10 premiers montent (Perle : ils restent en Perle), les 5 derniers descendent
- *   (pas plus bas que Bronze) ; en Perle, tous ceux qui ne sont pas dans les 10 premiers redescendent.
+ * - Fin de semaine : les 15 premiers montent (les 5 premiers sont en Zone d'excellence ; en Perle, les 15
+ *   premiers restent en Perle), les 16 derniers (dès la 16e place) sont en Zone de relégation et descendent
+ *   (pas plus bas que Bronze).
  *   Pour monter, il faut avoir gagné au moins 1 XP dans la semaine.
  * - Réputation de 80 % ou moins : l'élève reste dans son groupe et VOIT toujours le classement, mais sa
  *   division est gelée (ni montée ni descente à la fin de la semaine) tant qu'il ne repasse pas au-dessus
@@ -24,8 +25,9 @@ export const DIVISIONS = [
   { id: 5, name: 'Perle', color: '#DB2777' },
 ];
 export const GROUP_SIZE = 30;
-export const PROMOTE_COUNT = 10;
-export const DEMOTE_COUNT = 5;
+export const EXCELLENCE_COUNT = 5;
+export const PROMOTE_COUNT = 15;
+export const DEMOTE_COUNT = 15;
 export const MIN_REPUTATION = 80; // il faut STRICTEMENT plus de 80 %
 
 // Mêmes valeurs que src/lib/gamification/gamification.ts
@@ -296,11 +298,11 @@ export function computeMovements(players, division) {
     const top = rank <= PROMOTE_COUNT;
     let to = division;
     if (division === DIVISIONS.length) {
-      // Perle : les 10 premiers gardent leur place, tous les autres redescendent
+      // Perle : les 15 premiers gardent leur place, tous les autres redescendent
       if (!top) to = division - 1;
     } else if (top && (p.weekXp || 0) > 0) {
       to = division + 1;
-    } else if (!top && rank > size - DEMOTE_COUNT && division > 1) {
+    } else if (!top && (rank > PROMOTE_COUNT || rank > size - DEMOTE_COUNT) && division > 1) {
       to = division - 1;
     }
     out.set(p.uid, { rank: fullRank.get(p.uid), toDivision: to, movement: to > division ? 'up' : to < division ? 'down' : 'stay' });
