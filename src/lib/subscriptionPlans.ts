@@ -164,6 +164,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     recommended: true,
     features: [
       { title: 'Préparation aux devoirs (Seconde, Première, Terminale et Licence 1 ENTD)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
+      { title: 'Mode « Je ne comprends pas »', detail: 'KONAN, ton professeur particulier : il t’explique, te fait faire des exercices et vérifie que tu as compris. Toutes les matières, 30 messages par jour.' },
       { title: 'Énergie illimitée ∞', detail: 'Autant de séries d’exercices que tu veux.' },
       { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONAN te corrige : 3 vocaux par jour.' },
       { title: 'Time Blocking', detail: 'De longs blocs en mode concentration, sans distraction.' },
