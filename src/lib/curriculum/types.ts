@@ -837,6 +837,11 @@ export interface CurriculumChapter {
    * Sans entrée pour la classe, `order` s'applique.
    */
   orderForGrades?: Partial<Record<CurriculumGradeLevel, number>>;
+  /**
+   * LMD : semestre(s) où ce chapitre est enseigné (une matière comme « Microéconomie » regroupe S1 et S2).
+   * Sert à cocher d'avance les bons chapitres d'un devoir de « Microéconomie 2 » ou « Comptabilité générale II ».
+   */
+  semesters?: (1 | 2)[];
   /** PDF officiel d'origine (traçabilité). */
   source?: string;
 }

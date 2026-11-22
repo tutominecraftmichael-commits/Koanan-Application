@@ -11,6 +11,7 @@
  */
 import type { CurriculumChapter } from '../../lib/curriculum/types';
 import { COMPTA_GENERALE_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/compta_generale';
+import { COMPTA_TRESORERIE_ENTD_L1_CHAPTER } from '../courses/lmd/entd_l1/compta_generale_tresorerie';
 import { COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/compta_analytique';
 import { OGE_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/oge';
 import { INTRO_MANAGEMENT_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/intro_management';
@@ -20,6 +21,8 @@ import { DROIT_NUMERIQUE_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/droit_n
 
 export const CHAPTERS: CurriculumChapter[] = [
   ...COMPTA_GENERALE_ENTD_L1_CHAPTERS,
+  // Comptabilité générale II (S2) : opérations de trésorerie
+  COMPTA_TRESORERIE_ENTD_L1_CHAPTER,
   ...COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS,
   ...OGE_ENTD_L1_CHAPTERS,
   ...INTRO_MANAGEMENT_ENTD_L1_CHAPTERS,

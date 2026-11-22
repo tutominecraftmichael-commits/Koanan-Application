@@ -73,6 +73,22 @@ export function isExamPrepGrade(rawGrade?: string | null): boolean {
   return Boolean(grade && (EXAM_PREP_GRADES as readonly string[]).includes(grade));
 }
 
+/**
+ * Semestre indiqué à la fin du nom de la matière (LMD) : « Microéconomie 2 », « Comptabilité générale II »,
+ * « Macroéconomie S2 », « Anglais semestre 1 » → 2 / 2 / 2 / 1. Sans indication : null.
+ */
+export function semesterFromSubjectName(name?: string | null): 1 | 2 | null {
+  const n = String(name || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+  const m = /(?:^| )(?:semestre |sem |s)?(1|2|i|ii)$/.exec(n);
+  if (!m) return null;
+  return m[1] === '2' || m[1] === 'ii' ? 2 : 1;
+}
+
 export function hasSujetTemplate(subjectKey?: string | null): boolean {
   return Boolean(subjectKey && (SUJET_TEMPLATE_SUBJECTS as readonly string[]).includes(subjectKey));
 }
