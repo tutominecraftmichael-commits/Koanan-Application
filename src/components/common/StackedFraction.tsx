@@ -184,6 +184,15 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
       continue;
     }
 
+    // Date « jour/mois/année » (comptabilité : « le 01/02/N », « au 03/01/N+1 », « 20/03/2026 ») : jamais une fraction
+    if (/^\s*\/\s*(?:N\b|N\s*[+-]\s*\d|\d{2,4}\b)/.test(suffix) || /\d\s*\/\s*$/.test(prefix)) {
+      continue;
+    }
+    // Écriture comptable en ligne « D 624 Entretien 20 000 / C 571 Caisse » : « C » ou « D » suivi d'un numéro de compte
+    if (/^[CD]$/.test(match[3].trim()) && /^\s+\d/.test(suffix)) {
+      continue;
+    }
+
     if (
       /Étape\s*$|Question\s*$|Leçon\s*$|Partie\s*$/i.test(prefix) ||
       /[_{]\s*$/.test(prefix) ||

@@ -4,7 +4,7 @@
  *  - matière sans cours : explication du « chronomètre classique » de 75 min (révision sur le cahier).
  * Les cours sont chargés à la demande (ils sont lourds).
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BookOpen, Clock } from 'lucide-react';
 import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
 import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
@@ -31,6 +31,15 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
   const match = useMemo(() => matchSubjectToStemCurriculum(subjectName, grade), [subjectName, grade]);
   const subjectKey = match.isStemSubject ? match.stemSubjectId : undefined;
   const semester = useMemo(() => semesterFromSubjectName(subjectName), [subjectName]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // Chapitres cochés d'avance souvent en bas de la liste (S2 après S1) : on fait défiler la liste jusqu'au premier
+  useEffect(() => {
+    if (!preselectedSemester || !rootRef.current) return;
+    const first = rootRef.current.querySelector<HTMLInputElement>('input[type=checkbox]:checked');
+    const list = first?.closest<HTMLElement>('[data-chapter-list]');
+    const row = first?.closest<HTMLElement>('label');
+    if (list && row) list.scrollTop = row.offsetTop; // la liste est « relative » : offsetTop est mesuré dans la liste
+  }, [preselectedSemester, groups]);
 
   useEffect(() => {
     let alive = true;
@@ -106,7 +115,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
   }
 
   return (
-    <div className="space-y-3">
+    <div ref={rootRef} className="space-y-3">
       <div className="flex items-center gap-2">
         <BookOpen className="w-4 h-4 text-sky-600 dark:text-sky-400" />
         <p className="text-xs font-black text-slate-800 dark:text-slate-100">Coche les chapitres de ton devoir</p>
@@ -127,7 +136,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
                 {allOn ? 'Tout décocher' : 'Tout cocher'}
               </button>
             </div>
-            <div className="max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+            <div data-chapter-list className="relative max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
               {g.chapters.map((c) => (
                 <label key={c.id} className="flex items-start gap-3 px-3 py-2.5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <input type="checkbox" checked={value.includes(c.id)} onChange={() => toggle(c.id)} className="w-4 h-4 mt-0.5 accent-sky-500 shrink-0" />

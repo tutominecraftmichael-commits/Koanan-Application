@@ -235,7 +235,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'definition',
-            stepBadge: 'PT, PM, Pm',
+            stepBadge: 'Trois mesures',
             stepTheme: 'Définitions',
             stepTitle: 'Produit total, moyen et marginal',
             paragraphText:
@@ -260,8 +260,8 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepNumber: 2,
             stepKind: 'methode',
             stepBadge: 'Calcul',
-            stepTheme: 'PM et Pm',
-            stepTitle: 'Calculer PM et Pm sur une fonction',
+            stepTheme: 'Moyenne et marginale',
+            stepTitle: 'Calculer les productivités moyenne et marginale',
             paragraphText:
               'Méthode : diviser PT par $x$ pour PM, dériver PT pour Pm.\n' +
               '• Exemple : $PT(x) = 12x^2 - x^3$.\n' +
@@ -281,7 +281,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'propriete',
             stepBadge: 'Relations',
             stepTheme: 'Courbes',
-            stepTitle: 'Relations entre PT, PM et Pm',
+            stepTitle: 'Relations entre produit total, moyen et marginal',
             paragraphText:
               '• Tant que **PM augmente**, $Pm > PM$ (la dernière unité tire la moyenne vers le haut).\n' +
               '• Au **maximum de PM**, $Pm = PM$ : la courbe de Pm coupe celle de PM en son sommet.\n' +
@@ -290,7 +290,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• Pm atteint son maximum **avant** PM.',
             visualSchema: {
               type: 'function_plot',
-              title: 'PM et Pm pour PT(x) = 12x² − x³',
+              title: 'Productivités moyenne et marginale pour PT(x) = 12x² − x³',
               caption: 'Pm (violet) coupe PM (bleu) au maximum de PM (x = 6) et s’annule en x = 8, où PT est maximal.',
               plot: {
                 xMin: 0,
@@ -323,7 +323,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'Max PM',
+            stepBadge: 'Moyenne maximale',
             stepTheme: 'Optimum technique',
             stepTitle: 'Trouver le maximum de la productivité moyenne',
             paragraphText:
@@ -343,8 +343,8 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'methode',
-            stepBadge: 'Max PT',
-            stepTheme: 'Pm = 0',
+            stepBadge: 'Produit maximal',
+            stepTheme: 'Marginale nulle',
             stepTitle: 'Trouver le maximum du produit total',
             paragraphText:
               '• Le produit total est maximal quand la productivité marginale **s’annule** : $Pm = 0$.\n' +
@@ -364,7 +364,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'propriete',
             stepBadge: 'Graphique',
             stepTheme: 'Pentes',
-            stepTitle: 'Lire PM et Pm sur la courbe de PT',
+            stepTitle: 'Lire les productivités sur la courbe du produit total',
             paragraphText:
               '• **PM** en un point de la courbe de PT = **pente du rayon** qui part de l’origine et passe par ce point.\n' +
               '• **Pm** en un point = **pente de la tangente** à la courbe de PT en ce point.\n' +
@@ -501,7 +501,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Type examen',
             stepTheme: 'Fonction avec paramètre',
-            stepTitle: 'PM, Pm et élasticité de $y = (y_1 - \\alpha)^{1/2}$',
+            stepTitle: 'Productivités et élasticité de $y = (y_1 - \\alpha)^{1/2}$',
             paragraphText:
               '• $PM_1 = \\dfrac{(y_1 - \\alpha)^{1/2}}{y_1}$.\n' +
               '• $Pm_1 = \\dfrac{1}{2}(y_1 - \\alpha)^{-1/2} = \\dfrac{1}{2(y_1 - \\alpha)^{1/2}}$.\n' +
@@ -726,7 +726,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             'Budget : $4x_1 + 2(2x_1) = 400$, donc $8x_1 = 400$, $x_1 = 50$ et $x_2 = 100$.',
             'Production : $y = 50 \\times 100 = 5000$.',
           ],
-          conclusion: 'La firme utilise 50 unités de $x_1$ et 100 unités de $x_2$ et produit 5 000 unités.',
+          conclusion: 'La firme utilise 50 unités de $x_1$ et 100 unités de $x_2$ et produit 5 000 unités.',
         },
         structuredSteps: [
           {
@@ -1087,7 +1087,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepNumber: 2,
             stepKind: 'definition',
             stepBadge: 'Coûts moyens',
-            stepTheme: 'CVM et CM',
+            stepTheme: 'Variable moyen et moyen',
             stepTitle: 'Coût variable moyen et coût moyen',
             paragraphText:
               '• $CVM = \\dfrac{CV}{y}$ et $CM = \\dfrac{CT}{y} = CFM + CVM$.\n' +
@@ -1105,7 +1105,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'definition',
-            stepBadge: 'Cm',
+            stepBadge: 'Coût marginal',
             stepTheme: 'Coût marginal',
             stepTitle: 'Le coût marginal',
             paragraphText:
@@ -1165,7 +1165,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepNumber: 5,
             stepKind: 'methode',
             stepBadge: 'Calcul',
-            stepTheme: 'Minimum de CM',
+            stepTheme: 'Coût moyen minimal',
             stepTitle: 'Trouver le minimum du coût moyen',
             paragraphText:
               'Deux méthodes : dériver CM, ou résoudre $Cm = CM$.\n' +
@@ -1194,10 +1194,10 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: `${C7}_p1_q6`,
               type: 'mcq',
               prompt:
-                'Awa ouvre un cybercafé à Bouaké. Recettes annuelles : 9 000 000 F ; dépenses payées (loyer, connexion, salaires) : 6 000 000 F. En restant salariée, elle aurait gagné 2 400 000 F, et ses fonds propres placés auraient rapporté 300 000 F. Quel est son profit économique ?',
-              options: ['300 000 F', '3 000 000 F', '2 700 000 F', '−300 000 F'],
+                'Awa ouvre un cybercafé à Bouaké. Recettes annuelles : 9 000 000 F ; dépenses payées (loyer, connexion, salaires) : 6 000 000 F. En restant salariée, elle aurait gagné 2 400 000 F, et ses fonds propres placés auraient rapporté 300 000 F. Quel est son profit économique ?',
+              options: ['300 000 F', '3 000 000 F', '2 700 000 F', '−300 000 F'],
               correctAnswerIndex: 0,
-              explanation: 'Profit comptable : 9 000 000 − 6 000 000 = 3 000 000 F. Coûts implicites : 2 400 000 + 300 000 = 2 700 000 F. Profit économique : 3 000 000 − 2 700 000 = 300 000 F.',
+              explanation: 'Profit comptable : 9 000 000 − 6 000 000 = 3 000 000 F. Coûts implicites : 2 400 000 + 300 000 = 2 700 000 F. Profit économique : 3 000 000 − 2 700 000 = 300 000 F.',
             },
           },
         ],
@@ -1234,7 +1234,7 @@ export const MICRO_PRODUCTEUR_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'propriete',
-            stepBadge: 'P = Cm',
+            stepBadge: 'Prix = coût marginal',
             stepTheme: 'Profit maximal',
             stepTitle: 'La règle de production en concurrence parfaite',
             paragraphText:

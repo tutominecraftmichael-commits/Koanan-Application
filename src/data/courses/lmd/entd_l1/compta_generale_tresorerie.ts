@@ -47,13 +47,13 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
       workedExample: {
         title: 'Tenir le compte Caisse du mois de février',
         statement:
-          'Le 01/02/N, la caisse contient 675 000 F. Opérations : achat au comptant de marchandises 500 000 F ; vente au comptant 1 500 000 F ; salaires payés en espèces 1 300 000 F ; avance en espèces au fournisseur KOFFI 200 000 F ; règlement d’un fournisseur 100 000 F ; le client FOFANA règle 400 000 F en espèces ; dépôt en banque 300 000 F ; retrait en banque 3 000 000 F ; loyer payé en espèces 150 000 F. Quel est le solde au 28/02/N ?',
+          'Le 01/02/N, la caisse contient 675 000 F. Opérations : achat au comptant de marchandises 500 000 F ; vente au comptant 1 500 000 F ; salaires payés en espèces 1 300 000 F ; avance en espèces au fournisseur KOFFI 200 000 F ; règlement d’un fournisseur 100 000 F ; le client FOFANA règle 400 000 F en espèces ; dépôt en banque 300 000 F ; retrait en banque 3 000 000 F ; loyer payé en espèces 150 000 F. Quel est le solde au 28/02/N ?',
         methodSteps: [
-          'Total des débits (entrées) : 675 000 + 1 500 000 + 400 000 + 3 000 000 = 5 575 000 F.',
-          'Total des crédits (sorties) : 500 000 + 1 300 000 + 200 000 + 100 000 + 300 000 + 150 000 = 2 550 000 F.',
-          'Solde : 5 575 000 − 2 550 000 = 3 025 000 F, solde débiteur.',
+          'Total des débits (entrées) : 675 000 + 1 500 000 + 400 000 + 3 000 000 = 5 575 000 F.',
+          'Total des crédits (sorties) : 500 000 + 1 300 000 + 200 000 + 100 000 + 300 000 + 150 000 = 2 550 000 F.',
+          'Solde : 5 575 000 − 2 550 000 = 3 025 000 F, solde débiteur.',
         ],
-        conclusion: 'La caisse contient 3 025 000 F au 28/02/N. Le solde reste débiteur à chaque date : la tenue est cohérente.',
+        conclusion: 'La caisse contient 3 025 000 F au 28/02/N. Le solde reste débiteur à chaque date : la tenue est cohérente.',
       },
       structuredSteps: [
         {
@@ -94,10 +94,10 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p1_q2`,
             type: 'mcq',
-            prompt: 'En fin de mois, un étudiant obtient un solde CRÉDITEUR de 120 000 F pour le compte 571 Caisse. Que faut-il en conclure ?',
+            prompt: 'En fin de mois, un étudiant obtient un solde CRÉDITEUR de 120 000 F pour le compte 571 Caisse. Que faut-il en conclure ?',
             options: [
-              'La caisse a un découvert autorisé de 120 000 F',
-              'L’entreprise doit 120 000 F à son caissier',
+              'La caisse a un découvert autorisé de 120 000 F',
+              'L’entreprise doit 120 000 F à son caissier',
               'Il y a une erreur d’enregistrement : une caisse ne peut pas avoir un solde créditeur',
               'C’est normal si les ventes au comptant ont été faibles',
             ],
@@ -113,18 +113,18 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           stepTitle: 'Calculer le solde de la caisse',
           paragraphText:
             'Méthode : partir de la situation initiale (au débit), ajouter toutes les entrées, retirer toutes les sorties.\n' +
-            '• Exemple : situation initiale 675 000 F ; achat au comptant 500 000 F ; vente au comptant 1 500 000 F ; salaires payés en espèces 1 300 000 F.\n' +
-            '• Débits : 675 000 + 1 500 000 = 2 175 000 F. Crédits : 500 000 + 1 300 000 = 1 800 000 F.\n' +
-            '• Solde : 2 175 000 − 1 800 000 = **375 000 F**, débiteur.',
+            '• Exemple : situation initiale 675 000 F ; achat au comptant 500 000 F ; vente au comptant 1 500 000 F ; salaires payés en espèces 1 300 000 F.\n' +
+            '• Débits : 675 000 + 1 500 000 = 2 175 000 F. Crédits : 500 000 + 1 300 000 = 1 800 000 F.\n' +
+            '• Solde : 2 175 000 − 1 800 000 = **375 000 F**, débiteur.',
           formula: { name: 'Solde de caisse', formula: '\\text{Solde} = \\text{Total débit} - \\text{Total crédit}' },
           exercise: {
             id: `${ID}_p1_q3`,
             type: 'mcq',
             prompt:
-              'La caisse contient 675 000 F au 01/02/N. Le 03/02 : achat au comptant de marchandises 500 000 F. Le 04/02 : vente au comptant 1 500 000 F. Le 05/02 : salaires payés en espèces 1 300 000 F. Quel est le solde de la caisse au 05/02/N ?',
-            options: ['375 000 F débiteur', '1 675 000 F débiteur', '425 000 F créditeur', '2 175 000 F débiteur'],
+              'La caisse contient 675 000 F au 01/02/N. Le 03/02 : achat au comptant de marchandises 500 000 F. Le 04/02 : vente au comptant 1 500 000 F. Le 05/02 : salaires payés en espèces 1 300 000 F. Quel est le solde de la caisse au 05/02/N ?',
+            options: ['375 000 F débiteur', '1 675 000 F débiteur', '425 000 F créditeur', '2 175 000 F débiteur'],
             correctAnswerIndex: 0,
-            explanation: 'Débits : 675 000 + 1 500 000 = 2 175 000 F. Crédits : 500 000 + 1 300 000 = 1 800 000 F. Solde : 2 175 000 − 1 800 000 = 375 000 F, débiteur.',
+            explanation: 'Débits : 675 000 + 1 500 000 = 2 175 000 F. Crédits : 500 000 + 1 300 000 = 1 800 000 F. Solde : 2 175 000 − 1 800 000 = 375 000 F, débiteur.',
           },
         },
         {
@@ -135,19 +135,19 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           stepTitle: 'Enregistrer une pièce de caisse « dépense »',
           paragraphText:
             'La **pièce de caisse** justifie une sortie d’espèces. Pour une charge avec TVA récupérable, on débite la charge (HT) et la TVA récupérable, et on crédite la caisse (TTC).\n' +
-            '• Exemple (examen G2) : entretien de l’ordinateur, travaux 20 000 F + TVA 18 % 3 600 F = 23 600 F TTC payés en espèces.\n' +
-            '• Écriture : **D 624** Entretien, réparations 20 000 ; **D 4454** État, TVA récupérable sur services 3 600 ; **C 571** Caisse 23 600.',
+            '• Exemple (examen G2) : entretien de l’ordinateur, travaux 20 000 F + TVA 18 % 3 600 F = 23 600 F TTC payés en espèces.\n' +
+            '• Écriture : **D 624** Entretien, réparations 20 000 ; **D 4454** État, TVA récupérable sur services 3 600 ; **C 571** Caisse 23 600.',
           keyRule: 'La caisse est créditée du montant TTC réellement sorti ; la charge est débitée HT, la TVA récupérable à part.',
           exercise: {
             id: `${ID}_p1_q4`,
             type: 'mcq',
             prompt:
-              'Pièce de caisse « dépense » : entretien de l’ordinateur, travaux 20 000 F HT, TVA 18 % = 3 600 F, total payé en espèces 23 600 F. Quelle écriture passer ?',
+              'Pièce de caisse « dépense » : entretien de l’ordinateur, travaux 20 000 F HT, TVA 18 % = 3 600 F, total payé en espèces 23 600 F. Quelle écriture passer ?',
             options: [
-              'D 571 Caisse 23 600 / C 624 Entretien 20 000 / C 4454 TVA 3 600',
-              'D 624 Entretien 20 000 / D 4454 TVA récupérable 3 600 / C 571 Caisse 23 600',
-              'D 624 Entretien 23 600 / C 521 Banque 23 600',
-              'D 601 Achats de marchandises 20 000 / D 4454 TVA 3 600 / C 571 Caisse 23 600',
+              'D 571 Caisse 23 600 / C 624 Entretien 20 000 / C 4454 TVA 3 600',
+              'D 624 Entretien 20 000 / D 4454 TVA récupérable 3 600 / C 571 Caisse 23 600',
+              'D 624 Entretien 23 600 / C 521 Banque 23 600',
+              'D 601 Achats de marchandises 20 000 / D 4454 TVA 3 600 / C 571 Caisse 23 600',
             ],
             correctAnswerIndex: 1,
             explanation: 'C’est une charge d’entretien (624) payée en espèces : charge HT au débit, TVA récupérable sur services (4454) au débit, sortie de caisse TTC au crédit du 571.',
@@ -169,12 +169,12 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p1_q5`,
             type: 'mcq',
-            prompt: 'Le 27/02/N, l’entreprise retire 3 000 000 F en espèces de son compte bancaire pour alimenter sa caisse. Quelle écriture passer ?',
+            prompt: 'Le 27/02/N, l’entreprise retire 3 000 000 F en espèces de son compte bancaire pour alimenter sa caisse. Quelle écriture passer ?',
             options: [
-              'D 521 Banque / C 571 Caisse : 3 000 000',
-              'D 571 Caisse / C 701 Ventes : 3 000 000',
-              'D 571 Caisse / C 521 Banque : 3 000 000',
-              'D 631 Frais bancaires / C 521 Banque : 3 000 000',
+              'D 521 Banque / C 571 Caisse : 3 000 000',
+              'D 571 Caisse / C 701 Ventes : 3 000 000',
+              'D 571 Caisse / C 521 Banque : 3 000 000',
+              'D 631 Frais bancaires / C 521 Banque : 3 000 000',
             ],
             correctAnswerIndex: 2,
             explanation: 'Le retrait fait entrer des espèces en caisse (débit 571) et diminue l’avoir en banque (crédit 521). Aucun produit ni charge n’apparaît.',
@@ -198,13 +198,13 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
       workedExample: {
         title: 'Solde du compte Banque en mars',
         statement:
-          'Le 01/03/N, l’avoir en banque est de 30 000 000 F. Avis de crédit pour un emprunt de 5 000 000 F ; virement reçu du client YAO 1 500 000 F ; ventes contre chèques 5 000 000 F. Sorties : chèque à BEDA 250 000 F ; frais d’escompte 18 000 F ; frais sur achat de titres 15 000 F ; effets domiciliés payés 500 000 F ; virement à ATSE 400 000 F ; frais de garde de titres 15 000 F ; retrait 2 000 000 F ; facture CIE 75 000 F ; achat de marchandises par chèque 600 000 F.',
+          'Le 01/03/N, l’avoir en banque est de 30 000 000 F. Avis de crédit pour un emprunt de 5 000 000 F ; virement reçu du client YAO 1 500 000 F ; ventes contre chèques 5 000 000 F. Sorties : chèque à BEDA 250 000 F ; frais d’escompte 18 000 F ; frais sur achat de titres 15 000 F ; effets domiciliés payés 500 000 F ; virement à ATSE 400 000 F ; frais de garde de titres 15 000 F ; retrait 2 000 000 F ; facture CIE 75 000 F ; achat de marchandises par chèque 600 000 F.',
         methodSteps: [
-          'Débit : 30 000 000 + 5 000 000 + 1 500 000 + 5 000 000 = 41 500 000 F.',
-          'Crédit : 250 000 + 18 000 + 15 000 + 500 000 + 400 000 + 15 000 + 2 000 000 + 75 000 + 600 000 = 3 873 000 F.',
-          'Solde : 41 500 000 − 3 873 000 = 37 627 000 F, débiteur.',
+          'Débit : 30 000 000 + 5 000 000 + 1 500 000 + 5 000 000 = 41 500 000 F.',
+          'Crédit : 250 000 + 18 000 + 15 000 + 500 000 + 400 000 + 15 000 + 2 000 000 + 75 000 + 600 000 = 3 873 000 F.',
+          'Solde : 41 500 000 − 3 873 000 = 37 627 000 F, débiteur.',
         ],
-        conclusion: 'L’entreprise dispose de 37 627 000 F en banque au 31/03/N.',
+        conclusion: 'L’entreprise dispose de 37 627 000 F en banque au 31/03/N.',
       },
       structuredSteps: [
         {
@@ -221,8 +221,8 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p2_q1`,
             type: 'mcq',
-            prompt: 'L’entreprise reçoit de sa banque un AVIS DE DÉBIT de 18 000 F pour frais d’escompte d’effets. Comment le compte 521 Banque est-il mouvementé chez l’entreprise ?',
-            options: ['Débité de 18 000 F', 'Crédité de 18 000 F', 'Il n’est pas mouvementé', 'Débité de 36 000 F'],
+            prompt: 'L’entreprise reçoit de sa banque un AVIS DE DÉBIT de 18 000 F pour frais d’escompte d’effets. Comment le compte 521 Banque est-il mouvementé chez l’entreprise ?',
+            options: ['Débité de 18 000 F', 'Crédité de 18 000 F', 'Il n’est pas mouvementé', 'Débité de 36 000 F'],
             correctAnswerIndex: 1,
             explanation: 'Un avis de débit annonce une diminution de l’avoir en banque : chez l’entreprise, le 521 est crédité (et le 631 Frais bancaires débité).',
           },
@@ -241,12 +241,12 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p2_q2`,
             type: 'mcq',
-            prompt: 'Au 31/12/N, le compte 521 Banque de la société KADI présente un solde CRÉDITEUR de 2 400 000 F. Que signifie ce solde ?',
+            prompt: 'Au 31/12/N, le compte 521 Banque de la société KADI présente un solde CRÉDITEUR de 2 400 000 F. Que signifie ce solde ?',
             options: [
-              'La société a 2 400 000 F disponibles en banque',
-              'La société doit 2 400 000 F à sa banque (découvert)',
+              'La société a 2 400 000 F disponibles en banque',
+              'La société doit 2 400 000 F à sa banque (découvert)',
               'La société a fait une erreur, car un compte Banque ne peut pas être créditeur',
-              'La banque doit 2 400 000 F de frais à la société',
+              'La banque doit 2 400 000 F de frais à la société',
             ],
             correctAnswerIndex: 1,
             explanation: 'Un solde créditeur du compte Banque est un découvert : c’est une dette envers la banque, classée en trésorerie-passif.',
@@ -260,17 +260,17 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           stepTitle: 'Calculer le solde du compte Banque',
           paragraphText:
             'Comme pour la caisse : situation initiale + entrées − sorties.\n' +
-            '• Exemple : avoir initial 30 000 000 F ; avis de crédit (emprunt) 5 000 000 F ; chèque émis 250 000 F ; retrait 2 000 000 F ; avis de débit (facture CIE) 75 000 F.\n' +
-            '• Débits : 35 000 000 F. Crédits : 250 000 + 2 000 000 + 75 000 = 2 325 000 F.\n' +
-            '• Solde : 35 000 000 − 2 325 000 = **32 675 000 F**, débiteur.',
+            '• Exemple : avoir initial 30 000 000 F ; avis de crédit (emprunt) 5 000 000 F ; chèque émis 250 000 F ; retrait 2 000 000 F ; avis de débit (facture CIE) 75 000 F.\n' +
+            '• Débits : 35 000 000 F. Crédits : 250 000 + 2 000 000 + 75 000 = 2 325 000 F.\n' +
+            '• Solde : 35 000 000 − 2 325 000 = **32 675 000 F**, débiteur.',
           exercise: {
             id: `${ID}_p2_q3`,
             type: 'mcq',
             prompt:
-              'Avoir en banque au 01/03/N : 30 000 000 F. Ensuite : avis de crédit pour un emprunt de 5 000 000 F ; chèque n° 18 émis à BEDA 250 000 F ; retrait d’espèces 2 000 000 F ; avis de débit pour la facture CIE 75 000 F. Quel est le solde du compte 521 ?',
-            options: ['32 675 000 F débiteur', '37 325 000 F débiteur', '27 675 000 F débiteur', '35 000 000 F débiteur'],
+              'Avoir en banque au 01/03/N : 30 000 000 F. Ensuite : avis de crédit pour un emprunt de 5 000 000 F ; chèque n° 18 émis à BEDA 250 000 F ; retrait d’espèces 2 000 000 F ; avis de débit pour la facture CIE 75 000 F. Quel est le solde du compte 521 ?',
+            options: ['32 675 000 F débiteur', '37 325 000 F débiteur', '27 675 000 F débiteur', '35 000 000 F débiteur'],
             correctAnswerIndex: 0,
-            explanation: 'Débits : 30 000 000 + 5 000 000 = 35 000 000 F. Crédits : 250 000 + 2 000 000 + 75 000 = 2 325 000 F. Solde : 32 675 000 F, débiteur.',
+            explanation: 'Débits : 30 000 000 + 5 000 000 = 35 000 000 F. Crédits : 250 000 + 2 000 000 + 75 000 = 2 325 000 F. Solde : 32 675 000 F, débiteur.',
           },
         },
         {
@@ -287,12 +287,12 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p2_q4`,
             type: 'mcq',
-            prompt: 'Le 05/03/N, la société reçoit l’avis de crédit n° 17 : la banque a versé sur son compte un emprunt de 5 000 000 F. Quelle écriture passer ?',
+            prompt: 'Le 05/03/N, la société reçoit l’avis de crédit n° 17 : la banque a versé sur son compte un emprunt de 5 000 000 F. Quelle écriture passer ?',
             options: [
-              'D 162 Emprunts / C 521 Banque : 5 000 000',
-              'D 521 Banque / C 701 Ventes : 5 000 000',
-              'D 521 Banque / C 162 Emprunts auprès des établissements de crédit : 5 000 000',
-              'D 631 Frais bancaires / C 162 Emprunts : 5 000 000',
+              'D 162 Emprunts / C 521 Banque : 5 000 000',
+              'D 521 Banque / C 701 Ventes : 5 000 000',
+              'D 521 Banque / C 162 Emprunts auprès des établissements de crédit : 5 000 000',
+              'D 631 Frais bancaires / C 162 Emprunts : 5 000 000',
             ],
             correctAnswerIndex: 2,
             explanation: 'L’avoir en banque augmente (débit 521) et l’entreprise contracte une dette financière (crédit 162).',
@@ -328,17 +328,17 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           stepTitle: 'Ne pas recopier le sens de la banque',
           paragraphText:
             'Piège fréquent : lire « avis de DÉBIT » et débiter le 521. Or la banque parle de ses propres livres.\n' +
-            '• Avis de débit de 6 000 F pour frais sur effet impayé (examen G2) : **D 631** Frais bancaires 6 000 / **C 521** Banque 6 000.\n' +
-            '• Avis de crédit de 850 000 F pour le chèque d’un client remis à l’encaissement : **D 521** Banque / **C 514** Chèques à l’encaissement (ou C 411 Clients si le chèque n’est pas passé par un compte d’attente).',
+            '• Avis de débit de 6 000 F pour frais sur effet impayé (examen G2) : **D 631** Frais bancaires 6 000 / **C 521** Banque 6 000.\n' +
+            '• Avis de crédit de 850 000 F pour le chèque d’un client remis à l’encaissement : **D 521** Banque / **C 514** Chèques à l’encaissement (ou C 411 Clients si le chèque n’est pas passé par un compte d’attente).',
           exercise: {
             id: `${ID}_p2_q6`,
             type: 'mcq',
-            prompt: 'Le 29/04/N, la SGCI envoie à G&B Sarl un AVIS DE DÉBIT de 6 000 F : frais sur l’effet n° 66 impayé. Quelle écriture G&B Sarl doit-elle passer ?',
+            prompt: 'Le 29/04/N, la SGCI envoie à G&B Sarl un AVIS DE DÉBIT de 6 000 F : frais sur l’effet n° 66 impayé. Quelle écriture G&B Sarl doit-elle passer ?',
             options: [
-              'D 521 Banque 6 000 / C 631 Frais bancaires 6 000',
-              'D 631 Frais bancaires 6 000 / C 521 Banque 6 000',
-              'D 631 Frais bancaires 6 000 / C 571 Caisse 6 000',
-              'D 521 Banque 6 000 / C 411 Clients 6 000',
+              'D 521 Banque 6 000 / C 631 Frais bancaires 6 000',
+              'D 631 Frais bancaires 6 000 / C 521 Banque 6 000',
+              'D 631 Frais bancaires 6 000 / C 571 Caisse 6 000',
+              'D 521 Banque 6 000 / C 411 Clients 6 000',
             ],
             correctAnswerIndex: 1,
             explanation: 'L’avis de débit diminue l’avoir en banque : crédit 521. Les frais sont une charge : débit 631.',
@@ -365,11 +365,11 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
       workedExample: {
         title: 'Quatre chèques clients remis à l’encaissement',
         statement:
-          'L’entreprise 2IT1A reçoit : le 02/02 chèque n° 1 de TOURE 5 000 000 F ; le 08/02 chèque n° 2 de BOUBA 1 000 000 F ; le 12/02 chèque n° 3 de KONAN 3 000 000 F ; le 15/02 chèque n° 4 de YEO 1 500 000 F. Le 16/02, elle remet les 4 chèques à l’encaissement. Le 19/02, avis de crédit : net 10 490 000 F.',
+          'L’entreprise 2IT1A reçoit : le 02/02 chèque n° 1 de TOURE 5 000 000 F ; le 08/02 chèque n° 2 de BOUBA 1 000 000 F ; le 12/02 chèque n° 3 de KONAN 3 000 000 F ; le 15/02 chèque n° 4 de YEO 1 500 000 F. Le 16/02, elle remet les 4 chèques à l’encaissement. Le 19/02, avis de crédit : net 10 490 000 F.',
         methodSteps: [
-          'À chaque réception : D 513 Chèques à encaisser / C 411 Client (5 000 000 ; 1 000 000 ; 3 000 000 ; 1 500 000).',
-          'Le 16/02 : total 5 000 000 + 1 000 000 + 3 000 000 + 1 500 000 = 10 500 000 F → D 514 / C 513 : 10 500 000.',
-          'Le 19/02 : frais = 10 500 000 − 10 490 000 = 10 000 F → D 521 10 490 000 ; D 631 10 000 ; C 514 10 500 000.',
+          'À chaque réception : D 513 Chèques à encaisser / C 411 Client (5 000 000 ; 1 000 000 ; 3 000 000 ; 1 500 000).',
+          'Le 16/02 : total 5 000 000 + 1 000 000 + 3 000 000 + 1 500 000 = 10 500 000 F → D 514 / C 513 : 10 500 000.',
+          'Le 19/02 : frais = 10 500 000 − 10 490 000 = 10 000 F → D 521 10 490 000 ; D 631 10 000 ; C 514 10 500 000.',
         ],
         conclusion: 'Les comptes 513 et 514 sont soldés : chaque chèque est passé de la réception à la banque, frais compris.',
       },
@@ -402,16 +402,16 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             'À la réception, la créance sur le client est éteinte et le chèque entre en attente :\n' +
             '• **D 513** Chèques à encaisser / **C 411** Clients.\n' +
-            '• Exemple : le 02/02/N, chèque n° 1 du client TOURE de 5 000 000 F → D 513 / C 411 TOURE : 5 000 000 (libellé « son chèque n° 1 »).',
+            '• Exemple : le 02/02/N, chèque n° 1 du client TOURE de 5 000 000 F → D 513 / C 411 TOURE : 5 000 000 (libellé « son chèque n° 1 »).',
           exercise: {
             id: `${ID}_p3_q2`,
             type: 'mcq',
-            prompt: 'Le 02/02/N, l’entreprise 2IT1A, qui utilise les comptes de transition, reçoit le chèque n° 1 de son client TOURE : 5 000 000 F. Quelle écriture passer ?',
+            prompt: 'Le 02/02/N, l’entreprise 2IT1A, qui utilise les comptes de transition, reçoit le chèque n° 1 de son client TOURE : 5 000 000 F. Quelle écriture passer ?',
             options: [
-              'D 521 Banque / C 411 TOURE : 5 000 000',
-              'D 411 TOURE / C 513 Chèques à encaisser : 5 000 000',
-              'D 514 Chèques à l’encaissement / C 411 TOURE : 5 000 000',
-              'D 513 Chèques à encaisser / C 411 TOURE : 5 000 000',
+              'D 521 Banque / C 411 TOURE : 5 000 000',
+              'D 411 TOURE / C 513 Chèques à encaisser : 5 000 000',
+              'D 514 Chèques à l’encaissement / C 411 TOURE : 5 000 000',
+              'D 513 Chèques à encaisser / C 411 TOURE : 5 000 000',
             ],
             correctAnswerIndex: 3,
             explanation: 'Avec les comptes de transition, le chèque reçu entre au 513 (débit) et la créance client est soldée (crédit 411).',
@@ -426,20 +426,20 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             'On regroupe les chèques sur un bordereau et on passe une seule écriture pour le total :\n' +
             '• **D 514** Chèques à l’encaissement / **C 513** Chèques à encaisser.\n' +
-            '• Exemple : chèques n° 1 à 4 : 5 000 000 + 1 000 000 + 3 000 000 + 1 500 000 = **10 500 000 F**.',
+            '• Exemple : chèques n° 1 à 4 : 5 000 000 + 1 000 000 + 3 000 000 + 1 500 000 = **10 500 000 F**.',
           exercise: {
             id: `${ID}_p3_q3`,
             type: 'mcq',
             prompt:
-              'Le 16/02/N, l’entreprise remet à l’encaissement 4 chèques reçus : TOURE 5 000 000 F, BOUBA 1 000 000 F, KONAN 3 000 000 F et YEO 1 500 000 F. Quelle écriture passer ?',
+              'Le 16/02/N, l’entreprise remet à l’encaissement 4 chèques reçus : TOURE 5 000 000 F, BOUBA 1 000 000 F, KONAN 3 000 000 F et YEO 1 500 000 F. Quelle écriture passer ?',
             options: [
-              'D 514 / C 513 : 10 500 000',
-              'D 513 / C 514 : 10 500 000',
-              'D 521 / C 513 : 10 500 000',
-              'D 514 / C 513 : 9 500 000',
+              'D 514 / C 513 : 10 500 000',
+              'D 513 / C 514 : 10 500 000',
+              'D 521 / C 513 : 10 500 000',
+              'D 514 / C 513 : 9 500 000',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Total remis : 5 000 000 + 1 000 000 + 3 000 000 + 1 500 000 = 10 500 000 F. Les chèques passent de « à encaisser » (crédit 513) à « à l’encaissement » (débit 514).',
+            explanation: 'Total remis : 5 000 000 + 1 000 000 + 3 000 000 + 1 500 000 = 10 500 000 F. Les chèques passent de « à encaisser » (crédit 513) à « à l’encaissement » (débit 514).',
           },
         },
         {
@@ -451,21 +451,21 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             'La banque crédite le **net** (montant remis − commission) :\n' +
             '• **D 521** Banque (net) ; **D 631** Frais bancaires (commission) ; **C 514** Chèques à l’encaissement (montant remis).\n' +
-            '• Exemple : remis 10 500 000 F, avis de crédit net 10 490 000 F → frais = **10 000 F**.',
+            '• Exemple : remis 10 500 000 F, avis de crédit net 10 490 000 F → frais = **10 000 F**.',
           formula: { name: 'Frais bancaires', formula: '\\text{Frais} = \\text{Montant remis} - \\text{Net crédité}' },
           exercise: {
             id: `${ID}_p3_q4`,
             type: 'mcq',
             prompt:
-              'Chèques remis à l’encaissement le 16/02/N : 10 500 000 F. Le 19/02/N, avis de crédit de la banque : net 10 490 000 F. Quelle écriture passer ?',
+              'Chèques remis à l’encaissement le 16/02/N : 10 500 000 F. Le 19/02/N, avis de crédit de la banque : net 10 490 000 F. Quelle écriture passer ?',
             options: [
-              'D 521 10 500 000 / C 514 10 500 000',
-              'D 521 10 490 000 ; D 631 10 000 / C 514 10 500 000',
-              'D 521 10 490 000 / C 514 10 490 000',
-              'D 514 10 500 000 / C 521 10 490 000 ; C 631 10 000',
+              'D 521 10 500 000 / C 514 10 500 000',
+              'D 521 10 490 000 ; D 631 10 000 / C 514 10 500 000',
+              'D 521 10 490 000 / C 514 10 490 000',
+              'D 514 10 500 000 / C 521 10 490 000 ; C 631 10 000',
             ],
             correctAnswerIndex: 1,
-            explanation: 'Frais = 10 500 000 − 10 490 000 = 10 000 F (charge 631). La banque reçoit le net (débit 521) et le compte 514 est soldé pour le montant remis.',
+            explanation: 'Frais = 10 500 000 − 10 490 000 = 10 000 F (charge 631). La banque reçoit le net (débit 521) et le compte 514 est soldé pour le montant remis.',
           },
         },
         {
@@ -501,7 +501,7 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
             id: `${ID}_p3_q6`,
             type: 'mcq',
             prompt:
-              'Le 08/03/N, le client YAO téléphone : « J’ai donné l’ordre de virer 1 500 000 F sur votre compte. » L’avis de crédit de la banque n’arrive que le 11/03/N. Quand l’entreprise enregistre-t-elle D 521 / C 411 YAO ?',
+              'Le 08/03/N, le client YAO téléphone : « J’ai donné l’ordre de virer 1 500 000 F sur votre compte. » L’avis de crédit de la banque n’arrive que le 11/03/N. Quand l’entreprise enregistre-t-elle D 521 / C 411 YAO ?',
             options: ['Le 08/03/N, dès l’appel du client', 'Le 11/03/N, à la réception de l’avis de crédit', 'À la fin du mois, lors du rapprochement', 'Jamais : un virement ne s’enregistre pas'],
             correctAnswerIndex: 1,
             explanation: 'Le créancier enregistre le virement à la réception de l’avis de crédit, qui est la pièce justificative.',
@@ -529,13 +529,13 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
       workedExample: {
         title: 'Société NIM & Cie : achat et revente d’actions ABICI',
         statement:
-          'Le 03/03/N, achat de 200 actions ABICI à 15 000 F l’une, frais d’achat 50 000 F, par banque. Le 30/03/N, vente de 150 actions pour 2 505 000 F. Le 16/04/N, vente des 50 actions restantes à 14 700 F l’une.',
+          'Le 03/03/N, achat de 200 actions ABICI à 15 000 F l’une, frais d’achat 50 000 F, par banque. Le 30/03/N, vente de 150 actions pour 2 505 000 F. Le 16/04/N, vente des 50 actions restantes à 14 700 F l’une.',
         methodSteps: [
-          '03/03 : D 50 : 200 × 15 000 = 3 000 000 ; D 6311 : 50 000 ; C 521 : 3 050 000.',
-          '30/03 : coût historique 150 × 15 000 = 2 250 000 ; plus-value 2 505 000 − 2 250 000 = 255 000 → D 521 2 505 000 / C 50 2 250 000 / C 777 255 000.',
-          '16/04 : prix de cession 50 × 14 700 = 735 000 ; coût 50 × 15 000 = 750 000 ; moins-value 15 000 → D 521 735 000 ; D 677 15 000 / C 50 750 000.',
+          '03/03 : D 50 : 200 × 15 000 = 3 000 000 ; D 6311 : 50 000 ; C 521 : 3 050 000.',
+          '30/03 : coût historique 150 × 15 000 = 2 250 000 ; plus-value 2 505 000 − 2 250 000 = 255 000 → D 521 2 505 000 / C 50 2 250 000 / C 777 255 000.',
+          '16/04 : prix de cession 50 × 14 700 = 735 000 ; coût 50 × 15 000 = 750 000 ; moins-value 15 000 → D 521 735 000 ; D 677 15 000 / C 50 750 000.',
         ],
-        conclusion: 'Le compte 50 est soldé (3 000 000 entrés, 2 250 000 + 750 000 sortis). Gain net sur les deux cessions : 255 000 − 15 000 = 240 000 F, avant les 50 000 F de frais.',
+        conclusion: 'Le compte 50 est soldé (3 000 000 entrés, 2 250 000 + 750 000 sortis). Gain net sur les deux cessions : 255 000 − 15 000 = 240 000 F, avant les 50 000 F de frais.',
       },
       structuredSteps: [
         {
@@ -567,14 +567,14 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
             '• **D 50** Titres de placement : **prix d’achat** (nombre × prix unitaire).\n' +
             '• **D 6311** Frais sur titres : frais d’achat (jamais ajoutés au prix des titres).\n' +
             '• **C 521** Banque : total payé.\n' +
-            '• Exemple : 200 actions à 15 000 F, frais 50 000 F → D 50 3 000 000 ; D 6311 50 000 ; C 521 3 050 000.',
+            '• Exemple : 200 actions à 15 000 F, frais 50 000 F → D 50 3 000 000 ; D 6311 50 000 ; C 521 3 050 000.',
           exercise: {
             id: `${ID}_p4_q2`,
             type: 'mcq',
-            prompt: 'Le 03/03/N, NIM & Cie achète par banque 200 actions ABICI au prix unitaire de 15 000 F ; les frais d’achat s’élèvent à 50 000 F. Quel montant porter au DÉBIT du compte 50 Titres de placement ?',
-            options: ['3 050 000 F', '3 000 000 F', '2 950 000 F', '50 000 F'],
+            prompt: 'Le 03/03/N, NIM & Cie achète par banque 200 actions ABICI au prix unitaire de 15 000 F ; les frais d’achat s’élèvent à 50 000 F. Quel montant porter au DÉBIT du compte 50 Titres de placement ?',
+            options: ['3 050 000 F', '3 000 000 F', '2 950 000 F', '50 000 F'],
             correctAnswerIndex: 1,
-            explanation: 'Le compte 50 reçoit le prix d’achat seul : 200 × 15 000 = 3 000 000 F. Les 50 000 F de frais vont au 6311.',
+            explanation: 'Le compte 50 reçoit le prix d’achat seul : 200 × 15 000 = 3 000 000 F. Les 50 000 F de frais vont au 6311.',
           },
         },
         {
@@ -586,14 +586,14 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             '• On sort les titres au **coût historique** : nombre vendu × prix d’achat unitaire.\n' +
             '• Plus-value = prix de cession − coût historique → **C 777** Gains sur cessions de titres de placement.\n' +
-            '• Exemple : 150 actions achetées 15 000 F vendues 2 505 000 F : coût 2 250 000 F ; plus-value **255 000 F** → D 521 2 505 000 / C 50 2 250 000 / C 777 255 000.',
+            '• Exemple : 150 actions achetées 15 000 F vendues 2 505 000 F : coût 2 250 000 F ; plus-value **255 000 F** → D 521 2 505 000 / C 50 2 250 000 / C 777 255 000.',
           exercise: {
             id: `${ID}_p4_q3`,
             type: 'mcq',
-            prompt: 'NIM & Cie a acheté des actions ABICI à 15 000 F l’une. Le 30/03/N, elle vend 150 de ces actions pour un prix global de 2 505 000 F. Quel est le résultat de cession ?',
-            options: ['Plus-value de 255 000 F (compte 777)', 'Moins-value de 255 000 F (compte 677)', 'Plus-value de 2 505 000 F (compte 777)', 'Plus-value de 205 000 F (compte 777)'],
+            prompt: 'NIM & Cie a acheté des actions ABICI à 15 000 F l’une. Le 30/03/N, elle vend 150 de ces actions pour un prix global de 2 505 000 F. Quel est le résultat de cession ?',
+            options: ['Plus-value de 255 000 F (compte 777)', 'Moins-value de 255 000 F (compte 677)', 'Plus-value de 2 505 000 F (compte 777)', 'Plus-value de 205 000 F (compte 777)'],
             correctAnswerIndex: 0,
-            explanation: 'Coût historique : 150 × 15 000 = 2 250 000 F. Plus-value : 2 505 000 − 2 250 000 = 255 000 F, au crédit du 777.',
+            explanation: 'Coût historique : 150 × 15 000 = 2 250 000 F. Plus-value : 2 505 000 − 2 250 000 = 255 000 F, au crédit du 777.',
           },
         },
         {
@@ -604,19 +604,19 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           stepTitle: 'Céder des titres avec une moins-value',
           paragraphText:
             '• Si le prix de cession est inférieur au coût historique, la perte va au **D 677** Pertes sur cessions de titres de placement.\n' +
-            '• Exemple : 50 actions achetées 15 000 F, vendues 14 700 F l’une : prix 735 000 F ; coût 750 000 F ; moins-value **15 000 F** → D 521 735 000 ; D 677 15 000 / C 50 750 000.',
+            '• Exemple : 50 actions achetées 15 000 F, vendues 14 700 F l’une : prix 735 000 F ; coût 750 000 F ; moins-value **15 000 F** → D 521 735 000 ; D 677 15 000 / C 50 750 000.',
           exercise: {
             id: `${ID}_p4_q4`,
             type: 'mcq',
-            prompt: 'Le 16/04/N, NIM & Cie vend par banque 50 actions ABICI à 14 700 F l’une ; elles avaient été achetées 15 000 F l’une. Quelle écriture passer ?',
+            prompt: 'Le 16/04/N, NIM & Cie vend par banque 50 actions ABICI à 14 700 F l’une ; elles avaient été achetées 15 000 F l’une. Quelle écriture passer ?',
             options: [
-              'D 521 735 000 / C 50 735 000',
-              'D 521 735 000 ; D 677 15 000 / C 50 750 000',
-              'D 521 750 000 / C 50 735 000 ; C 777 15 000',
-              'D 521 735 000 ; D 6311 15 000 / C 50 750 000',
+              'D 521 735 000 / C 50 735 000',
+              'D 521 735 000 ; D 677 15 000 / C 50 750 000',
+              'D 521 750 000 / C 50 735 000 ; C 777 15 000',
+              'D 521 735 000 ; D 6311 15 000 / C 50 750 000',
             ],
             correctAnswerIndex: 1,
-            explanation: 'Prix de cession : 50 × 14 700 = 735 000 F ; coût historique : 50 × 15 000 = 750 000 F ; moins-value 15 000 F au débit du 677. Le compte 50 est crédité du coût historique.',
+            explanation: 'Prix de cession : 50 × 14 700 = 735 000 F ; coût historique : 50 × 15 000 = 750 000 F ; moins-value 15 000 F au débit du 677. Le compte 50 est crédité du coût historique.',
           },
         },
         {
@@ -632,10 +632,10 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p4_q5`,
             type: 'mcq',
-            prompt: 'Lors de la vente de titres de placement achetés 15 000 F l’un et revendus 16 700 F l’un, de quel montant unitaire le compte 50 doit-il être crédité ?',
-            options: ['16 700 F, le prix de vente', '15 000 F, le prix d’achat (coût historique)', '1 700 F, la plus-value', '31 700 F, la somme des deux prix'],
+            prompt: 'Lors de la vente de titres de placement achetés 15 000 F l’un et revendus 16 700 F l’un, de quel montant unitaire le compte 50 doit-il être crédité ?',
+            options: ['16 700 F, le prix de vente', '15 000 F, le prix d’achat (coût historique)', '1 700 F, la plus-value', '31 700 F, la somme des deux prix'],
             correctAnswerIndex: 1,
-            explanation: 'Le compte 50 est toujours crédité au coût historique (15 000 F par titre) ; la plus-value de 1 700 F par titre va au 777.',
+            explanation: 'Le compte 50 est toujours crédité au coût historique (15 000 F par titre) ; la plus-value de 1 700 F par titre va au 777.',
           },
         },
       ],
@@ -656,11 +656,11 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
       workedExample: {
         title: 'Une entreprise d’Abidjan utilise un compte Mobile Money',
         statement:
-          'Le 02/05/N, l’entreprise charge son compte Mobile Money de 300 000 F depuis sa caisse ; frais de chargement 1 500 F payés en espèces. Le 10/05/N, elle règle le fournisseur KONE 120 000 F par Mobile Money. Quel est le solde du compte 55 au 10/05/N ?',
+          'Le 02/05/N, l’entreprise charge son compte Mobile Money de 300 000 F depuis sa caisse ; frais de chargement 1 500 F payés en espèces. Le 10/05/N, elle règle le fournisseur KONE 120 000 F par Mobile Money. Quel est le solde du compte 55 au 10/05/N ?',
         methodSteps: [
-          '02/05 : D 55 / C 571 : 300 000 ; D 6317 / C 571 : 1 500.',
-          '10/05 : D 401 KONE / C 55 : 120 000.',
-          'Solde du 55 : 300 000 − 120 000 = 180 000 F débiteur, à comparer au solde affiché par l’opérateur.',
+          '02/05 : D 55 / C 571 : 300 000 ; D 6317 / C 571 : 1 500.',
+          '10/05 : D 401 KONE / C 55 : 120 000.',
+          'Solde du 55 : 300 000 − 120 000 = 180 000 F débiteur, à comparer au solde affiché par l’opérateur.',
         ],
         conclusion: 'Le compte 55 fonctionne comme une petite caisse électronique : chargements au débit, paiements au crédit.',
       },
@@ -678,7 +678,7 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p5_q1`,
             type: 'mcq',
-            prompt: 'Une entreprise ivoirienne détient 450 000 F sur son compte marchand Wave. Dans quel compte SYSCOHADA cette somme est-elle enregistrée ?',
+            prompt: 'Une entreprise ivoirienne détient 450 000 F sur son compte marchand Wave. Dans quel compte SYSCOHADA cette somme est-elle enregistrée ?',
             options: ['571 Caisse', '521 Banque', '55 Instruments de monnaie électronique', '411 Clients'],
             correctAnswerIndex: 2,
             explanation: 'Les fonds stockés sur un portefeuille de monnaie électronique (Wave, Orange Money, MTN MoMo…) sont enregistrés au compte 55.',
@@ -693,16 +693,16 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             'Le chargement est une sortie de fonds de la banque ou de la caisse :\n' +
             '• **D 55** Instruments de monnaie électronique / **C 521** Banque, **C 53** Établissements financiers ou **C 571** Caisse.\n' +
-            '• Exemple : chargement de 300 000 F en espèces → D 55 / C 571 : 300 000.',
+            '• Exemple : chargement de 300 000 F en espèces → D 55 / C 571 : 300 000.',
           exercise: {
             id: `${ID}_p5_q2`,
             type: 'mcq',
-            prompt: 'Le 02/05/N, l’entreprise charge son compte Orange Money de 300 000 F en versant des espèces prises dans sa caisse. Quelle écriture passer ?',
+            prompt: 'Le 02/05/N, l’entreprise charge son compte Orange Money de 300 000 F en versant des espèces prises dans sa caisse. Quelle écriture passer ?',
             options: [
-              'D 571 Caisse / C 55 Monnaie électronique : 300 000',
-              'D 55 Monnaie électronique / C 571 Caisse : 300 000',
-              'D 55 Monnaie électronique / C 701 Ventes : 300 000',
-              'D 6317 Frais / C 571 Caisse : 300 000',
+              'D 571 Caisse / C 55 Monnaie électronique : 300 000',
+              'D 55 Monnaie électronique / C 571 Caisse : 300 000',
+              'D 55 Monnaie électronique / C 701 Ventes : 300 000',
+              'D 6317 Frais / C 571 Caisse : 300 000',
             ],
             correctAnswerIndex: 1,
             explanation: 'L’argent passe de la caisse (crédit 571) au portefeuille électronique (débit 55) : c’est un mouvement entre deux comptes de trésorerie.',
@@ -717,16 +717,16 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             'Les frais éventuels liés au chargement sont une charge :\n' +
             '• **D 6317** Frais sur instruments de monnaie électronique / **C 52**, **C 53** ou **C 57** selon le moyen de paiement.\n' +
-            '• Exemple : frais de 1 500 F payés en espèces → D 6317 / C 571 : 1 500.',
+            '• Exemple : frais de 1 500 F payés en espèces → D 6317 / C 571 : 1 500.',
           exercise: {
             id: `${ID}_p5_q3`,
             type: 'mcq',
-            prompt: 'Pour charger son compte Mobile Money, l’entreprise paie 1 500 F de frais en espèces. Quelle écriture passer ?',
+            prompt: 'Pour charger son compte Mobile Money, l’entreprise paie 1 500 F de frais en espèces. Quelle écriture passer ?',
             options: [
-              'D 55 / C 571 : 1 500',
-              'D 6317 Frais sur instruments de monnaie électronique / C 571 Caisse : 1 500',
-              'D 571 / C 6317 : 1 500',
-              'D 631 Frais bancaires / C 55 : 1 500',
+              'D 55 / C 571 : 1 500',
+              'D 6317 Frais sur instruments de monnaie électronique / C 571 Caisse : 1 500',
+              'D 571 / C 6317 : 1 500',
+              'D 631 Frais bancaires / C 55 : 1 500',
             ],
             correctAnswerIndex: 1,
             explanation: 'Les frais de chargement sont une charge propre à la monnaie électronique (6317), payée ici en espèces (crédit 571).',
@@ -746,12 +746,12 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           exercise: {
             id: `${ID}_p5_q4`,
             type: 'mcq',
-            prompt: 'Le 10/05/N, l’entreprise règle sa dette envers le fournisseur KONE, soit 120 000 F, par transfert depuis son compte Mobile Money. Quelle écriture passer ?',
+            prompt: 'Le 10/05/N, l’entreprise règle sa dette envers le fournisseur KONE, soit 120 000 F, par transfert depuis son compte Mobile Money. Quelle écriture passer ?',
             options: [
-              'D 55 / C 401 KONE : 120 000',
-              'D 401 KONE / C 55 : 120 000',
-              'D 401 KONE / C 571 : 120 000',
-              'D 6317 / C 55 : 120 000',
+              'D 55 / C 401 KONE : 120 000',
+              'D 401 KONE / C 55 : 120 000',
+              'D 401 KONE / C 571 : 120 000',
+              'D 6317 / C 55 : 120 000',
             ],
             correctAnswerIndex: 1,
             explanation: 'La dette fournisseur est éteinte (débit 401) et l’argent sort du portefeuille électronique (crédit 55).',
@@ -766,20 +766,20 @@ export const COMPTA_TRESORERIE_ENTD_L1_CHAPTER: CurriculumChapter = {
           paragraphText:
             'En fin de période, il faut **comparer** le solde du compte 55 avec le solde réel confirmé par l’émetteur (relevé de l’opérateur).\n' +
             '• Un écart révèle un oubli : frais prélevés non enregistrés, paiement reçu sans écriture…\n' +
-            '• Exemple : chargement 300 000 F, paiement 120 000 F → solde comptable 180 000 F. Si l’opérateur affiche 179 000 F, il manque 1 000 F de frais à enregistrer au 6317.',
+            '• Exemple : chargement 300 000 F, paiement 120 000 F → solde comptable 180 000 F. Si l’opérateur affiche 179 000 F, il manque 1 000 F de frais à enregistrer au 6317.',
           exercise: {
             id: `${ID}_p5_q5`,
             type: 'mcq',
             prompt:
-              'Le compte 55 de l’entreprise présente un solde comptable de 180 000 F (chargement 300 000 F, paiement fournisseur 120 000 F). Le relevé de l’opérateur affiche 179 000 F, car des frais de transfert ont été prélevés. Que faire ?',
+              'Le compte 55 de l’entreprise présente un solde comptable de 180 000 F (chargement 300 000 F, paiement fournisseur 120 000 F). Le relevé de l’opérateur affiche 179 000 F, car des frais de transfert ont été prélevés. Que faire ?',
             options: [
               'Rien : l’écart est trop petit pour être enregistré',
-              'Enregistrer les frais de 1 000 F : D 6317 / C 55',
-              'Enregistrer un produit de 1 000 F : D 55 / C 758 Produits divers',
+              'Enregistrer les frais de 1 000 F : D 6317 / C 55',
+              'Enregistrer un produit de 1 000 F : D 55 / C 758 Produits divers',
               'Modifier le solde initial du compte 55',
             ],
             correctAnswerIndex: 1,
-            explanation: 'Le rapprochement révèle 1 000 F de frais non enregistrés : on les comptabilise (D 6317 / C 55) pour retrouver le solde confirmé par l’émetteur.',
+            explanation: 'Le rapprochement révèle 1 000 F de frais non enregistrés : on les comptabilise (D 6317 / C 55) pour retrouver le solde confirmé par l’émetteur.',
           },
         },
       ],
