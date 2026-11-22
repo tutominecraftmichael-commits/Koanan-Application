@@ -110,7 +110,8 @@ import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; /
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { isExamPrepOpenFor } from './lib/featureFlags';
-import { followsIvorianProgram, normalizeCountry } from './lib/country';
+import { normalizeCountry } from './lib/country';
+import { setCurriculumCountry } from './lib/curriculum/subjectVisibility';
 import { PAYMENTS_OPEN, PRO_NO_COURSES_NOTICE } from './lib/subscriptionPlans';
 import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
@@ -311,13 +312,12 @@ export function App() {
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
   const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
   const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
-  // Hors de Côte d'Ivoire : toujours Gratuit (Pro réservé au programme ivoirien, même pendant l'offre de lancement)
-  const countryForTier = state.preferences?.country || state.userAccount?.country;
+  // Tous les pays ont accès à KONAN, Pro compris (choix du fondateur, 2026-11-22 au soir) : seule différence,
+  // pas d'Histoire-Géographie du lycée hors Côte d'Ivoire (voir setCurriculumCountry plus bas).
   const effectivePlanTier = useMemo<PlanTier>(() => {
-    if (!followsIvorianProgram(countryForTier)) return 'free';
     if (serverTier) return serverTier;
     return state.planTier || state.userAccount?.planTier || 'free';
-  }, [serverTier, state.planTier, state.userAccount?.planTier, countryForTier]);
+  }, [serverTier, state.planTier, state.userAccount?.planTier]);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
@@ -329,16 +329,17 @@ export function App() {
   // est celle qui suit les changements (import d'emploi du temps, autre appareil) ; le compte en garde une
   // copie qui peut être ancienne. Avant, certains écrans lisaient l'une et d'autres l'autre.
   const studentGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel);
-  // Pays de l'élève : les cours et devoirs suivent le programme ivoirien (lib/country). Sans pays = ancien compte = CI.
+  // Pays de l'élève (lib/country). Sans pays = ancien compte = Côte d'Ivoire.
   const studentCountry = normalizeCountry(state.preferences?.country || state.userAccount?.country) || undefined;
-  const outsideIvorianProgram = !followsIvorianProgram(studentCountry);
-  // KONAN Pro est vendu à TOUTES les classes de Côte d'Ivoire (choix du fondateur, 2026-11-22 au soir), et
-  // seulement en Côte d'Ivoire (le serveur refuse aussi). Les classes qui n'ont pas encore les cours guidés ni les
-  // devoirs sont prévenues AVANT de payer (PRO_NO_COURSES_NOTICE + case « J'ai compris »).
-  const proSellableForClass = !outsideIvorianProgram;
+  // Hors Côte d'Ivoire : pas d'Histoire-Géographie du lycée (réglage du catalogue des cours, avant tout affichage)
+  setCurriculumCountry(studentCountry);
+  // KONAN Pro est vendu à TOUTES les classes et dans tous les pays (choix du fondateur, 2026-11-22 au soir).
+  // Les classes qui n'ont pas encore les cours guidés ni les devoirs sont prévenues AVANT de payer
+  // (PRO_NO_COURSES_NOTICE + case « J'ai compris »). On ne parle jamais du « programme ivoirien » à l'élève.
+  const proSellableForClass = true;
   const classHasCourses = isExamPrepOpenFor(studentGradeRaw, studentCountry);
-  const proNoCoursesNotice = proSellableForClass && !classHasCourses ? PRO_NO_COURSES_NOTICE : undefined;
-  const PRO_NOT_FOR_CLASS_TEXT = 'KONAN Pro est réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien. Tu peux continuer à utiliser KONAN gratuitement.';
+  const proNoCoursesNotice = !classHasCourses ? PRO_NO_COURSES_NOTICE : undefined;
+  const PRO_NOT_FOR_CLASS_TEXT = 'KONAN Pro n’est pas encore disponible pour toi.';
   const effectiveClassLabel = studentClassLabel(
     studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
@@ -3196,11 +3197,14 @@ export function App() {
           <TutorChat
             uid={subscriptionAccount}
             classe={effectiveClassLabel || ''}
+            prenom={String(effectiveStudentName || '').trim().split(/\s+/)[0] === 'Étudiant' ? undefined : String(effectiveStudentName || '').trim().split(/\s+/)[0]}
             context={tutorOpen.context}
             paid={tutorStatus.paid}
             remaining={tutorStatus.remaining}
             limit={tutorStatus.limit}
+            voiceRemaining={tutorStatus.voiceRemaining}
             onRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, remaining: n } : s))}
+            onVoiceRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, voiceRemaining: n } : s))}
             onSubscribe={proSellableForClass ? () => { setTutorOpen(null); setIsSubscriptionOpen(true); } : undefined}
             onClose={() => setTutorOpen(null)}
           />

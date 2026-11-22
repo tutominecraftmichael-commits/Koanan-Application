@@ -10,7 +10,7 @@
 import React, { useEffect, useState } from 'react';
 import './konanPlush.css';
 
-export type PlushMood = 'idle' | 'listen' | 'think' | 'happy' | 'encourage' | 'celebrate';
+export type PlushMood = 'idle' | 'listen' | 'think' | 'happy' | 'encourage' | 'celebrate' | 'talk';
 
 // Repères mesurés sur les images officielles (en % de l'image)
 const LAYOUT = {

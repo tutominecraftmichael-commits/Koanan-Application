@@ -55,7 +55,7 @@ export function subscriptionErrorText(code?: string): string {
     case 'BAD_PHONE': return 'Numéro de téléphone invalide. Écris les 10 chiffres (exemple : 07 01 02 03 04).';
     case 'TIER_NOT_SOLD': return 'Cette formule n’est pas encore disponible.';
     case 'PRO_NOT_FOR_GRADE': return 'KONAN Pro n’est pas encore disponible pour ta classe : il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD. Aucun paiement n’a été enregistré.';
-    case 'PRO_NOT_FOR_COUNTRY': return 'KONAN Pro est réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien. Aucun paiement n’a été enregistré.';
+    case 'PRO_NOT_FOR_COUNTRY': return 'KONAN Pro n’est pas encore disponible dans ton pays. Aucun paiement n’a été enregistré.';
     case 'OTHER_TIER_ACTIVE': return 'Tu as déjà une autre formule en cours.';
     case 'TOO_MANY': return 'Trop d’essais aujourd’hui. Réessaie demain.';
     case 'BAD_PROVIDER': return 'Choisis Wave ou Orange Money.';

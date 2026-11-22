@@ -1200,7 +1200,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            En Côte d’Ivoire, le programme officiel de <strong>{subjectTitle}</strong> comporte deux volets complémentaires.
+            Le programme officiel de <strong>{subjectTitle}</strong> comporte deux volets complémentaires.
             Choisis librement par lequel tu démarres : Konan alternera ensuite automatiquement à chaque séance !
           </p>
 

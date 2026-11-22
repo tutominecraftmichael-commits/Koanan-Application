@@ -40,13 +40,10 @@ export const GRADES_WITH_COURSES = [
 export const proAvailableForGrade = () => true;
 
 /**
- * Pro vendu seulement en Côte d'Ivoire : les cours et les devoirs suivent le programme ivoirien
- * (src/lib/country.ts). Pays absent = ancien compte = Côte d'Ivoire.
+ * Pays où Pro est vendu. D'abord la Côte d'Ivoire seule ; depuis le 2026-11-22 au soir (choix du fondateur),
+ * tous les pays (seule l'Histoire-Géographie du lycée manque hors Côte d'Ivoire, voir src/lib/country.ts).
  */
-export const proAvailableForCountry = (country) => {
-  const c = String(country || '').trim().toUpperCase();
-  return !c || c === 'CI';
-};
+export const proAvailableForCountry = () => true;
 
 export const PROVIDERS = { wave: 'Wave', orange: 'Orange Money' };
 

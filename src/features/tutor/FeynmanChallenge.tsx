@@ -7,6 +7,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Mic, Square, Send, PenLine, RotateCcw, ArrowRight, Check, X } from 'lucide-react';
 import { auth } from '../../lib/firebase';
+import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
 import { KonanMascot } from '../../components/common/KonanMascot';
 
 const MAX_SECONDS = 60;
@@ -95,7 +96,7 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
       const res = await fetch('/api/feynman', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ notion, reference, classe, ...payload }),
+        body: JSON.stringify({ notion, reference, classe, country: getStudentCountry(), ...payload }),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json?.success) {

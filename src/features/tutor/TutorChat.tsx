@@ -6,10 +6,16 @@
  * Lisible en mode jour ET en mode nuit.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { X, Send, RotateCcw, Sparkles, Lock } from 'lucide-react';
+import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square } from 'lucide-react';
 import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
 import { MathRenderer } from '../../components/common/MathRenderer';
-import { sendTutorMessage, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
+import { sendTutorMessage, speakTutor, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
+import { getReviewMap } from '../../lib/curriculum/reviewMemory';
+import { STEM_SUBJECTS } from '../../lib/curriculum/types';
+import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
+
+/** Son muet très court : joué pendant un toucher pour que le téléphone accepte ensuite la voix de KONAN. */
+const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
 
 const LEVELS = ['Je découvre', 'Je commence à comprendre', 'J’ai compris', 'Je maîtrise'];
 const KEEP_MS = 7 * 24 * 3600 * 1000;
@@ -26,6 +32,8 @@ const ERRORS: Record<TutorError, string> = {
   EMPTY_MESSAGE: 'Écris ton message d’abord.',
   NETWORK: 'Pas de connexion Internet. Réessaie quand tu es connecté.',
   UNKNOWN: 'Une erreur est survenue. Réessaie.',
+  VOICE_DAILY_LIMIT: 'La voix de KONAN revient demain.',
+  VOICE_UNAVAILABLE: 'KONAN n’a pas pu parler cette fois.',
 };
 
 interface Stored { messages: TutorMessage[]; context: TutorContext; updatedAt: number }
@@ -103,17 +111,37 @@ const Gauge: React.FC<{ niveau: number; notion?: string }> = ({ niveau, notion }
 export interface TutorChatProps {
   uid: string;
   classe: string;
+  /** Prénom de l'élève : KONAN l'appelle par son prénom */
+  prenom?: string;
   /** Leçon d'où vient l'élève (cours guidé) : la discussion repart sur cette notion. */
   context?: TutorContext;
   paid: boolean;
   remaining: number | null;
   limit: number;
+  /** Lectures à voix haute restantes aujourd'hui (null : inconnu) */
+  voiceRemaining?: number | null;
   onRemainingChange: (n: number) => void;
+  onVoiceRemainingChange?: (n: number) => void;
   onSubscribe?: () => void;
   onClose: () => void;
 }
 
-export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid, remaining, limit, onRemainingChange, onSubscribe, onClose }) => {
+const VOICE_KEY = 'konan_tutor_voice';
+
+/** Dernières erreurs des cours guidés (mémoire de révision du téléphone) : KONAN s'en sert pour trouver ce qui bloque. */
+function recentMistakes(uid: string): TutorContext['erreurs'] {
+  try {
+    return Object.values(getReviewMap(uid))
+      .filter((e) => e.lastResult === 'ko' && e.prompt)
+      .sort((a, b) => Number(b.wrongAt || b.updatedAt || 0) - Number(a.wrongAt || a.updatedAt || 0))
+      .slice(0, 5)
+      .map((e) => ({ matiere: STEM_SUBJECTS[e.subject]?.name || '', question: String(e.prompt).slice(0, 220), reponse: e.wrongAnswer ? String(e.wrongAnswer).slice(0, 120) : undefined }));
+  } catch {
+    return [];
+  }
+}
+
+export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose }) => {
   const [state, setState] = useState<Stored>(() => {
     const stored = readStored(uid);
     // Venu d'une autre leçon : nouvelle discussion sur cette notion
@@ -131,6 +159,76 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // ---------- Voix de KONAN : lit ses réponses à voix haute (réglage gardé sur le téléphone) ----------
+  const [voiceOn, setVoiceOn] = useState<boolean>(() => {
+    try { return localStorage.getItem(VOICE_KEY) !== 'off'; } catch { return true; }
+  });
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [voiceLoadingId, setVoiceLoadingId] = useState<string | null>(null);
+  const [voiceNote, setVoiceNote] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCache = useRef(new Map<string, string>());
+  const voiceRequest = useRef(0);
+
+  /** Prépare le lecteur pendant un toucher de l'élève (sinon iPhone refuse de jouer le son plus tard). */
+  const unlockAudio = () => {
+    if (audioRef.current) return;
+    const a = new Audio();
+    a.preload = 'auto';
+    audioRef.current = a;
+    try {
+      a.src = SILENT_WAV;
+      a.play().then(() => a.pause()).catch(() => { /* rien à débloquer */ });
+    } catch { /* lecteur indisponible */ }
+  };
+
+  const stopVoice = () => {
+    voiceRequest.current += 1;
+    const a = audioRef.current;
+    if (a) { a.pause(); a.onended = null; }
+    setSpeakingId(null);
+    setVoiceLoadingId(null);
+  };
+  useEffect(() => () => stopVoice(), []); // en fermant la discussion, KONAN se tait
+
+  const speak = async (m: TutorMessage) => {
+    unlockAudio();
+    if (speakingId === m.id || voiceLoadingId === m.id) { stopVoice(); return; }
+    stopVoice();
+    const req = voiceRequest.current;
+    let src = audioCache.current.get(m.id);
+    if (!src) {
+      if (voiceRemaining !== null && voiceRemaining <= 0) { setVoiceNote('La voix de KONAN revient demain. Tu peux continuer à lire ses messages.'); return; }
+      setVoiceLoadingId(m.id);
+      const r = await speakTutor(m.text);
+      if (req !== voiceRequest.current) return; // l'élève a demandé autre chose entre-temps
+      setVoiceLoadingId(null);
+      if (!r.ok) {
+        if (typeof r.voiceRemaining === 'number') onVoiceRemainingChange?.(r.voiceRemaining);
+        setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONAN revient demain. Tu peux continuer à lire ses messages.' : 'KONAN n’a pas pu parler cette fois. Tu peux lire son message.');
+        return;
+      }
+      onVoiceRemainingChange?.(r.voiceRemaining);
+      src = r.src;
+      audioCache.current.set(m.id, src);
+    }
+    const a = audioRef.current || new Audio();
+    audioRef.current = a;
+    a.src = src;
+    a.onended = () => setSpeakingId((cur) => (cur === m.id ? null : cur));
+    setVoiceNote(null);
+    setSpeakingId(m.id);
+    a.play().catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONAN.'); });
+  };
+
+  const toggleVoice = () => {
+    unlockAudio();
+    const next = !voiceOn;
+    setVoiceOn(next);
+    if (!next) stopVoice();
+    try { localStorage.setItem(VOICE_KEY, next ? 'on' : 'off'); } catch { /* sans effet */ }
+  };
+
   useEffect(() => { writeStored(uid, state.messages.length ? state : null); }, [uid, state]);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [state.messages.length, sending]);
   // Échap ferme ; on bloque le défilement de la page derrière
@@ -147,18 +245,27 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
   const notion = lastKonan?.notion || state.context.notion;
   const outOfMessages = remaining !== null && remaining <= 0;
   const canWrite = paid && !outOfMessages && !sending;
-  const mood: PlushMood = sending ? 'think' : flash || (typing && input.trim() ? 'listen' : 'idle');
+  const mood: PlushMood = sending ? 'think' : flash || (speakingId ? 'talk' : typing && input.trim() ? 'listen' : 'idle');
 
   const send = async (raw: string) => {
     const text = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
     if (!text || !canWrite) return;
+    unlockAudio();
+    stopVoice();
     const mine: TutorMessage = { id: newId(), role: 'eleve', text };
     const messages = [...state.messages, mine];
     setState((s) => ({ ...s, messages, updatedAt: Date.now() }));
     setInput('');
     setError(null);
     setSending(true);
-    const res = await sendTutorMessage(messages, state.context);
+    // « KONAN se souvient » : prénom, pays et dernières erreurs des cours accompagnent chaque message
+    const res = await sendTutorMessage(messages, {
+      ...state.context,
+      classe,
+      prenom,
+      country: getStudentCountry() || undefined,
+      erreurs: recentMistakes(uid),
+    });
     setSending(false);
     if (!res.ok) {
       setError(ERRORS[res.error] || ERRORS.UNKNOWN);
@@ -180,14 +287,15 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
       clearTimeout(flashTimer.current);
       flashTimer.current = setTimeout(() => setFlash(null), next === 'celebrate' ? 2800 : 2000);
     }
-    setState((s) => ({
-      ...s,
-      messages: [...s.messages, { id: newId(), role: 'konan', text: texte, niveau: lvl, etape, notion: n, choix }],
-      updatedAt: Date.now(),
-    }));
+    const answer: TutorMessage = { id: newId(), role: 'konan', text: texte, niveau: lvl, etape, notion: n, choix };
+    setState((s) => ({ ...s, messages: [...s.messages, answer], updatedAt: Date.now() }));
+    // Voix allumée : KONAN lit sa réponse tout de suite
+    if (voiceOn) void speak(answer);
   };
 
   const restart = () => {
+    stopVoice();
+    audioCache.current.clear();
     setState({ messages: [], context: { ...(context || {}), classe }, updatedAt: Date.now() });
     setError(null);
     setInput('');
@@ -212,6 +320,18 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
               <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
               <p className="text-xs text-slate-600 dark:text-slate-400">KONAN t’explique jusqu’à ce que tu comprennes</p>
             </div>
+            {paid && (
+              <button
+                type="button"
+                onClick={toggleVoice}
+                title={voiceOn ? 'KONAN lit ses réponses à voix haute (toucher pour couper)' : 'Voix coupée (toucher pour que KONAN parle)'}
+                aria-label={voiceOn ? 'Couper la voix de KONAN' : 'Activer la voix de KONAN'}
+                aria-pressed={voiceOn}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer ${voiceOn ? 'text-sky-700 dark:text-sky-300 bg-white dark:bg-slate-800' : 'text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800'}`}
+              >
+                {voiceOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              </button>
+            )}
             {state.messages.length > 0 && (
               <button type="button" onClick={restart} title="Nouvelle discussion" aria-label="Nouvelle discussion" className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 cursor-pointer">
                 <RotateCcw className="w-[18px] h-[18px]" />
@@ -236,8 +356,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
             <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
             <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
               {state.context.notion
-                ? <>Tu bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
-                : <>Salut ! Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
+                ? <>{prenom ? `${prenom}, tu` : 'Tu'} bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
+                : <>Salut{prenom ? ` ${prenom}` : ''} ! Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
             </div>
           </div>
 
@@ -251,8 +371,22 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
                 <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
                 <div className={`max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md text-sm leading-relaxed break-words text-slate-800 dark:text-slate-100 ${
                   m.etape === 'conclusion' ? 'bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800/80'
-                }`}>
+                } ${speakingId === m.id ? 'ring-2 ring-sky-400/70' : ''}`}>
                   <RichText text={m.text} />
+                  {paid && (
+                    <button
+                      type="button"
+                      onClick={() => void speak(m)}
+                      aria-label={speakingId === m.id ? 'Arrêter la voix de KONAN' : 'Écouter KONAN'}
+                      className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold text-sky-800 dark:text-sky-200 bg-white/80 dark:bg-slate-900/60 border border-sky-200 dark:border-sky-400/30 hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+                    >
+                      {voiceLoadingId === m.id
+                        ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONAN prépare sa voix…</>
+                        : speakingId === m.id
+                          ? <><Square className="w-3 h-3 fill-current" /> Arrêter</>
+                          : <><Volume2 className="w-3.5 h-3.5" /> Écouter</>}
+                    </button>
+                  )}
                 </div>
               </div>
             )
@@ -270,6 +404,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
           )}
 
           {error && <p className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 text-amber-900 dark:text-amber-200 text-sm font-semibold" role="alert">{error}</p>}
+          {voiceNote && <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 text-center" aria-live="polite">{voiceNote}</p>}
           <div ref={endRef} />
         </div>
 

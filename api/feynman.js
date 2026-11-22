@@ -13,6 +13,7 @@
 import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
+import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
 
 export const DAILY_LIMITS = { audio: 3, text: 10 };
 const MAX_AUDIO_BYTES = 3 * 1024 * 1024; // ~3 Mo : largement plus qu'une minute de voix compressée
@@ -78,7 +79,13 @@ const str = (v, max) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().s
 /** Jour civil à Abidjan (UTC), pour le compteur quotidien. */
 const today = () => new Date().toISOString().slice(0, 10);
 
-export function buildFeynmanPrompt({ notion, reference, classe, written }) {
+export function buildFeynmanPrompt({ notion, reference, classe, written, country }) {
+  const prompt = buildFeynmanPromptCI({ notion, reference, classe, written });
+  // Élève hors Côte d'Ivoire : aucune mention ivoirienne dans le conseil
+  return isOutsideCI(country) ? `${neutralizeForCountry(prompt, country)}\n${NEUTRAL_COUNTRY_RULE}` : prompt;
+}
+
+function buildFeynmanPromptCI({ notion, reference, classe, written }) {
   return [
     "Tu es KONAN, un professeur bienveillant d'une application d'étude pour les élèves de Côte d'Ivoire.",
     `Un élève${classe ? ` de ${classe}` : ''} doit expliquer avec SES mots, comme à un élève de 6ème, la notion : « ${notion} ».`,
@@ -170,7 +177,7 @@ export default async function handler(req, res) {
   }
 
   // Mode « Je ne comprends pas » (professeur particulier) : même fonction serveur, Vercel gratuit = 12 fonctions au plus
-  if (body?.action === 'tutor' || body?.action === 'tutor_status') {
+  if (body?.action === 'tutor' || body?.action === 'tutor_status' || body?.action === 'tutor_voice') {
     const { handleTutorAction } = await import('./_tutor.js');
     const { status, data } = await handleTutorAction({ body, uid, getDb });
     return send(res, status, data);
@@ -190,6 +197,7 @@ export default async function handler(req, res) {
   const notion = str(body.notion, 200);
   const reference = str(body.reference, 1800);
   const classe = str(body.classe, 40);
+  const country = str(body.country, 4);
   const written = typeof body.text === 'string';
   const kind = written ? 'text' : 'audio';
   if (!notion) return send(res, 400, { success: false, error: 'MISSING_NOTION' });
@@ -198,13 +206,13 @@ export default async function handler(req, res) {
   if (written) {
     const text = str(body.text, 1500);
     if (text.length < 15) return send(res, 400, { success: false, error: 'TOO_SHORT' });
-    parts = [{ text: `${buildFeynmanPrompt({ notion, reference, classe, written: true })}\n\nExplication de l’élève :\n${text}` }];
+    parts = [{ text: `${buildFeynmanPrompt({ notion, reference, classe, written: true, country })}\n\nExplication de l’élève :\n${text}` }];
   } else {
     const mimeType = String(body.mimeType || '').split(';')[0].trim();
     const audio = typeof body.audio === 'string' ? body.audio : '';
     if (!AUDIO_TYPES.test(mimeType) || !audio) return send(res, 400, { success: false, error: 'BAD_AUDIO' });
     if (audio.length * 0.75 > MAX_AUDIO_BYTES) return send(res, 413, { success: false, error: 'AUDIO_TOO_LONG' });
-    parts = [{ inlineData: { mimeType, data: audio } }, { text: buildFeynmanPrompt({ notion, reference, classe, written: false }) }];
+    parts = [{ inlineData: { mimeType, data: audio } }, { text: buildFeynmanPrompt({ notion, reference, classe, written: false, country }) }];
   }
 
   const apiKey = String(process.env.GEMINI_API_KEY || '').trim();

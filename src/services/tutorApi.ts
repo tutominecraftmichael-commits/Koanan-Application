@@ -21,6 +21,12 @@ export interface TutorContext {
   matiere?: string;
   notion?: string;
   reference?: string;
+  /** Pays de l'élève (hors Côte d'Ivoire : aucune mention ivoirienne) */
+  country?: string;
+  /** Prénom : KONAN appelle l'élève par son prénom */
+  prenom?: string;
+  /** Dernières erreurs dans les cours : KONAN trouve plus vite ce qui bloque */
+  erreurs?: Array<{ matiere?: string; question: string; reponse?: string }>;
 }
 
 export interface TutorStatus {
@@ -28,11 +34,14 @@ export interface TutorStatus {
   paid: boolean;
   limit: number;
   remaining: number;
+  voiceLimit: number;
+  voiceRemaining: number;
 }
 
 export type TutorError =
   | 'PAID_PRO_REQUIRED' | 'DAILY_LIMIT' | 'TUTOR_BUSY' | 'AI_UNAVAILABLE' | 'TUTOR_OFF'
-  | 'UNAUTHORIZED' | 'TOKEN_EXPIRED' | 'EMPTY_MESSAGE' | 'NETWORK' | 'UNKNOWN';
+  | 'UNAUTHORIZED' | 'TOKEN_EXPIRED' | 'EMPTY_MESSAGE' | 'NETWORK' | 'UNKNOWN'
+  | 'VOICE_DAILY_LIMIT' | 'VOICE_UNAVAILABLE';
 
 async function call(body: Record<string, unknown>): Promise<{ ok: boolean; json: any }> {
   const user = auth?.currentUser;
@@ -57,6 +66,8 @@ export async function getTutorStatus(): Promise<TutorStatus | null> {
       paid: json.paid === true,
       limit: Number(json.limit) || 0,
       remaining: Number(json.remaining) || 0,
+      voiceLimit: Number(json.voiceLimit) || 0,
+      voiceRemaining: Number(json.voiceRemaining) || 0,
     };
   } catch {
     return null;
@@ -75,6 +86,19 @@ export async function sendTutorMessage(
     });
     if (!ok) return { ok: false, error: (json?.error as TutorError) || 'UNKNOWN', remaining: typeof json?.remaining === 'number' ? json.remaining : undefined };
     return { ok: true, reply: json.reply, remaining: Number(json.remaining) || 0 };
+  } catch {
+    return { ok: false, error: 'NETWORK' };
+  }
+}
+
+/** KONAN lit un message à voix haute : renvoie un son (WAV) prêt à jouer. */
+export async function speakTutor(text: string): Promise<{ ok: true; src: string; voiceRemaining: number } | { ok: false; error: TutorError; voiceRemaining?: number }> {
+  try {
+    const { ok, json } = await call({ action: 'tutor_voice', text: text.slice(0, 4000) });
+    if (!ok || !json.audio) {
+      return { ok: false, error: (json?.error as TutorError) || 'VOICE_UNAVAILABLE', voiceRemaining: typeof json?.voiceRemaining === 'number' ? json.voiceRemaining : undefined };
+    }
+    return { ok: true, src: `data:${json.mimeType || 'audio/wav'};base64,${json.audio}`, voiceRemaining: Number(json.voiceRemaining) || 0 };
   } catch {
     return { ok: false, error: 'NETWORK' };
   }

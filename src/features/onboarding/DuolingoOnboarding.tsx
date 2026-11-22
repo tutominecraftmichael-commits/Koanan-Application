@@ -39,6 +39,7 @@ import {
   Globe
 } from 'lucide-react';
 import { COUNTRIES, OUTSIDE_PROGRAM_TEXT, PROGRAM_COUNTRY, followsIvorianProgram } from '../../lib/country';
+import { setCurriculumCountry } from '../../lib/curriculum/subjectVisibility';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
@@ -271,9 +272,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
   // Étape 2 : Système d'études choisi (LMD, BTS, Lycée)
   const [studyType, setStudyType] = useState<StudySystemChoice | null>('lmd');
-  // Pays de l'élève : les cours et devoirs suivent le programme ivoirien ; Pro seulement en Côte d'Ivoire
+  // Pays de l'élève : tout est ouvert partout ; hors Côte d'Ivoire, pas d'Histoire-Géographie du lycée
   const [country, setCountry] = useState<string>(PROGRAM_COUNTRY);
   const outsideProgram = !followsIvorianProgram(country);
+  setCurriculumCountry(country);
   const activeSystem = STUDY_SYSTEM_CONFIG[studyType || 'lmd'];
   const activeFormat: ScheduleFormatType = activeSystem.format;
 
@@ -1003,9 +1005,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       setIsWaitlistOpen(true);
       return;
     }
-    // Pro seulement en Côte d'Ivoire (toutes les classes ; celles sans cours sont prévenues) ; payant quand le paiement est ouvert
-    const proSellable = !outsideProgram;
-    if (planId === 'pro' && !proSellable) return; // la carte Pro est grisée, sécurité en plus
+    // Pro pour toutes les classes et tous les pays (celles sans cours sont prévenues) ; payant quand le paiement est ouvert
     const wantsPaidPro = planId === 'pro' && PAYMENTS_OPEN;
     if (wantsPaidPro) planId = 'free';
     setSelectedPlan(planId);
@@ -2073,7 +2073,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                   {studyType === 'lycee'
-                    ? "Sélectionne ta série pour synchroniser ton tuteur KONAN avec le programme officiel de Côte d'Ivoire (3ème à Terminale)."
+                    ? "Sélectionne ta série pour synchroniser ton tuteur KONAN avec le programme officiel de ta classe (3ème à Terminale)."
                     : "Précise ta filière pour calibrer tes coefficients et prioriser tes cours universitaires."}
                 </p>
               </div>
@@ -2756,10 +2756,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* Gratuit, Pro, Plus : par mois ou par semestre */}
               <PlanPicker
                 onSelect={(planId) => handleSelectAccompanimentModel(planId)}
-                unavailable={outsideProgram ? {
-                  pro: 'Réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien.',
-                } : undefined}
-                notice={!outsideProgram && !isExamPrepOpenFor(selectedGradeLevel, country) ? { pro: PRO_NO_COURSES_NOTICE } : undefined}
+                notice={!isExamPrepOpenFor(selectedGradeLevel, country) ? { pro: PRO_NO_COURSES_NOTICE } : undefined}
               />
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-500 dark:text-slate-400">

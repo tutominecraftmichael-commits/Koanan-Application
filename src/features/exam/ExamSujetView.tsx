@@ -16,6 +16,7 @@ import { canonicalGradeLevel, studentClassLabel } from '../../lib/curriculum/cur
 import { MathRenderer } from '../../components/common/MathRenderer';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { auth } from '../../lib/firebase';
+import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
 import { afterShine } from '../../lib/shineClick';
 import { soundFX } from '../../lib/audioEffects';
 import { LITERARY_EXAM_SUBJECTS } from '../../lib/exam/examPrepRules';
@@ -421,6 +422,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
         classe: gradeLabel,
         matiere: subjectName,
         chapitres: chapters.map((c) => ({ titre: c.title, notions: c.points.map((p) => p.title) })),
+        country: getStudentCountry(), // hors Côte d'Ivoire : aucune mention ivoirienne dans le sujet
       }, () => setRetrying(true));
       const next: Saved = { sujet: json.sujet, chapterTitles: chapters.map((c) => c.title) };
       writeSaved(session.id, next);
@@ -518,6 +520,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
         sujet: { exercices: saved.sujet.exercices, corrige: saved.sujet.corrige },
         images: photos.map(({ mimeType, data }) => ({ mimeType, data })),
         sessionId: session.id, // chrono du serveur : temps mis et éventuel retard
+        country: getStudentCountry(),
       }, () => setRetrying(true));
       const correction: Correction = json.correction;
       if (correction.lisible) {

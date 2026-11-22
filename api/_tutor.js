@@ -18,6 +18,7 @@
  */
 import { isProductionRuntime } from './_env.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
+import { isOutsideCI, NEUTRAL_COUNTRY_RULE } from './_country.js';
 
 export const TUTOR_DAILY_LIMIT = 30;
 export const TUTOR_DEFAULT_BUDGET = 500;
@@ -51,15 +52,62 @@ export function tutorBudget(env = process.env) {
   return Number.isFinite(n) && n >= 0 ? n : TUTOR_DEFAULT_BUDGET;
 }
 
-/** Contexte facultatif envoyé par l'appli (leçon du cours guidé, classe, matière). */
+/**
+ * Contexte facultatif envoyé par l'appli : leçon du cours guidé, classe, matière, pays, prénom,
+ * et les dernières erreurs faites dans les cours (« KONAN se souvient »).
+ */
 export function cleanTutorContext(raw) {
   const c = raw && typeof raw === 'object' ? raw : {};
+  const prenom = oneLine(c.prenom, 30).split(' ')[0].replace(/[^\p{L}'-]/gu, '');
+  const erreurs = Array.isArray(c.erreurs)
+    ? c.erreurs.slice(0, 5).map((e) => ({
+        matiere: oneLine(e?.matiere, 40),
+        question: oneLine(e?.question, 220),
+        reponse: oneLine(e?.reponse, 120),
+      })).filter((e) => e.question)
+    : [];
   return {
     classe: oneLine(c.classe, 40),
     matiere: oneLine(c.matiere, 60),
     notion: oneLine(c.notion, 160),
     reference: multiLine(c.reference, 1800),
+    country: /^[A-Z]{2}$/.test(String(c.country || '').toUpperCase()) ? String(c.country).toUpperCase() : '',
+    prenom: prenom.length >= 2 ? prenom : '',
+    erreurs,
   };
+}
+
+// ---------- Mémoire de KONAN (Firestore tutor_memory/<uid>, écrite par le serveur seulement) ----------
+export const MEMORY_MAX_NOTIONS = 20;
+const LEVEL_WORDS = ['découvrait', 'commençait à comprendre', 'avait compris', 'maîtrisait'];
+
+/** Notions déjà travaillées → lignes pour la consigne de l'IA (les plus récentes d'abord). */
+export function memoryLines(memory, nowMs = Date.now()) {
+  const list = Array.isArray(memory?.notions) ? memory.notions : [];
+  return list.slice(0, 8).map((m) => {
+    const days = Math.max(0, Math.round((nowMs - Number(m.at || nowMs)) / 86400e3));
+    const when = days === 0 ? "aujourd'hui" : days === 1 ? 'hier' : `il y a ${days} jours`;
+    return `- « ${m.n} »${m.m ? ` (${m.m})` : ''} : ${LEVEL_WORDS[Math.max(0, Math.min(3, Number(m.lvl) || 0))]}${m.blk ? ` ; bloquait sur : ${m.blk}` : ''} (${when})`;
+  });
+}
+
+/** Mémoire mise à jour après une réponse de KONAN (notion travaillée, niveau, blocage). */
+export function updatedMemory(memory, reply, ctx, nowMs = Date.now()) {
+  const list = Array.isArray(memory?.notions) ? memory.notions.filter((m) => m && m.n) : [];
+  const name = oneLine(reply?.notion, 60);
+  if (!name) return { notions: list.slice(0, MEMORY_MAX_NOTIONS), updatedAt: nowMs };
+  const key = name.toLowerCase();
+  const prev = list.find((m) => String(m.n).toLowerCase() === key);
+  const lvl = Math.max(0, Math.min(3, Number(reply.niveau) || 0));
+  const entry = {
+    n: name,
+    m: ctx?.matiere || prev?.m || '',
+    lvl,
+    // Blocage oublié une fois la notion comprise (niveau 2 ou plus) sans nouveau blocage
+    blk: reply.blocage || (lvl >= 2 ? '' : prev?.blk || ''),
+    at: nowMs,
+  };
+  return { notions: [entry, ...list.filter((m) => String(m.n).toLowerCase() !== key)].slice(0, MEMORY_MAX_NOTIONS), updatedAt: nowMs };
 }
 
 /**
@@ -92,15 +140,24 @@ export function cleanTutorHistory(raw) {
   return recent.map((t) => ({ role: t.role, parts: [{ text: t.text }] }));
 }
 
-export function buildTutorSystem(ctx) {
+export function buildTutorSystem(ctx, memory = null, nowMs = Date.now()) {
+  const outside = isOutsideCI(ctx.country);
   const lines = [
-    "Tu es KONAN, le professeur particulier d'une application d'étude pour les élèves de Côte d'Ivoire.",
+    outside
+      ? "Tu es KONAN, le professeur particulier d'une application d'étude pour les élèves francophones."
+      : "Tu es KONAN, le professeur particulier d'une application d'étude pour les élèves de Côte d'Ivoire.",
     `L'élève${ctx.classe ? ` est en ${ctx.classe}` : ''} a touché le bouton « Je ne comprends pas ». Ta mission : qu'il COMPRENNE vraiment, pas seulement qu'il ait la réponse.`,
-    "Tu suis le programme officiel ivoirien (DPFC) de sa classe, toutes matières et toutes filières, même si son cours n'est pas dans l'appli.",
+    outside
+      ? "Tu suis le programme officiel de sa classe, toutes matières et toutes filières, même si son cours n'est pas dans l'appli."
+      : "Tu suis le programme officiel ivoirien (DPFC) de sa classe, toutes matières et toutes filières, même si son cours n'est pas dans l'appli.",
+    '',
+    'Ta personnalité : joyeux, enthousiaste et chaleureux, comme un ami qui adore expliquer. Petites touches d’humour, jamais moqueur. Tu fêtes chaque progrès (« Yes ! », « Trop fort ! ») et tu rassures quand ça bloque (« C’est normal, on va y arriver »). Tes messages sont aussi LUS À VOIX HAUTE : phrases courtes, naturelles, faciles à écouter.',
     '',
     'Ta méthode, dans cet ordre :',
     '1. DIAGNOSTIC : si tu ne sais pas encore où ça bloque, pose UNE question courte pour savoir ce qu’il sait déjà (pas plus de deux questions de diagnostic en tout). Si sa demande est déjà précise, passe directement à l’explication.',
-    '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie en Côte d’Ivoire (marché, transport, sport, cuisine, argent en FCFA…). Une seule idée à la fois.',
+    outside
+      ? '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie quotidienne (marché, transport, sport, cuisine, argent en francs CFA…). Une seule idée à la fois.'
+      : '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie en Côte d’Ivoire (marché, transport, sport, cuisine, argent en FCFA…). Une seule idée à la fois.',
     '3. VÉRIFICATION : termine presque chaque message par UNE petite question ou un mini-exercice fait pour lui (calcul court, QCM A/B/C, phrase à compléter). Attends sa réponse avant de continuer.',
     '4. ADAPTATION : réponse juste → félicite brièvement et donne un exercice un peu plus difficile. Réponse fausse ou « je ne comprends toujours pas » → réexplique AUTREMENT (autre exemple, autre image, étape plus petite), jamais la même phrase répétée. Montre où est l’erreur sans le juger.',
     '5. CONCLUSION : quand il réussit seul deux exercices de suite sur la notion, donne un court résumé en commençant par « **À retenir :** » (3 points au plus), puis propose une autre notion ou un exercice de type examen.',
@@ -115,13 +172,31 @@ export function buildTutorSystem(ctx) {
     '- Si tu n’es pas sûr d’une information du programme, dis-le simplement plutôt que d’inventer.',
     '',
     `Format OBLIGATOIRE : ton message à l’élève, puis une DERNIÈRE ligne qui commence par « ${META_TAG} » suivie d’un objet JSON sur une ligne :`,
-    `${META_TAG} {"niveau":1,"etape":"explication","notion":"Les vecteurs","choix":["A","B","C"]}`,
+    `${META_TAG} {"niveau":1,"etape":"explication","notion":"Les vecteurs","choix":["A","B","C"],"blocage":"confond le sens et la direction"}`,
     '- niveau : compréhension de l’élève sur la notion travaillée, 0 = découvre, 1 = commence à comprendre, 2 = a compris, 3 = maîtrise (réussit seul). Monte d’un cran au plus à chaque bonne réponse ; redescends s’il se trompe sur l’essentiel.',
     '- etape : "diagnostic", "explication", "verification" ou "conclusion".',
     '- notion : le nom court de la notion travaillée (6 mots au plus).',
     '- choix : les réponses rapides que l’élève peut toucher (4 au plus, 25 caractères chacune), par exemple les lettres d’un QCM ; sinon [].',
+    '- blocage : ce qui bloque l’élève sur cette notion, en quelques mots (12 mots au plus), ou "" s’il n’y a pas de blocage visible. Tu t’en souviendras la prochaine fois.',
     '- Dans cette ligne : JAMAIS de LaTeX, de $ ni de barre oblique inversée.',
   ];
+
+  // « KONAN se souvient » : prénom, notions déjà travaillées, erreurs récentes dans les cours
+  const remembered = memoryLines(memory, nowMs);
+  if (ctx.prenom || remembered.length || ctx.erreurs?.length) {
+    lines.push('', 'CE QUE TU SAIS DÉJÀ DE L’ÉLÈVE (sers-t’en naturellement, sans tout réciter) :');
+    if (ctx.prenom) lines.push(`- Prénom : ${ctx.prenom}. Appelle l’élève par son prénom de temps en temps (pas à chaque message).`);
+    if (remembered.length) {
+      lines.push('- Notions déjà travaillées avec toi :', ...remembered.map((l) => `  ${l}`));
+      lines.push('  Si l’élève revient sur l’une d’elles, rappelle où il en était (« La dernière fois, tu bloquais sur… ») et repars de là.');
+    }
+    if (ctx.erreurs?.length) {
+      lines.push('- Erreurs récentes dans ses cours (pistes pour trouver ce qui bloque) :');
+      for (const e of ctx.erreurs) lines.push(`  • ${e.matiere ? `${e.matiere} — ` : ''}question « ${e.question} »${e.reponse ? ` ; réponse donnée : « ${e.reponse} »` : ''}`);
+    }
+  }
+  if (outside) lines.push('', NEUTRAL_COUNTRY_RULE);
+
   if (ctx.matiere || ctx.notion || ctx.reference) {
     lines.push('', "L'élève vient de cette leçon de l'appli :");
     if (ctx.matiere) lines.push(`- Matière : ${ctx.matiere}`);
@@ -143,6 +218,7 @@ function cleanMeta(raw) {
     etape,
     notion: oneLine(r.notion, 60).replace(/[$\\]/g, ''),
     choix: [...new Set(choix)],
+    blocage: oneLine(r.blocage, 120).replace(/[$\\]/g, ''),
   };
 }
 
@@ -165,10 +241,10 @@ export function parseTutorReply(raw) {
 }
 
 /** Appel à Gemini (modèle principal, puis modèle « lite » de secours). */
-export async function askTutor(apiKey, ctx, contents, { totalMs = 55_000 } = {}) {
+export async function askTutor(apiKey, ctx, contents, { totalMs = 55_000, memory = null } = {}) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
-  const systemInstruction = buildTutorSystem(ctx);
+  const systemInstruction = buildTutorSystem(ctx, memory);
   let lastErr;
   const started = Date.now();
   for (const [i, { model, config }] of MODELS.entries()) {
@@ -206,16 +282,28 @@ export async function hasPaidPro(db, uid, nowMs = Date.now(), env = process.env)
   return (sub?.tier === 'pro' || sub?.tier === 'plus') && Number.isFinite(endsAt) && endsAt > nowMs;
 }
 
-function usageLeft(snapData, day, limit) {
-  const used = snapData?.date === day ? Number(snapData?.count || 0) : 0;
-  return { used, remaining: Math.max(0, limit - used) };
+/** Compteurs du jour d'un document tutor_usage ({ date, count, voice }) : remis à zéro chaque jour. */
+function dayCounts(snapData, day) {
+  const same = snapData?.date === day;
+  return { count: same ? Number(snapData?.count || 0) : 0, voice: same ? Number(snapData?.voice || 0) : 0 };
+}
+
+// La voix coûte plus cher que le texte (≈ 5 à 8 F par réponse lue, estimation) : plafonds prudents pour que la
+// voix ne vide jamais le plafond de dépense Gemini (qui couperait aussi devoirs, corrections et Feynman).
+export const TUTOR_VOICE_DAILY_LIMIT = 20;
+export const TUTOR_VOICE_DEFAULT_BUDGET = 150;
+export function tutorVoiceBudget(env = process.env) {
+  const n = Number.parseInt(String(env.KONAN_TUTOR_VOICE_BUDGET || ''), 10);
+  return Number.isFinite(n) && n >= 0 ? n : TUTOR_VOICE_DEFAULT_BUDGET;
 }
 
 /**
  * Point d'entrée appelé par api/feynman.js (élève déjà authentifié).
+ * Actions : tutor_status, tutor (message), tutor_voice (KONAN lit sa réponse à voix haute).
+ * `ask` et `speak` sont remplaçables pour les tests (pas d'appel réel à l'IA).
  * @returns {Promise<{ status: number, data: object }>}
  */
-export async function handleTutorAction({ body, uid, getDb, env = process.env, nowMs = Date.now(), ask = askTutor }) {
+export async function handleTutorAction({ body, uid, getDb, env = process.env, nowMs = Date.now(), ask = askTutor, speak = null }) {
   const enabled = tutorEnabled(env);
   const day = todayKey(nowMs);
   if (!enabled) return { status: body.action === 'tutor_status' ? 200 : 503, data: { success: body.action === 'tutor_status', enabled: false, error: 'TUTOR_OFF' } };
@@ -236,34 +324,90 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
 
   const usageRef = db.collection('tutor_usage').doc(uid);
   const globalRef = db.collection('tutor_usage').doc('_global');
+  const memoryRef = db.collection('tutor_memory').doc(uid);
   let mine;
-  let globalUsed = 0;
+  let all;
   try {
     const [a, b] = await Promise.all([usageRef.get(), globalRef.get()]);
-    mine = usageLeft(a.exists ? a.data() : null, day, TUTOR_DAILY_LIMIT);
-    globalUsed = b.exists && b.data()?.date === day ? Number(b.data()?.count || 0) : 0;
+    mine = dayCounts(a.exists ? a.data() : null, day);
+    all = dayCounts(b.exists ? b.data() : null, day);
   } catch {
     return { status: 503, data: { success: false, error: 'SERVER_UNAVAILABLE' } };
   }
+  const remainingOf = (used) => Math.max(0, TUTOR_DAILY_LIMIT - used);
+  const voiceRemainingOf = (used) => Math.max(0, TUTOR_VOICE_DAILY_LIMIT - used);
 
   if (body.action === 'tutor_status') {
-    return { status: 200, data: { success: true, enabled: true, paid, limit: TUTOR_DAILY_LIMIT, remaining: mine.remaining } };
+    return {
+      status: 200,
+      data: {
+        success: true, enabled: true, paid, limit: TUTOR_DAILY_LIMIT, remaining: remainingOf(mine.count),
+        voiceLimit: TUTOR_VOICE_DAILY_LIMIT, voiceRemaining: voiceRemainingOf(mine.voice),
+      },
+    };
   }
 
   if (!paid) return { status: 403, data: { success: false, error: 'PAID_PRO_REQUIRED' } };
-  if (mine.remaining <= 0) return { status: 429, data: { success: false, error: 'DAILY_LIMIT', limit: TUTOR_DAILY_LIMIT, remaining: 0 } };
-  if (globalUsed >= tutorBudget(env)) return { status: 503, data: { success: false, error: 'TUTOR_BUSY' } };
+  const apiKey = String(env.GEMINI_API_KEY || '').trim();
+  if (!apiKey) return { status: 503, data: { success: false, error: 'AI_NOT_CONFIGURED' } };
+
+  // Compteurs (seules les réponses réussies comptent), élève + toute l'appli, en une transaction
+  const bump = async (field) => {
+    let used = 0;
+    try {
+      await db.runTransaction(async (tx) => {
+        const [a, b] = await Promise.all([tx.get(usageRef), tx.get(globalRef)]);
+        const ua = dayCounts(a.exists ? a.data() : null, day);
+        const ub = dayCounts(b.exists ? b.data() : null, day);
+        ua[field] += 1;
+        ub[field] += 1;
+        tx.set(usageRef, { date: day, ...ua, userId: uid, updatedAt: new Date(nowMs).toISOString() });
+        tx.set(globalRef, { date: day, ...ub });
+        used = ua[field];
+      });
+    } catch {
+      used = mine[field] + 1; // compteur non mis à jour : sans gravité
+    }
+    return used;
+  };
+
+  // ---------- KONAN lit sa réponse à voix haute ----------
+  if (body.action === 'tutor_voice') {
+    if (mine.voice >= TUTOR_VOICE_DAILY_LIMIT) return { status: 429, data: { success: false, error: 'VOICE_DAILY_LIMIT', voiceRemaining: 0 } };
+    if (all.voice >= tutorVoiceBudget(env)) return { status: 503, data: { success: false, error: 'TUTOR_BUSY' } };
+    const { speakableText, synthesizeSpeech } = await import('./_tutorVoice.js');
+    const text = speakableText(body.text);
+    if (text.length < 2) return { status: 400, data: { success: false, error: 'EMPTY_MESSAGE' } };
+    let audio;
+    try {
+      audio = await (speak || synthesizeSpeech)(apiKey, text);
+    } catch (e) {
+      const msg = String(e?.message || e);
+      console.error('[tutor-voice]', msg.split(apiKey).join('***').slice(0, 200));
+      return { status: 502, data: { success: false, error: /429|RESOURCE_EXHAUSTED|quota/i.test(msg) ? 'TUTOR_BUSY' : 'VOICE_UNAVAILABLE' } };
+    }
+    const used = await bump('voice');
+    return { status: 200, data: { success: true, audio: audio.base64, mimeType: audio.mimeType, seconds: audio.seconds, voiceRemaining: voiceRemainingOf(used) } };
+  }
+
+  // ---------- Message de l'élève ----------
+  if (mine.count >= TUTOR_DAILY_LIMIT) return { status: 429, data: { success: false, error: 'DAILY_LIMIT', limit: TUTOR_DAILY_LIMIT, remaining: 0 } };
+  if (all.count >= tutorBudget(env)) return { status: 503, data: { success: false, error: 'TUTOR_BUSY' } };
 
   const contents = cleanTutorHistory(body.messages);
   if (!contents.length) return { status: 400, data: { success: false, error: 'EMPTY_MESSAGE' } };
   const ctx = cleanTutorContext(body.context);
 
-  const apiKey = String(env.GEMINI_API_KEY || '').trim();
-  if (!apiKey) return { status: 503, data: { success: false, error: 'AI_NOT_CONFIGURED' } };
+  // Mémoire de KONAN (notions déjà travaillées) : sans elle, la discussion marche quand même
+  let memory = null;
+  try {
+    const snap = await memoryRef.get();
+    memory = snap.exists ? snap.data() : null;
+  } catch { /* mémoire indisponible */ }
 
   let reply;
   try {
-    reply = await ask(apiKey, ctx, contents);
+    reply = await ask(apiKey, ctx, contents, { memory });
   } catch (e) {
     const msg = String(e?.message || e);
     console.error('[tutor]', msg.split(apiKey).join('***').slice(0, 200));
@@ -271,21 +415,11 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
     return { status: 502, data: { success: false, error: busy ? 'TUTOR_BUSY' : 'AI_UNAVAILABLE' } };
   }
 
-  // Seules les réponses réussies sont comptées (élève + toute l'appli), en une transaction
-  let remaining = Math.max(0, mine.remaining - 1);
+  const used = await bump('count');
   try {
-    await db.runTransaction(async (tx) => {
-      const [a, b] = await Promise.all([tx.get(usageRef), tx.get(globalRef)]);
-      const ua = a.exists && a.data()?.date === day ? Number(a.data()?.count || 0) : 0;
-      const ub = b.exists && b.data()?.date === day ? Number(b.data()?.count || 0) : 0;
-      tx.set(usageRef, { date: day, count: ua + 1, userId: uid, updatedAt: new Date(nowMs).toISOString() });
-      tx.set(globalRef, { date: day, count: ub + 1 });
-      remaining = Math.max(0, TUTOR_DAILY_LIMIT - ua - 1);
-    });
-  } catch {
-    // compteur non mis à jour : sans gravité
-  }
+    await memoryRef.set(updatedMemory(memory, reply, ctx, nowMs));
+  } catch { /* mémoire non mise à jour : sans gravité */ }
 
-  const { model, ...clean } = reply;
-  return { status: 200, data: { success: true, reply: clean, limit: TUTOR_DAILY_LIMIT, remaining } };
+  const { model, blocage, ...clean } = reply;
+  return { status: 200, data: { success: true, reply: clean, limit: TUTOR_DAILY_LIMIT, remaining: remainingOf(used) } };
 }

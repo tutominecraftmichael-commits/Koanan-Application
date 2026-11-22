@@ -98,6 +98,14 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Parle (sa voix est jouée) : petits rebonds rapides, comme s'il parlait avec tout le corps, joues un peu roses */
+.kp--talk .kp-mood { animation: kp-talk 0.36s ease-in-out infinite alternate; }
+@keyframes kp-talk {
+  from { transform: scale(1, 1) rotate(-1.5deg); }
+  to { transform: scale(1.04, 0.95) translateY(1.5%) rotate(1.5deg); }
+}
+.kp--talk .kp-cheek { opacity: 0.45; }
+
 /* Toucher : « boing » de peluche */
 .kp.is-boing .kp-mood { animation: kp-boing 0.42s cubic-bezier(.3,.7,.4,1) 1 !important; }
 @keyframes kp-boing {

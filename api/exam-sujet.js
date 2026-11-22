@@ -11,6 +11,7 @@
  * le planning ne propose de toute façon un sujet de 2 h qu'un jour sur trois). Un échec n'est pas décompté.
  */
 import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
+import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, startExamTimer } from './_examCommon.js';
 
 export const DAILY_SUJETS = 1;
@@ -119,7 +120,14 @@ function cleanTable(t) {
   return colonnes.length ? { colonnes, lignes } : null;
 }
 
-export function buildSujetPrompt({ template, classe, gradeId, matiere, chapitres }) {
+export function buildSujetPrompt(args) {
+  // Élève hors Côte d'Ivoire : aucune mention ivoirienne (ni DRENA, MENA, DPFC) dans le sujet ni le corrigé
+  const outside = isOutsideCI(args.country);
+  const prompt = buildSujetPromptCI(args);
+  return outside ? `${neutralizeForCountry(prompt, args.country)}\n${NEUTRAL_COUNTRY_RULE}` : prompt;
+}
+
+function buildSujetPromptCI({ template, classe, gradeId, matiere, chapitres }) {
   const structure = template.exercices
     .map((e) => `- EXERCICE ${e.numero} (${e.points} points) — ${e.nature}. ${e.consignes}`)
     .join('\n');
@@ -334,7 +342,7 @@ export default async function handler(req, res) {
 
   let sujet;
   try {
-    const prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres });
+    const prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres, country: str(body.country, 4) });
     // Un sujet complet prend 50 s environ (mesuré le 2026-11-22) : 230 s au total (vercel.json : 300 s),
     // un essai du modèle principal plafonné à 150 s pour laisser 60 s au modèle de secours
     sujet = await askGeminiJson(ctx.apiKey, [{ text: prompt }], (raw) => cleanSujet(raw, template), 0.6, {}, {
