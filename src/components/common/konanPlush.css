@@ -1,0 +1,160 @@
+/*
+ * Peluche KONAN animée (mode « Je ne comprends pas »).
+ * Couches imbriquées pour que les mouvements s'additionnent sans se gêner :
+ *   .kp (racine) > .kp-float (flotte) > .kp-mood (humeur : saut, hochement…) > .kp-body (respire) > image + yeux + joues
+ * Clignement des yeux : paupières couleur fourrure qui descendent (classe .is-blinking posée par le composant).
+ */
+.kp { position: relative; display: inline-block; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+.kp-float, .kp-mood, .kp-body { position: absolute; inset: 0; }
+.kp-mood, .kp-body { transform-origin: 50% 92%; }
+.kp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.kp--face .kp-img { border-radius: 50%; }
+/* Bouton flottant : anneau blanc (jour) ou bleu nuit + liseré ciel (nuit), qui bouge avec la peluche */
+.kp--ringed .kp-img { box-shadow: 0 0 0 3px #fff, 0 8px 22px rgba(2, 132, 199, 0.35); }
+.dark .kp--ringed .kp-img { box-shadow: 0 0 0 3px #0f172a, 0 0 0 5px rgba(56, 189, 248, 0.55), 0 10px 26px rgba(0, 0, 0, 0.5); }
+
+/* ---------- Yeux ---------- */
+.kp-eye { position: absolute; border-radius: 50%; overflow: hidden; pointer-events: none; }
+.kp-lid {
+  position: absolute; left: -8%; right: -8%; top: 0; height: 104%;
+  background: radial-gradient(120% 90% at 50% 20%, #b3e0f5 0%, #93cdea 55%, #7dbfe2 100%);
+  border-bottom: max(1.5px, 0.09em) solid #16233f;
+  border-radius: 0 0 50% 50% / 0 0 42% 42%;
+  transform: translateY(-106%);
+  transition: transform 75ms ease-in;
+}
+.kp.is-blinking .kp-lid { transform: translateY(0); transition-duration: 60ms; }
+.kp--think .kp-lid { transform: translateY(-64%); transition-duration: 260ms; }
+.kp--think.is-blinking .kp-lid { transform: translateY(0); }
+
+/* ---------- Joues (rougissent quand l'élève réussit) ---------- */
+.kp-cheek {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 105, 135, 0.75), rgba(255, 105, 135, 0) 100%);
+  opacity: 0; transition: opacity 400ms ease;
+}
+.kp--happy .kp-cheek, .kp--celebrate .kp-cheek { opacity: 0.9; }
+.kp--listen .kp-cheek { opacity: 0.35; }
+
+/* ---------- Mouvements de fond ---------- */
+.kp-float { animation: kp-float 3.6s ease-in-out infinite; }
+.kp-body { animation: kp-breathe 3s ease-in-out infinite; }
+@keyframes kp-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4%); } }
+@keyframes kp-breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(0.985, 1.03); } }
+
+/* Repos : de temps en temps un petit saut, puis un « coucou » de la tête */
+.kp--idle .kp-mood { animation: kp-idle-life 9s ease-in-out infinite; animation-delay: 1.2s; }
+@keyframes kp-idle-life {
+  0%, 66% { transform: none; }
+  69% { transform: translateY(0) scale(1.08, 0.9); }
+  73% { transform: translateY(-16%) scale(0.95, 1.07); }
+  77% { transform: translateY(0) scale(1.1, 0.88); }
+  80% { transform: scale(0.97, 1.03); }
+  83% { transform: none; }
+  86% { transform: rotate(-9deg); }
+  89% { transform: rotate(8deg); }
+  92% { transform: rotate(-5deg); }
+  95%, 100% { transform: rotate(0); }
+}
+
+/* Écoute : penché vers l'élève, petit mouvement de tête */
+.kp--listen .kp-mood { animation: kp-listen 2.4s ease-in-out infinite; }
+@keyframes kp-listen {
+  0%, 100% { transform: rotate(-9deg) scale(1.05); }
+  50% { transform: rotate(-5deg) scale(1.05) translateY(-2%); }
+}
+
+/* Réfléchit : balance la tête, yeux mi-clos, petite bulle de points */
+.kp--think .kp-mood { animation: kp-think 1.5s ease-in-out infinite alternate; }
+@keyframes kp-think { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+
+/* Joie : deux sauts avec écrasement à l'atterrissage */
+.kp--happy .kp-mood { animation: kp-jump 0.85s cubic-bezier(.3,.7,.4,1) 2; }
+@keyframes kp-jump {
+  0% { transform: none; }
+  15% { transform: scale(1.12, 0.86); }
+  42% { transform: translateY(-30%) scale(0.93, 1.09); }
+  70% { transform: translateY(0) scale(1.1, 0.88); }
+  85% { transform: scale(0.97, 1.03); }
+  100% { transform: none; }
+}
+
+/* Encourage : hoche doucement la tête */
+.kp--encourage .kp-mood { animation: kp-nod 1s ease-in-out 2; }
+@keyframes kp-nod {
+  0%, 100% { transform: none; }
+  30% { transform: translateY(4%) rotate(4deg) scale(1.02, 0.97); }
+  60% { transform: translateY(-2%) rotate(-2deg); }
+}
+
+/* Fête : saut avec un tour complet */
+.kp--celebrate .kp-mood { animation: kp-celebrate 1.3s cubic-bezier(.3,.7,.4,1) 2; transform-origin: 50% 50%; }
+@keyframes kp-celebrate {
+  0% { transform: none; }
+  12% { transform: scale(1.14, 0.84); }
+  45% { transform: translateY(-38%) rotate(180deg) scale(1.02); }
+  70% { transform: translateY(0) rotate(360deg) scale(1.1, 0.88); }
+  85% { transform: rotate(360deg) scale(0.97, 1.03); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Toucher : « boing » de peluche */
+.kp.is-boing .kp-mood { animation: kp-boing 0.42s cubic-bezier(.3,.7,.4,1) 1 !important; }
+@keyframes kp-boing {
+  0% { transform: none; }
+  30% { transform: scale(1.16, 0.8); }
+  60% { transform: scale(0.9, 1.12); }
+  80% { transform: scale(1.04, 0.97); }
+  100% { transform: none; }
+}
+
+/* Apparition */
+.kp-enter { animation: kp-enter 0.7s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes kp-enter { from { transform: scale(0) rotate(-25deg); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- Étoiles (joie, fête) ---------- */
+.kp-spark { position: absolute; width: 22%; height: 22%; left: 39%; top: 30%; pointer-events: none; color: #F5C451; opacity: 0;
+  animation: kp-spark 0.9s ease-out var(--d, 0s) 2 both; }
+.kp-spark svg { width: 100%; height: 100%; filter: drop-shadow(0 0 2px rgba(245, 196, 81, 0.8)); }
+@keyframes kp-spark {
+  0% { transform: translate(calc(var(--x) * 0.55), calc(var(--y) * 0.55)) scale(0) rotate(0); opacity: 0; }
+  25% { opacity: 1; }
+  70% { transform: translate(var(--x), var(--y)) scale(1) rotate(90deg); opacity: 1; }
+  100% { transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2)) scale(0.2) rotate(140deg); opacity: 0; }
+}
+
+/* ---------- Bulle « … » quand KONAN réfléchit ---------- */
+.kp-dots { position: absolute; right: -14%; top: -8%; display: flex; gap: 2px; padding: 3px 5px; border-radius: 999px;
+  background: #fff; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25); animation: kp-pop 0.3s ease-out both; }
+.kp-dots i { width: 4px; height: 4px; border-radius: 50%; background: #0284C7; animation: kp-dot 0.9s ease-in-out infinite; }
+.kp-dots i:nth-child(2) { animation-delay: 0.15s; }
+.kp-dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes kp-dot { 0%, 100% { transform: translateY(0); opacity: 0.5; } 40% { transform: translateY(-3px); opacity: 1; } }
+@keyframes kp-pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* ---------- Bouton flottant : halo qui respire + bulle « ? » ---------- */
+.kp-halo { position: absolute; inset: 0; border-radius: 50%; background: rgba(56, 189, 248, 0.45); animation: kp-halo 3.2s ease-out infinite; pointer-events: none; }
+@keyframes kp-halo { 0% { transform: scale(0.95); opacity: 0.7; } 70%, 100% { transform: scale(1.45); opacity: 0; } }
+.kp-ask { position: absolute; left: -10%; top: -12%; width: 34%; height: 34%; border-radius: 50% 50% 50% 12%;
+  display: flex; align-items: center; justify-content: center; font-weight: 900; line-height: 1;
+  animation: kp-ask 8s ease-in-out infinite; animation-delay: 2s; transform-origin: 100% 100%; pointer-events: none; }
+@keyframes kp-ask {
+  0%, 4% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  8% { transform: scale(1.15) rotate(6deg); opacity: 1; }
+  11%, 52% { transform: scale(1) rotate(0); opacity: 1; }
+  56% { transform: scale(1.1) rotate(-4deg); }
+  60%, 100% { transform: scale(0); opacity: 0; }
+}
+.kp-hint { animation: kp-hint 6s ease-in-out both; transform-origin: 100% 50%; }
+@keyframes kp-hint {
+  0% { transform: scale(0.6) translateX(10px); opacity: 0; }
+  8%, 88% { transform: none; opacity: 1; }
+  100% { transform: scale(0.8) translateX(10px); opacity: 0; }
+}
+
+/* Moins d'animations demandé par le téléphone : la peluche reste calme (clignements gardés, discrets) */
+@media (prefers-reduced-motion: reduce) {
+  .kp-float, .kp-body, .kp-mood, .kp-halo, .kp-ask, .kp-spark, .kp-dots i, .kp-enter, .kp-hint { animation: none !important; }
+  .kp-ask { transform: none; opacity: 1; }
+  .kp-hint { opacity: 1; }
+}

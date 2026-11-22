@@ -7,7 +7,7 @@
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { X, Send, RotateCcw, Sparkles, Lock } from 'lucide-react';
-import { KonanMascot } from '../../components/common/KonanMascot';
+import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
 import { MathRenderer } from '../../components/common/MathRenderer';
 import { sendTutorMessage, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
 
@@ -123,6 +123,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Humeur passagère de la peluche après une réponse (saut de joie, hochement, fête)
+  const [flash, setFlash] = useState<PlushMood | null>(null);
+  const [typing, setTyping] = useState(false);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(flashTimer.current), []);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -142,6 +147,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
   const notion = lastKonan?.notion || state.context.notion;
   const outOfMessages = remaining !== null && remaining <= 0;
   const canWrite = paid && !outOfMessages && !sending;
+  const mood: PlushMood = sending ? 'think' : flash || (typing && input.trim() ? 'listen' : 'idle');
 
   const send = async (raw: string) => {
     const text = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
@@ -164,6 +170,16 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
     }
     onRemainingChange(res.remaining);
     const { texte, niveau: lvl, etape, notion: n, choix } = res.reply;
+    const before = niveau;
+    const next: PlushMood | null = etape === 'conclusion' || (lvl === 3 && before < 3) ? 'celebrate'
+      : (lvl ?? 0) > before ? 'happy'
+      : (lvl ?? 0) < before ? 'encourage'
+      : null;
+    if (next) {
+      setFlash(next);
+      clearTimeout(flashTimer.current);
+      flashTimer.current = setTimeout(() => setFlash(null), next === 'celebrate' ? 2800 : 2000);
+    }
     setState((s) => ({
       ...s,
       messages: [...s.messages, { id: newId(), role: 'konan', text: texte, niveau: lvl, etape, notion: n, choix }],
@@ -191,7 +207,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
         {/* En-tête : KONAN + jauge de compréhension */}
         <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-slate-200 dark:border-slate-800 bg-sky-50 dark:bg-slate-900/80 space-y-2.5">
           <div className="flex items-center gap-3">
-            <KonanMascot pose={sending ? 'notes' : niveau >= 3 ? 'jump' : 'wave'} size={44} />
+            <KonanPlush variant="face" size={52} mood={mood} />
             <div className="flex-1 min-w-0">
               <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
               <p className="text-xs text-slate-600 dark:text-slate-400">KONAN t’explique jusqu’à ce que tu comprennes</p>
@@ -210,7 +226,14 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
 
         {/* Discussion */}
         <div className="flex-1 overflow-y-auto px-3 sm:px-5 py-4 space-y-3 overscroll-contain">
+          {/* Accueil : la peluche entière dit bonjour */}
+          {state.messages.length === 0 && (
+            <div className="flex justify-center pt-2 pb-3">
+              <KonanPlush variant="body" size={136} mood={mood} enter />
+            </div>
+          )}
           <div className="flex items-end gap-2">
+            <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
             <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
               {state.context.notion
                 ? <>Tu bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
@@ -225,7 +248,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
               </div>
             ) : (
               <div key={m.id} className="flex items-end gap-2">
-                <div className={`max-w-[88%] px-4 py-3 rounded-2xl rounded-bl-md text-sm leading-relaxed break-words text-slate-800 dark:text-slate-100 ${
+                <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
+                <div className={`max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md text-sm leading-relaxed break-words text-slate-800 dark:text-slate-100 ${
                   m.etape === 'conclusion' ? 'bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800/80'
                 }`}>
                   <RichText text={m.text} />
@@ -306,6 +330,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, context, paid
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT))}
+                  onFocus={() => setTyping(true)}
+                  onBlur={() => setTyping(false)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !('ontouchstart' in window)) { e.preventDefault(); send(input); } }}
                   rows={1}
                   disabled={!canWrite}
