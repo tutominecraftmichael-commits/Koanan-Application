@@ -14,7 +14,9 @@
 
 /** Prix officiels en FCFA. */
 export const PRICES = {
-  pro: { mois: 2500, semestre: 9950 },
+  // Semestre passé de 9 950 à 12 500 F le 2026-11-22 (choix du fondateur : les gros utilisateurs de l'IA
+  // coûtaient plus cher que 1 660 F par mois). Toujours moins cher que 6 × 2 500 F = 15 000 F.
+  pro: { mois: 2500, semestre: 12500 },
   plus: { mois: 5000, semestre: 19950 },
 };
 

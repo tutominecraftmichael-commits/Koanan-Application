@@ -79,7 +79,7 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: '2 500 F CFA / mois • 9 950 F CFA / semestre • Paiement Wave ou Orange Money',
+    tagline: '2 500 F CFA / mois • 12 500 F CFA / semestre • Paiement Wave ou Orange Money',
     priceLabel: '2 500 F',
     periodLabel: 'CFA / mois',
     priceAmount: 2500,
@@ -157,7 +157,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     id: 'pro',
     name: 'KONAN PRO',
     tagline: 'Pour progresser vite',
-    prices: { monthly: 2500, semester: 9950 },
+    prices: { monthly: 2500, semester: 12500 },
     includesLabel: 'Tout le Gratuit, plus :',
     note: 'Wave, Orange Money, MTN, Moov',
     available: true,

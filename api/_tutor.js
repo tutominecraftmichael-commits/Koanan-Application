@@ -290,7 +290,7 @@ function dayCounts(snapData, day) {
 
 // La voix coûte plus cher que le texte (≈ 5 à 8 F par réponse lue, estimation) : plafonds prudents pour que la
 // voix ne vide jamais le plafond de dépense Gemini (qui couperait aussi devoirs, corrections et Feynman).
-export const TUTOR_VOICE_DAILY_LIMIT = 20;
+export const TUTOR_VOICE_DAILY_LIMIT = 10; // 20 → 10 le 2026-11-22 (choix du fondateur : la voix coûte le plus cher)
 export const TUTOR_VOICE_DEFAULT_BUDGET = 150;
 export function tutorVoiceBudget(env = process.env) {
   const n = Number.parseInt(String(env.KONAN_TUTOR_VOICE_BUDGET || ''), 10);

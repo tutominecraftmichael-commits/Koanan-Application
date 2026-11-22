@@ -10,14 +10,25 @@
 export const VOICE_MODELS = ['gemini-3.8-flash-tts', 'gemini-3.8-flash-lite-tts'];
 export const VOICE_NAME = process.env.KONAN_VOICE_NAME || 'Puck';
 /**
+ * Voix rendue plus enfantine par traitement du son (childVoice) : Puck reste une voix d'adulte quelle que soit
+ * la consigne (testé le 2026-11-22). 1 = voix d'origine, 1.3 = « un petit peu plus enfant » (défaut),
+ * 1.4 = enfant de 8-9 ans (un peu déformé). Réglable sur Vercel : KONAN_VOICE_PITCH.
+ */
+export function voicePitch(env = process.env) {
+  const n = Number.parseFloat(String(env.KONAN_VOICE_PITCH || ''));
+  return Number.isFinite(n) && n >= 1 && n <= 1.6 ? n : 1.3;
+}
+/**
  * Consigne de jeu SÉPARÉE du texte à lire (« notes du metteur en scène » puis « TRANSCRIPT ») : sans cette
  * séparation, la voix lisait parfois la consigne elle-même à voix haute (vu le 2026-11-22).
  */
 export function voicePrompt(text) {
   return [
     "DIRECTOR'S NOTES (never read these notes aloud)",
-    'Voice: a cheerful, energetic 10-year-old boy, smiling, speaking French.',
-    'Delivery: very clear articulation, natural pace (not too fast, not too slow), warm and encouraging.',
+    // Choix du fondateur (2026-11-22) : Puck, mais plus enfantin, « comme un petit garçon ivoirien de 9 ans »
+    'Voice: a cheerful, playful 9-year-old Ivorian boy from Abidjan, a real child\'s voice: light, high-pitched, bubbly, smiling.',
+    'Accent: natural French from Côte d\'Ivoire (Abidjan), friendly and lively, but every word stays easy to understand.',
+    'Delivery: very clear articulation, natural pace (not too fast, not too slow), warm and encouraging, like a kid proud to explain to a friend.',
     'Read ONLY the transcript below, exactly as written, nothing else.',
     '',
     'TRANSCRIPT:',
@@ -198,6 +209,60 @@ export function resample(pcm, rate, outRate = OUT_RATE) {
   return out;
 }
 
+/**
+ * Allonge le son SANS changer la hauteur (WSOLA : morceaux de 30 ms recollés là où ils se ressemblent le plus).
+ * `stretch` > 1 = plus long. Calculs allégés (un échantillon sur deux) : ~0,1 s pour une minute de voix.
+ */
+export function timeStretch(pcm, rate, stretch) {
+  if (!pcm.length || Math.abs(stretch - 1) < 0.01) return pcm;
+  const N = Math.max(64, Math.round(rate * 0.03) & ~1); // fenêtre de 30 ms
+  const Hs = N / 2; // pas de sortie
+  const Ha = Hs / stretch; // pas d'entrée
+  const tol = Math.round(N / 4);
+  const win = new Float32Array(N).map((_x, i) => 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (N - 1)));
+  const outLen = Math.floor(pcm.length * stretch) + N;
+  const out = new Float32Array(outLen);
+  const norm = new Float32Array(outLen);
+  let prev = 0; // début du morceau précédemment recopié
+  for (let k = 0; k * Hs + N < outLen; k++) {
+    const nominal = Math.round(k * Ha);
+    if (nominal + N + tol >= pcm.length) break;
+    let best = nominal;
+    if (k > 0) {
+      // Le morceau qui prolonge le mieux le précédent (corrélation maximale)
+      const natural = prev + Hs;
+      let bestScore = -Infinity;
+      for (let d = -tol; d <= tol; d += 2) {
+        const cand = nominal + d;
+        if (cand < 0 || cand + N >= pcm.length) continue;
+        let score = 0;
+        for (let i = 0; i < Hs; i += 2) score += pcm[natural + i] * pcm[cand + i];
+        if (score > bestScore) { bestScore = score; best = cand; }
+      }
+    }
+    const o = k * Hs;
+    for (let i = 0; i < N; i++) {
+      out[o + i] += pcm[best + i] * win[i];
+      norm[o + i] += win[i];
+    }
+    prev = best;
+  }
+  let end = outLen;
+  while (end > 0 && norm[end - 1] === 0) end--;
+  const res = new Int16Array(end);
+  for (let i = 0; i < end; i++) res[i] = Math.max(-32768, Math.min(32767, Math.round(norm[i] > 1e-3 ? out[i] / norm[i] : 0)));
+  return res;
+}
+
+/**
+ * Voix plus aiguë (et timbre d'enfant) sans parler plus vite : on allonge le son de `factor`,
+ * puis on le « rejoue » `factor` fois plus vite. factor 1.3 ≈ +4,5 demi-tons.
+ */
+export function childVoice(pcm, rate, factor) {
+  if (!factor || Math.abs(factor - 1) < 0.01) return pcm;
+  return resample(timeStretch(pcm, rate, factor), rate * factor, rate);
+}
+
 export function wavFromPcm(pcm, rate) {
   const data = Buffer.from(pcm.buffer, pcm.byteOffset, pcm.byteLength);
   const h = Buffer.alloc(44);
@@ -231,7 +296,7 @@ export async function synthesizeSpeech(apiKey, text, { voice = VOICE_NAME, total
       if (!part) { lastErr = new Error('NO_AUDIO'); continue; }
       const { pcm, rate } = readPcm(Buffer.from(part.inlineData.data, 'base64'), part.inlineData.mimeType || '');
       if (pcm.length < rate / 4) { lastErr = new Error('AUDIO_TOO_SHORT'); continue; }
-      const small = resample(pcm, rate, OUT_RATE);
+      const small = resample(childVoice(pcm, rate, voicePitch()), rate, OUT_RATE);
       return { base64: wavFromPcm(small, OUT_RATE).toString('base64'), mimeType: 'audio/wav', seconds: Math.round(small.length / OUT_RATE) };
     } catch (e) {
       lastErr = e;
