@@ -199,9 +199,16 @@ export const PLUS_VISIBLE = false;
  * Paiement ouvert aux élèves ? Tant que c'est false, KONAN Pro est OFFERT (activation libre, comme avant) :
  * la fiche des tarifs l'annonce « Offert pendant le lancement ». À passer à true en même temps que KONAN_PAYMENTS=on
  * et PAYMENTS_ALLOWED_IN_CODE (api/_subscriptionRules.js). Éteint le 2026-11-16, rallumé le 2026-11-22
- * (Pro payant, vendu seulement aux classes qui ont les cours : voir PRO_GRADES côté serveur).
+ * (Pro payant). Depuis le 2026-11-22 au soir : Pro vendu à TOUTES les classes de Côte d'Ivoire ; celles qui
+ * n'ont pas encore les cours sont prévenues avant de payer (PRO_NO_COURSES_NOTICE).
  */
 export const PAYMENTS_OPEN = true;
+
+/** Avertissement montré AVANT de payer Pro aux classes qui n'ont pas encore les cours guidés ni les devoirs. */
+export const PRO_NO_COURSES_NOTICE =
+  'Ta classe n’a pas encore les cours guidés ni la préparation aux devoirs dans KONAN. '
+  + 'Avec Pro, tu as le planning complet, les méthodes Pro, le mode « Je ne comprends pas » (toutes les matières) '
+  + 'et l’énergie illimitée, mais pas encore de cours.';
 
 /** Formules affichées aux élèves. */
 export const VISIBLE_DISPLAY_PLANS: DisplayPlan[] = DISPLAY_PLANS.filter((p) => p.id !== 'plus' || PLUS_VISIBLE);

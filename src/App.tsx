@@ -111,7 +111,7 @@ import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './compon
 import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { isExamPrepOpenFor } from './lib/featureFlags';
 import { followsIvorianProgram, normalizeCountry } from './lib/country';
-import { PAYMENTS_OPEN } from './lib/subscriptionPlans';
+import { PAYMENTS_OPEN, PRO_NO_COURSES_NOTICE } from './lib/subscriptionPlans';
 import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
@@ -332,12 +332,13 @@ export function App() {
   // Pays de l'élève : les cours et devoirs suivent le programme ivoirien (lib/country). Sans pays = ancien compte = CI.
   const studentCountry = normalizeCountry(state.preferences?.country || state.userAccount?.country) || undefined;
   const outsideIvorianProgram = !followsIvorianProgram(studentCountry);
-  // KONAN Pro est vendu seulement en Côte d'Ivoire, aux classes qui ont les cours guidés et les devoirs (choix
-  // du fondateur, 2026-11-22) : les autres ne peuvent pas payer pour un Pro presque vide. Le serveur refuse aussi.
-  const proSellableForClass = isExamPrepOpenFor(studentGradeRaw, studentCountry);
-  const PRO_NOT_FOR_CLASS_TEXT = outsideIvorianProgram
-    ? 'KONAN Pro est réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien. Tu peux continuer à utiliser KONAN gratuitement.'
-    : 'KONAN Pro arrive bientôt pour ta classe. Il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts.';
+  // KONAN Pro est vendu à TOUTES les classes de Côte d'Ivoire (choix du fondateur, 2026-11-22 au soir), et
+  // seulement en Côte d'Ivoire (le serveur refuse aussi). Les classes qui n'ont pas encore les cours guidés ni les
+  // devoirs sont prévenues AVANT de payer (PRO_NO_COURSES_NOTICE + case « J'ai compris »).
+  const proSellableForClass = !outsideIvorianProgram;
+  const classHasCourses = isExamPrepOpenFor(studentGradeRaw, studentCountry);
+  const proNoCoursesNotice = proSellableForClass && !classHasCourses ? PRO_NO_COURSES_NOTICE : undefined;
+  const PRO_NOT_FOR_CLASS_TEXT = 'KONAN Pro est réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien. Tu peux continuer à utiliser KONAN gratuitement.';
   const effectiveClassLabel = studentClassLabel(
     studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
@@ -1195,7 +1196,7 @@ export function App() {
       const rejected = subscriptionInfo?.status?.lastRejected;
       showToast(rejected && subscriptionInfo?.status?.history[0]?.id === rejected.id
         ? 'Ton paiement n’a pas été validé : KONAN Pro est retiré de ton compte.'
-        : 'KONAN Pro n’est pas actif sur ton compte. Abonne-toi pour en profiter.');
+        : 'KONAN Pro n’est plus actif sur ton compte (fin de l’offre gratuite ou de ton abonnement). Abonne-toi (2 500 F par mois) pour retrouver tes avantages Pro.');
     } else {
       // Déjà appliqué, ou passage à Pro : simple mise à jour de la formule, sans recalcul du planning
       setState((prev) => {
@@ -3391,6 +3392,7 @@ export function App() {
             canRenew={paidMode}
             proAvailable={proSellableForClass}
             unavailableText={PRO_NOT_FOR_CLASS_TEXT}
+            noticeText={proNoCoursesNotice}
             onClose={() => setIsPlansOpen(false)}
             onChoosePro={(period) => {
               setIsPlansOpen(false);
@@ -3419,6 +3421,7 @@ export function App() {
             initialPeriod={subscriptionPeriod}
             gradeLevel={tryResolveGradeLevel(studentGradeRaw) || ''}
             country={studentCountry || 'CI'}
+            noCoursesNotice={proNoCoursesNotice}
             info={subscriptionInfo}
             loading={subscriptionLoading}
             loadError={subscriptionError}

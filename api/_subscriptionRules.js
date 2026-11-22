@@ -25,17 +25,19 @@ export const PERIOD_DAYS = { mois: 30, semestre: 183 };
 export const SELLABLE_TIERS = ['pro'];
 
 /**
- * Classes où KONAN Pro est EN VENTE (choix du fondateur, 2026-11-22) : seulement celles qui ont les cours
- * guidés et la préparation aux devoirs. Ailleurs, Pro n'apporterait presque que de l'organisation :
- * on ne le fait pas payer. Même liste que EXAM_PREP_GRADES (src/lib/exam/examPrepRules.ts).
+ * Classes qui ont les cours guidés et la préparation aux devoirs (même liste que EXAM_PREP_GRADES,
+ * src/lib/exam/examPrepRules.ts). Pour information : depuis le 2026-11-22 (soir), KONAN Pro est EN VENTE
+ * pour TOUTES les classes de Côte d'Ivoire (choix du fondateur). Les autres classes sont prévenues avant de
+ * payer qu'elles n'ont pas encore de cours (planning, « Je ne comprends pas », méthodes Pro seulement).
  */
-export const PRO_GRADES = [
+export const GRADES_WITH_COURSES = [
   'seconde_a', 'seconde_c',
   'premiere_a', 'premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d',
   'terminale_a', 'terminale_a1', 'terminale_a2', 'terminale_c', 'terminale_d',
   'lmd_entd_l1',
 ];
-export const proAvailableForGrade = (grade) => PRO_GRADES.includes(String(grade || '').trim());
+/** Pro est vendu à toutes les classes (le pays, lui, doit être la Côte d'Ivoire). */
+export const proAvailableForGrade = () => true;
 
 /**
  * Pro vendu seulement en Côte d'Ivoire : les cours et les devoirs suivent le programme ivoirien

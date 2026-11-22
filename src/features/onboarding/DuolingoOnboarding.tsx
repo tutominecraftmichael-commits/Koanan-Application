@@ -43,7 +43,7 @@ import { KonanMascot } from '../../components/common/KonanMascot';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { PlanPicker } from '../../components/pricing/PlanPicker';
-import { isProMethod, PAYMENTS_OPEN } from '../../lib/subscriptionPlans';
+import { isProMethod, PAYMENTS_OPEN, PRO_NO_COURSES_NOTICE } from '../../lib/subscriptionPlans';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { LMD_PROGRAMS, LMD_TRACKS, isLmdTrackGrade } from '../../lib/curriculum/lmdTracks';
 import { soundFX } from '../../lib/audioEffects';
@@ -1003,8 +1003,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       setIsWaitlistOpen(true);
       return;
     }
-    // Pro seulement en Côte d'Ivoire, pour les classes qui ont les cours ; et payant quand le paiement est ouvert
-    const proSellable = isExamPrepOpenFor(selectedGradeLevel, country);
+    // Pro seulement en Côte d'Ivoire (toutes les classes ; celles sans cours sont prévenues) ; payant quand le paiement est ouvert
+    const proSellable = !outsideProgram;
     if (planId === 'pro' && !proSellable) return; // la carte Pro est grisée, sécurité en plus
     const wantsPaidPro = planId === 'pro' && PAYMENTS_OPEN;
     if (wantsPaidPro) planId = 'free';
@@ -2756,11 +2756,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* Gratuit, Pro, Plus : par mois ou par semestre */}
               <PlanPicker
                 onSelect={(planId) => handleSelectAccompanimentModel(planId)}
-                unavailable={isExamPrepOpenFor(selectedGradeLevel, country) ? undefined : {
-                  pro: outsideProgram
-                    ? 'Réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien.'
-                    : 'Bientôt pour ta classe : Pro est ouvert de la Seconde à la Terminale et en Licence 1 ENTD.',
-                }}
+                unavailable={outsideProgram ? {
+                  pro: 'Réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien.',
+                } : undefined}
+                notice={!outsideProgram && !isExamPrepOpenFor(selectedGradeLevel, country) ? { pro: PRO_NO_COURSES_NOTICE } : undefined}
               />
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
