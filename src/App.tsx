@@ -3186,12 +3186,9 @@ export function App() {
       {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
-      {/* Bouton « Je ne comprends pas » (au-dessus des mini-jeux quand ils sont là) */}
+      {/* Peluche KONAN « Je ne comprends pas » : en bas à droite (les mini-jeux sont en bas à gauche) */}
       {tutorAvailable && !tutorOpen && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
-        <TutorFab
-          raised={gamificationEnabled && gradeHasGuidedCourses}
-          onOpen={() => setTutorOpen({})}
-        />
+        <TutorFab onOpen={() => setTutorOpen({})} />
       )}
       {tutorOpen && tutorStatus && subscriptionAccount && (
         <Suspense fallback={null}>

@@ -26,7 +26,6 @@ import {
   Play,
   Trophy
 } from 'lucide-react';
-import { KonanMascot } from '../../components/common/KonanMascot';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import type { SessionType } from '../../types';
@@ -295,9 +294,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     Manquée à {nextStudySession.originalStartTime} → replacée à {nextStudySession.startTime}
                   </span>
                 )}
-              </div>
-              <div className="shrink-0 -mt-1 -mr-1 hidden min-[360px]:block">
-                <KonanMascot pose="cta" size={72} />
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
