@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, ArrowUp, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Crown, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
 import { FrostOverlay, IceStyles, Snowflake } from './Ice';
@@ -13,6 +13,8 @@ import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 const DIVISION_ORDER = [1, 2, 3, 4, 5];
 /** Couleur pleine de chaque division (badge hexagonal de la maquette) */
 const HEX_COLORS: Record<number, string> = { 1: '#B45309', 2: '#94A3B8', 3: '#F5C451', 4: '#38BDF8', 5: '#F472B6' };
+const EXCELLENCE_COUNT = 5;
+const PROMOTE_COUNT = 15;
 const ordinal = (n: number) => (n === 1 ? '1er' : `${n}e`);
 
 export function timeLeftLabel(endsAt: number, now = Date.now()): string {
@@ -34,13 +36,17 @@ export const DivisionBadge: React.FC<{ division: number; size?: number }> = ({ d
   );
 };
 
-/** Zone d'un rang : montée, maintien (Perle), descente ou rien. */
-function zoneOf(board: LeagueBoard, rank: number, size: number): 'up' | 'keep' | 'down' | null {
-  if (board.promoteCount && rank <= board.promoteCount) return 'up';
-  if (board.keepCount && rank <= board.keepCount) return 'keep';
-  if (board.demoteCount === null) return rank > board.keepCount ? 'down' : null; // Perle : hors des 10 premiers
-  if (board.demoteCount && size > board.promoteCount && rank > size - board.demoteCount) return 'down';
-  return null;
+/**
+ * Zone d'un rang façon Duolingo :
+ * - 1 à 5 : Zone d'excellence (jaune gold, montée en grade + élite)
+ * - 6 à 15 (15 premiers) : Zone de montée (vert, montée en grade ou maintien en Perle)
+ * - 16 et + (16 derniers) : Zone de relégation (rouge, descente de division)
+ */
+function zoneOf(board: LeagueBoard, rank: number): 'excellence' | 'up' | 'keep' | 'down' {
+  const promoteLimit = Math.max(board.promoteCount || 0, board.keepCount || 0, PROMOTE_COUNT);
+  if (rank <= EXCELLENCE_COUNT) return 'excellence';
+  if (rank <= promoteLimit) return board.division === 5 ? 'keep' : 'up';
+  return 'down';
 }
 
 /** Raison lisible d'un échec de chargement de la ligue. */
@@ -89,7 +95,7 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
   }
   const me = board.rows.find((r) => r.me);
   const size = board.rows.length;
-  const zone = me ? zoneOf(board, me.rank, size) : null;
+  const zone = me ? zoneOf(board, me.rank) : null;
   const st = DIVISION_STYLES[board.division];
   return (
     <button type="button" onClick={onOpen} className="w-full text-left rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 flex items-center gap-3 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600">
@@ -101,9 +107,10 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
         </p>
         <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
           {board.frozen && <span className="text-amber-700 dark:text-amber-300">Division gelée (réputation {reputation} %) · </span>}
-          {!board.frozen && zone === 'up' && 'Zone de montée ✓ · '}
-          {!board.frozen && zone === 'keep' && 'Tu gardes ta place en Perle ✓ · '}
-          {!board.frozen && zone === 'down' && 'Zone de descente ! · '}
+          {!board.frozen && zone === 'excellence' && <span className="text-amber-600 dark:text-[#F5C451] font-extrabold">Zone d’excellence ★ (Montée) · </span>}
+          {!board.frozen && zone === 'up' && <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Zone de montée ▲ · </span>}
+          {!board.frozen && zone === 'keep' && <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Maintien en Perle ✓ · </span>}
+          {!board.frozen && zone === 'down' && <span className="text-rose-600 dark:text-rose-400 font-extrabold">Zone de relégation ▼ · </span>}
           Fin dans {timeLeftLabel(board.endsAt)}
         </p>
       </div>
@@ -184,8 +191,13 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
       <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+5 %</b>.</p>
     </div>
     <div className="space-y-1">
-      <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>
-      <p>Groupes de 30 élèves. Les 10 premiers montent de division, les 5 derniers descendent. En Perle, les 10 premiers gardent leur place.</p>
+      <p className="font-extrabold text-slate-900 dark:text-white">Zones du classement & Fin de semaine</p>
+      <p>Groupes de 30 élèves répartis en 3 zones :</p>
+      <ul className="space-y-1 pl-1">
+        <li className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-full bg-[#F5C451] shrink-0" /><span><b className="text-amber-600 dark:text-[#F5C451]">Zone d’excellence (5 premiers)</b> : élite de la semaine + montée en grade.</span></li>
+        <li className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" /><span><b className="text-emerald-600 dark:text-emerald-400">Zone de montée (15 premiers)</b> : les 15 premiers montent de division (ou restent en Perle).</span></li>
+        <li className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" /><span><b className="text-rose-600 dark:text-rose-400">Zone de relégation (16 derniers)</b> : descente d’une division à la fin de la semaine.</span></li>
+      </ul>
     </div>
   </div>
 );
@@ -193,6 +205,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
 export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId: string) => void; questSection?: React.ReactNode }> = ({ board, onOpenPlayer, questSection }) => {
   const size = board.rows.length;
   const [showRules, setShowRules] = React.useState(false);
+  const promoteLimit = Math.max(board.promoteCount || 0, board.keepCount || 0, PROMOTE_COUNT);
   const repTone = board.reputation > 80
     ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30'
     : 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30';
@@ -201,11 +214,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
   const meIndex = board.rows.findIndex((r) => r.me);
   const ahead = meIndex > 0 ? board.rows[meIndex - 1] : null;
   const gapToNext = ahead && meIndex >= 0 ? Math.max(1, ahead.xp - board.rows[meIndex].xp + 1) : 0;
-  const rankColor = (rank: number, zone: ReturnType<typeof zoneOf>) =>
-    rank === 1 ? 'text-amber-600 dark:text-[#F5C451]'
-      : rank === 2 ? 'text-slate-500 dark:text-slate-300'
-        : rank === 3 ? 'text-orange-700 dark:text-orange-400'
-          : zone === 'down' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400';
   return (
     <div>
       <div className="max-w-xl mx-auto space-y-4">
@@ -286,53 +294,176 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
           })}
         </div>
 
-        <div className="flex items-center justify-between px-0.5">
-          <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
-            {board.division === 5 ? `Les ${board.keepCount} premiers restent en Perle` : `Zone de montée · top ${board.promoteCount}`}
-          </span>
-          <span className="text-[11px] text-slate-500 dark:text-slate-400">{size} élève{size > 1 ? 's' : ''}</span>
+        {/* Légende des 3 zones du classement (Excellence Or, Montée Vert, Relégation Rouge) */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="p-2.5 rounded-2xl border border-amber-300/90 dark:border-[#F5C451]/45 bg-amber-50/90 dark:bg-[#F5C451]/10 flex flex-col gap-0.5">
+            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-[#F5C451]">
+              <Crown className="w-3.5 h-3.5 shrink-0" />
+              <span>Top {EXCELLENCE_COUNT}</span>
+            </span>
+            <span className="text-[11px] font-extrabold text-amber-900 dark:text-amber-200 leading-tight">Zone d’excellence</span>
+          </div>
+          <div className="p-2.5 rounded-2xl border border-emerald-300/90 dark:border-emerald-500/45 bg-emerald-50/90 dark:bg-emerald-500/10 flex flex-col gap-0.5">
+            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+              <ArrowUp className="w-3.5 h-3.5 shrink-0 stroke-[2.8]" />
+              <span>Top {promoteLimit}</span>
+            </span>
+            <span className="text-[11px] font-extrabold text-emerald-900 dark:text-emerald-200 leading-tight">
+              {board.division === 5 ? 'Zone de maintien' : 'Zone de montée'}
+            </span>
+          </div>
+          <div className="p-2.5 rounded-2xl border border-rose-300/90 dark:border-rose-500/45 bg-rose-50/90 dark:bg-rose-500/10 flex flex-col gap-0.5">
+            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-rose-700 dark:text-rose-300">
+              <ArrowDown className="w-3.5 h-3.5 shrink-0 stroke-[2.8]" />
+              <span>16 derniers</span>
+            </span>
+            <span className="text-[11px] font-extrabold text-rose-900 dark:text-rose-200 leading-tight">Zone de relégation</span>
+          </div>
         </div>
 
-        {/* Classement : une carte par élève */}
+        <div className="flex items-center justify-between px-0.5">
+          <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">
+            {board.division === 5
+              ? `Les ${promoteLimit} premiers restent en Perle (Top ${EXCELLENCE_COUNT} Excellence)`
+              : `Les ${promoteLimit} premiers montent en grade · Top ${EXCELLENCE_COUNT} Excellence`}
+          </span>
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">{size} élève{size > 1 ? 's' : ''}</span>
+        </div>
+
+        {/* Classement : séparé visuellement en 3 zones (Excellence en Jaune Gold, Montée en Vert, Relégation en Rouge) */}
         <ol className="space-y-1.5">
-          {board.rows.map((row) => {
-            const zone = zoneOf(board, row.rank, size);
+          {size > 0 && (
+            <li aria-hidden="true" className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/20 border border-amber-400/60 dark:border-[#F5C451]/50 text-amber-800 dark:text-[#F5C451]">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider">
+                <Crown className="w-3.5 h-3.5 shrink-0" />
+                <span>Zone d’excellence · {EXCELLENCE_COUNT} premiers</span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase">
+                <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
+                <span>{board.division === 5 ? 'Élite Perle' : 'Montée en grade'}</span>
+              </span>
+            </li>
+          )}
+          {board.rows.map((row, idx) => {
+            const zone = zoneOf(board, row.rank);
+            const isLastOfExcellence = row.rank === EXCELLENCE_COUNT || (row.rank < EXCELLENCE_COUNT && idx === size - 1);
+            const isLastOfPromotion = row.rank === promoteLimit || (row.rank > EXCELLENCE_COUNT && row.rank < promoteLimit && idx === size - 1);
+
+            const rowZoneStyle = zone === 'excellence'
+              ? (row.me
+                  ? 'bg-gradient-to-r from-amber-100/95 via-sky-50 to-amber-50/90 dark:from-[#F5C451]/25 dark:via-sky-500/15 dark:to-[#0F1626] border-2 border-[#F5C451] border-l-4 border-l-[#F5C451] shadow-sm shadow-amber-500/10'
+                  : 'bg-gradient-to-r from-amber-50/90 via-amber-50/35 to-white dark:from-[#F5C451]/14 dark:via-[#F5C451]/[0.05] dark:to-[#0F1626] border border-amber-300/80 dark:border-[#F5C451]/40 border-l-4 border-l-[#F5C451]')
+              : (zone === 'up' || zone === 'keep')
+                ? (row.me
+                    ? 'bg-gradient-to-r from-emerald-100/95 via-sky-50 to-emerald-50/90 dark:from-emerald-500/25 dark:via-sky-500/15 dark:to-[#0F1626] border-2 border-emerald-400 border-l-4 border-l-emerald-500 shadow-sm shadow-emerald-500/10'
+                    : 'bg-gradient-to-r from-emerald-50/85 via-emerald-50/25 to-white dark:from-emerald-500/14 dark:via-emerald-500/[0.05] dark:to-[#0F1626] border border-emerald-300/80 dark:border-emerald-500/40 border-l-4 border-l-emerald-500')
+                : (row.me
+                    ? 'bg-gradient-to-r from-rose-100/95 via-sky-50 to-rose-50/90 dark:from-rose-500/25 dark:via-sky-500/15 dark:to-[#0F1626] border-2 border-rose-400 border-l-4 border-l-rose-500 shadow-sm shadow-rose-500/10'
+                    : 'bg-gradient-to-r from-rose-50/85 via-rose-50/25 to-white dark:from-rose-500/14 dark:via-rose-500/[0.05] dark:to-[#0F1626] border border-rose-300/80 dark:border-rose-500/40 border-l-4 border-l-rose-500');
+
+            const rankBadgeStyle = zone === 'excellence'
+              ? 'bg-amber-400/25 text-amber-800 border-amber-400/70 dark:bg-[#F5C451]/20 dark:text-[#F5C451] dark:border-[#F5C451]/55'
+              : (zone === 'up' || zone === 'keep')
+                ? 'bg-emerald-500/15 text-emerald-800 border-emerald-400/60 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/50'
+                : 'bg-rose-500/15 text-rose-800 border-rose-400/60 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/50';
+
             return (
-              <li
-                key={`${row.rank}-${row.name}`}
-                className={`relative isolate overflow-hidden flex items-center gap-3 px-3 py-2.5 rounded-2xl ${row.me
-                  ? 'bg-sky-50 dark:bg-sky-400/10 border-[1.5px] border-sky-400'
-                  : 'bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-transparent'}`}
-              >
-                {/* Ligue gelée : givre sur ta ligne */}
-                {row.me && board.frozen && <FrostOverlay className="-z-10" />}
-                {/* Toucher un élève ouvre sa fiche (XP au total, amis, abonnement, ID) */}
-                {onOpenPlayer && row.konanId && (
-                  <button type="button" onClick={() => onOpenPlayer(row.konanId!)} aria-label={`Voir le profil de ${row.name}`} className="absolute inset-0 z-10 rounded-2xl cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400" />
-                )}
-                <span className={`w-6 text-center text-[15px] font-extrabold tabular-nums ${row.me ? 'text-sky-700 dark:text-sky-300' : rankColor(row.rank, zone)}`}>{row.rank}</span>
-                <AnimatedAvatar
-                  config={row.avatarConfig}
-                  seed={row.konanId || row.name}
-                  size={40}
-                  className={row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}
-                  alt={`Personnage de ${row.name}`}
-                />
-                <span className="min-w-0 flex-1">
-                  {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
-                  <span className={`block truncate text-sm ${row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
-                    : row.tier === 'pro' ? 'gold-shimmer-text font-black'
-                      : 'font-bold text-slate-900 dark:text-white'
-                    }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
-                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                    {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
+              <React.Fragment key={`${row.rank}-${row.name}`}>
+                <li
+                  className={`relative isolate overflow-hidden flex items-center gap-3 px-3 py-2.5 rounded-2xl ${rowZoneStyle}`}
+                >
+                  {/* Ligue gelée : givre sur ta ligne */}
+                  {row.me && board.frozen && <FrostOverlay className="-z-10" />}
+                  {/* Toucher un élève ouvre sa fiche (XP au total, amis, abonnement, ID) */}
+                  {onOpenPlayer && row.konanId && (
+                    <button type="button" onClick={() => onOpenPlayer(row.konanId!)} aria-label={`Voir le profil de ${row.name}`} className="absolute inset-0 z-10 rounded-2xl cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400" />
+                  )}
+                  <span className={`w-7 h-7 rounded-xl border flex items-center justify-center text-[13px] font-black tabular-nums shrink-0 ${rankBadgeStyle}`}>
+                    {row.rank}
                   </span>
-                </span>
-                <span className={`relative inline-flex items-center gap-1 text-sm font-extrabold tabular-nums ${row.me && board.frozen ? 'text-cyan-700 dark:text-cyan-200' : 'text-slate-900 dark:text-white'}`}>
-                  {row.me && board.frozen && <Snowflake size={15} />}
-                  {row.xp} XP
-                </span>
-              </li>
+                  <AnimatedAvatar
+                    config={row.avatarConfig}
+                    seed={row.konanId || row.name}
+                    size={40}
+                    className={
+                      zone === 'excellence'
+                        ? 'ring-2 ring-[#F5C451]'
+                        : (zone === 'up' || zone === 'keep')
+                          ? 'ring-2 ring-emerald-400/80'
+                          : 'ring-2 ring-rose-400/80'
+                    }
+                    alt={`Personnage de ${row.name}`}
+                  />
+                  <span className="min-w-0 flex-1">
+                    {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
+                    <span className={`block truncate text-sm ${row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
+                      : row.tier === 'pro' ? 'gold-shimmer-text font-black'
+                        : 'font-bold text-slate-900 dark:text-white'
+                      }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400 truncate">
+                      {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
+                    </span>
+                  </span>
+                  <span className="shrink-0 flex flex-col items-end gap-0.5">
+                    <span className={`relative inline-flex items-center gap-1 text-sm font-extrabold tabular-nums ${row.me && board.frozen ? 'text-cyan-700 dark:text-cyan-200' : 'text-slate-900 dark:text-white'}`}>
+                      {row.me && board.frozen && <Snowflake size={15} />}
+                      {row.xp} XP
+                    </span>
+                    {zone === 'excellence' ? (
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/50 text-[9px] font-black uppercase tracking-wider text-amber-800 dark:text-[#F5C451]">
+                        <Crown className="w-2.5 h-2.5" />
+                        <span>Excellence</span>
+                      </span>
+                    ) : (zone === 'up' || zone === 'keep') ? (
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-[9px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+                        <ArrowUp className="w-2.5 h-2.5 stroke-[2.8]" />
+                        <span>{zone === 'keep' ? 'Maintien' : 'Montée'}</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/40 text-[9px] font-black uppercase tracking-wider text-rose-800 dark:text-rose-300">
+                        <ArrowDown className="w-2.5 h-2.5 stroke-[2.8]" />
+                        <span>Relégation</span>
+                      </span>
+                    )}
+                  </span>
+                </li>
+
+                {/* Séparateur Duolingo après les 5 premiers : fin de la Zone d'excellence (or) → début de la Zone de montée (vert) */}
+                {isLastOfExcellence && (
+                  <li aria-hidden="true" className="py-1.5 space-y-1.5">
+                    <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/50 dark:border-[#F5C451]/45 text-amber-800 dark:text-[#F5C451] text-[10.5px] font-black uppercase tracking-wider">
+                      <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
+                      <span>Zone d’excellence · {EXCELLENCE_COUNT} premiers</span>
+                      <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
+                    </div>
+                    <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-emerald-500/15 border border-emerald-400/60 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-300">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider">
+                        <ArrowUp className="w-3.5 h-3.5 stroke-[2.8] shrink-0" />
+                        <span>{board.division === 5 ? `Zone de maintien · ${promoteLimit} premiers` : `Zone de montée · ${promoteLimit} premiers`}</span>
+                      </span>
+                      <span className="text-[10px] font-extrabold uppercase">Places 6 à {promoteLimit}</span>
+                    </div>
+                  </li>
+                )}
+
+                {/* Séparateur Duolingo après les 15 premiers : fin de la Zone de montée (vert) → début de la Zone de relégation (rouge) */}
+                {(isLastOfPromotion || (size <= EXCELLENCE_COUNT && idx === size - 1)) && (
+                  <li aria-hidden="true" className="py-1.5 space-y-1.5">
+                    {size > EXCELLENCE_COUNT && (
+                      <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/60 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-300 text-[10.5px] font-black uppercase tracking-wider">
+                        <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
+                        <span>{board.division === 5 ? `Zone de maintien · les ${promoteLimit} premiers restent en Perle` : `Zone de montée · les ${promoteLimit} premiers montent en grade`}</span>
+                        <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
+                      </div>
+                    )}
+                    <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-rose-500/15 border border-rose-400/60 dark:border-rose-500/50 text-rose-800 dark:text-rose-300 text-[10.5px] font-black uppercase tracking-wider">
+                      <ArrowDown className="w-3.5 h-3.5 stroke-[2.8]" />
+                      <span>Zone de relégation · les 16 derniers descendent</span>
+                      <ArrowDown className="w-3.5 h-3.5 stroke-[2.8]" />
+                    </div>
+                  </li>
+                )}
+              </React.Fragment>
             );
           })}
           {!size && <li className="px-3 py-6 rounded-2xl bg-white dark:bg-[#0F1626] text-center text-sm text-slate-500">Ton groupe se remplit : gagne des XP pour lancer le classement !</li>}
