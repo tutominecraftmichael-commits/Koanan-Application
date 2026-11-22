@@ -18,6 +18,8 @@ interface Props {
   grace?: boolean;
   /** Le paiement est ouvert : un abonné peut prolonger. Sinon (Pro offert), pas de bouton « Prolonger ». */
   canRenew?: boolean;
+  /** Pro vendu pour la classe de l'élève ? (seulement les classes qui ont les cours et les devoirs) */
+  proAvailable?: boolean;
   onClose: () => void;
   onChoosePro: (period: 'mois' | 'semestre') => void;
   onJoinPlus: () => void;
@@ -40,7 +42,7 @@ const Feature: React.FC<{ title: string; detail?: string; muted?: boolean }> = (
   </li>
 );
 
-export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, onClose, onChoosePro, onJoinPlus }) => {
+export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, proAvailable = true, onClose, onChoosePro, onJoinPlus }) => {
   const [billing, setBilling] = useState<BillingPeriod>('semester');
   const isPro = currentTier === 'pro';
   const isPlus = currentTier === 'plus';
@@ -125,7 +127,13 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
                 {PRO.features.map((f) => <Feature key={f.title} title={f.title} detail={f.detail} />)}
               </ul>
               {isPro && !canRenew && <p className="mt-6 text-center text-xs font-bold text-slate-600 dark:text-slate-300">Ta formule actuelle</p>}
-              {!isPlus && !(isPro && !canRenew) && (
+              {!isPlus && !(isPro && !canRenew) && !proAvailable && (
+                <div className="mt-6 rounded-2xl px-4 py-3 text-center bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10">
+                  <p className="text-[13px] font-bold text-slate-900 dark:text-white inline-flex items-center gap-1.5"><Clock className="w-4 h-4 text-amber-700 dark:text-amber-300" /> Bientôt pour ta classe</p>
+                  <p className="mt-1 text-[11.5px] text-slate-600 dark:text-slate-400">KONAN Pro est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts. Ta classe arrive : tu n’as rien à payer d’ici là.</p>
+                </div>
+              )}
+              {!isPlus && !(isPro && !canRenew) && proAvailable && (
                 <button type="button" onClick={() => onChoosePro(period)}
                   className="mt-6 w-full py-3.5 rounded-2xl text-sm font-black tracking-wide bg-slate-900 text-white hover:bg-slate-800 dark:bg-amber-300 dark:text-slate-950 dark:hover:bg-amber-200 transition-colors inline-flex items-center justify-center gap-2 shadow-sm">
                   {isPro ? (grace ? 'M’abonner pour la suite' : 'Prolonger mon abonnement') : PAYMENTS_OPEN ? 'Devenir KONAN Pro' : 'Activer KONAN Pro (offert)'} <ArrowUpRight className="w-4 h-4" />

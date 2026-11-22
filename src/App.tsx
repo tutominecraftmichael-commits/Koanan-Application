@@ -107,6 +107,8 @@ import { DashboardOverview } from './features/dashboard/DashboardOverview';
 import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
+import { isExamPrepOpenFor } from './lib/featureFlags';
+import { PAYMENTS_OPEN } from './lib/subscriptionPlans';
 import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
@@ -320,6 +322,10 @@ export function App() {
   // est celle qui suit les changements (import d'emploi du temps, autre appareil) ; le compte en garde une
   // copie qui peut être ancienne. Avant, certains écrans lisaient l'une et d'autres l'autre.
   const studentGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel);
+  // KONAN Pro est vendu seulement aux classes qui ont les cours guidés et les devoirs (choix du fondateur,
+  // 2026-11-22) : les autres ne peuvent pas payer pour un Pro presque vide. Le serveur refuse aussi.
+  const proSellableForClass = isExamPrepOpenFor(studentGradeRaw);
+  const PRO_NOT_FOR_CLASS_TEXT = 'KONAN Pro arrive bientôt pour ta classe. Il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts.';
   const effectiveClassLabel = studentClassLabel(
     studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
@@ -1554,10 +1560,18 @@ export function App() {
           return;
         }
         if (serverTier !== 'pro') {
+          if (!proSellableForClass) { showToast(PRO_NOT_FOR_CLASS_TEXT); return; }
           setIsSubscriptionOpen(true);
           return;
         }
         setActiveView('pro-wizard');
+        return;
+      }
+      // Paiement ouvert dans l'appli mais réponse du serveur pas encore là (ou KONAN_PAYMENTS pas encore
+      // allumé) : on n'offre plus Pro gratuitement, on ouvre la fiche de paiement (chargement / « bientôt »)
+      if (PAYMENTS_OPEN) {
+        if (!proSellableForClass) { showToast(PRO_NOT_FOR_CLASS_TEXT); return; }
+        setIsSubscriptionOpen(true);
         return;
       }
       setState(prev => ({
@@ -2063,8 +2077,12 @@ export function App() {
     if (payload.launchProWizard && (payload.planTier === 'pro' || payload.planTier === 'plus')) {
       // Mode payant sans abonnement : on propose de payer au lieu d'ouvrir le guide Pro
       if (paidModeRef.current.paidMode && paidModeRef.current.serverTier !== 'pro') {
-        showToast('Emploi du temps enregistré ! Pour KONAN Pro, choisis ta formule.');
         setActiveView('dashboard');
+        if (!isExamPrepOpenFor(payload.preferences?.gradeLevel || studentGradeRaw)) {
+          showToast('Emploi du temps enregistré ! ' + PRO_NOT_FOR_CLASS_TEXT);
+          return;
+        }
+        showToast('Emploi du temps enregistré ! Pour KONAN Pro, choisis ta formule.');
         setIsSubscriptionOpen(true);
         return;
       }
@@ -3296,6 +3314,7 @@ export function App() {
             provisional={Boolean(paidMode && subscriptionInfo?.status?.provisional)}
             grace={Boolean(paidMode && subscriptionInfo?.status?.grace)}
             canRenew={paidMode}
+            proAvailable={proSellableForClass}
             onClose={() => setIsPlansOpen(false)}
             onChoosePro={(period) => {
               setIsPlansOpen(false);
@@ -3322,6 +3341,7 @@ export function App() {
         <Suspense fallback={null}>
           <SubscriptionView
             initialPeriod={subscriptionPeriod}
+            gradeLevel={tryResolveGradeLevel(studentGradeRaw) || ''}
             info={subscriptionInfo}
             loading={subscriptionLoading}
             loadError={subscriptionError}

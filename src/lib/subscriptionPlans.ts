@@ -159,11 +159,11 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     tagline: 'Pour progresser vite',
     prices: { monthly: 2500, semester: 9950 },
     includesLabel: 'Tout le Gratuit, plus :',
-    note: 'Offert pendant le lancement', // « Paiement par Wave » quand PAYMENTS_OPEN
+    note: 'Paiement par Wave',
     available: true,
     recommended: true,
     features: [
-      { title: 'Préparation aux devoirs (Seconde, Première et Terminale)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
+      { title: 'Préparation aux devoirs (Seconde, Première, Terminale et Licence 1 ENTD)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
       { title: 'Énergie illimitée ∞', detail: 'Autant de séries d’exercices que tu veux.' },
       { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONAN te corrige : 3 vocaux par jour.' },
       { title: 'Time Blocking', detail: 'De longs blocs en mode concentration, sans distraction.' },
@@ -197,9 +197,10 @@ export const PLUS_VISIBLE = false;
 /**
  * Paiement ouvert aux élèves ? Tant que c'est false, KONAN Pro est OFFERT (activation libre, comme avant) :
  * la fiche des tarifs l'annonce « Offert pendant le lancement ». À passer à true en même temps que KONAN_PAYMENTS=on
- * et PAYMENTS_ALLOWED_IN_CODE (api/_subscriptionRules.js). Éteint le 2026-11-16 (paiements à retravailler).
+ * et PAYMENTS_ALLOWED_IN_CODE (api/_subscriptionRules.js). Éteint le 2026-11-16, rallumé le 2026-11-22
+ * (Pro payant, vendu seulement aux classes qui ont les cours : voir PRO_GRADES côté serveur).
  */
-export const PAYMENTS_OPEN = false;
+export const PAYMENTS_OPEN = true;
 
 /** Formules affichées aux élèves. */
 export const VISIBLE_DISPLAY_PLANS: DisplayPlan[] = DISPLAY_PLANS.filter((p) => p.id !== 'plus' || PLUS_VISIBLE);
