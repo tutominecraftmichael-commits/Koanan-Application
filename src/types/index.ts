@@ -243,19 +243,17 @@ export interface PlusInvitationNotification {
 }
 
 /**
- * XP et réputation (gamification, étape 1). Voir src/lib/gamification/gamification.ts pour les règles.
+ * XP (gamification). Voir src/lib/gamification/gamification.ts pour les règles.
+ * La réputation et la ligue gelée ont été supprimées le 2026-11-22.
  */
 export interface GamificationEvent {
   at: string;          // ISO
-  kind: 'xp' | 'reputation';
+  kind: 'xp';
   amount: number;      // + ou −
   reason: string;      // texte court affiché à l'élève
 }
 export interface GamificationState {
   xp: number;
-  reputation: number;                // 0 à 100 (%)
-  reputationCheckedDate?: string;    // dernier jour déjà compté (YYYY-MM-DD)
-  reputationUpdatedAt?: string;      // ISO : dernier vrai calcul (un appareil neuf ne remplace pas la vraie réputation)
   awardedKeys: string[];             // séances déjà récompensées (« idSéance_AAAA-MM-JJ »)
   history: GamificationEvent[];      // derniers gains et pertes (les plus récents d'abord)
   updatedAt?: string;                // ISO : la version la plus récente gagne entre deux appareils
@@ -264,8 +262,6 @@ export interface GamificationState {
   energyAt?: string;
   /** Séries d'exercices enchaînées : la prochaine rapporte le double (15 → 30 → 60 → 120 XP) */
   seriesChain?: { count: number; lastEndAt: string };
-  /** Séries d'entraînement qui ont déjà rapporté de la réputation ce jour-là (+1 % chacune, 5 par jour au plus) */
-  trainingRep?: { day: string; count: number };
   /** Gains d'XP pas encore confirmés par le serveur de la ligue (envoyés dès que possible) */
   pendingEvents?: LeagueEvent[];
 }

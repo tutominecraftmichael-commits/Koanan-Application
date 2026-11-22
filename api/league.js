@@ -3,7 +3,7 @@
  * Endpoint : POST /api/league   (en-tête Authorization: Bearer <jeton Firebase de l'élève>)
  *
  * Corps JSON : { events: [ { id, kind: 'lesson'|'series', amount, at, durationMinutes | level, questions, mistakes, seconds } ],
- *                reputation, displayName, classLabel, gradeLevel, avatar }
+ *                displayName, classLabel, gradeLevel, avatar }
  * Réponse    : { success, accepted: [id], rejected: [{ id, reason }], board, gold }
  *
  * Le serveur recompte et borne chaque gain d'XP (api/_leagueRules.js) : c'est LUI qui fait foi pour le
@@ -24,7 +24,7 @@ import {
 import { buyAvatarItem, getAvatarState, sanitizeAvatarConfig, saveAvatarConfig } from './_avatar.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
-  settleServerReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
+  isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
 } from './_leagueRules.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -76,17 +76,14 @@ async function assignGroup(db, uid, weekId, division) {
 async function buildBoard(db, player, nowMs) {
   const division = clampDivision(player.division);
   const base = {
-    // Le classement se voit toujours ; sous 80 % de réputation, seule la division est gelée
     eligible: isParticipant(player),
     reason: player.hasCourses === false ? 'no_courses' : null,
-    frozen: isParticipant(player) && isFrozen(player),
-    reputation: player.reputation,
     division,
     divisionName: DIVISIONS[division - 1].name,
     weekId: weekIdOf(nowMs),
     endsAt: weekEndMs(nowMs),
     weekXp: player.weekXp || 0,
-    // Total de tous les XP gagnés (toutes semaines et divisions, gel compris) : affiché dans le profil
+    // Total de tous les XP gagnés (toutes semaines et divisions) : affiché dans le profil
     totalXp: player.totalXp || 0,
     promoteCount: division === DIVISIONS.length ? 0 : PROMOTE_COUNT,
     keepCount: division === DIVISIONS.length ? PROMOTE_COUNT : 0,
@@ -118,7 +115,7 @@ async function buildBoard(db, player, nowMs) {
 }
 
 /**
- * Cœur de la ligue pour un élève : XP vérifiés, réputation bornée, nom (3 mois entre deux changements),
+ * Cœur de la ligue pour un élève : XP vérifiés, nom (3 mois entre deux changements),
  * photo, classe, puis place dans un groupe et classement. `user` = fiche users/{uid} (formule, classe).
  */
 export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts = {}) {
@@ -132,18 +129,12 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
 
   const result = await db.runTransaction(async (tx) => {
     const snap = await tx.get(playerRef);
-    const prev = snap.exists ? snap.data() : { uid, division: 1, reputation: 100 };
+    // Anciennes fiches : la réputation et le gel ont été supprimés le 2026-11-22 (champs effacés à la prochaine écriture)
+    const { reputation: _rep, repCredits: _repCredits, repV2: _repV2, dayRepSeries: _dayRepSeries, ...prev } =
+      snap.exists ? snap.data() : { uid, division: 1 };
     if (prev.weekId && prev.weekId !== weekId) prev.groupId = null; // nouvelle semaine : nouveau groupe
-    // Énergie vérifiée seulement quand la formule est sûre (paiement allumé) ; pendant le gel, une leçon vaut +5 %
-    const xpOpts = { nowMs, planTier, enforceEnergy: paymentsEnabled(), lessonRepCredit: isFrozen(prev) ? 5 : 1 };
-    const counted = applyXpEvents(prev, body.events, xpOpts);
-    // Réputation : chaque séance ou série vérifiée donne un crédit de hausse, gardé pour plus tard
-    // (l'appli compte parfois le +1 % d'une séance le lendemain). Première fois après la correction : reprise telle quelle.
-    const rep = settleServerReputation(prev.reputation, body.reputation, prev.repCredits, counted.repCredits, snap.exists && !prev.repV2);
-    const reputation = rep.reputation;
-    // Ligue gelée (réputation de 80 % ou moins APRÈS ces gains) : XP gardés dans le total, pas dans le classement.
-    // La leçon qui fait repasser au-dessus de 80 % compte donc déjà dans le classement.
-    const applied = isFrozen({ reputation }) ? applyXpEvents(prev, body.events, { ...xpOpts, frozen: true }) : counted;
+    // Énergie vérifiée seulement quand la formule est sûre (paiement allumé)
+    const applied = applyXpEvents(prev, body.events, { nowMs, planTier, enforceEnergy: paymentsEnabled() });
     // Nom : changement accepté seulement 3 mois après le précédent
     let displayName = prev.displayName || wantedName;
     let nameChangedAt = prev.nameChangedAt || null;
@@ -156,10 +147,6 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       ...applied.player,
       uid,
       division: clampDivision(prev.division),
-      reputation,
-      repCredits: rep.credits,
-      // Reprise unique faite seulement quand l'appli a envoyé sa réputation
-      repV2: Boolean(prev.repV2 || body.reputation !== undefined || !snap.exists),
       displayName,
       nameChangedAt,
       avatar,
@@ -175,8 +162,7 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       updatedAt: new Date(nowMs).toISOString(),
     };
     tx.set(playerRef, next);
-    // Quête en duo : tous les XP vérifiés (leçons et entraînement) comptent dans la quête active,
-    // même si la ligue est gelée (seul le classement de la ligue reste bloqué à <= 80 %).
+    // Quête en duo : tous les XP vérifiés (leçons et entraînement) comptent dans la quête active
     const validQuestXp = Math.max(0, Number(applied.xpGained) || 0);
     return { next, accepted: applied.accepted, rejected: applied.rejected, validQuestXp };
   });
@@ -186,7 +172,7 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
     await recordQuestXp(db, uid, result.validQuestXp, nowMs).catch((e) => console.warn('[quests/xp]', e?.message || e));
   }
 
-  // Place dans un groupe : toute classe admise dans la ligue (quelle que soit la réputation)
+  // Place dans un groupe : toute classe admise dans la ligue
   let player = result.next;
   if (isParticipant(player) && !player.groupId) {
     try {

@@ -1668,7 +1668,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               M’arrêter ici
             </button>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Si tu t’arrêtes, la séance ne compte pas encore : rattrape-la avant minuit pour garder ta réputation. Tu reprendras là où tu t’es arrêté.
+              Si tu t’arrêtes, la séance ne compte pas encore : rattrape-la avant minuit pour gagner tes XP. Tu reprendras là où tu t’es arrêté.
             </p>
           </>
         )}

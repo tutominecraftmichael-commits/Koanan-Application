@@ -9,21 +9,19 @@ import type { AvatarConfig } from '../lib/avatar/avatarCatalog';
 export interface LeagueRow { rank: number; name: string; classLabel: string; avatar?: string; avatarConfig?: AvatarConfig | null; xp: number; me: boolean; tier?: 'free' | 'pro' | 'plus'; /** ID KONAN public : ouvre la fiche de l'élève */ konanId?: string }
 export interface LeagueBoard {
   eligible: boolean;
-  /** Pourquoi l'élève n'est pas dans la ligue : réputation trop basse ou classe sans cours (LMD, BTS…) */
-  reason?: 'reputation' | 'no_courses' | null;
-  /** Réputation de 80 % ou moins : classement visible, mais division gelée (ni montée ni descente) */
-  frozen?: boolean;
-  reputation: number;
+  /** Pourquoi l'élève n'est pas dans la ligue : classe non admise (collège, classe inconnue) */
+  reason?: 'no_courses' | null;
   division: number;
   divisionName: string;
   weekId: string;
   endsAt: number;
   weekXp: number;
-  /** Total de tous les XP gagnés (toutes semaines et divisions, gel compris), pour le profil. */
+  /** Total de tous les XP gagnés (toutes semaines et divisions), pour le profil. */
   totalXp?: number;
   promoteCount: number;
   keepCount: number;
   demoteCount: number | null;
+  /** « frozen » ne peut venir que d'une semaine terminée avant la suppression du gel (affiché comme « stay ») */
   lastResult: { weekId: string; rank: number; size: number; movement: 'up' | 'down' | 'stay' | 'frozen'; fromDivision: number; toDivision: number; weekXp: number } | null;
   rows: LeagueRow[];
 }
@@ -36,7 +34,7 @@ export interface LeagueSyncResult {
   gold?: number;
 }
 
-export async function callLeague(body: { events: LeagueEvent[]; reputation?: number; displayName?: string; classLabel?: string; gradeLevel?: string; avatar?: string }): Promise<LeagueSyncResult> {
+export async function callLeague(body: { events: LeagueEvent[]; displayName?: string; classLabel?: string; gradeLevel?: string; avatar?: string }): Promise<LeagueSyncResult> {
   const user = auth?.currentUser;
   if (!user) return { success: false, error: 'connexion au compte pas encore prête' };
   const attempt = async (forceRefresh: boolean) => {

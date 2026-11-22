@@ -15,7 +15,7 @@
  *   - Relance sociale (« Encourager / Relancer ») : notification cloche + push téléphone.
  */
 import { FieldValue } from 'firebase-admin/firestore';
-import { isFrozen, leagueCol, weekIdOf } from './_leagueRules.js';
+import { leagueCol, weekIdOf } from './_leagueRules.js';
 import { publicCards, uidOfKonanId } from './_friends.js';
 import { sendPushToUser } from './_pushSend.js';
 
@@ -88,7 +88,7 @@ async function removeInviteNotice(db, targetUid, questId) {
 }
 
 /** Formate un document `friend_quests` pour le client (sans exposer les UID Firebase internes). */
-function serializeQuest(doc, viewerUid, partnerFrozen = false, avatarMap = null) {
+function serializeQuest(doc, viewerUid, avatarMap = null) {
   const isA = doc.userA?.uid === viewerUid;
   const me = isA ? doc.userA : doc.userB;
   const partner = isA ? doc.userB : doc.userA;
@@ -122,7 +122,6 @@ function serializeQuest(doc, viewerUid, partnerFrozen = false, avatarMap = null)
       avatarConfig: partnerAvatarConfig,
       accepted: Boolean(partner?.accepted),
       xpContributed: Number(partner?.xpContributed) || 0,
-      frozen: Boolean(partnerFrozen),
     },
     claimedByMe: claimedBy.includes(viewerUid),
     partnerClaimed: Boolean(partner?.uid && claimedBy.includes(partner.uid)),
@@ -193,16 +192,11 @@ async function hasActiveQuestSlot(db, uid, nowMs) {
  */
 export async function getQuestState(db, uid, nowMs = Date.now()) {
   const weekId = weekIdOf(nowMs);
-  const [gold, docs, lpSnap, inboxSnap] = await Promise.all([
+  const [gold, docs, inboxSnap] = await Promise.all([
     ensureUserGold(db, uid),
     loadAndExpireUserQuests(db, uid, nowMs),
-    leagueCol(db, 'league_players').doc(uid).get(),
     inboxCol(db).doc(uid).get(),
   ]);
-
-  const lp = lpSnap.exists ? lpSnap.data() : null;
-  const frozen = lp ? isFrozen(lp) : false;
-  const reputation = lp && Number.isFinite(lp.reputation) ? Number(lp.reputation) : 100;
 
   // Quête en cours (active ou terminée dans sa fenêtre de 6 jours) ou récompense non encore réclamée
   const currentActive = docs.find((q) => isOccupyingSlot(q, nowMs)) || null;
@@ -220,15 +214,6 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
   const expiredRaw = !activeRaw && !outgoingRaw && incomingRaw.length === 0
     ? docs.find((q) => q.status === 'expired' && nowMs - (Number(q.expiresAt) || 0) <= QUEST_DURATION_MS) || null
     : null;
-
-  let partnerFrozen = false;
-  if (activeRaw) {
-    const partnerUid = activeRaw.userA?.uid === uid ? activeRaw.userB?.uid : activeRaw.userA?.uid;
-    if (partnerUid) {
-      const pSnap = await leagueCol(db, 'league_players').doc(partnerUid).get();
-      if (pSnap.exists) partnerFrozen = isFrozen(pSnap.data());
-    }
-  }
 
   // Notifications de quête récentes (avec état frais pour les invitations et relances en attente)
   const pendingIncomingIds = new Set(incomingRaw.map((q) => q.id));
@@ -301,12 +286,10 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
     gold,
     weekId,
     weekEndsAt: activeRaw?.expiresAt || (nowMs + QUEST_DURATION_MS),
-    isFrozen: frozen,
-    reputation,
-    activeQuest: activeRaw ? serializeQuest(activeRaw, uid, partnerFrozen, avatarMap) : null,
-    outgoingQuest: outgoingRaw ? serializeQuest(outgoingRaw, uid, false, avatarMap) : null,
-    incomingQuests: incomingRaw.map((q) => serializeQuest(q, uid, false, avatarMap)),
-    expiredQuest: expiredRaw ? serializeQuest(expiredRaw, uid, false, avatarMap) : null,
+    activeQuest: activeRaw ? serializeQuest(activeRaw, uid, avatarMap) : null,
+    outgoingQuest: outgoingRaw ? serializeQuest(outgoingRaw, uid, avatarMap) : null,
+    incomingQuests: incomingRaw.map((q) => serializeQuest(q, uid, avatarMap)),
+    expiredQuest: expiredRaw ? serializeQuest(expiredRaw, uid, avatarMap) : null,
     questNotices,
   };
 }
@@ -419,7 +402,7 @@ export async function proposeFriendQuest(db, uid, friendKonanId, tierIdOrNow = D
     tag: `konan-quest-invite-${questId}`,
   });
 
-  return { status: 'pending', quest: serializeQuest(doc, uid, false) };
+  return { status: 'pending', quest: serializeQuest(doc, uid) };
 }
 
 /**
@@ -537,7 +520,7 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
     });
   }
 
-  return { status: 'active', quest: serializeQuest(updated.quest, uid, false) };
+  return { status: 'active', quest: serializeQuest(updated.quest, uid) };
 }
 
 /** Annule une proposition envoyée par l'utilisateur A tant qu'elle est en attente (`pending`). */
@@ -673,7 +656,7 @@ export async function claimQuestReward(db, uid, questId, nowMs = Date.now()) {
   return {
     gold: result.gold,
     rewardGold: result.rewardGold,
-    quest: serializeQuest(result.quest, uid, false),
+    quest: serializeQuest(result.quest, uid),
   };
 }
 

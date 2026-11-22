@@ -1,13 +1,10 @@
 /**
- * GAMIFICATION — ÉTAPE 1 : XP ET RÉPUTATION (document « Vision Globale de KONAN I »)
+ * GAMIFICATION : XP (document « Vision Globale de KONAN I »)
  *
  * XP d'une séance terminée, selon sa durée prévue :
  *   25 min → +35 XP · 45 min → +50 XP · 75 min → +90 XP · 2 h → +140 XP
  *   (durées intermédiaires : palier le plus proche)
- * Réputation (discipline) : démarre à 100 %.
- *   −5 % par séance manquée et non rattrapée avant minuit ; +1 % par séance faite, TOUT DE SUITE ;
- *   +1 % par série d'entraînement terminée (5 par jour au plus) ; jamais sous 0 ni au-dessus de 100.
- *   Ligue : à 80 % ou moins, l'élève voit le classement mais sa division est gelée (ni montée ni descente).
+ * La réputation (−5 % par séance manquée) et la ligue gelée sont supprimées depuis le 2026-11-22.
  * Tout est pur (aucun accès au stockage) : App.tsx applique le résultat à l'état de l'élève.
  */
 import type { GamificationEvent, GamificationState, LeagueEvent, StudySession } from '../../types';
@@ -26,25 +23,13 @@ export function clearPendingEvents(g0: GamificationState | undefined, ids: strin
   return { ...g, pendingEvents: (g.pendingEvents || []).filter((e) => !done.has(e.id)) };
 }
 
-export const REPUTATION_START = 100;
-export const REPUTATION_MISSED = -5;
-export const REPUTATION_DONE = 1;
-/** Pendant le gel (réputation de 80 % ou moins) : une leçon terminée rapporte +5 % pour aider à dégeler. */
-export const REPUTATION_DONE_FROZEN = 5;
-/** +1 % par leçon, ou +5 % tant que la réputation est à 80 % ou moins (ligue gelée). */
-export const lessonReputationGain = (reputation: number) => (reputation <= 80 ? REPUTATION_DONE_FROZEN : REPUTATION_DONE);
-/** Série d'entraînement terminée : +1 %, au plus 5 séries comptées par jour (le serveur applique la même limite). */
-export const REPUTATION_TRAINING = 1;
-export const REPUTATION_TRAINING_DAILY_MAX = 5;
-export const LEAGUE_MIN_REPUTATION = 80;
-/** Préfixe des clés de séances dont le +1 % de réputation est déjà donné (au moment où elles sont terminées). */
-const REP_KEY = 'R_';
+// Réputation et ligue gelée supprimées le 2026-11-22 (choix du fondateur : l'appli démarre, on ne pénalise pas
+// les nouveaux élèves). Les anciens champs (reputation, reputationCheckedDate…) des sauvegardes sont ignorés.
 const MAX_HISTORY = 40;
-const MAX_KEYS = 600; // séances récompensées + leurs clés de réputation « R_ »
-const DAY_MS = 24 * 60 * 60 * 1000;
+const MAX_KEYS = 600; // séances déjà récompensées
 
 export function defaultGamification(): GamificationState {
-  return { xp: 0, reputation: REPUTATION_START, awardedKeys: [], history: [] };
+  return { xp: 0, awardedKeys: [], history: [] };
 }
 
 /** État complet, même pour un ancien compte sans gamification. */
@@ -53,16 +38,13 @@ export function gamificationOf(g?: Partial<GamificationState> | null): Gamificat
   if (!g) return base;
   return {
     xp: Number.isFinite(g.xp) ? Math.max(0, Math.round(Number(g.xp))) : 0,
-    reputation: Number.isFinite(g.reputation) ? clampReputation(Number(g.reputation)) : REPUTATION_START,
-    reputationCheckedDate: g.reputationCheckedDate,
-    reputationUpdatedAt: g.reputationUpdatedAt,
-    awardedKeys: Array.isArray(g.awardedKeys) ? g.awardedKeys.map(String) : [],
-    history: Array.isArray(g.history) ? g.history.filter((e) => e && typeof e.amount === 'number') : [],
+    awardedKeys: Array.isArray(g.awardedKeys) ? g.awardedKeys.map(String).filter((k) => !k.startsWith('R_')) : [],
+    // Anciennes lignes « réputation » de l'historique : retirées
+    history: Array.isArray(g.history) ? g.history.filter((e) => e && typeof e.amount === 'number' && e.kind === 'xp') : [],
     updatedAt: g.updatedAt,
     energy: Number.isFinite(g.energy) ? Math.max(0, Math.min(ENERGY_MAX, Number(g.energy))) : undefined,
     energyAt: g.energyAt,
     seriesChain: g.seriesChain && Number.isFinite(g.seriesChain.count) ? g.seriesChain : undefined,
-    trainingRep: g.trainingRep && typeof g.trainingRep.day === 'string' && Number.isFinite(g.trainingRep.count) ? g.trainingRep : undefined,
     pendingEvents: Array.isArray(g.pendingEvents) ? g.pendingEvents.filter((e) => e && e.id && Number.isFinite(e.at)) : [],
   };
 }
@@ -183,31 +165,19 @@ export function finishSeries(
     level: seriesLevelFor(chainIndex).level, questions: total, mistakes: Math.max(0, Math.round(mistakes)),
     seconds: Math.max(0, Math.round((now.getTime() - startedAt.getTime()) / 1000)),
   };
-  // Réputation : l'entraînement aussi montre la discipline (+1 %, 5 séries comptées par jour au plus)
-  const today = ymdLocal(now);
-  const trainedToday = g.trainingRep?.day === today ? g.trainingRep.count : 0;
-  const repGain = trainedToday < REPUTATION_TRAINING_DAILY_MAX ? REPUTATION_TRAINING : 0;
-  const reputation = clampReputation(g.reputation + repGain);
-  const repEvents: GamificationEvent[] = reputation !== g.reputation
-    ? [{ at: now.toISOString(), kind: 'reputation', amount: reputation - g.reputation, reason: 'Série d’entraînement terminée' }]
-    : [];
   return {
     gamification: {
       ...g,
       xp: g.xp + gained,
-      reputation,
-      ...(repGain ? { reputationUpdatedAt: now.toISOString(), trainingRep: { day: today, count: trainedToday + 1 } } : {}),
       pendingEvents: withPending(g, [leagueEvent]),
       seriesChain: { count: Math.min(chainIndex, SERIES_LEVELS.length - 1), lastEndAt: now.toISOString() },
-      history: pushEvents(g.history, [event, ...repEvents]),
+      history: pushEvents(g.history, [event]),
       updatedAt: now.toISOString(),
     },
     gained,
     base,
   };
 }
-
-const clampReputation = (r: number) => Math.max(0, Math.min(100, Math.round(r)));
 
 /** XP d'une séance terminée selon sa durée (palier le plus proche de 25, 45, 75 ou 120 min). */
 export function lessonXp(durationMinutes: number): number {
@@ -234,10 +204,6 @@ export function lessonXpAfterMistakes(durationMinutes: number, mistakes?: number
 
 export function ymdLocal(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-function addDays(ymd: string, days: number): string {
-  const [y, m, d] = ymd.split('-').map(Number);
-  return ymdLocal(new Date(new Date(y, m - 1, d, 12).getTime() + days * DAY_MS));
 }
 
 function pushEvents(history: GamificationEvent[], events: GamificationEvent[]): GamificationEvent[] {
@@ -272,7 +238,7 @@ export function awardCompletedSessions(
     const key = sessionKey(s);
     if (done.has(key)) continue;
     done.add(key);
-    // Devoir rendu hors temps : la séance compte comme faite (réputation), mais ne rapporte aucun XP
+    // Devoir rendu hors temps : la séance compte comme faite, mais ne rapporte aucun XP
     if (s.noXp) {
       rewarded.push(s);
       events.push({ at: now.toISOString(), kind: 'xp', amount: 0, reason: 'Devoir rendu hors temps : pas de XP' });
@@ -288,20 +254,10 @@ export function awardCompletedSessions(
   }
   // Séance comptée même à 0 XP (beaucoup d'erreurs) : elle ne doit pas être récompensée une 2e fois
   if (!rewarded.length) return { gamification: g, gained: 0, sessions: [] };
-  // Réputation : +1 % tout de suite par séance faite (le calcul du soir ne la recompte pas : clé « R_ »)
-  for (const s of rewarded) done.add(REP_KEY + sessionKey(s));
-  // +1 % par séance, +5 % tant que la ligue est gelée (80 % ou moins)
-  let reputation = g.reputation;
-  for (let i = 0; i < rewarded.length; i++) reputation = clampReputation(reputation + lessonReputationGain(reputation));
-  if (reputation !== g.reputation) {
-    events.push({ at: now.toISOString(), kind: 'reputation', amount: reputation - g.reputation, reason: rewarded.length > 1 ? `${rewarded.length} séances faites` : 'Séance faite' });
-  }
   return {
     gamification: {
       ...g,
       xp: g.xp + gained,
-      reputation,
-      reputationUpdatedAt: now.toISOString(),
       awardedKeys: [...done].slice(-MAX_KEYS),
       history: pushEvents(g.history, events),
       pendingEvents: withPending(g, league),
@@ -313,88 +269,8 @@ export function awardCompletedSessions(
 }
 
 /**
- * Compte la réputation des jours terminés (jusqu'à hier inclus) qui ne l'ont pas encore été.
- * - Séances datées de ce jour : faite → +1 %, manquée (non faite, non expirée) → −5 %.
- * - Jour après le dernier jour du planning (l'élève n'a pas ouvert KONAN) : les séances du même jour de
- *   la semaine comptent comme manquées.
- * - Premier passage : on part d'aujourd'hui (aucune pénalité rétroactive).
- * - Jour où l'élève a terminé tout son programme en avance (cycleCompletedDate) : rien ne compte.
- */
-export function settleReputation(
-  g0: GamificationState | undefined,
-  sessions: StudySession[],
-  now: Date = new Date(),
-  cycleCompletedDate?: string,
-): { gamification: GamificationState; changed: boolean; missed: number; done: number } {
-  const g = gamificationOf(g0);
-  const today = ymdLocal(now);
-  const yesterday = addDays(today, -1);
-  if (!g.reputationCheckedDate) {
-    // Point de départ seulement (sans date de calcul) : la vraie réputation d'un autre appareil reste prioritaire
-    return { gamification: { ...g, reputationCheckedDate: yesterday }, changed: true, missed: 0, done: 0 };
-  }
-  if (g.reputationCheckedDate >= yesterday) return { gamification: g, changed: false, missed: 0, done: 0 };
-  // Planning pas encore chargé : on attend (sinon les jours seraient comptés sans leurs séances)
-  if (!sessions || sessions.length === 0) return { gamification: g, changed: false, missed: 0, done: 0 };
-
-  const list = (sessions || []).filter((s) => s && !s.isExpired);
-  const repGiven = new Set(g.awardedKeys.filter((k) => k.startsWith(REP_KEY)));
-  const lastPlanned = list.reduce((max, s) => (s.date && s.date > max ? s.date : max), '');
-  let reputation = g.reputation;
-  let missed = 0;
-  let done = 0;
-  const events: GamificationEvent[] = [];
-  // Au plus 60 jours comptés d'un coup (élève absent très longtemps)
-  let day = addDays(g.reputationCheckedDate, 1);
-  const firstAllowed = addDays(yesterday, -59);
-  if (day < firstAllowed) day = firstAllowed;
-  for (; day <= yesterday; day = addDays(day, 1)) {
-    if (cycleCompletedDate === day) continue;
-    const dated = list.filter((s) => s.date === day);
-    let dayMissed = 0;
-    let dayDone = 0;
-    if (dated.length) {
-      for (const s of dated) {
-        // Séance faite : +1 %, sauf si elle l'a déjà rapporté au moment où elle a été terminée
-        if (s.completed) { if (!repGiven.has(REP_KEY + sessionKey(s))) dayDone += 1; }
-        else dayMissed += 1;
-      }
-    } else if (lastPlanned && day > lastPlanned) {
-      const [y, m, d] = day.split('-').map(Number);
-      const dow = (new Date(y, m - 1, d, 12).getDay() + 6) % 7;
-      dayMissed = list.filter((s) => s.dayOfWeek === dow).length;
-    }
-    if (!dayMissed && !dayDone) continue;
-    const before = reputation;
-    // Manquées d'abord, puis faites (+1 %, ou +5 % si la journée a fait passer à 80 % ou moins)
-    reputation = clampReputation(reputation + dayMissed * REPUTATION_MISSED);
-    for (let i = 0; i < dayDone; i++) reputation = clampReputation(reputation + lessonReputationGain(reputation));
-    missed += dayMissed;
-    done += dayDone;
-    if (reputation !== before) {
-      const parts = [dayDone ? `${dayDone} faite${dayDone > 1 ? 's' : ''}` : '', dayMissed ? `${dayMissed} manquée${dayMissed > 1 ? 's' : ''}` : ''].filter(Boolean);
-      events.push({ at: now.toISOString(), kind: 'reputation', amount: reputation - before, reason: `Séances du ${day.slice(8, 10)}/${day.slice(5, 7)} : ${parts.join(', ')}` });
-    }
-  }
-  return {
-    gamification: {
-      ...g,
-      reputation,
-      reputationCheckedDate: yesterday,
-      reputationUpdatedAt: now.toISOString(),
-      history: pushEvents(g.history, events),
-      updatedAt: now.toISOString(),
-    },
-    changed: true,
-    missed,
-    done,
-  };
-}
-
-/**
  * Fusion entre deux appareils (ou appareil ↔ compte) :
  * - XP : le plus grand total ; séances récompensées réunies (jamais deux fois les XP d'une même séance) ;
- * - réputation : celle du dernier vrai calcul (un appareil neuf, encore à 100 %, ne l'écrase jamais) ;
  * - historique : réuni, sans doublon, du plus récent au plus ancien.
  */
 export function mergeGamification(local?: Partial<GamificationState> | null, cloud?: Partial<GamificationState> | null): GamificationState | undefined {
@@ -404,11 +280,6 @@ export function mergeGamification(local?: Partial<GamificationState> | null, clo
   const a = gamificationOf(local);
   const b = gamificationOf(cloud);
   const time = (iso?: string) => Date.parse(iso || '') || 0;
-  const rep = time(a.reputationUpdatedAt) >= time(b.reputationUpdatedAt) ? a : b;
-  // Sans aucun calcul des deux côtés : on garde le point de départ le plus ancien (aucun jour sauté)
-  const checked = rep.reputationUpdatedAt
-    ? rep.reputationCheckedDate
-    : [a.reputationCheckedDate, b.reputationCheckedDate].filter(Boolean).sort()[0];
   const seen = new Set<string>();
   const history = [...a.history, ...b.history]
     .filter((e) => {
@@ -421,9 +292,6 @@ export function mergeGamification(local?: Partial<GamificationState> | null, clo
     .slice(0, MAX_HISTORY);
   return {
     xp: Math.max(a.xp, b.xp),
-    reputation: rep.reputation,
-    reputationCheckedDate: checked,
-    reputationUpdatedAt: rep.reputationUpdatedAt,
     awardedKeys: [...new Set([...b.awardedKeys, ...a.awardedKeys])].slice(-MAX_KEYS),
     history,
     updatedAt: time(a.updatedAt) >= time(b.updatedAt) ? a.updatedAt : b.updatedAt,
@@ -432,17 +300,7 @@ export function mergeGamification(local?: Partial<GamificationState> | null, clo
       ? (a.energyAt ? { energy: a.energy, energyAt: a.energyAt } : {})
       : { energy: b.energy, energyAt: b.energyAt }),
     seriesChain: time(a.seriesChain?.lastEndAt) >= time(b.seriesChain?.lastEndAt) ? a.seriesChain : b.seriesChain,
-    // Entraînement compté pour la réputation : le jour le plus récent, et le plus grand nombre ce jour-là
-    trainingRep: [a.trainingRep, b.trainingRep].filter(Boolean)
-      .sort((x, y) => (x!.day === y!.day ? y!.count - x!.count : y!.day.localeCompare(x!.day)))[0],
     // Gains pas encore confirmés par la ligue : réunis (le serveur ignore ceux qu'il a déjà comptés)
     pendingEvents: withPending(a, b.pendingEvents || []),
   };
-}
-
-/** Couleur et message de la réputation. */
-export function reputationLevel(r: number): { tone: 'good' | 'warn' | 'bad'; label: string } {
-  if (r > LEAGUE_MIN_REPUTATION) return { tone: 'good', label: 'Discipline solide' };
-  if (r >= 60) return { tone: 'warn', label: 'Attention : rattrape tes séances' };
-  return { tone: 'bad', label: 'Discipline en danger' };
 }

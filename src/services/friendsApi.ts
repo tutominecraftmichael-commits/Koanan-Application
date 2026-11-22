@@ -182,7 +182,6 @@ export interface FriendQuestParticipant {
   avatarConfig?: AvatarConfig | null;
   accepted: boolean;
   xpContributed: number;
-  frozen?: boolean;
 }
 
 export interface FriendQuest {
@@ -221,8 +220,6 @@ export interface QuestState {
   gold: number;
   weekId: string;
   weekEndsAt: number;
-  isFrozen: boolean;
-  reputation: number;
   activeQuest: FriendQuest | null;
   outgoingQuest: FriendQuest | null;
   incomingQuests: FriendQuest[];
@@ -260,8 +257,6 @@ export async function fetchQuestState(): Promise<FriendApiResult<QuestState>> {
       gold: typeof raw.gold === 'number' && Number.isFinite(raw.gold) ? raw.gold : 100,
       weekId: String(raw.weekId || ''),
       weekEndsAt: Number(raw.weekEndsAt) || 0,
-      isFrozen: Boolean(raw.isFrozen),
-      reputation: typeof raw.reputation === 'number' ? raw.reputation : 100,
       activeQuest: raw.activeQuest || null,
       outgoingQuest: raw.outgoingQuest || null,
       incomingQuests: Array.isArray(raw.incomingQuests) ? raw.incomingQuests : [],

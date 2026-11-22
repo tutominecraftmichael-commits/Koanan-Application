@@ -4,7 +4,7 @@
  * descentes de division, résultat mémorisé pour l'élève. Les élèves à 80 % de réputation ou moins sont
  * classés comme les autres, mais leur division reste gelée (ni montée ni descente). Reprise sûre : un groupe déjà traité est marqué « closed ».
  */
-import { computeMovements, isFrozen, isParticipant, leagueCol, weekIdOf } from './_leagueRules.js';
+import { computeMovements, isParticipant, leagueCol, weekIdOf } from './_leagueRules.js';
 
 const MAX_GROUPS_PER_RUN = 150;
 
@@ -32,7 +32,7 @@ export async function rolloverLeague(db, nowMs = Date.now()) {
 
   // 2. Classement des groupes des semaines terminées
   let groupsDone = 0;
-  const stats = { groups: 0, up: 0, down: 0, stay: 0, frozen: 0 };
+  const stats = { groups: 0, up: 0, down: 0, stay: 0 };
   for (const week of closingWeeks) {
     const groups = (await leagueCol(db, 'league_groups').where('weekId', '==', week).get()).docs
       .filter((g) => !g.get('closed'));
@@ -43,7 +43,7 @@ export async function rolloverLeague(db, nowMs = Date.now()) {
       const snaps = members.length ? await db.getAll(...members.map((uid) => leagueCol(db, 'league_players').doc(uid))) : [];
       const participants = snaps
         .filter((s) => s.exists && s.get('weekId') === week && isParticipant(s.data()))
-        .map((s) => ({ uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0, frozen: isFrozen(s.data()) }));
+        .map((s) => ({ uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0 }));
       const moves = computeMovements(participants, division);
       const batch = db.batch();
       for (const p of participants) {

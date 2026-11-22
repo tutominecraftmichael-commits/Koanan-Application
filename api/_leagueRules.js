@@ -7,9 +7,8 @@
  *   premiers restent en Perle), les 16 derniers (dès la 16e place) sont en Zone de relégation et descendent
  *   (pas plus bas que Bronze).
  *   Pour monter, il faut avoir gagné au moins 1 XP dans la semaine.
- * - Réputation de 80 % ou moins : l'élève reste dans son groupe et VOIT toujours le classement, mais sa
- *   division est gelée (ni montée ni descente à la fin de la semaine) tant qu'il ne repasse pas au-dessus
- *   de 80 % (choix du fondateur, 2026-11-16). Il ne prend pas non plus la place de montée d'un autre.
+ * - Plus de réputation ni de division gelée (choix du fondateur, 2026-11-22 : l'appli démarre, on ne pénalise
+ *   pas les nouveaux élèves). Tous les XP vérifiés comptent dans le classement de la semaine.
  *
  * Anti-triche : les XP sont recalculés et bornés par le serveur (montants autorisés, durée minimale
  * d'une série, énergie des comptes Gratuit, plafonds par jour). Un gain impossible est refusé.
@@ -28,7 +27,6 @@ export const GROUP_SIZE = 30;
 export const EXCELLENCE_COUNT = 5;
 export const PROMOTE_COUNT = 15;
 export const DEMOTE_COUNT = 15;
-export const MIN_REPUTATION = 80; // il faut STRICTEMENT plus de 80 %
 
 // Mêmes valeurs que src/lib/gamification/gamification.ts
 export const LESSON_XP = [35, 50, 90, 140];
@@ -69,10 +67,6 @@ export function previousWeekId(ms) {
 }
 const dayKeyOf = (ms) => new Date(ms).toISOString().slice(0, 10);
 
-export function isEligible(reputation) {
-  return Number(reputation) > MIN_REPUTATION;
-}
-
 /** Classes qui ont des cours dans KONAN (Seconde, Première, Terminale, et filières LMD intégrées). */
 export function gradeHasCourses(gradeLevel) {
   return /^(seconde|premiere|terminale|lmd)_/.test(String(gradeLevel || ''));
@@ -88,14 +82,9 @@ export function gradeInLeague(gradeLevel) {
   return gradeHasCourses(gradeLevel) || /^superieur_(lmd|bts)$/.test(String(gradeLevel || ''));
 }
 
-/** L'élève est-il dans le classement (classe admise dans la ligue) ? La réputation n'y change rien. */
+/** L'élève est-il dans le classement (classe admise dans la ligue) ? */
 export function isParticipant(player) {
   return Boolean(player) && player.hasCourses !== false;
-}
-
-/** Division gelée (réputation de 80 % ou moins) : ni montée ni descente à la fin de la semaine. */
-export function isFrozen(player) {
-  return !isEligible(player?.reputation ?? 100);
 }
 
 /** Collections de la ligue (préfixe réservé aux tests sur la vraie base : LEAGUE_COLLECTION_PREFIX). */
@@ -136,12 +125,10 @@ function energyNow(player, nowMs) {
  * Renvoie le nouvel état, les identifiants acceptés et refusés (avec la raison).
  * `player` : { weekId, weekXp, totalXp, dayKey, dayLessons, daySeries, lastSeriesEndAt, energy, energyAt, seenIds[] }
  */
-export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy = true, frozen = false, lessonRepCredit = 1 }) {
+export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy = true }) {
   // enforceEnergy : l'énergie des comptes Gratuit n'est vérifiée que quand la formule est sûre (paiement allumé).
   //   Paiement éteint (Pro offert, formule écrite par l'appli) : les séries d'un élève Pro « offert » vu Gratuit
   //   par le serveur étaient refusées en silence (« plus d'énergie ») → ses XP d'entraînement ne comptaient pas.
-  // frozen : réputation de 80 % ou moins → XP gardés dans le total, mais PAS dans le classement de la semaine.
-  // lessonRepCredit : crédit de réputation par séance (5 pendant le gel : +5 % par leçon pour dégeler).
   const player = {
     weekXp: 0, totalXp: 0, dayLessons: 0, daySeries: 0, seenIds: [], lastSeriesEndAt: 0,
     ...player0,
@@ -155,7 +142,6 @@ export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy 
   const accepted = [];
   const rejected = [];
   let lessonsCounted = 0;
-  let repCredits = 0; // hausses de réputation gagnées : 1 par séance, 1 par série (5 par jour)
   let xpGained = 0;
   const unlimited = planTier === 'pro' || planTier === 'plus';
   const sorted = [...(Array.isArray(events) ? events : [])]
@@ -173,7 +159,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy 
     if (weekIdOf(at) !== weekId) { seen.add(id); accepted.push(id); continue; } // semaine passée : ne compte plus pour la ligue
 
     const day = dayKeyOf(at);
-    if (player.dayKey !== day) { player.dayKey = day; player.dayLessons = 0; player.daySeries = 0; player.dayRepSeries = 0; }
+    if (player.dayKey !== day) { player.dayKey = day; player.dayLessons = 0; player.daySeries = 0; }
 
     let xp = 0;
     if (e.kind === 'lesson') {
@@ -185,7 +171,6 @@ export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy 
       if (player.dayLessons >= MAX_LESSONS_PER_DAY) { reject('trop de séances dans la journée'); continue; }
       player.dayLessons += 1;
       lessonsCounted += 1;
-      repCredits += lessonRepCredit;
       xp = expected;
     } else if (e.kind === 'series') {
       const lvl = SERIES_LEVELS.find((l) => l.level === Number(e.level));
@@ -212,11 +197,6 @@ export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy 
         player.energyAt = base;
       }
       player.daySeries += 1;
-      // Réputation : une série terminée vaut +1 %, 5 séries comptées par jour au plus
-      if ((player.dayRepSeries || 0) < TRAINING_REP_DAILY_MAX) {
-        player.dayRepSeries = (player.dayRepSeries || 0) + 1;
-        repCredits += 1;
-      }
       player.lastSeriesEndAt = at;
       xp = expected;
     } else {
@@ -225,49 +205,13 @@ export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy 
     }
     seen.add(id);
     accepted.push(id);
-    if (!frozen) player.weekXp += xp; // ligue gelée : ces XP ne font pas avancer dans le classement
+    player.weekXp += xp;
     player.totalXp += xp;
     xpGained += xp;
   }
   player.seenIds = [...seen].slice(-300);
-  if (xpGained > 0 && !frozen) player.xpReachedAt = nowMs;
-  return { player, accepted, rejected, lessonsCounted, repCredits, xpGained, frozenXp: frozen ? xpGained : 0 };
-}
-
-/**
- * Réputation envoyée par l'appli : une baisse est toujours acceptée ; une hausse est limitée à
- * +1 % par séance acceptée depuis le dernier envoi (on ne peut pas « remonter » sans travailler).
- */
-export function guardReputation(previous, claimed, lessonsAccepted) {
-  const prev = Number.isFinite(previous) ? previous : 100;
-  const c = Math.max(0, Math.min(100, Math.round(Number(claimed))));
-  if (!Number.isFinite(c)) return prev;
-  if (c <= prev) return c;
-  return Math.min(c, prev + Math.max(0, lessonsAccepted));
-}
-
-/** Crédits de réputation gardés d'un envoi à l'autre (au plus 30). */
-export const MAX_REP_CREDITS = 30;
-export const TRAINING_REP_DAILY_MAX = 5;
-
-/**
- * Réputation envoyée par l'appli, avec crédits gardés : chaque séance ou série vérifiée donne 1 crédit,
- * utilisable même plus tard (l'appli peut compter le +1 % d'une séance le lendemain). Une hausse consomme
- * les crédits ; une baisse est toujours acceptée. Sans crédit, pas de hausse (on ne remonte pas sans travailler).
- * `trustOnce` : première synchronisation après la correction du 2026-11-16 (l'ancien serveur refusait à tort
- * les hausses comptées le lendemain) : la réputation de l'appli est reprise telle quelle, une seule fois.
- * @returns { reputation, credits }
- */
-export function settleServerReputation(previous, claimed, credits0, newCredits, trustOnce = false) {
-  const prev = Number.isFinite(previous) ? previous : 100;
-  let credits = Math.min(MAX_REP_CREDITS, Math.max(0, Number(credits0) || 0) + Math.max(0, Number(newCredits) || 0));
-  const c = Math.round(Number(claimed));
-  if (claimed === undefined || claimed === null || !Number.isFinite(c)) return { reputation: prev, credits };
-  const want = Math.max(0, Math.min(100, c));
-  if (trustOnce || want <= prev) return { reputation: want, credits };
-  const rise = Math.min(want - prev, credits);
-  credits -= rise;
-  return { reputation: prev + rise, credits };
+  if (xpGained > 0) player.xpReachedAt = nowMs;
+  return { player, accepted, rejected, lessonsCounted, xpGained };
 }
 
 // ---------------------------------------------------------------------------
@@ -279,20 +223,13 @@ export function rankPlayers(players) {
 }
 
 /**
- * Montées et descentes d'un groupe à la fin de la semaine.
- * Les élèves à division gelée (`frozen`) gardent leur division ; les places de montée et de descente
- * se jouent entre les autres. `rank` = place dans le classement complet (celle que l'élève a vue).
- * @returns Map uid -> { rank, toDivision, movement: 'up' | 'down' | 'stay' | 'frozen' }
+ * Montées et descentes d'un groupe à la fin de la semaine. `rank` = place dans le classement.
+ * @returns Map uid -> { rank, toDivision, movement: 'up' | 'down' | 'stay' }
  */
 export function computeMovements(players, division) {
-  const all = rankPlayers(players);
-  const fullRank = new Map(all.map((p, i) => [p.uid, i + 1]));
-  const ranked = all.filter((p) => !p.frozen);
+  const ranked = rankPlayers(players);
   const size = ranked.length;
   const out = new Map();
-  for (const p of all) {
-    if (p.frozen) out.set(p.uid, { rank: fullRank.get(p.uid), toDivision: division, movement: 'frozen' });
-  }
   ranked.forEach((p, i) => {
     const rank = i + 1;
     const top = rank <= PROMOTE_COUNT;
@@ -305,7 +242,7 @@ export function computeMovements(players, division) {
     } else if (!top && (rank > PROMOTE_COUNT || rank > size - DEMOTE_COUNT) && division > 1) {
       to = division - 1;
     }
-    out.set(p.uid, { rank: fullRank.get(p.uid), toDivision: to, movement: to > division ? 'up' : to < division ? 'down' : 'stay' });
+    out.set(p.uid, { rank, toDivision: to, movement: to > division ? 'up' : to < division ? 'down' : 'stay' });
   });
   return out;
 }

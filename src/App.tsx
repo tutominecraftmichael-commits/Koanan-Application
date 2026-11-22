@@ -68,7 +68,7 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
+import { awardCompletedSessions, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
 import {
   clearFriendNotices,
@@ -417,12 +417,7 @@ export function App() {
     if (needsCloud && !cloudReady && !cloudGaveUp) return;
     // La nouvelle semaine est faite avec la progression de l'élève (sinon une matière terminée revenait tous les jours)
     if (!workloadReady) return;
-    // La réputation des jours passés est comptée AVANT que la nouvelle semaine ne remplace les séances
-    // (seulement avec la copie du cloud : jamais sur un planning en retard)
-    const canSettle = !needsCloud || cloudReady;
-    const settled = canSettle ? settleReputation(state.gamification, state.studySessions, new Date(), state.cycleCompletedDate) : null;
-    const base = settled?.changed ? { ...state, gamification: settled.gamification } : state;
-    const rollover = checkAndPerformWeeklyRollover(base);
+    const rollover = checkAndPerformWeeklyRollover(state);
     if (rollover.hasRollover) {
       const cleanNextState = { ...rollover.nextState, pendingWeeklyRecap: null };
       setState(cleanNextState);
@@ -783,7 +778,7 @@ export function App() {
   ]);
 
   // =========================================================================
-  // GAMIFICATION (étape 1) : XP à chaque séance terminée, réputation comptée chaque jour
+  // GAMIFICATION : XP à chaque séance terminée (réputation supprimée le 2026-11-22)
   // =========================================================================
   const [xpBurst, setXpBurst] = useState<{ amount: number; id: number } | null>(null);
   const closeXpBurst = useCallback(() => setXpBurst(null), []);
@@ -855,7 +850,6 @@ export function App() {
       const g = gamificationOf(gamificationRef.current);
       const r = await callLeague({
         events: g.pendingEvents || [],
-        reputation: g.reputationUpdatedAt ? g.reputation : undefined,
         displayName: effectiveStudentName,
         classLabel: effectiveClassLabel,
         // Classe reconnue (seconde_c, terminale_d…) : sans cours (LMD, BTS), pas de ligue
@@ -1171,28 +1165,6 @@ export function App() {
     try { localStorage.setItem(storeKey, serverTier); } catch { /* sans effet */ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paidMode, serverTier, subscriptionAccount]);
-
-  // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
-  useEffect(() => {
-    if (!gamificationEnabled) return;
-    const settle = () => setState((prev) => {
-      // Compte connecté : on attend la copie du cloud (séances faites sur un autre appareil)
-      if (prev.userAccount?.isLoggedIn && !prev.isDemoMode && !cloudReadyRef.current) return prev;
-      const r = settleReputation(prev.gamification, prev.studySessions, new Date(), prev.cycleCompletedDate);
-      if (!r.changed) return prev;
-      const next = { ...prev, gamification: r.gamification };
-      if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
-      return next;
-    });
-    settle();
-    const timer = setInterval(settle, 10 * 60 * 1000);
-    const onVisible = () => { if (document.visibilityState === 'visible') settle(); };
-    document.addEventListener('visibilitychange', onVisible);
-    return () => {
-      clearInterval(timer);
-      document.removeEventListener('visibilitychange', onVisible);
-    };
-  }, [gamificationEnabled, cloudReady]);
 
   // Fluidité : dès l'ouverture, on précharge en silence toutes les pages courantes (≈ 300 Ko au total),
   // pour qu'elles s'ouvrent instantanément. Seuls les cours guidés (trop lourds) attendent la séance.
@@ -2876,11 +2848,10 @@ export function App() {
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
-              // Tuiles de la maquette : ligue (rang + division, élèves admis dans la ligue) et réputation
+              // Tuile de la maquette : ligue (rang + division, élèves admis dans la ligue)
               leagueSummary={gamificationEnabled && gradeIsInLeague
-                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze', frozen: Boolean(leagueBoard?.frozen) }
+                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
                 : null}
-              reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
             />
             </>
           ) : (
@@ -3084,7 +3055,6 @@ export function App() {
         {activeView === 'league' && gamificationEnabled && (
           <LeaguePage
             board={leagueBoard}
-            localReputation={gamificationOf(state.gamification).reputation}
             hasCourses={gradeIsInLeague}
             offline={leagueOffline}
             errorText={leagueError}
