@@ -288,8 +288,13 @@ export default async function handler(req, res) {
   let correction;
   try {
     const prompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
-    // Correction avec réflexion poussée : plus longue, un nouvel essai seulement si la panne arrive vite
-    correction = await askGeminiJson(ctx.apiKey, [...parts, { text: prompt }], (raw) => cleanCorrection(raw, cleanSujet), 0.2, { thinkingConfig: { thinkingLevel: 'high' } }, { attemptMs: 30_000 });
+    // Correction avec réflexion poussée (40 s pour une photo, mesuré le 2026-11-22 ; plus avec 4 photos) :
+    // 230 s au total (vercel.json : 300 s), photos lues en haute résolution (écriture manuscrite),
+    // essai principal plafonné à 160 s pour laisser 60 s au modèle de secours
+    correction = await askGeminiJson(ctx.apiKey, [...parts, { text: prompt }], (raw) => cleanCorrection(raw, cleanSujet), 0.2, { thinkingConfig: { thinkingLevel: 'high' } }, {
+      budgetMs: 230_000, attemptMs: 60_000, maxAttemptMs: 160_000, reserveMs: 60_000,
+      sharedConfig: { mediaResolution: 'MEDIA_RESOLUTION_HIGH' },
+    });
   } catch (e) {
     console.error('[exam-correct]', String(e?.message || e).slice(0, 200));
     // Rien n'est décompté : la correction ratée ne compte pas dans les 4 du jour

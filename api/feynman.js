@@ -119,12 +119,20 @@ async function askGemini(apiKey, parts) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
   let lastErr;
-  for (const { model, config } of MODELS) {
+  const started = Date.now();
+  for (const [i, { model, config }] of MODELS.entries()) {
+    // vercel.json : 60 s. Modèle principal plafonné à 25 s (3 à 5 s d'habitude) : s'il traîne, le modèle
+    // « lite » a encore le temps de répondre (avant, un essai lent faisait échouer l'explication entière).
+    const left = 55_000 - (Date.now() - started);
+    if (left < 10_000) break;
     try {
       const response = await ai.models.generateContent({
         model,
         contents: [{ role: 'user', parts }],
-        config: { responseMimeType: 'application/json', temperature: 0.3, ...config },
+        config: {
+          responseMimeType: 'application/json', temperature: 0.3, ...config,
+          httpOptions: { timeout: Math.max(10_000, i < MODELS.length - 1 ? Math.min(25_000, left - 15_000) : left - 1_000) },
+        },
       });
       const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
       const verdict = cleanVerdict(JSON.parse(text));

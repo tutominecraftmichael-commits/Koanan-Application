@@ -25,7 +25,6 @@ import {
 import { soundFX } from '../../lib/audioEffects';
 import { timeLeftLabel } from './LeagueView';
 import { GoldCoinIcon } from './GoldCoin';
-import { Snowflake } from './Ice';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 
@@ -61,9 +60,6 @@ export interface FriendQuestCardProps {
   questState: QuestState | null;
   friends: FriendCard[];
   loading?: boolean;
-  /** True si la ligue de l'élève est gelée (réputation <= 80 %) */
-  isFrozen?: boolean;
-  reputation?: number;
   onRefresh: () => Promise<void> | void;
   onGoldUpdated?: (gold: number) => void;
   onOpenFriends?: () => void;
@@ -74,8 +70,6 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
   questState,
   friends,
   loading = false,
-  isFrozen,
-  reputation,
   onRefresh,
   onGoldUpdated,
   onOpenFriends,
@@ -93,9 +87,6 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
     () => QUEST_TIERS.find((t) => t.id === selectedTierId) || QUEST_TIERS[1],
     [selectedTierId],
   );
-
-  const effectiveFrozen = isFrozen ?? questState?.isFrozen ?? false;
-  const effectiveReputation = reputation ?? questState?.reputation ?? 100;
 
   const chosenFriend = useMemo(() => {
     if (friends.length === 1) return friends[0];
@@ -324,16 +315,6 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                 <span>{copiedId === quest.id ? 'Copié !' : 'Copier'}</span>
               </button>
             </div>
-          </div>
-        )}
-
-        {/* Note Gel de Ligue : les XP comptent bien pour la quête, mais pas dans le classement de la ligue */}
-        {!isCompleted && effectiveFrozen && (
-          <div className="p-3 rounded-2xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-300 dark:border-cyan-400/35 flex items-start gap-2.5 text-xs text-cyan-950 dark:text-cyan-100">
-            <Snowflake size={18} className="shrink-0 mt-0.5 text-cyan-600 dark:text-cyan-300" />
-            <span>
-              <b>Ta ligue est gelée ({effectiveReputation} %) :</b> tes XP de leçons et d’entraînement <b>comptent bien pour la quête en duo</b>, mais ils ne comptent pas dans le classement de la ligue tant que ta réputation reste à 80 % ou moins.
-            </span>
           </div>
         )}
 

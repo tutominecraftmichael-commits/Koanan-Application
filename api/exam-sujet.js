@@ -335,7 +335,11 @@ export default async function handler(req, res) {
   let sujet;
   try {
     const prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres });
-    sujet = await askGeminiJson(ctx.apiKey, [{ text: prompt }], (raw) => cleanSujet(raw, template), 0.6);
+    // Un sujet complet prend 50 s environ (mesuré le 2026-11-22) : 230 s au total (vercel.json : 300 s),
+    // un essai du modèle principal plafonné à 150 s pour laisser 60 s au modèle de secours
+    sujet = await askGeminiJson(ctx.apiKey, [{ text: prompt }], (raw) => cleanSujet(raw, template), 0.6, {}, {
+      budgetMs: 230_000, attemptMs: 60_000, maxAttemptMs: 150_000, reserveMs: 60_000,
+    });
   } catch (e) {
     console.error('[exam-sujet]', String(e?.message || e).slice(0, 200));
     // Rien n'est décompté : le sujet raté ne compte pas dans les 4 du jour

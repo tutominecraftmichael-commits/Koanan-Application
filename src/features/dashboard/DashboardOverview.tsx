@@ -14,7 +14,6 @@ import { Card } from '../../components/ui/Card';
 import { getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes } from '../../lib/utils';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
-import { FrostOverlay, IceStyles, Snowflake } from '../gamification/Ice';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { 
@@ -24,8 +23,7 @@ import {
   Moon,
   Zap,
   Play,
-  Trophy,
-  ShieldCheck
+  Trophy
 } from 'lucide-react';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
@@ -60,10 +58,7 @@ export interface DashboardOverviewProps {
   invitedBy?: { name: string; konanId: string; email?: string };
   userUid?: string;
   /** Tuile « Ligue » : rang de la semaine et division (null : pas dans la ligue) */
-  /** frozen : réputation de 80 % ou moins → ligue gelée (glace sur la tuile) */
-  leagueSummary?: { rank: number | null; divisionName: string; frozen?: boolean } | null;
-  /** Tuile « Réputation » (%) */
-  reputation?: number;
+  leagueSummary?: { rank: number | null; divisionName: string } | null;
   /** Carte « Quête d'XP en duo entre amis » */
   friendQuestSlot?: React.ReactNode;
   /** Avatar animé personnalisé de l'élève sur l'accueil */
@@ -120,7 +115,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   invitedBy: _invitedBy,
   userUid: _userUid,
   leagueSummary = null,
-  reputation,
   friendQuestSlot: _friendQuestSlot,
   avatarConfig = null,
   hasCustomizedAvatar = false,
@@ -328,35 +322,21 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         )}
 
-        {/* Ligue et réputation (maquette ; pas de série de jours) */}
-        {(leagueSummary || typeof reputation === 'number') && (
-          <div className="grid grid-cols-2 gap-2.5">
-            {leagueSummary && (
-              <button
-                type="button"
-                onClick={() => onNavigate('league')}
-                className="relative overflow-hidden text-left p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex flex-col gap-1 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
-              >
-                {/* Ligue gelée (réputation de 80 % ou moins) : la tuile est prise dans la glace */}
-                {leagueSummary.frozen && <><IceStyles /><FrostOverlay /></>}
-                <span className="relative flex items-center gap-1.5">
-                  <Trophy className="w-5 h-5 text-amber-600 dark:text-[#F5C451]" />
-                  {leagueSummary.frozen && <Snowflake size={16} className="text-cyan-600 dark:text-cyan-200" />}
-                </span>
-                <span className="relative text-[17px] font-extrabold text-slate-900 dark:text-white">
-                  {leagueSummary.rank ? <>{leagueSummary.rank}<span className="text-[11px]">{leagueSummary.rank === 1 ? 'er' : 'e'}</span></> : '—'}
-                </span>
-                <span className="relative text-[11px] text-slate-600 dark:text-slate-400">{leagueSummary.frozen ? `Ligue ${leagueSummary.divisionName} · gelée` : `Ligue ${leagueSummary.divisionName}`}</span>
-              </button>
-            )}
-            {typeof reputation === 'number' && (
-              <div className="p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex flex-col gap-1">
-                <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-[17px] font-extrabold text-slate-900 dark:text-white tabular-nums">{reputation} %</span>
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">Réputation</span>
-              </div>
-            )}
-          </div>
+        {/* Ligue (maquette ; pas de série de jours). Réputation supprimée le 2026-11-22. */}
+        {leagueSummary && (
+          <button
+            type="button"
+            onClick={() => onNavigate('league')}
+            className="w-full text-left p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex items-center gap-3 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
+          >
+            <Trophy className="w-6 h-6 shrink-0 text-amber-600 dark:text-[#F5C451]" />
+            <span className="flex flex-col gap-0.5">
+              <span className="text-[17px] font-extrabold text-slate-900 dark:text-white">
+                {leagueSummary.rank ? <>{leagueSummary.rank}<span className="text-[11px]">{leagueSummary.rank === 1 ? 'er' : 'e'}</span></> : '—'}
+              </span>
+              <span className="text-[11px] text-slate-600 dark:text-slate-400">{`Ligue ${leagueSummary.divisionName}`}</span>
+            </span>
+          </button>
         )}
 
       </div>

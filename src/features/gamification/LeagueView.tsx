@@ -1,8 +1,7 @@
 import React from 'react';
-import { ArrowDown, ArrowUp, Crown, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Crown, Info, Lock, Trophy, X } from 'lucide-react';
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
-import { FrostOverlay, IceStyles, Snowflake } from './Ice';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 
 /**
@@ -58,8 +57,7 @@ function leagueErrorLabel(error: string): string {
   return `Ligue momentanément indisponible (${error}). Je réessaie dans 2 minutes.`;
 }
 
-export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; hasCourses?: boolean; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, localReputation, hasCourses = true, offline, errorText = '', onOpen }) => {
-  const reputation = board?.reputation ?? localReputation;
+export const LeagueCard: React.FC<{ board: LeagueBoard | null; hasCourses?: boolean; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, hasCourses = true, offline, errorText = '', onOpen }) => {
   // Classe non admise dans la ligue (collège, ou classe pas encore indiquée). LMD et BTS y sont, au chronomètre.
   if (!hasCourses || board?.reason === 'no_courses') {
     return (
@@ -68,20 +66,6 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
         <div className="min-w-0">
           <p className="text-sm font-black text-slate-900 dark:text-white">Ligue pas encore ouverte pour ta classe</p>
           <p className="text-xs text-slate-600 dark:text-slate-300">La ligue est ouverte de la Seconde à la Terminale, et aux étudiants LMD et BTS. Si tu es dans l’une de ces classes, indique ta classe exacte en réimportant ton emploi du temps.</p>
-        </div>
-      </div>
-    );
-  }
-  // Le classement se voit toujours, quelle que soit la réputation (sous 80 % : division gelée seulement).
-  // Ce message ne sert plus qu'avec l'ancien serveur, tant que la nouvelle version n'est pas en ligne.
-  const eligible = board ? board.eligible : true;
-  if (!eligible) {
-    return (
-      <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 flex items-center gap-3">
-        <span className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center shrink-0"><Lock className="w-5 h-5 text-slate-500" /></span>
-        <div className="min-w-0">
-          <p className="text-sm font-black text-slate-900 dark:text-white">Ligue verrouillée</p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">Il te faut plus de 80 % de réputation (tu es à {reputation} %). Fais tes séances et rattrape celles manquées pour revenir.</p>
         </div>
       </div>
     );
@@ -106,11 +90,10 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
           {me ? `${ordinal(me.rank)} sur ${size}` : 'Classement en cours'} · <span className="tabular-nums">{board.weekXp} XP</span>
         </p>
         <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-          {board.frozen && <span className="text-amber-700 dark:text-amber-300">Division gelée (réputation {reputation} %) · </span>}
-          {!board.frozen && zone === 'excellence' && <span className="text-amber-600 dark:text-[#F5C451] font-extrabold">Zone d’excellence ★ (Montée) · </span>}
-          {!board.frozen && zone === 'up' && <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Zone de montée ▲ · </span>}
-          {!board.frozen && zone === 'keep' && <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Maintien en Perle ✓ · </span>}
-          {!board.frozen && zone === 'down' && <span className="text-rose-600 dark:text-rose-400 font-extrabold">Zone de relégation ▼ · </span>}
+          {zone === 'excellence' && <span className="text-amber-600 dark:text-[#F5C451] font-extrabold">Zone d’excellence ★ (Montée) · </span>}
+          {zone === 'up' && <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Zone de montée ▲ · </span>}
+          {zone === 'keep' && <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Maintien en Perle ✓ · </span>}
+          {zone === 'down' && <span className="text-rose-600 dark:text-rose-400 font-extrabold">Zone de relégation ▼ · </span>}
           Fin dans {timeLeftLabel(board.endsAt)}
         </p>
       </div>
@@ -128,9 +111,7 @@ export const LeagueResultBanner: React.FC<{ board: LeagueBoard; onClose: () => v
     ? `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu montes en division ${to} !`
     : r.movement === 'down'
       ? `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu redescends en division ${to}. Reprends ta place cette semaine !`
-      : r.movement === 'frozen'
-        ? `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Ta division ${to} est restée gelée (réputation de 80 % ou moins). Repasse au-dessus de 80 % pour pouvoir monter.`
-        : `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu restes en division ${to}.`;
+      : `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu restes en division ${to}.`;
   return (
     <div className={`rounded-2xl border-2 p-3 flex items-start gap-2 text-sm font-bold ${r.movement === 'up' ? 'bg-emerald-50 border-emerald-300 text-emerald-900 dark:bg-emerald-500/10 dark:border-emerald-500/40 dark:text-emerald-200' : r.movement === 'down' ? 'bg-rose-50 border-rose-300 text-rose-900 dark:bg-rose-500/10 dark:border-rose-500/40 dark:text-rose-200' : 'bg-slate-50 border-slate-200 text-slate-800 dark:bg-slate-800/60 dark:border-slate-700 dark:text-slate-200'}`}>
       {r.movement === 'up' ? <ArrowUp className="w-5 h-5 shrink-0" /> : r.movement === 'down' ? <ArrowDown className="w-5 h-5 shrink-0" /> : <Trophy className="w-5 h-5 shrink-0" />}
@@ -141,12 +122,11 @@ export const LeagueResultBanner: React.FC<{ board: LeagueBoard; onClose: () => v
 };
 
 /**
- * Page Ligue (onglet trophée de la barre du bas) : résultat de la semaine passée, puis classement,
- * toujours visible (à 80 % de réputation ou moins : bandeau « Division gelée »). Actualisée à chaque ouverture.
+ * Page Ligue (onglet trophée de la barre du bas) : résultat de la semaine passée, puis classement.
+ * Actualisée à chaque ouverture.
  */
 export const LeaguePage: React.FC<{
   board: LeagueBoard | null;
-  localReputation: number;
   hasCourses?: boolean;
   offline: boolean;
   errorText?: string;
@@ -157,7 +137,7 @@ export const LeaguePage: React.FC<{
   onOpenPlayer?: (konanId: string) => void;
   /** Quête d'XP hebdomadaire en duo entre amis */
   questSection?: React.ReactNode;
-}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer, questSection }) => {
+}> = ({ board, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer, questSection }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
@@ -169,15 +149,15 @@ export const LeaguePage: React.FC<{
       ) : (
         <div className="max-w-xl mx-auto space-y-4">
           {questSection}
-          <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />
+          <LeagueCard board={board} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />
         </div>
       )}
     </div>
   );
 };
 
-/** Règles de la ligue (bouton ⓘ du titre) : XP, réputation, montées et descentes. */
-const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
+/** Règles de la ligue (bouton ⓘ du titre) : XP, montées et descentes. */
+const LeagueRules: React.FC = () => (
   <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3.5 space-y-2.5 text-xs text-slate-700 dark:text-slate-300 leading-snug">
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Gagner des XP</p>
@@ -185,10 +165,6 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
       <p>Séries d’exercices (icône ronde, classes avec cours) : 15, 30, 60 puis 120 XP si tu les enchaînes ; chaque faute en retire.</p>
       <p>LMD et BTS : pas encore de cours ni d’exercices ; tu gagnes tes XP en menant le chronomètre de tes séances jusqu’au bout, puis en validant.</p>
       <p>Les XP du classement sont ceux de la semaine, vérifiés par KONAN : ils repartent de 0 chaque lundi.</p>
-    </div>
-    <div className="space-y-1">
-      <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
-      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+5 %</b>.</p>
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Zones du classement & Fin de semaine</p>
@@ -206,9 +182,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
   const size = board.rows.length;
   const [showRules, setShowRules] = React.useState(false);
   const promoteLimit = Math.max(board.promoteCount || 0, board.keepCount || 0, PROMOTE_COUNT);
-  const repTone = board.reputation > 80
-    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30'
-    : 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30';
   const current = DIVISION_STYLES[board.division] || DIVISION_STYLES[1];
   // Ta ligne : combien d'XP pour dépasser l'élève juste devant
   const meIndex = board.rows.findIndex((r) => r.me);
@@ -225,13 +198,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
             <polygon points="32,10 54,22 54,48 32,60 10,48 10,22" fill={HEX_COLORS[board.division] || HEX_COLORS[3]} />
             <path d="M24 26h16v6a8 8 0 0 1-16 0z M28 44h8 M32 40v4" fill="none" stroke="#141A28" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M24 28h-4v2a4 4 0 0 0 4 4 M40 28h4v2a4 4 0 0 1-4 4" fill="none" stroke="#141A28" strokeWidth="2.5" strokeLinecap="round" />
-            {/* Ligue gelée : le badge est pris dans la glace */}
-            {board.frozen && (
-              <g>
-                <polygon points="32,2 61,18 61,52 32,68 3,52 3,18" fill="#A5F3FC" fillOpacity="0.55" stroke="#67E8F9" strokeWidth="2.5" strokeLinejoin="round" className="konan-ice-pulse" />
-                <path d="M14 22l10 8M50 20l-8 10M32 66V54M10 46l9-4M54 46l-9-4" stroke="#ECFEFF" strokeWidth="1.6" strokeLinecap="round" />
-              </g>
-            )}
           </svg>
           <div className="min-w-0 flex-1">
             <span className="konan-kicker">Ligue de la semaine</span>
@@ -239,9 +205,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
             <p className="text-[13px] text-slate-600 dark:text-slate-400">Se termine dans <b className="text-slate-900 dark:text-white">{timeLeftLabel(board.endsAt)}</b></p>
           </div>
           <div className="shrink-0 flex flex-col items-end gap-1.5">
-            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-black tabular-nums whitespace-nowrap ${repTone}`} title="Ta réputation (discipline)">
-              <ShieldCheck className="w-3.5 h-3.5" />{board.reputation}&nbsp;%
-            </span>
             <button
               type="button"
               onClick={() => setShowRules((v) => !v)}
@@ -254,25 +217,10 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
             </button>
           </div>
         </div>
-        {showRules && <LeagueRules reputation={board.reputation} />}
+        {showRules && <LeagueRules />}
 
         {/* Quête d'XP hebdomadaire en duo entre amis */}
         {questSection}
-
-        {/* Réputation de 80 % ou moins : ligue gelée (glace animée), XP gelés, comment dégeler */}
-        <IceStyles />
-        {board.frozen && (
-          <div className="relative overflow-hidden rounded-2xl border-2 border-cyan-300 dark:border-cyan-300/50 bg-gradient-to-br from-cyan-50 to-sky-100 dark:from-cyan-400/10 dark:to-sky-500/10 p-3.5 flex items-start gap-3 text-cyan-950 dark:text-cyan-50">
-            <span className="relative shrink-0 w-10 h-10 rounded-full bg-white/80 dark:bg-cyan-300/15 border border-cyan-300 dark:border-cyan-300/40 flex items-center justify-center text-cyan-600 dark:text-cyan-200">
-              <Snowflake size={24} />
-            </span>
-            <span className="relative text-sm leading-snug">
-              <b className="block text-[15px]">Ta ligue est gelée</b>
-              Ta réputation est à {board.reputation} %. Tant qu’elle reste à 80 % ou moins, tes XP <b>ne comptent plus dans le classement</b> et tu ne peux pas monter de division.
-              <span className="block mt-1 font-bold">Pour dégeler : termine tes leçons, chacune te rend <span className="text-cyan-700 dark:text-cyan-200">+5 %</span> de réputation.</span>
-            </span>
-          </div>
-        )}
 
         {/* Chemin des divisions : Bronze → Perle */}
         <div className="flex items-center justify-between px-3.5 py-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10">
@@ -324,8 +272,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
                 <li
                   className={`relative isolate overflow-hidden flex items-center gap-3 px-3 py-2.5 rounded-2xl ${rowZoneStyle}`}
                 >
-                  {/* Ligue gelée : givre sur ta ligne */}
-                  {row.me && board.frozen && <FrostOverlay className="-z-10" />}
                   {/* Toucher un élève ouvre sa fiche (XP au total, amis, abonnement, ID) */}
                   {onOpenPlayer && row.konanId && (
                     <button type="button" onClick={() => onOpenPlayer(row.konanId!)} aria-label={`Voir le profil de ${row.name}`} className="absolute inset-0 z-10 rounded-2xl cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400" />
@@ -357,8 +303,7 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
                     </span>
                   </span>
                   <span className="shrink-0 flex flex-col items-end gap-0.5">
-                    <span className={`relative inline-flex items-center gap-1 text-sm font-extrabold tabular-nums ${row.me && board.frozen ? 'text-cyan-700 dark:text-cyan-200' : 'text-slate-900 dark:text-white'}`}>
-                      {row.me && board.frozen && <Snowflake size={15} />}
+                    <span className="relative inline-flex items-center gap-1 text-sm font-extrabold tabular-nums text-slate-900 dark:text-white">
                       {row.xp} XP
                     </span>
                     {zone === 'excellence' ? (
@@ -414,7 +359,7 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
           {!size && <li className="px-3 py-6 rounded-2xl bg-white dark:bg-[#0F1626] text-center text-sm text-slate-500">Ton groupe se remplit : gagne des XP pour lancer le classement !</li>}
         </ol>
         <p className="text-xs text-center text-slate-500 dark:text-slate-400 pb-4">
-          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. Les XP du classement repartent de 0 chaque semaine (et donc dans ta nouvelle division) ; ton total est dans ton profil. À 80 % de réputation ou moins, ta ligue est gelée.
+          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. Les XP du classement repartent de 0 chaque semaine (et donc dans ta nouvelle division) ; ton total est dans ton profil.
         </p>
       </div>
     </div>

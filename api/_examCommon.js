@@ -150,10 +150,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  * Demande une réponse JSON à Gemini et la valide avec `clean`. Pour ne pas laisser l'élève sur une erreur :
  * modèle principal, puis nouvel essai après une courte pause si la panne est passagère ou la réponse
  * inutilisable, puis modèle de secours (même chose). On ne lance un essai que s'il a le temps de finir
- * avant la limite de la fonction (60 s sur Vercel). Si toutes les limites du jour sont atteintes,
+ * avant la limite de la fonction (vercel.json). Si toutes les limites du jour sont atteintes,
  * l'erreur a le code « AI_QUOTA » (message honnête côté élève).
  * `primaryConfig` : réglages ajoutés pour le modèle principal seulement (le modèle de secours ne les accepte pas tous).
  * `opts.budgetMs` : temps total disponible ; `opts.attemptMs` : durée prévue d'un essai.
+ * Chaque essai a son propre délai (jamais au-delà du temps restant) : un appel bloqué ne peut plus empêcher
+ * le nouvel essai ni le modèle de secours (2026-11-22 : sujets 49-55 s et corrections 40 s mesurés pour une
+ * limite de 60 s — un essai lent faisait échouer toute la demande).
  */
 export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, primaryConfig = {}, opts = {}) {
   const { GoogleGenAI } = await import('@google/genai');
@@ -161,6 +164,9 @@ export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, pri
   const generate = opts.generate || ((req) => ai.models.generateContent(req));
   const budgetMs = opts.budgetMs ?? 52_000;
   const attemptMs = opts.attemptMs ?? 20_000;
+  // Délai d'un essai : on garde de quoi faire un essai de secours (modèle « lite », rapide) quand c'est possible.
+  // Google refuse un délai de moins de 10 s.
+  const attemptTimeout = (isLastChance) => Math.max(10_000, isLastChance ? timeLeft() - 1_000 : Math.min(opts.maxAttemptMs ?? budgetMs, timeLeft() - (opts.reserveMs ?? 0)));
   const started = Date.now();
   const timeLeft = () => budgetMs - (Date.now() - started);
   let lastErr;
@@ -169,6 +175,7 @@ export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, pri
     for (let attempt = 0; attempt < 2; attempt++) {
       // Premier essai : toujours ; les suivants seulement s'ils ont le temps de finir
       if ((attempt > 0 || model !== MODELS[0]) && timeLeft() < attemptMs) break;
+      const isLastChance = model === MODELS[MODELS.length - 1];
       try {
         const response = await generate({
           model,
@@ -177,7 +184,9 @@ export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, pri
             responseMimeType: 'application/json',
             // Nouvel essai : un peu moins de fantaisie, pour une réponse plus sage
             temperature: attempt > 0 ? Math.max(0.1, temperature - 0.2) : temperature,
+            ...(opts.sharedConfig || {}),
             ...(model === MODELS[0] ? primaryConfig : {}),
+            httpOptions: { timeout: attemptTimeout(isLastChance) },
           },
         });
         const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
