@@ -1,15 +1,15 @@
 /**
- * Carte « KONAN Community » : lien vers la chaîne WhatsApp officielle (défis XP, actus, astuces).
- * Tant que le lien n'est pas renseigné (TON_LIEN_ICI), la carte ne s'affiche pas.
- * Lisible en mode jour ET en mode nuit (classes claires d'abord, puis dark:).
+ * Carte « KONAN Community » : lien vers le groupe WhatsApp officiel (défis XP, actus, astuces).
+ * Accepte un lien d'invitation de groupe (chat.whatsapp.com/…) ou de chaîne (whatsapp.com/channel/…).
+ * Sans lien valable, la carte ne s'affiche pas. Lisible en mode jour ET en mode nuit.
  */
 import React from 'react';
 
-export const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/TON_LIEN_ICI';
+export const WHATSAPP_CHANNEL_URL = 'https://chat.whatsapp.com/IwITVT84oE6HLQU3eoHFdf';
 
-/** Le lien est-il un vrai lien de chaîne WhatsApp (et plus le texte d'exemple) ? */
+/** Le lien est-il un vrai lien WhatsApp (groupe ou chaîne) ? */
 export const hasWhatsAppChannel = (url: string = WHATSAPP_CHANNEL_URL) =>
-  /^https:\/\/(www\.)?whatsapp\.com\/channel\/[A-Za-z0-9_-]{10,}$/.test(url) && !url.includes('TON_LIEN_ICI');
+  /^https:\/\/(chat\.whatsapp\.com\/[A-Za-z0-9]{10,}|(www\.)?whatsapp\.com\/channel\/[A-Za-z0-9_-]{10,})$/.test(url);
 
 export const WhatsAppCommunityCard: React.FC = () => {
   if (!hasWhatsAppChannel()) return null;
@@ -29,11 +29,11 @@ export const WhatsAppCommunityCard: React.FC = () => {
         </div>
         <div className="min-w-0">
           <h4 className="font-bold text-sm text-slate-900 dark:text-white">KONAN Community 🇨🇮</h4>
-          <p className="text-xs text-slate-600 dark:text-slate-300">Rejoins la chaîne officielle (défis XP, actus & astuces)</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">Rejoins le groupe officiel (défis XP, actus & astuces)</p>
         </div>
       </div>
       <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-600 dark:bg-emerald-500 text-white group-hover:scale-105 transition-transform shrink-0">
-        Suivre
+        Rejoindre
       </span>
     </a>
   );

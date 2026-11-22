@@ -340,7 +340,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </button>
         )}
 
-        {/* Chaîne WhatsApp officielle (cachée tant que le lien n'est pas renseigné) */}
+        {/* Groupe WhatsApp officiel (caché si le lien n'est pas valable) */}
         <WhatsAppCommunityCard />
 
       </div>
