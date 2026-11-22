@@ -1301,7 +1301,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             keyRule:
               'L’abonnement transfère la logique économique de la propriété définitive d’un bien vers la location continue d’un service mis à jour.',
             konanTip:
-              'L’exemple historique à retenir : iTunes (achat définitif à 0,99 $ par titre) supplanté par Spotify (abonnement mensuel donnant accès à tout le catalogue).',
+              'L’exemple historique à retenir : iTunes (achat définitif à 0,99 dollar par titre) supplanté par Spotify (abonnement mensuel donnant accès à tout le catalogue).',
             exercise: {
               id: 'lmd_entd_l1_modele_dev_eco_num_ch2_p3_q1',
               type: 'mcq',
@@ -1463,8 +1463,8 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'iTunes vs Spotify',
             stepTitle: 'Étude de cas : pourquoi le streaming par abonnement a supplanté iTunes',
             paragraphText:
-              'Au début des années 2000, iTunes d’Apple avait sauvé l’industrie musicale en vendant des titres à l’unité (0,99 $). Pourtant, dix ans plus tard, le modèle d’abonnement (Spotify, Apple Music) a écrasé le téléchargement payant.\n' +
-              '• **Limite d’iTunes (transactionnel)** : acheter 1 000 chansons coûtait près de 1 000 $, incitant les jeunes au piratage, et chaque écoute restait limitée aux titres achetés.\n' +
+              'Au début des années 2000, iTunes d’Apple avait sauvé l’industrie musicale en vendant des titres à l’unité (0,99 dollar). Pourtant, dix ans plus tard, le modèle d’abonnement (Spotify, Apple Music) a écrasé le téléchargement payant.\n' +
+              '• **Limite d’iTunes (transactionnel)** : acheter 1 000 chansons coûtait près de 1 000 dollars, incitant les jeunes au piratage, et chaque écoute restait limitée aux titres achetés.\n' +
               '• **Force de Spotify (abonnement + freemium)** : pour le prix d’un seul album par mois, accès illimité à des dizaines de millions de titres, découverte par algorithmes et écoute fluide sur mobile.\n' +
               '• **Leçon stratégique** : Apple elle-même a dû s’adapter en lançant Apple Music par abonnement et en fermant progressivement iTunes.',
             keyRule:
@@ -2570,7 +2570,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Étude de cas : iTunes (transactionnel) face à Spotify (freemium + abonnement)',
             paragraphText:
               'L’industrie musicale illustre parfaitement la transition historique de la **propriété** vers l’**accès**.\n' +
-              '• **iTunes (modèle transactionnel)** : l’utilisateur achetait définitivement chaque chanson (ex. 0,99 $) ou album. Avantage : propriété durable ; limite : coût élevé pour découvrir de nombreux artistes.\n' +
+              '• **iTunes (modèle transactionnel)** : l’utilisateur achetait définitivement chaque chanson (ex. 0,99 dollar) ou album. Avantage : propriété durable ; limite : coût élevé pour découvrir de nombreux artistes.\n' +
               '• **Spotify (modèle freemium + abonnement)** : accès gratuit financé par la publicité pour capter une masse critique d’auditeurs, puis conversion vers un abonnement mensuel illimité donnant accès à plus de 100 millions de titres.\n' +
               '• **Rétention par la donnée** : les playlists personnalisées (Découvertes de la semaine) créent un fort coût de changement (*lock-in*) qui fidélise les abonnés.',
             konanTip:
@@ -2720,7 +2720,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Calculer et interpréter CAC, ARPU, taux de churn, LTV, ratio LTV/CAC ≥ 3 et Payback Period ; comprendre l’effet winner-takes-all, le multi-homing et l’essor du Mobile Money et des super-apps en Afrique.',
         conceptExplanation:
           'Pour piloter une entreprise numérique (SaaS, abonnement, fintech ou plateforme) et convaincre des investisseurs, quatre **métriques financières unitaires (*unit economics*)** sont incontournables :\n\n' +
-          '1. **CAC (Coût d’Acquisition Client)** : coût marketing et commercial moyen dépensé pour acquérir un nouveau client payant : $\\text{CAC} = \\frac{\\text{Dépenses marketing & ventes}}{\\text{Nombre de nouveaux clients}}$.\n' +
+          '1. **CAC (Coût d’Acquisition Client)** : coût marketing et commercial moyen dépensé pour acquérir un nouveau client payant : $\\text{CAC} = \\frac{\\text{Dépenses marketing et ventes}}{\\text{Nombre de nouveaux clients}}$.\n' +
           '2. **ARPU (Average Revenue Per User)** : revenu moyen mensuel généré par utilisateur actif : $\\text{ARPU} = \\frac{\\text{Revenu mensuel total}}{\\text{Nombre d’utilisateurs actifs}}$.\n' +
           '3. **Churn Rate (taux de résiliation)** : pourcentage de clients qui quittent le service chaque mois. La durée de vie moyenne d’un client vaut $\\frac{1}{\\text{Churn}}$.\n' +
           '4. **LTV (Lifetime Value — Valeur Vie Client)** : marge totale générée par un client sur toute sa durée de relation : $\\text{LTV} = \\frac{\\text{ARPU} \\times \\text{Marge brute}}{\\text{Churn}}$.\n\n' +

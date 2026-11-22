@@ -43,7 +43,9 @@ function checkText(where: string, text?: string) {
   rest = latexCommandsToUnicode(rest);
   if (/\\[a-zA-Z]{2,}/.test(rest)) add('commande LaTeX visible', `${where} :: ${rest.match(/.{0,40}\\[a-zA-Z]{2,}.{0,30}/)?.[0]}`);
   if (/\$/.test(rest)) add('« $ » visible', `${where} :: ${rest.match(/.{0,40}\$.{0,30}/)?.[0]}`);
-  if (/#/.test(rest)) add('« # » visible', `${where} :: ${rest.match(/.{0,40}#.{0,30}/)?.[0]}`);
+  // « # » légitime (LMD) : code entre accents graves (`ligne(2, '#')`), erreurs Excel (#VALEUR!, #DIV/0!), codes USSD (*144#)
+  const hashRest = rest.replace(/`[^`\n]*`/g, ' ').replace(/#(?:VALEUR|DIV\/0|N\/A|NOM|REF|NOMBRE|NUL)[!?]?/g, ' ').replace(/\*\d+#/g, ' ');
+  if (/#/.test(hashRest)) add('« # » visible', `${where} :: ${hashRest.match(/.{0,40}#.{0,30}/)?.[0]}`);
 }
 
 function checkFormulaBox(where: string, formula?: string) {
@@ -76,8 +78,14 @@ function checkVisual(where: string, v?: { title?: string; caption?: string; svgC
 
 let lessons = 0;
 const doneChapters = new Set<string>();
-for (const g of GRADES) for (const s of SUBJECTS) {
-  for (const ch of getCurriculumChapters(s, g)) {
+// Lycée/collège + filière LMD ENTD L1 (24 matières, contrôlée depuis le 2026-11-22)
+const { ENTD_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
+const PAIRS: [string, string][] = [
+  ...GRADES.flatMap((g) => SUBJECTS.map((s) => [g, s] as [string, string])),
+  ...ENTD_L1_SUBJECT_IDS.map((s) => ['lmd_entd_l1', s] as [string, string]),
+];
+for (const [g, s] of PAIRS) {
+  for (const ch of getCurriculumChapters(s as any, g as any)) {
     if (doneChapters.has(ch.id)) continue;
     doneChapters.add(ch.id);
     lessons++;
