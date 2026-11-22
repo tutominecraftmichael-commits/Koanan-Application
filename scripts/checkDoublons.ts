@@ -30,9 +30,12 @@ const problems: string[] = [];
 let points = 0;
 let questions = 0;
 
-for (const grade of GRADES) {
-  for (const subject of SUBJECTS) {
-    const chapters = getCurriculumChapters(subject, grade);
+// Lycée/collège + filière LMD ENTD L1 (24 matières, contrôlée depuis le 2026-11-22)
+const { ENTD_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
+const SUBJECTS_OF = (grade: string): readonly string[] => (grade === 'lmd_entd_l1' ? ENTD_L1_SUBJECT_IDS : SUBJECTS);
+for (const grade of [...GRADES, 'lmd_entd_l1']) {
+  for (const subject of SUBJECTS_OF(grade)) {
+    const chapters = getCurriculumChapters(subject as any, grade as any);
     if (!chapters.length) continue;
     const tag = `${grade}/${subject}`;
     const chapterIds = new Set<string>();

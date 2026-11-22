@@ -85,7 +85,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Toute écriture créative solide s’appuie sur quatre piliers complémentaires qui donnent au message son « supplément d’âme ».\n• **Originalité et imagination** : sortir des formules génériques pour créer une voix singulière.\n• **Narration (Storytelling)** : schémas narratifs, protagonistes et règle du « Show, Don’t Tell ».\n• **Esthétique du langage** : figures de style, variation du rythme des phrases et vocabulaire sensoriel.\nExemple : dans une newsletter tech UEMOA, varier phrases brèves percutantes et images visuelles évite l’ennui des communiqués administratifs.',
             formula: {
               name: 'Équation de l’impact créatif',
-              formula: '\\text{Impact} = \\text{Originalit\\acute{e}} + \\text{Narration} + \\text{Esth\\acute{e}tique} + \\text{Format adapt\\acute{e}}',
+              formula: '\\text{Impact} = \\text{Originalité} + \\text{Narration} + \\text{Esthétique} + \\text{Format adapté}',
               note: 'L’esthétique combine figures de style, musique du rythme et appel aux cinq sens.',
             },
             konanTip:
@@ -227,7 +227,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Chaîne itérative de production',
-            formula: '\\text{Capture brute (Auteur)} \\longrightarrow \\text{D\\acute{e}rushage (Tri)} \\longrightarrow \\text{\\acute{E}dition fine (Monteur)}',
+            formula: '\\text{Capture brute (Auteur)} \\longrightarrow \\text{Dérushage (Tri)} \\longrightarrow \\text{Édition fine (Monteur)}',
             note: 'Vouloir éditer pendant la capture brute provoque immédiatement la paralysie.',
           },
         ],
@@ -720,7 +720,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Issu de la conception de produits engageants, le modèle Hook repose sur un cycle en 4 temps : Déclencheur (Trigger) → Action → Récompense → Investissement.\n• **En rédaction digitale** : l’accroche joue le rôle du Déclencheur externe qui interrompt le défilement machinal du pouce (scroll).\n• **Objectif** : piquer la curiosité dès la première seconde pour obtenir le premier « micro-oui » du lecteur — lire la phrase suivante.\nExemple : « 68 % de vos visiteurs partent sans rien dire au moment exact où ils sortent leur carte. »',
             formula: {
               name: 'Chaîne d’engagement Hook en écriture',
-              formula: '\\text{Trigger (Accroche)} \\longrightarrow \\text{Action (Lecture)} \\longrightarrow \\text{R\\acute{e}compense (Valeur)} \\longrightarrow \\text{Investissement (Partage / Clic)}',
+              formula: '\\text{Trigger (Accroche)} \\longrightarrow \\text{Action (Lecture)} \\longrightarrow \\text{Récompense (Valeur)} \\longrightarrow \\text{Investissement (Partage / Clic)}',
               note: 'Sans Trigger efficace dans les 2 premières secondes, aucune des étapes suivantes n’a lieu.',
             },
             exercise: {
@@ -971,7 +971,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'L’erreur classique des profils techniques consiste à parler de ce que le produit EST (fonctionnalités) au lieu de ce que le client DEVIENT ou GAGNE grâce à lui (bénéfices).\n• **Test du « Et alors ? »** : après chaque caractéristique technique, posez-vous la question « Et alors, qu’est-ce que ça change dans la vie de mon Persona ? ».\n• **Exemple 1** : au lieu de « Notre logiciel possède un algorithme d’indexation rapide », écrivez « Récupérez deux heures de votre temps chaque jour ».\n• **Exemple 2** : au lieu de « Chiffrement AES-256 », écrivez « Vos paiements et les données de vos clients dorment en sécurité totale ».',
             formula: {
               name: 'Règle de transformation Caractéristique → Bénéfice',
-              formula: '\\text{Fonctionnalit\\acute{e} (Produit)} \\xrightarrow{\\text{« Et alors ? »}} \\text{B\\acute{e}n\\acute{e}fice concret (Utilisateur)}',
+              formula: '\\text{Fonctionnalité (Produit)} \\xrightarrow{\\text{« Et alors ? »}} \\text{Bénéfice concret (Utilisateur)}',
               note: 'Le client n’achète pas une perceuse de 800 W, il achète un trou propre dans son mur pour accrocher un cadre.',
             },
             keyRule:
@@ -1253,7 +1253,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Triptyque rhétorique d’Aristote',
-            formula: '\\text{Persuasion} = \\underbrace{\\text{Ethos}}_{\\text{Cr\\acute{e}dibilit\\acute{e}}} + \\underbrace{\\text{Logos}}_{\\text{Faits \\& Logique}} + \\underbrace{\\text{Pathos}}_{\\text{\\acute{E}motion \\& R\\acute{e}cit}}',
+            formula: '\\text{Persuasion} = \\underbrace{\\text{Ethos}}_{\\text{Crédibilité}} + \\underbrace{\\text{Logos}}_{\\text{Faits \\& Logique}} + \\underbrace{\\text{Pathos}}_{\\text{Émotion \\& Récit}}',
             note: 'Sans Ethos, on doute de vous ; sans Logos, on juge votre discours creux ; sans Pathos, on reste indifférent.',
           },
         ],
@@ -1525,7 +1525,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Les 5 actes du schéma narratif quinaire',
-            formula: '\\text{1. Situation initiale} \\to \\text{2. \\acute{E}l\\acute{e}ment perturbateur} \\to \\text{3. P\\acute{e}rip\\acute{e}ties} \\to \\text{4. D\\acute{e}nouement} \\to \\text{5. Situation finale}',
+            formula: '\\text{1. Situation initiale} \\to \\text{2. Élément perturbateur} \\to \\text{3. Péripéties} \\to \\text{4. Dénouement} \\to \\text{5. Situation finale}',
             note: 'Sans élément perturbateur (tension/problème), il n’y a pas d’histoire — seulement un catalogue ennuyeux.',
           },
         ],
@@ -1960,7 +1960,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Les deux frameworks rois du Copywriting',
-            formula: '\\text{AIDA : Attention} \\to \\text{Int\\acute{e}r\\^et} \\to \\text{D\\acute{e}sir} \\to \\text{Action} \\quad|\\quad \\text{PAS : Probl\\`eme} \\to \\text{Agitation} \\to \\text{Solution}',
+            formula: '\\text{AIDA : Attention} \\to \\text{Intérêt} \\to \\text{Désir} \\to \\text{Action} \\quad|\\quad \\text{PAS : Problème} \\to \\text{Agitation} \\to \\text{Solution}',
             note: 'Chaque structure se clôt impérativement par un seul Appel à l’Action (CTA) clair et sans friction.',
           },
         ],

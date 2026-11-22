@@ -6,7 +6,8 @@
     "api/cron-notifications.js": { "maxDuration": 60 },
     "api/feynman.js": { "maxDuration": 30 },
     "api/exam-sujet.js": { "maxDuration": 60 },
-    "api/exam-correct.js": { "maxDuration": 60 }
+    "api/exam-correct.js": { "maxDuration": 60 },
+    "api/extract-timetable.js": { "maxDuration": 300 }
   },
   "rewrites": [
     {

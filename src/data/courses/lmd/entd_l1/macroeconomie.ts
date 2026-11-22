@@ -20,6 +20,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_macroeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 1,
+    semesters: [1],
     title: 'Chapitre 1 : Objet de la macroéconomie, circuit économique et équilibre emplois-ressources',
     summary:
       'Maîtriser les agrégats, le carré magique de Kaldor, les 6 secteurs institutionnels, le circuit économique à 5 agents, les 3 types d’opérations et l’identité emplois-ressources.',
@@ -777,6 +778,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_macroeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 2,
+    semesters: [1],
     title: 'Chapitre 2 : Mesure de l’activité : PIB, déflateur, inflation et chômage',
     summary:
       'Calculer le PIB selon les trois optiques, distinguer PIB nominal, PIB réel et déflateur, relier PIB, PNB et IDH, mesurer l’inflation par l’IPC et maîtriser les taux du marché du travail.',
@@ -1492,6 +1494,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_macroeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 3,
+    semesters: [1, 2],
     title: 'Chapitre 3 : Comportements macroéconomiques : Consommation, Épargne et Investissement',
     summary:
       'Maîtriser la fonction de consommation keynésienne et l’épargne, les théories du revenu permanent (Friedman) et du cycle de vie (Modigliani), les critères VAN/TRI et le principe de l’accélérateur.',
@@ -2197,6 +2200,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_macroeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 4,
+    semesters: [1, 2],
     title: 'Chapitre 4 : Équilibre revenu-dépense, multiplicateurs, monnaie et modèle IS-LM',
     summary:
       'Maîtriser le diagramme à 45° keynésien, les quatre multiplicateurs (dont Haavelmo), la monnaie (M1/M2/M3, base monétaire, multiplicateur de crédit) et l’équilibre simultané IS-LM.',
@@ -3244,6 +3248,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_macroeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 5,
+    semesters: [2],
     title: 'Chapitre 5 : Marché du travail, inflation et politiques économiques',
     summary:
       'Maîtriser le marché du travail (salaire réel, demande PmL = wr, arbitrage travail-loisir), opposer chômage classique et keynésien, analyser la courbe de Phillips et le NAIRU, et concevoir le policy mix (budgétaire et monétaire BCEAO).',
@@ -3373,7 +3378,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Programme du salarié',
             stepTitle: 'Offre de travail des ménages : arbitrage consommation-loisir et effets substitution/revenu',
             paragraphText:
-              'Pourquoi travaille-t-on $8$ heures par jour plutôt que $2$ ou $16$ ? Parce que le travail procure un revenu réel permettant de consommer ($C$), mais sacrifie du temps de loisir ($\ell = \\overline{H} - L^o$).\n' +
+              'Pourquoi travaille-t-on $8$ heures par jour plutôt que $2$ ou $16$ ? Parce que le travail procure un revenu réel permettant de consommer ($C$), mais sacrifie du temps de loisir ($\\ell = \\overline{H} - L^o$).\n' +
               '• **Programme microéconomique** : maximiser $U(C, \\ell)$ sous la contrainte $C = w_r(\\overline{H} - \\ell)$ (en l’absence de revenu non salarial). Par le Lagrangien, l’optimum vérifie $TMS_{\\ell, C} = \\frac{U’_\\ell}{U’_C} = w_r$.\n' +
               '• **Double effet d’une hausse de $w_r$** : (1) **effet de substitution** ($L^o \\uparrow$ : chaque heure de loisir devient plus coûteuse en manque à gagner) ; (2) **effet de revenu** ($L^o \\downarrow$ : plus riche, le salarié achète plus de biens ET plus de loisir !).\n' +
               '• **Forme de $L^o$** : tant que l’effet de substitution domine, $L^o(w_r)$ est **croissante** (à très hauts salaires, elle peut se retourner en arrière).',
@@ -3524,7 +3529,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Face à une montée du chômage, prescrire le mauvais remède peut aggraver la crise ! La théorie du déséquilibre (Edmond Malinvaud) distingue rigoureusement le **chômage classique** (manque de rentabilité / salaire réel trop élevé) du **chômage keynésien** (manque de débouchés / demande globale insuffisante).\n\n' +
           '• **Double nature du salaire** : le salaire est à la fois un **coût de production** pour l’entreprise (vision classique) et un **revenu qui alimente la consommation** (vision keynésienne). Augmenter les salaires aggrave le chômage classique mais peut réduire le chômage keynésien !\n' +
           '• **Courbe de Phillips (1958) et Samuelson-Solow** : relation empirique décroissante à **court terme** entre le taux de chômage $u$ et le taux d’inflation $\\pi$ : $\\pi = \\pi^e - \\beta(u - u_n) + \\varepsilon$.\n' +
-          '• **Critique monétariste (Friedman-Phelps) et NAIRU** : à **long terme**, les anticipations s’adaptent ($\\pi^e = \\pi$) : il n’y a plus d’arbitrage et la courbe de Phillips devient **verticale** au taux de chômage naturel / d’équilibre **NAIRU** ($u_n$). Un choc d’offre négatif (choc pétrolier) provoque une **stagflation** ($\pi\\uparrow$ et $u\\uparrow$ simultanés).',
+          '• **Critique monétariste (Friedman-Phelps) et NAIRU** : à **long terme**, les anticipations s’adaptent ($\\pi^e = \\pi$) : il n’y a plus d’arbitrage et la courbe de Phillips devient **verticale** au taux de chômage naturel / d’équilibre **NAIRU** ($u_n$). Un choc d’offre négatif (choc pétrolier) provoque une **stagflation** ($\\pi\\uparrow$ et $u\\uparrow$ simultanés).',
         keyRule:
           'Chômage **classique** $\\to$ coût salarial excessif $\\to$ baisser $w_r$ / alléger les charges. Chômage **keynésien** $\\to$ demande insuffisante $\\to$ relance budgétaire/monétaire. À long terme, seul le traitement structurel réduit le NAIRU $u_n$.',
         formulas: [
@@ -3734,7 +3739,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Chocs d’offre négatifs et stagflation : quand inflation et chômage montent ensemble',
             paragraphText:
               'Dans les années 1970, les chocs pétroliers brisent le schéma keynésien simple : les pays connaissent à la fois une **stagnation** (chômage en hausse) et une **inflation** à deux chiffres (**stagflation**).\n' +
-              '• **Explication par la courbe de Phillips** : un choc d’offre négatif ($\varepsilon_t > 0$ : flambée du pétrole, du fret maritime ou des intrants agricoles) alourdit les coûts de production de toutes les entreprises.\n' +
+              '• **Explication par la courbe de Phillips** : un choc d’offre négatif ($\\varepsilon_t > 0$ : flambée du pétrole, du fret maritime ou des intrants agricoles) alourdit les coûts de production de toutes les entreprises.\n' +
               '• **Déplacement de la courbe** : la courbe de Phillips se déplace **vers le haut et la droite** ! Pour un même taux de chômage, l’inflation est plus forte ; et la baisse des marges pousse les firmes à réduire la production ($Y\\downarrow, u\\uparrow$) tout en augmentant leurs prix ($\\pi\\uparrow$).',
             formula: {
               name: 'Modélisation d’un choc d’offre sur l’inflation',
@@ -3742,7 +3747,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               note: 'Un choc de demande déplace l’économie LE LONG de la courbe de Phillips ; un choc d’offre déplace TOUTE la courbe !',
             },
             keyRule:
-              'La **stagflation** (stagnation + inflation) résulte d’un **choc d’offre négatif** ($\varepsilon > 0$) ou d’un désancrage des anticipations inflationnistes ($\pi^e \\uparrow$), mettant les politiques de demande face à un dilemme douloureux.',
+              'La **stagflation** (stagnation + inflation) résulte d’un **choc d’offre négatif** ($\\varepsilon > 0$) ou d’un désancrage des anticipations inflationnistes ($\\pi^e \\uparrow$), mettant les politiques de demande face à un dilemme douloureux.',
             konanTip:
               'Dilemme du banquier central face à la stagflation : s’il relance pour sauver l’emploi, il aggrave l’inflation ; s’il resserre les taux pour casser l’inflation, il creuse la récession ! Seules des politiques d’offre (productivité, énergie, concurrence) résolvent le choc à la racine.',
             exercise: {

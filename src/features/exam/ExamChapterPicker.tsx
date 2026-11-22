@@ -4,10 +4,11 @@
  *  - matière sans cours : explication du « chronomètre classique » de 75 min (révision sur le cahier).
  * Les cours sont chargés à la demande (ils sont lourds).
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BookOpen, Clock } from 'lucide-react';
 import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
 import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
+import { semesterFromSubjectName } from '../../lib/exam/examPrepRules';
 
 export interface ExamChapterPickerProps {
   subjectName: string;
@@ -20,13 +21,25 @@ export interface ExamChapterPickerProps {
   onAvailability?: (hasCourse: boolean) => void;
 }
 
-interface Group { key: string; label: string; chapters: { id: string; title: string; points: number }[] }
+interface Group { key: string; label: string; chapters: { id: string; title: string; points: number; semesters?: (1 | 2)[] }[] }
 
 export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectName, gradeRaw, value, onChange, onAvailability }) => {
   const [groups, setGroups] = useState<Group[] | null>(null);
+  // Chapitres du semestre cochés d'avance (« Microéconomie 2 » → chapitres du S2) : message affiché à l'élève
+  const [preselectedSemester, setPreselectedSemester] = useState<1 | 2 | null>(null);
   const grade = useMemo(() => tryResolveGradeLevel(gradeRaw), [gradeRaw]);
   const match = useMemo(() => matchSubjectToStemCurriculum(subjectName, grade), [subjectName, grade]);
   const subjectKey = match.isStemSubject ? match.stemSubjectId : undefined;
+  const semester = useMemo(() => semesterFromSubjectName(subjectName), [subjectName]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // Chapitres cochés d'avance souvent en bas de la liste (S2 après S1) : on fait défiler la liste jusqu'au premier
+  useEffect(() => {
+    if (!preselectedSemester || !rootRef.current) return;
+    const first = rootRef.current.querySelector<HTMLInputElement>('input[type=checkbox]:checked');
+    const list = first?.closest<HTMLElement>('[data-chapter-list]');
+    const row = first?.closest<HTMLElement>('label');
+    if (list && row) list.scrollTop = row.offsetTop; // la liste est « relative » : offsetTop est mesuré dans la liste
+  }, [preselectedSemester, groups]);
 
   useEffect(() => {
     let alive = true;
@@ -48,7 +61,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
         for (const c of chapters) {
           const sub = sps.getChapterSubCategory(c);
           const g = byGroup.get(sub) || { key: sub, label: sps.getSubCategoryName(sub, grade), chapters: [] };
-          g.chapters.push({ id: c.id, title: c.title, points: c.points.length });
+          g.chapters.push({ id: c.id, title: c.title, points: c.points.length, semesters: c.semesters });
           byGroup.set(sub, g);
         }
         if (!alive) return;
@@ -57,14 +70,22 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
         onAvailability?.(list.length > 0);
         // Chapitres qui n'existent plus (cours mis à jour) : retirés de la sélection
         const valid = new Set(list.flatMap((g) => g.chapters.map((c) => c.id)));
-        if (value.some((id) => !valid.has(id))) onChange(value.filter((id) => valid.has(id)), subjectKey);
+        const kept = value.filter((id) => valid.has(id));
+        // Rien de coché et un semestre dans le nom (« Microéconomie 2 ») : on coche d'avance les chapitres de ce semestre
+        const ofSemester = semester ? chapters.filter((c) => c.semesters?.includes(semester)).map((c) => c.id) : [];
+        if (!kept.length && ofSemester.length) {
+          setPreselectedSemester(semester);
+          onChange(ofSemester, subjectKey);
+        } else if (kept.length !== value.length) {
+          onChange(kept, subjectKey);
+        }
       } catch {
         if (alive) { setGroups([]); onAvailability?.(false); }
       }
     })();
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subjectKey, grade]);
+  }, [subjectKey, grade, semester]);
 
   const toggle = (id: string) => {
     const next = value.includes(id) ? value.filter((x) => x !== id) : [...value, id];
@@ -94,12 +115,17 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
   }
 
   return (
-    <div className="space-y-3">
+    <div ref={rootRef} className="space-y-3">
       <div className="flex items-center gap-2">
         <BookOpen className="w-4 h-4 text-sky-600 dark:text-sky-400" />
         <p className="text-xs font-black text-slate-800 dark:text-slate-100">Coche les chapitres de ton devoir</p>
         <span className="ml-auto text-[11px] font-bold text-slate-500 dark:text-slate-400">{value.length} choisi{value.length > 1 ? 's' : ''}</span>
       </div>
+      {preselectedSemester && (
+        <p className="text-[11px] font-semibold text-sky-800 bg-sky-50 border border-sky-200 rounded-lg px-3 py-2 dark:text-sky-200 dark:bg-sky-900/30 dark:border-sky-800">
+          J’ai coché les chapitres du semestre {preselectedSemester}. Ajuste selon ce que ton enseignant a annoncé pour le devoir.
+        </p>
+      )}
       {groups.map((g) => {
         const allOn = g.chapters.every((c) => value.includes(c.id));
         return (
@@ -110,13 +136,16 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
                 {allOn ? 'Tout décocher' : 'Tout cocher'}
               </button>
             </div>
-            <div className="max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+            <div data-chapter-list className="relative max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
               {g.chapters.map((c) => (
                 <label key={c.id} className="flex items-start gap-3 px-3 py-2.5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <input type="checkbox" checked={value.includes(c.id)} onChange={() => toggle(c.id)} className="w-4 h-4 mt-0.5 accent-sky-500 shrink-0" />
                   <span className="text-xs text-slate-800 dark:text-slate-100 leading-snug">
                     {c.title}
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">{c.points} mini-leçon{c.points > 1 ? 's' : ''}</span>
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">
+                      {c.points} mini-leçon{c.points > 1 ? 's' : ''}
+                      {c.semesters?.length ? ` · ${c.semesters.map((s) => `S${s}`).join(' et ')}` : ''}
+                    </span>
                   </span>
                 </label>
               ))}

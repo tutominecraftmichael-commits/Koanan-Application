@@ -40,7 +40,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Principe fondamental de reclassement en CAGE',
-            formula: '\\text{Charges par nature (CG)} \\;\\xrightarrow{\\text{Destination / Fonction}}\\; \\text{Co\\^uts par produit / activit\\acute{e} (CAGE)}',
+            formula: '\\text{Charges par nature (CG)} \\;\\xrightarrow{\\text{Destination / Fonction}}\\; \\text{Coûts par produit / activité (CAGE)}',
             note: 'La CG répond à « Qu’a-t-on dépensé ? » ; la CAGE répond à « Pour quel produit ou service a-t-on dépensé ? ».',
           },
         ],
@@ -262,12 +262,12 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Passage des charges de CG aux charges de CAGE',
-            formula: '\\text{Charges CAGE} = \\text{Charges CG} - \\text{Charges non incorporables} + \\text{Charges suppl\\acute{e}tives}',
+            formula: '\\text{Charges CAGE} = \\text{Charges CG} - \\text{Charges non incorporables} + \\text{Charges supplétives}',
             note: 'Les écarts créés par ces retraitements forment les différences d’incorporation.',
           },
           {
             name: 'Rémunération supplétive des capitaux propres',
-            formula: '\\text{Charge suppl\\acute{e}tive} = \\text{Capitaux propres} \\times t_{\\text{annuel}} \\times \\frac{\\text{mois}}{12}',
+            formula: '\\text{Charge supplétive} = \\text{Capitaux propres} \\times t_{\\text{annuel}} \\times \\frac{\\text{mois}}{12}',
             note: 'Permet de comparer à armes égales une entreprise financée sur fonds propres et une entreprise endettée.',
           },
         ],
@@ -416,7 +416,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Mettons en pratique le filtrage complet sur un cas chiffré mensuel.\n' +
               '• **Données du mois** : Total charges CG = 8 500 000 F (dont 300 000 F d’amendes fiscales non courantes, 200 000 F de dotations sur non-valeurs, et 100 000 F d’intérêts bancaires).\n' +
               '• **Supplétifs** : le gérant exploitant individuel estime son travail à 450 000 F/mois et les capitaux propres (6 000 000 F) sont rémunérés à 10 % l’an (soit 50 000 F/mois).\n' +
-              '• **Calcul** : Non incorporables = $300\,000 + 200\,000 = 500\,000$ F (attention : les intérêts bancaires de 100 000 F SONT incorporables !). Supplétives = $450\,000 + 50\,000 = 500\,000$ F. Charges CAGE = $8\,500\,000 - 500\,000 + 500\,000 = 8\,500\,000$ F.',
+              '• **Calcul** : Non incorporables = $300\\,000 + 200\\,000 = 500\\,000$ F (attention : les intérêts bancaires de 100 000 F SONT incorporables !). Supplétives = $450\\,000 + 50\\,000 = 500\\,000$ F. Charges CAGE = $8\\,500\\,000 - 500\\,000 + 500\\,000 = 8\\,500\\,000$ F.',
             konanTip:
               'Ne confonds pas « Charges d’intérêt bancaire » (réelles, payées à la banque → INCORPORABLES) avec « Rémunération des capitaux propres » (fictive → SUPPLÉTIVE) !',
             exercise: {
@@ -480,7 +480,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Coût de l’Unité d’Œuvre (CUO)',
-            formula: '\\text{CUO} = \\frac{\\text{Total r\\acute{e}partition secondaire du centre principal}}{\\text{Nombre d’unit\\acute{e}s d’\\oe uvre (UO) du centre}}',
+            formula: '\\text{CUO} = \\frac{\\text{Total répartition secondaire du centre principal}}{\\text{Nombre d’unités d’\\oe uvre (UO) du centre}}',
             note: 'Sert à imputer les charges indirectes au prorata des UO consommées par chaque produit.',
           },
           {
@@ -575,7 +575,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Exemple** : 600 000 F de loyer répartis selon les surfaces (100 m², 300 m², 600 m², total 1 000 m²) donnent 60 000 F, 180 000 F et 360 000 F.',
             formula: {
               name: 'Part d’un centre en répartition primaire',
-              formula: '\\text{Part}_i = \\text{Charge totale} \\times \\frac{\\text{Cl\\acute{e}}_i}{\\sum \\text{Cl\\acute{e}s}}',
+              formula: '\\text{Part}_i = \\text{Charge totale} \\times \\frac{\\text{Clé}_i}{\\sum \\text{Clés}}',
               note: 'La somme des parts doit toujours reconstituer 100 % de la charge indirecte.',
             },
             exercise: {
@@ -634,7 +634,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Le tableau ci-dessous achève l’exemple précédent avec les deux centres auxiliaires (E = 300 000 F, N = 300 000 F) vidés vers Approvisionnement et Production.\n' +
               '• **Ligne Cession** : on inscrit −300 000 sous Entretien et −300 000 sous Énergie, puis on ventile leurs pourcentages vers chaque bénéficiaire.\n' +
-              '• **Contrôle** : la somme des totaux secondaires principaux ($650\,000 + 1\,500\,000 = 2\,150\,000$ F) égale exactement la somme des totaux primaires ($225\,000 + 240\,000 + 485\,000 + 1\,200\,000 = 2\,150\,000$ F) !',
+              '• **Contrôle** : la somme des totaux secondaires principaux ($650\\,000 + 1\\,500\\,000 = 2\\,150\\,000$ F) égale exactement la somme des totaux primaires ($225\\,000 + 240\\,000 + 485\\,000 + 1\\,200\\,000 = 2\\,150\\,000$ F) !',
             visualSchema: {
               type: 'custom_svg',
               title: 'Tableau de répartition primaire et secondaire avec prestations réciproques (FCFA)',
@@ -678,7 +678,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Certains centres principaux (comme la Distribution ou l’Administration) n’ont pas d’unité physique homogène (kg ou heure) pour mesurer leur activité.\n' +
               '• **Unité d’œuvre physique (CUO)** : exprimée en quantité (kg acheté, heure de MOD, heure-machine, unité produite) → donne un coût en FCFA par unité physique.\n' +
               '• **Assiette de frais en valeur (Taux de frais)** : lorsque l’activité est mesurée en argent (ex. : « 100 FCFA de chiffre d’affaires » ou « 1 FCFA de coût de production »), le quotient donne un taux de frais (en % ou en F pour 100 F de CA).\n' +
-              '• **Piège classique** : si l’assiette est « 100 F de CA » et le CA vaut 5 000 000 F, le nombre d’assiettes est $5\,000\,000 / 100 = 50\,000$ (et non 5 000 000 !).',
+              '• **Piège classique** : si l’assiette est « 100 F de CA » et le CA vaut 5 000 000 F, le nombre d’assiettes est $5\\,000\\,000 / 100 = 50\\,000$ (et non 5 000 000 !).',
             konanTip:
               'Lis toujours l’unité exacte de l’assiette de frais : « 100 F de CA » ou « 1 000 F d’achat » oblige à diviser le montant par 100 ou 1 000 avant de calculer le taux de frais !',
             exercise: {
@@ -725,17 +725,17 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Distinguer inventaire permanent et intermittent, vérifier l’équilibre fondamental SI + Entrées = Sorties + SF et valoriser correctement les entrées de matières et de produits.',
         conceptExplanation:
           'L’inventaire permanent est une organisation comptable des stocks qui enregistre au jour le jour chaque mouvement (entrée et sortie) afin de connaître à tout moment les quantités et valeurs disponibles en magasin.\n\n' +
-          'Tout compte de stock obéit à l’équation fondamentale de conservation : $\\text{Stock Initial (SI)} + \\text{Entr\\acute{e}es (E)} = \\text{Sorties (S)} + \\text{Stock Final (SF)}$ (vérifiée en quantités et en valeurs lorsque les coûts sont homogènes).\n\n' +
-          'En entrée de stock, la règle est sans ambiguïté : les matières premières et marchandises achetées entrent à leur **Coût d’achat** ($\\text{Prix d’achat} + \\text{Charges d’approvisionnement}$), tandis que les produits fabriqués entrent à leur **Coût de production** ($\\text{Co\\^ut des mati\\`eres consomm\\acute{e}es} + \\text{Charges de production}$).',
+          'Tout compte de stock obéit à l’équation fondamentale de conservation : $\\text{Stock Initial (SI)} + \\text{Entrées (E)} = \\text{Sorties (S)} + \\text{Stock Final (SF)}$ (vérifiée en quantités et en valeurs lorsque les coûts sont homogènes).\n\n' +
+          'En entrée de stock, la règle est sans ambiguïté : les matières premières et marchandises achetées entrent à leur **Coût d’achat** ($\\text{Prix d’achat} + \\text{Charges d’approvisionnement}$), tandis que les produits fabriqués entrent à leur **Coût de production** ($\\text{Coût des matières consommées} + \\text{Charges de production}$).',
         formulas: [
           {
             name: 'Équation fondamentale d’un compte de stock',
-            formula: '\\text{SI} + \\text{Entr\\acute{e}es} = \\text{Sorties} + \\text{SF} \\;\\iff\\; \\text{SF} = \\text{SI} + \\text{Entr\\acute{e}es} - \\text{Sorties}',
+            formula: '\\text{SI} + \\text{Entrées} = \\text{Sorties} + \\text{SF} \\;\\iff\\; \\text{SF} = \\text{SI} + \\text{Entrées} - \\text{Sorties}',
             note: 'Permet de calculer le stock final théorique avant inventaire physique.',
           },
           {
             name: 'Coût d’entrée en stock (matières / produits)',
-            formula: '\\text{Co\\^ut d’achat} = \\text{PA} + \\text{Frais d’approv.} \\quad ; \\quad \\text{Co\\^ut de prod.} = \\text{CAMPC} + \\text{Charges de prod.}',
+            formula: '\\text{Coût d’achat} = \\text{PA} + \\text{Frais d’approv.} \\quad ; \\quad \\text{Coût de prod.} = \\text{CAMPC} + \\text{Charges de prod.}',
             note: 'Les frais d’approche (transport, manutention, douane, transit) s’ajoutent au prix d’achat HT.',
           },
         ],
@@ -938,17 +938,17 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Calculer le CUMP de fin de période et tenir une fiche complète de stock en CUMP mobile recalculé après chaque entrée.',
         conceptExplanation:
           'La famille du Coût Unitaire Moyen Pondéré (CUMP) lisse les variations de prix en considérant le stock comme une masse fongible.\n\n' +
-          '1) **CUMP de fin de période** : on attend la fin du mois pour calculer un coût moyen unique égal à la valeur totale disponible ($\\text{Valeur SI} + \\sum \\text{Valeur Entr\\acute{e}es}$) divisée par la quantité totale disponible ($Q_{SI} + \\sum Q_E$). Toutes les sorties et le stock final sont alors valorisés à ce CUMP unique.\n\n' +
+          '1) **CUMP de fin de période** : on attend la fin du mois pour calculer un coût moyen unique égal à la valeur totale disponible ($\\text{Valeur SI} + \\sum \\text{Valeur Entrées}$) divisée par la quantité totale disponible ($Q_{SI} + \\sum Q_E$). Toutes les sorties et le stock final sont alors valorisés à ce CUMP unique.\n\n' +
           '2) **CUMP après chaque entrée (CUMP mobile)** : pour pallier le retard du calcul en fin de mois et respecter le principe de valorisation immédiate de l’inventaire permanent, on recalcule un nouveau CUMP uniquement après chaque nouvelle entrée en stock : les sorties suivantes utilisent le dernier CUMP calculé jusqu’à l’entrée suivante.',
         formulas: [
           {
             name: 'CUMP de fin de période',
-            formula: '\\text{CUMP} = \\frac{\\text{Valeur SI} + \\sum \\text{Valeurs Entr\\acute{e}es}}{\\text{Quantit\\acute{e} SI} + \\sum \\text{Quantit\\acute{e}s Entr\\acute{e}es}}',
+            formula: '\\text{CUMP} = \\frac{\\text{Valeur SI} + \\sum \\text{Valeurs Entrées}}{\\text{Quantité SI} + \\sum \\text{Quantités Entrées}}',
             note: 'Simple à calculer mais oblige à attendre la fin de période pour chiffrer les coûts.',
           },
           {
             name: 'CUMP après chaque entrée (CUMP mobile)',
-            formula: '\\text{CUMP}_k = \\frac{\\text{Valeur stock pr\\acute{e}c\\acute{e}dent} + \\text{Valeur nouvelle entr\\acute{e}e}}{\\text{Quantit\\acute{e} stock pr\\acute{e}c\\acute{e}dent} + \\text{Quantit\\acute{e} nouvelle entr\\acute{e}e}}',
+            formula: '\\text{CUMP}_k = \\frac{\\text{Valeur stock précédent} + \\text{Valeur nouvelle entrée}}{\\text{Quantité stock précédent} + \\text{Quantité nouvelle entrée}}',
             note: 'Une sortie de stock ne modifie JAMAIS le CUMP ; seule une entrée le recalcule !',
           },
         ],
@@ -978,7 +978,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'La méthode du CUMP de fin de période (ou CUMP mensuel) est la plus simple mathématiquement : elle traite la période entière comme un grand panier unique.\n' +
               '• **Numérateur** : Valeur du stock initial + Somme des valeurs de toutes les entrées du mois.\n' +
               '• **Dénominateur** : Quantité du stock initial + Somme des quantités entrées durant le mois.\n' +
-              '• **Application** : toutes les sorties du mois et le stock final sont multipliés par ce coût moyen unique (ex. : $13\,150 / 100 = 131{,}50$ F).',
+              '• **Application** : toutes les sorties du mois et le stock final sont multipliés par ce coût moyen unique (ex. : $13\\,150 / 100 = 131{,}50$ F).',
             formula: {
               name: 'CUMP de fin de période',
               formula: '\\text{CUMP} = \\frac{V_{SI} + \\sum V_E}{Q_{SI} + \\sum Q_E}',
@@ -1066,7 +1066,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Lire et vérifier une fiche de stock complète en CUMP mobile',
             paragraphText:
               'La fiche ci-dessous retrace l’ensemble des 7 mouvements de janvier en CUMP après chaque entrée.\n' +
-              '• **Remarque sur les arrondis** : lorsque la division ne tombe pas juste (ex. $4\,800 / 35 = 137{,}1428\dots$), on arrondit à 2 décimales ($137{,}14$), ce qui crée de légers écarts d’arrondi de quelques centimes sur la valeur résiduelle ($1\,371{,}5$ F).\n' +
+              '• **Remarque sur les arrondis** : lorsque la division ne tombe pas juste (ex. $4\\,800 / 35 = 137{,}1428\\dots$), on arrondit à 2 décimales ($137{,}14$), ce qui crée de légers écarts d’arrondi de quelques centimes sur la valeur résiduelle ($1\\,371{,}5$ F).\n' +
               '• **Contrôle final** : au 28/01, après toutes les entrées et sorties, il reste 25 unités valorisées à 132,02 F = 3 300,50 F.',
             visualSchema: {
               type: 'custom_svg',
@@ -1110,7 +1110,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Un piège très courant consiste à calculer la moyenne simple des prix unitaires sans tenir compte des quantités achetées !\n' +
               '• **Exemple frappant** : s’il reste 10 unités à 100 F (1 000 F) et qu’on achète 90 unités à 200 F (18 000 F), le prix moyen simple $(100+200)/2 = 150$ F est FAUX.\n' +
-              '• **Calcul pondéré exact** : $(1\,000 + 18\,000) / (10 + 90) = 19\,000 / 100 = 190$ F (beaucoup plus proche de 200 F car le lot de 90 unités pèse 9 fois plus que celui de 10 unités).\n' +
+              '• **Calcul pondéré exact** : $(1\\,000 + 18\\,000) / (10 + 90) = 19\\,000 / 100 = 190$ F (beaucoup plus proche de 200 F car le lot de 90 unités pèse 9 fois plus que celui de 10 unités).\n' +
               '• D’où le mot **Pondéré** dans CUMP : chaque prix est pondéré par sa quantité.',
             keyRule:
               'Un CUMP est toujours un quotient de VALEURS totales sur des QUANTITÉS totales, jamais la moyenne arithmétique des coûts unitaires.',
@@ -1139,7 +1139,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Lorsqu’une entreprise reçoit deux livraisons successives avant la sortie suivante (comme le 17/01 puis le 26/01 dans notre fiche), le principe reste rigoureusement identique.\n' +
               '• **17/01** : stock cumulé = 45 u pour 5 221,5 F (CUMP = 116,03 F).\n' +
-              '• **26/01** : sans sortie intermédiaire, nouvelle entrée de 15 u à 180 F = 2 700 F → nouveau stock = 60 u pour 7 921,5 F → nouveau CUMP = $7\,921{,}5 / 60 = 132{,}03$ F.\n' +
+              '• **26/01** : sans sortie intermédiaire, nouvelle entrée de 15 u à 180 F = 2 700 F → nouveau stock = 60 u pour 7 921,5 F → nouveau CUMP = $7\\,921{,}5 / 60 = 132{,}03$ F.\n' +
               '• **Conseil d’examen** : pour limiter les erreurs d’arrondi en cascade, garde toujours la valeur totale exacte en stock (colonne Mt) et recalcule le CUMP en divisant Montant total / Quantité totale !',
             konanTip:
               'Astuce anti-arrondi : dans la colonne Stock final, calcule d’abord la valeur totale $Mt_{\\text{nouveau}} = Mt_{\\text{précédent}} + Mt_{\\text{entrée}}$, puis divise par $Q_{\\text{nouvelle}}$ pour obtenir le CUMP !',
@@ -1176,7 +1176,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Différence d’inventaire (Mali vs Boni)',
-            formula: '\\Delta \\text{Inventaire} = Q_{SF\\text{ réel}} - Q_{SF\\text{ théorique}} \\;\\Rightarrow\\; \\begin{cases} < 0 : \\text{Mali (sortie fictive au Cr\\acute{e}dit)} \\\\ > 0 : \\text{Boni (entr\\acute{e}e fictive au D\\acute{e}bit)} \\end{cases}',
+            formula: '\\Delta \\text{Inventaire} = Q_{SF\\text{ réel}} - Q_{SF\\text{ théorique}} \\;\\Rightarrow\\; \\begin{cases} < 0 : \\text{Mali (sortie fictive au Crédit)} \\\\ > 0 : \\text{Boni (entrée fictive au Débit)} \\end{cases}',
             note: 'Le redressement porte uniquement sur les quantités manquantes ou excédentaires au coût du SF, sans recalculer les coûts des sorties passées.',
           },
         ],
@@ -1205,7 +1205,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'La méthode PEPS (Premier Entré, Premier Sorti) ou FIFO (First In, First Out) suit l’ordre chronologique naturel de rotation des stocks périssables.\n' +
               '• **Principe** : à chaque sortie, on puise d’abord dans le lot le plus ancien encore en stock ; une fois ce lot épuisé, on entame le lot suivant.\n' +
-              '• **Exemple (12/01, sortie de 25 u)** : le stock contient 15 u à 120 F (reliquat du SI) et 20 u à 150 F (entrée du 10/01). On sort donc $15 \\times 120 + 10 \\times 150 = 3\,300$ F, et il reste 10 u à 150 F.\n' +
+              '• **Exemple (12/01, sortie de 25 u)** : le stock contient 15 u à 120 F (reliquat du SI) et 20 u à 150 F (entrée du 10/01). On sort donc $15 \\times 120 + 10 \\times 150 = 3\\,300$ F, et il reste 10 u à 150 F.\n' +
               '• **Avantage** : valorisation immédiate des sorties et stock final évalué aux prix les plus récents.',
             keyRule:
               'En FIFO, ne mélange jamais deux lots à des prix différents : garde toujours une ligne par lot dans la colonne Stock final !',
@@ -1337,7 +1337,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Règle absolue** : le stock final retenu est toujours le $SF_{\\text{réel}}$ et on ne modifie jamais les coûts des sorties passées.',
             formula: {
               name: 'Équilibre après redressement d’inventaire',
-              formula: '\\text{SI} + \\text{Entr\\acute{e}es} (+ \\text{Boni}) = \\text{Sorties} + SF_{\\text{r\\acute{e}el}} (+ \\text{Mali})',
+              formula: '\\text{SI} + \\text{Entrées} (+ \\text{Boni}) = \\text{Sorties} + SF_{\\text{réel}} (+ \\text{Mali})',
               note: 'Le mali augmente virtuellement les sorties (Crédit) ; le boni augmente virtuellement les entrées (Débit).',
             },
             exercise: {
@@ -1641,12 +1641,12 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           'En fin de mois, tous les produits mis en fabrication ne sont pas achevés : certains restent sur les chaînes d’assemblage sous forme d’**en-cours de production**.\n\n' +
           'Les en-cours initiaux ($EI$, commencés le mois précédent) sont achevés ce mois-ci et s’ajoutent au coût des produits finis du mois ; les en-cours finals ($EF$, inachevés en fin de mois) doivent être retranchés pour ne pas gonfler le coût des produits terminés :\n' +
-          '$\\text{CPPF} = \\text{Charges de production de la p\\acute{e}riode} + EI - EF$.\n\n' +
+          '$\\text{CPPF} = \\text{Charges de production de la période} + EI - EF$.\n\n' +
           'Par ailleurs, la fabrication génère souvent des **produits dérivés** : déchets sans valeur (frais d’évacuation ajoutés au coût), déchets vendables ou réutilisables (valeur nette déduite du coût), rebuts (produits défectueux vendus à bas prix) et sous-produits (produits secondaires obtenus simultanément avec le produit principal).',
         formulas: [
           {
             name: 'Coût de production avec en-cours et déchets',
-            formula: '\\text{CPPF} = \\text{Charges p\\acute{e}riode} + \\text{EI} - \\text{EF} + \\text{Frais \\acute{e}vac. d\\acute{e}chets} - \\text{Valeur d\\acute{e}chets vendus / r\\acute{e}utilis\\acute{e}s}',
+            formula: '\\text{CPPF} = \\text{Charges période} + \\text{EI} - \\text{EF} + \\text{Frais évac. déchets} - \\text{Valeur déchets vendus / réutilisés}',
             note: 'Les en-cours s’évaluent souvent par la méthode des unités équivalentes selon leur degré d’avancement.',
           },
         ],
@@ -1678,7 +1678,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Pourquoi − EF ?** Les dépenses faites en mai sur les produits encore inachevés au 31 mai ne concernent pas les produits finis sortis d’usine : on les retranche et on les reporte au mois suivant.',
             formula: {
               name: 'Formule des en-cours de production',
-              formula: '\\text{CPPF (termin\\acute{e}s)} = \\text{Charges p\\acute{e}riode} + \\text{EI} - \\text{EF}',
+              formula: '\\text{CPPF (terminés)} = \\text{Charges période} + \\text{EI} - \\text{EF}',
               note: 'C’est l’ordre inverse de la variation de stock (SI − SF), mais exactement le même principe économique !',
             },
             exercise: {
@@ -1850,17 +1850,17 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Calculer le coût de revient et le résultat analytique par produit, puis établir la concordance exacte entre le résultat analytique global et le résultat net de la comptabilité générale.',
         conceptExplanation:
           'L’étape finale du calcul en coûts complets consiste à ajouter au Coût de production des produits vendus (CPPV) les **coûts hors production** (frais directs de distribution, commissions commerciales, transport sur ventes, charges indirectes des centres Distribution et Administration générale) pour obtenir le **Coût de revient (CR)**.\n\n' +
-          'Le **Résultat analytique** par produit s’obtient par différence : $\\text{RA} = \\text{Chiffre d’affaires HT} - \\text{Co\\^ut de revient}$.\n\n' +
+          'Le **Résultat analytique** par produit s’obtient par différence : $\\text{RA} = \\text{Chiffre d’affaires HT} - \\text{Coût de revient}$.\n\n' +
           'Enfin, le total des résultats analytiques de tous les produits ne correspond pas immédiatement au résultat de la comptabilité générale : il faut dresser le **tableau de concordance** en réintégrant les charges supplétives (+), les bonis d’inventaire (+) et les différences d’incorporation favorables, et en déduisant les charges non incorporables (−), les malis d’inventaire (−) et les coûts résiduels de centres non imputés.',
         formulas: [
           {
             name: 'Coût de revient et Résultat analytique',
-            formula: '\\text{CR} = \\text{CPPV} + \\text{Co\\^uts hors production} \\quad ; \\quad \\text{RA} = \\text{CA HT} - \\text{CR}',
+            formula: '\\text{CR} = \\text{CPPV} + \\text{Coûts hors production} \\quad ; \\quad \\text{RA} = \\text{CA HT} - \\text{CR}',
             note: 'La somme des RA par produit forme le Résultat analytique global avant concordance.',
           },
           {
             name: 'Formule de concordance CAGE → CG',
-            formula: '\\text{R\\acute{e}sultat CG} = \\sum \\text{RA} + \\text{Suppl\\acute{e}tives} - \\text{Non incorp.} + \\text{Bonis} - \\text{Malis} \\pm \\text{Diff. d’incorp.}',
+            formula: '\\text{Résultat CG} = \\sum \\text{RA} + \\text{Supplétives} - \\text{Non incorp.} + \\text{Bonis} - \\text{Malis} \\pm \\text{Diff. d’incorp.}',
             note: 'Permet de prouver la cohérence arithmétique parfaite entre les deux comptabilités.',
           },
         ],
@@ -1890,7 +1890,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Une fois le produit fabriqué sorti du stock de produits finis (CPPV), il reste à financer son acheminement jusqu’au client et le fonctionnement général de l’entreprise.\n' +
               '• **Coûts de distribution** : emballages de vente, transport sur ventes, publicité, salaires et commissions des commerciaux, charges indirectes du centre Distribution.\n' +
               '• **Autres coûts hors production** : quote-part des frais d’administration générale, frais financiers ou de siège non rattachés à l’atelier.\n' +
-              '• **Exemple** : pour 900 m de tissu vendus avec 5 F/m de commissions et 2 % de frais de pub sur un coût d’achat de 450 000 F, les frais hors production valent $4\,500 + 9\,000 = 13\,500$ F.',
+              '• **Exemple** : pour 900 m de tissu vendus avec 5 F/m de commissions et 2 % de frais de pub sur un coût d’achat de 450 000 F, les frais hors production valent $4\\,500 + 9\\,000 = 13\\,500$ F.',
             keyRule:
               'Les coûts hors production s’appliquent exclusivement aux quantités VENDUES et jamais aux quantités restant en stock.',
             exercise: {
@@ -1917,11 +1917,11 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Calculer le résultat analytique unitaire et global par produit',
             paragraphText:
               'Le résultat analytique mesure la contribution nette de chaque produit ou ligne d’activité après couverture de l’intégralité de ses charges.\n' +
-              '• **Formule** : $\\text{RA}_i = \\text{CA HT}_i - \\text{Co\\^ut de revient}_i$ (ou unitairement : $\\text{Prix de vente unitaire HT} - \\text{Co\\^ut de revient unitaire}$).\n' +
+              '• **Formule** : $\\text{RA}_i = \\text{CA HT}_i - \\text{Coût de revient}_i$ (ou unitairement : $\\text{Prix de vente unitaire HT} - \\text{Coût de revient unitaire}$).\n' +
               '• **Interprétation** : si $\\text{RA}_i > 0$, le produit est bénéficiaire ; si $\\text{RA}_i < 0$, le produit est déficitaire en coût complet (attention toutefois avant de le supprimer : il faut vérifier s’il couvre ses coûts variables et absorbe des charges fixes !).',
             formula: {
               name: 'Résultat analytique et taux de rentabilité',
-              formula: '\\text{RA}_i = Q_{\\text{vendue}} \\times (PV_u - CR_u) \\quad ; \\quad \\text{Taux de rentabilit\\acute{e}} = \\frac{\\text{RA}_i}{\\text{CA}_i}',
+              formula: '\\text{RA}_i = Q_{\\text{vendue}} \\times (PV_u - CR_u) \\quad ; \\quad \\text{Taux de rentabilité} = \\frac{\\text{RA}_i}{\\text{CA}_i}',
               note: 'Un produit déficitaire en coût complet peut parfois rester utile à court terme si sa marge sur coût variable est positive.',
             },
             exercise: {
@@ -1951,7 +1951,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Cinq sources d’écart** : 1) charges non incorporables exclues de la CAGE ; 2) charges supplétives ajoutées en CAGE ; 3) différences d’incorporation sur amortissements, matières ou arrondis de CUO ; 4) différences d’inventaire (bonis et malis) ; 5) produits non incorporés (ex. : produits HAO 82/84).\n' +
               '• **Vérification finale** : la concordance doit reconstituer à l’unité près le résultat net comptable.',
             keyRule:
-              'La concordance est l’épreuve de vérité du comptable analytique : $\\text{R\\acute{e}sultat CAGE ajust\\acute{e}} = \\text{R\\acute{e}sultat CG}$.',
+              'La concordance est l’épreuve de vérité du comptable analytique : $\\text{Résultat CAGE ajusté} = \\text{Résultat CG}$.',
             exercise: {
               id: 'lmd_entd_l1_compta_analytique_ch3_p3_q3',
               type: 'mcq',
@@ -2003,7 +2003,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Arrondis de CUO',
             stepTitle: 'Traiter les différences d’incorporation dues aux arrondis de CUO',
             paragraphText:
-              'Lorsque le coût d’unité d’œuvre (CUO) d’un centre principal ne tombe pas juste (ex. : $1\,000\,000 / 3\,000 = 333{,}33$ F/UO), l’imputation arrondie laisse un petit reliquat appelé « frais résiduels de section ».\n' +
+              'Lorsque le coût d’unité d’œuvre (CUO) d’un centre principal ne tombe pas juste (ex. : $1\\,000\\,000 / 3\\,000 = 333{,}33$ F/UO), l’imputation arrondie laisse un petit reliquat appelé « frais résiduels de section ».\n' +
               '• **Sous-imputation (coût réel du centre > coût imputé aux produits)** : on a imputé un peu trop peu de charges aux coûts, donc le résultat analytique est légèrement surestimé → à **retrancher (−)** lors de la concordance.\n' +
               '• **Sur-imputation (coût imputé > coût réel du centre)** : on a imputé un peu trop de charges → à **ajouter (+)** lors de la concordance.',
             keyRule:
@@ -2034,7 +2034,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Finalisons le raisonnement sur un cas complet combinant tous les ajustements possibles.\n' +
               '• **Résultat analytique** : Produit X (+3 200 000 F) + Produit Y (+800 000 F) = +4 000 000 F.\n' +
               '• **Ajustements** : + Supplétives (150 000 F), + Produits financiers non incorporés (60 000 F), + Boni sur PF (40 000 F), − Non incorporables (210 000 F), − Mali sur MP (30 000 F), − Frais résiduels de centre (10 000 F).\n' +
-              '• **Résultat CG retrouvé** : $4\,000\,000 + 250\,000 - 250\,000 = +4\,000\,000$ F.',
+              '• **Résultat CG retrouvé** : $4\\,000\\,000 + 250\\,000 - 250\\,000 = +4\\,000\\,000$ F.',
             konanTip:
               'Construis toujours ton tableau de concordance à deux colonnes : une colonne « Crédit / + » (éléments qui augmentent le résultat) et une colonne « Débit / − » (éléments qui le diminuent).',
             exercise: {
@@ -2146,7 +2146,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'La Marge sur Coût Variable (MCV) est l’indicateur central de l’analyse coût-volume-profit : elle mesure ce qu’il reste des ventes une fois payées les charges proportionnelles.\n' +
               '• **MCV globale et unitaire** : $\\text{MCV} = \\text{CA} - \\text{CV}$ et $MCV_u = PV_u - CV_u$.\n' +
               '• **Taux de MCV** : $t_{\\text{MCV}} = \\frac{\\text{MCV}}{\\text{CA}} = 1 - \\frac{\\text{CV}}{\\text{CA}}$. Tant que les prix et rendements ne changent pas, ce taux est constant quel que soit le chiffre d’affaires.\n' +
-              '• **Exemple** : si $PV_u = 5\,000$ F et $CV_u = 3\,000$ F, alors $MCV_u = 2\,000$ F et $t_{\\text{MCV}} = 40\\,\\%$.',
+              '• **Exemple** : si $PV_u = 5\\,000$ F et $CV_u = 3\\,000$ F, alors $MCV_u = 2\\,000$ F et $t_{\\text{MCV}} = 40\\,\\%$.',
             formula: {
               name: 'Taux de marge sur coût variable',
               formula: 't_{\\text{MCV}} = \\frac{\\text{CA} - \\text{CV}}{\\text{CA}} = \\frac{PV_u - CV_u}{PV_u}',
@@ -2222,7 +2222,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Décision stratégique** : tant que $MCS_i > 0$, le produit aide à absorber les charges fixes communes du siège ; si $MCS_i < 0$, l’abandonner améliore immédiatement le résultat global !',
             formula: {
               name: 'Marge sur coût spécifique',
-              formula: '\\text{MCS}_i = \\text{MCV}_i - \\text{CF sp\\acute{e}cifiques}_i \\quad ; \\quad \\text{R\\acute{e}sultat global} = \\sum \\text{MCS}_i - \\text{CF communes}',
+              formula: '\\text{MCS}_i = \\text{MCV}_i - \\text{CF spécifiques}_i \\quad ; \\quad \\text{Résultat global} = \\sum \\text{MCS}_i - \\text{CF communes}',
               note: 'Critère décisif pour décider du maintien ou de l’abandon d’une ligne de produits.',
             },
             exercise: {
@@ -2249,8 +2249,8 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Scinder une charge semi-variable en part fixe et part variable',
             paragraphText:
               'Certaines dépenses réelles sont mixtes (semi-variables) : elles comprennent un abonnement fixe plus une fraction proportionnelle (ex. : facture d’électricité avec prime fixe + kWh consommés, ou salaire d’un commercial = fixe + commission sur ventes).\n' +
-              '• **Méthode des deux points extrêmes** : si pour 1 000 unités la charge vaut 350 000 F et pour 1 500 unités elle vaut 450 000 F, la pente variable vaut $a = \\frac{450\,000 - 350\,000}{1\,500 - 1\,000} = 200$ F/unité.\n' +
-              '• **Part fixe** : $b = 350\,000 - (200 \\times 1\,000) = 150\,000$ F → équation $y = 200x + 150\,000$.',
+              '• **Méthode des deux points extrêmes** : si pour 1 000 unités la charge vaut 350 000 F et pour 1 500 unités elle vaut 450 000 F, la pente variable vaut $a = \\frac{450\\,000 - 350\\,000}{1\\,500 - 1\\,000} = 200$ F/unité.\n' +
+              '• **Part fixe** : $b = 350\\,000 - (200 \\times 1\\,000) = 150\\,000$ F → équation $y = 200x + 150\\,000$.',
             konanTip:
               'Face à une charge mixte donnée à deux niveaux d’activité $(x_1, y_1)$ et $(x_2, y_2)$, calcule toujours le coefficient directeur $a = (y_2 - y_1)/(x_2 - x_1)$ : c’est exactement le coût variable unitaire !',
             exercise: {
@@ -2349,7 +2349,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'À quel niveau exact de ventes l’entreprise cesse-t-elle de perdre de l’argent pour commencer à gagner du bénéfice ?\n' +
               '• **Condition d’équilibre** : $R = \\text{MCV} - \\text{CF} = 0 \\iff t_{\\text{MCV}} \\times \\text{SR} = \\text{CF}$, d’où $\\text{SR} = \\frac{\\text{CF}}{t_{\\text{MCV}}}$.\n' +
               '• **En quantité** : $Q^* = \\frac{\\text{CF}}{PV_u - CV_u} = \\frac{\\text{CF}}{\\text{MCV}_u}$.\n' +
-              '• **Exemple** : si $CF = 2\,000\,000$ F et $t_{\\text{MCV}} = 40\\,\\%$, alors $\\text{SR} = 2\,000\,000 / 0{,}40 = 5\,000\,000$ F.',
+              '• **Exemple** : si $CF = 2\\,000\\,000$ F et $t_{\\text{MCV}} = 40\\,\\%$, alors $\\text{SR} = 2\\,000\\,000 / 0{,}40 = 5\\,000\\,000$ F.',
             formula: {
               name: 'Seuil de rentabilité critique',
               formula: '\\text{SR} = \\frac{\\text{CF}}{t_{\\text{MCV}}} \\quad \\text{et} \\quad Q^* = \\frac{\\text{CF}}{\\text{MCV}_u}',
@@ -2473,7 +2473,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Indice de sécurité (IS)** : $\\text{IS} = \\frac{\\text{CA} - \\text{SR}}{\\text{CA}}$. Exprimé en %, il mesure la baisse relative maximale de CA tolérable.\n' +
               '• **Exemple** : avec CA = 10 M et SR = 6 M, MS = 4 M et IS = 40 % (très solide ; sous 10 %, l’entreprise est fragile).',
             keyRule:
-              'Relation directe avec le résultat : $\\text{R\\acute{e}sultat} = \\text{Marge de s\\acute{e}curit\\acute{e}} \\times t_{\\text{MCV}}$ !',
+              'Relation directe avec le résultat : $\\text{Résultat} = \\text{Marge de sécurité} \\times t_{\\text{MCV}}$ !',
             exercise: {
               id: 'lmd_entd_l1_compta_analytique_ch4_p2_q4',
               type: 'mcq',
@@ -2498,7 +2498,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Calculer et interpréter le levier opérationnel ($MCV / R$)',
             paragraphText:
               'Si le chiffre d’affaires varie de $+10\\,\\%$, le résultat varie-t-il aussi de $+10\\,\\%$ ? Non ! Grâce aux charges fixes déjà absorbées, le résultat varie beaucoup plus vite.\n' +
-              '• **Coefficient de levier opérationnel (LO)** : $LO = \\frac{\\Delta R / R}{\\Delta CA / CA} = \\frac{\\text{MCV}}{\\text{R\\acute{e}sultat}} = \\frac{1}{\\text{IS}}$.\n' +
+              '• **Coefficient de levier opérationnel (LO)** : $LO = \\frac{\\Delta R / R}{\\Delta CA / CA} = \\frac{\\text{MCV}}{\\text{Résultat}} = \\frac{1}{\\text{IS}}$.\n' +
               '• **Exemple** : avec MCV = 4 M et Résultat = 1,6 M ($IS = 40\\,\\%$), $LO = 4 / 1{,}6 = 2{,}5$. Si le CA augmente de $+10\\,\\%$, le résultat bondit de $2{,}5 \\times 10\\,\\% = +25\\,\\%$ (et inversement à la baisse !).',
             formula: {
               name: 'Levier opérationnel (élasticité du résultat au CA)',
@@ -2560,7 +2560,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Calculer le coefficient d’imputation rationnelle (CIR), déterminer les charges fixes imputées et le coût de sous-activité ou boni de suractivité, et analyser les écarts sur coûts préétablis.',
         conceptExplanation:
           'En coût complet classique, lorsque l’activité baisse de moitié pendant un mois creux, le coût fixe unitaire double artificiellement ! Pour éviter d’imputer les variations conjoncturelles d’activité aux coûts unitaires des produits, on utilise l’**imputation rationnelle des charges fixes**.\n\n' +
-          'On définit un **Coefficient d’Imputation Rationnelle ($CIR = \\frac{\\text{Activit\\acute{e} r\\acute{e}elle}}{\\text{Activit\\acute{e} normale}}$)** et on n’incorpore aux coûts que les charges fixes imputées ($CF_{\\text{imputées}} = CF_{\\text{réelles}} \\times CIR$).\n' +
+          'On définit un **Coefficient d’Imputation Rationnelle ($CIR = \\frac{\\text{Activité réelle}}{\\text{Activité normale}}$)** et on n’incorpore aux coûts que les charges fixes imputées ($CF_{\\text{imputées}} = CF_{\\text{réelles}} \\times CIR$).\n' +
           '• Si $CIR < 1$ (sous-activité) : $CF_{\\text{réelles}} - CF_{\\text{imputées}} > 0$ représente un **coût de sous-activité (chômage)** isolé hors du coût du produit.\n' +
           '• Si $CIR > 1$ (suractivité) : $CF_{\\text{réelles}} - CF_{\\text{imputées}} < 0$ constitue un **boni de suractivité**.\n\n' +
           'Enfin, la gestion prévisionnelle compare les **coûts préétablis (standards)** aux **coûts réels** : $\\text{Écart} = \\text{Réel} - \\text{Préétabli}$ (positif = défavorable ; négatif = favorable), décomposé en écart sur quantité et écart sur prix.',
@@ -2572,7 +2572,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
           {
             name: 'Écart sur coût préétabli et sous-écarts',
-            formula: 'E_G = (Q_r P_r) - (Q_p P_p) = \\underbrace{(Q_r - Q_p)P_p}_{E/\\text{Quantit\\acute{e}}} + \\underbrace{(P_r - P_p)Q_r}_{E/\\text{Prix}}',
+            formula: 'E_G = (Q_r P_r) - (Q_p P_p) = \\underbrace{(Q_r - Q_p)P_p}_{E/\\text{Quantité}} + \\underbrace{(P_r - P_p)Q_r}_{E/\\text{Prix}}',
             note: 'Convention : Écart = Réel − Préétabli (> 0 : défavorable ; < 0 : favorable).',
           },
         ],
@@ -2627,12 +2627,12 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Calculer le Coefficient d’Imputation Rationnelle (CIR) et les CF imputées',
             paragraphText:
               'La mise en œuvre de l’imputation rationnelle tient en trois opérations arithmétiques simples.\n' +
-              '• **1. Calcul du CIR** : $\\text{CIR} = \\frac{\\text{Activit\\acute{e} r\\acute{e}elle (A}_r)}{\\text{Activit\\acute{e} normale (A}_n)}$.\n' +
+              '• **1. Calcul du CIR** : $\\text{CIR} = \\frac{\\text{Activité réelle (A}_r)}{\\text{Activité normale (A}_n)}$.\n' +
               '• **2. Charges fixes imputées** : $CF_{\\text{imp}} = CF_{\\text{réelles}} \\times \\text{CIR}$.\n' +
               '• **3. Coût total d’imputation rationnelle** : $CV_{\\text{réelles}} + CF_{\\text{imp}}$ (attention : les charges variables ne sont JAMAIS multipliées par le CIR puisqu’elles varient déjà naturellement avec l’activité !).',
             formula: {
               name: 'Coefficient d’imputation rationnelle',
-              formula: '\\text{CIR} = \\frac{A_r}{A_n} \\quad ; \\quad \\text{Co\\^ut IR} = CV_r + (CF_r \\times \\text{CIR})',
+              formula: '\\text{CIR} = \\frac{A_r}{A_n} \\quad ; \\quad \\text{Coût IR} = CV_r + (CF_r \\times \\text{CIR})',
               note: 'Le CIR ne s’applique EXCLUSIVEMENT qu’aux charges fixes.',
             },
             exercise: {
@@ -2715,11 +2715,11 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Comparer coût réel et coût préétabli (convention de signe)',
             paragraphText:
               'En contrôle budgétaire, la méthode des **coûts préétablis** consiste à définir une fiche de coût standard par unité produite (norme technique × prix budgété), puis à mesurer les écarts face aux réalisations.\n' +
-              '• **Convention universelle sur coûts** : $\\text{\\acute{E}cart} = \\text{Co\\^ut R\\acute{e}el} - \\text{Co\\^ut Pr\\acute{e}\\acute{e}tabli}$ (adapté à la production réelle !).\n' +
+              '• **Convention universelle sur coûts** : $\\text{Écart} = \\text{Coût Réel} - \\text{Coût Préétabli}$ (adapté à la production réelle !).\n' +
               '• **Interprétation du signe** : un écart **POSITIF ($+$)** signifie que l’on a dépensé PLUS que prévu : c’est **DÉFAVORABLE** ; un écart **NÉGATIF ($-$)** signifie que l’on a économisé par rapport au standard : c’est **FAVORABLE**.',
             formula: {
               name: 'Écart global sur coût',
-              formula: '\\text{\\acute{E}cart} = \\text{Co\\^ut R\\acute{e}el} - \\text{Co\\^ut Pr\\acute{e}\\acute{e}tabli de la production r\\acute{e}elle}',
+              formula: '\\text{Écart} = \\text{Coût Réel} - \\text{Coût Préétabli de la production réelle}',
               note: 'Positif (+) = dépassement de coût (défavorable) ; Négatif (−) = économie (favorable).',
             },
             exercise: {
@@ -2748,7 +2748,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Savoir qu’on a dépassé le budget de +20 500 F ne suffit pas : il faut déterminer si la responsabilité revient à l’acheteur (hausse de prix) ou à l’atelier (gaspillage de matière).\n' +
               '• **Écart sur quantité ($E/Q$)** : $(Q_r - Q_p) \\times P_p$ — valorisé au prix standard $P_p$ pour isoler la performance technique de consommation.\n' +
               '• **Écart sur prix ($E/P$)** : $(P_r - P_p) \\times Q_r$ — appliqué à la quantité réelle $Q_r$ pour isoler la variation tarifaire.\n' +
-              '• **Vérification** : $E/Q + E/P = \\text{\\acute{E}cart global}$.',
+              '• **Vérification** : $E/Q + E/P = \\text{Écart global}$.',
             konanTip:
               'Moyen mnémotechnique infaillible pour les indices : l’écart sur Quantité multiplie par $P_p$ (Prix préétabli), et l’écart sur Prix multiplie par $Q_r$ (Quantité réelle) — vérifie toujours que leur somme redonne $Q_r P_r - Q_p P_p$ !',
             exercise: {

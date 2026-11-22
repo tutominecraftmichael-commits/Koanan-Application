@@ -2381,7 +2381,10 @@ export function formatExtractedScheduleToFormatText(
     for (const slot of daySlots) {
       const subject = extracted.subjects.find(sub => sub.id === slot.subjectId);
       const subjectName = (slot.subjectName || subject?.name || 'Matière').trim();
-      const code = subject?.code ? ` [${subject.code}]` : '';
+      // Jamais le code fabriqué faute de mieux à la lecture (« APP 1 » → « APPX-321 ») : il ferait croire à un vrai code d'ECUE
+      const fakePrefix = (subject?.name || subjectName).normalize('NFD').replace(/[̀-ͯ]/g, '').slice(0, 4).toUpperCase().replace(/[^A-Z]/g, 'X');
+      const isFabricated = !!subject?.code && new RegExp(`^${fakePrefix}-\\d{3}$`).test(subject.code);
+      const code = subject?.code && !isFabricated ? ` [${subject.code}]` : '';
       const cleanRoom = slot.room && !isGenericRoom(slot.room)
         ? slot.room.replace(/^(?:Salle|Lieu)\s*:\s*/i, '').replace(/^[()]+|[()]+$/g, '').trim()
         : '';

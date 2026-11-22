@@ -12,12 +12,53 @@
 import { GoogleGenAI } from '@google/genai';
 import { buildTimetablePrompt, cleanTimetableOutput } from './_timetablePrompt.js';
 
-/** Modèles essayés dans l'ordre (le plus précis d'abord, repli automatique s'il est saturé). */
-export const STRUCTURED_MODELS = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.5-flash'];
+/**
+ * Modèles essayés dans l'ordre (repli automatique s'il est saturé). Depuis le 2026-11-22 : Gemini 3 en premier
+ * (plus juste ET deux fois plus rapide que 2.5-flash sur le banc lycée, voir thinkingConfigFor).
+ */
+export const STRUCTURED_MODELS = ['gemini-3.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash'];
 /** Dernier recours en texte libre (ancienne consigne) : un seul modèle léger, pour ménager le quota. */
 export const FALLBACK_TEXT_MODELS = ['gemini-flash-lite-latest'];
+/**
+ * LMD : grilles denses par semaines avec codes d'ECUE presque identiques (1MAN3250 / 2MAN3250 / 3MAN3250).
+ * Tests du 2026-11-22 (EDT ESATIC ENTD 1, 14 créneaux) :
+ *  - gemini-2.5-flash (réflexion 4096) : ~30 s mais confond les codes (jeudi et vendredi faux à chaque essai) ;
+ *  - gemini-3.5-flash / flash-latest avec l'ancien réglage « thinkingBudget » : 14/14 mais 110 à 165 s
+ *    (les modèles Gemini 3 ignorent ce budget et réfléchissent au maximum) ;
+ *  - gemini-3.5-flash avec thinkingLevel « low » : 14/14 en 10,7 s et 15,4 s (et 14/14 en 11,8 s en « minimal »).
+ * Le modèle Gemini 3 en réflexion « low » passe donc en premier ; 2.5-flash reste le dernier recours.
+ */
+export const LMD_MODELS = ['gemini-3.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash'];
 /** Au-delà, on n'essaie plus d'autre modèle (l'élève attend). */
 const TOTAL_DEADLINE_MS = 110_000;
+/** LMD : temps total et temps par modèle. Doit rester sous la limite de la fonction (vercel.json : maxDuration 300 s,
+ *  le maximum du plan Hobby avec Fluid compute) pour que le serveur réponde avant d'être coupé. */
+const LMD_DEADLINE_MS = 250_000;
+const LMD_MODEL_TIMEOUT_MS = 90_000;
+
+/**
+ * Réglage de la réflexion selon le modèle : les Gemini 3 (et les alias « -latest ») se règlent par niveau,
+ * les Gemini 2.5 gardent un budget de jetons.
+ * Tests du 2026-11-22 avec gemini-3.5-flash :
+ *  - une seule page (photo, image, PDF d'une page) en « low » : ENTD 1 14/14 (×3, 11-15 s), 2nde C photo 22/23 en 16 s
+ *    (2.5-flash : 21/23 en 35 s), PDF 6 classes : les 6 classes en 29 s ;
+ *  - PDF BTS de 2 pages en « low » : la 2e page est SAUTÉE (une classe manquante) ; en « medium » : les 2 pages, 32 s.
+ * D'où « medium » dès que le PDF a plusieurs pages.
+ */
+export function thinkingConfigFor(model, { multiPage = false } = {}) {
+  if (!/gemini-3|latest/.test(model)) return { thinkingBudget: 4096 };
+  return { thinkingLevel: multiPage ? 'medium' : 'low' };
+}
+
+/** Nombre de pages d'un PDF en base64 (0 si ce n'est pas un PDF lisible). Sans bibliothèque : marqueurs « /Type /Page ». */
+export function pdfPageCount(base64) {
+  try {
+    const bin = typeof Buffer !== 'undefined' ? Buffer.from(base64, 'base64').toString('latin1') : atob(base64);
+    return (bin.match(/\/Type\s*\/Page(?![s\w])/g) || []).length;
+  } catch {
+    return 0;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Matières : sigles et variantes d'écriture → nom standard
@@ -64,7 +105,8 @@ const NON_COURSE = /^(recre(ation)?|pause( dejeuner| midi)?|dejeuner|repas|midi|
 
 const stripWeeks = (s) =>
   String(s || '')
-    .replace(/\s*(?:[-–—|/,;:(]+\s*)?\b(?:semaines?|sem\.?|weeks?)\s*(?:n[°o]?\s*)?[\d,\s\-–—àaet/]+(?:\))?/gi, '')
+    // « sem » seul ou « sem. » : surtout pas le début de « SEMESTRES » (« Examens … semestres pairs » devenait « partiestres pairs »)
+    .replace(/\s*(?:[-–—|/,;:(]+\s*)?\b(?:semaines?|sem\b\.?|weeks?)\s*(?:n[°o]?\s*)?(?=\d)[\d,\s\-–—àaet/]+(?:\))?/gi, '')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -90,7 +132,7 @@ export function isNonCourseLabel(text) {
   if (!k || NON_COURSE.test(k)) return true;
   if (/^(devoirs? et cours de rattrapage|conges? de paques|examens? deuxieme partie|lundi de pentecote|fete du travail)\b/.test(k)) return true;
   // « Devoir surveillé toutes disciplines », « DS commun », « Examen blanc » : évaluation sans matière précise
-  const evalHead = /^(devoir|ds|dst|examen|evaluation|interrogation|composition|controle|bac blanc|bepc blanc)( surveille| commun| blanc)?\b\s*(.*)$/.exec(k);
+  const evalHead = /^(devoirs?|ds|dst|examens?|evaluations?|interrogations?|compositions?|controles?|bac blanc|bepc blanc)( surveilles?| communs?| blancs?)?\b\s*(.*)$/.exec(k);
   if (evalHead) {
     const rest = evalHead[3].replace(/^(de|d|du|des|en)\s+/, '').trim();
     return !rest || !SUBJECT_ALIASES.has(rest);
@@ -135,11 +177,12 @@ const CELL_SCHEMA = {
     code: { type: 'string', description: 'Code de l’unité d’enseignement s’il est écrit (ex. 1MTH3350)' },
     weeks: { type: 'string', description: 'Semaines concernées si le document le précise (ex. « 1-8 »), sinon vide' },
     group: { type: 'string', description: 'Groupe / demi-classe si précisé (ex. « Gr A »), sinon vide' },
+    color: { type: 'string', description: 'Couleur de fond de la case si elle est colorée (ex. « jaune », « gris », « orange », « bleu clair »), sinon vide' },
   },
   required: ['day', 'start', 'end', 'label', 'subject', 'kind'],
 };
 
-const RESPONSE_SCHEMA = {
+export const RESPONSE_SCHEMA = {
   type: 'object',
   properties: {
     documentType: { type: 'string', enum: ['scolaire', 'bts', 'lmd'] },
@@ -162,8 +205,17 @@ const RESPONSE_SCHEMA = {
     },
     legend: {
       type: 'array',
-      description: 'Sigles expliqués dans le document lui-même (légende, tableau des codes)',
-      items: { type: 'object', properties: { abbr: { type: 'string' }, meaning: { type: 'string' } }, required: ['abbr', 'meaning'] },
+      description: 'Sigles ou codes expliqués dans le document lui-même (légende, tableau des ECUE / UE sous la grille)',
+      items: {
+        type: 'object',
+        properties: {
+          abbr: { type: 'string', description: 'Sigle ou code tel qu’écrit dans les cases (ex. « 1MAN3251 »)' },
+          meaning: { type: 'string', description: 'Intitulé complet (ex. « Comptabilité générale II »)' },
+          teacher: { type: 'string', description: 'Enseignant indiqué pour ce code, sinon vide' },
+          color: { type: 'string', description: 'Couleur de fond de cette ligne du tableau (la même que ses cases dans la grille), sinon vide' },
+        },
+        required: ['abbr', 'meaning'],
+      },
     },
   },
   required: ['documentType', 'classes'],
@@ -198,6 +250,12 @@ MÉTHODE DE LECTURE (suis-la dans l'ordre) :
    - Case qui s'étend sur plusieurs jours (ex. bande « RÉCRÉATION ») : une entrée par jour.
    - Case vide ou barrée : rien.
    - Si une ligne est découpée en semaines (« Semaines 1 à 8 », colonnes 1…16), indique les semaines dans « weeks ».
+   GRILLE PAR SEMAINES (très fréquente à l'université et en grande école : ESATIC, INP-HB, UFHB…) : les COLONNES sont des semaines ou des dates (« 1, 2, 3… », « 23/03/2026 »…) et les LIGNES sont les jours, chaque jour découpé en plages horaires (ex. LUNDI : 7h30-10h00, 10h15-12h45, 16h30-18h00 ; MARDI : 7h30-10h00, 10h15-12h45, 14h30-17h00).
+   - Le jour d'une case = le bloc de lignes du jour, à gauche. Ses heures = l'en-tête de SA ligne, lu jour par jour (les plages ne sont pas forcément les mêmes d'un jour à l'autre : ne recopie pas celles du lundi pour les autres jours).
+   - Lis la grille LIGNE PAR LIGNE : une même matière répétée sur plusieurs semaines dans la même ligne = UNE seule entrée, avec ses semaines dans « weeks » (ex. « 1, 4-9 »). Ne fais pas une entrée par semaine.
+   - Une bande verticale ou un bloc qui couvre toute une semaine ou toute une journée n'est JAMAIS un cours : Congés de Pâques, Fête du travail, Ascension, Lundi de Pentecôte, Examens (… semestres pairs/impairs), Devoirs et cours de rattrapage → kind « administratif » ou « evaluation ». Sport et Coaching → kind « administratif ».
+   - Les cases ne contiennent souvent qu'un CODE d'ECUE (ex. « 1MAN3251 ») ou une couleur. Cherche ce code dans le tableau des ECUE / UE placé sous la grille : subject = son intitulé, teacher = son enseignant, code = le code. Recopie TOUT ce tableau dans « legend » (abbr = code, meaning = intitulé, teacher = enseignant), une ligne par code : deux lignes n'ont jamais le même code.
+   - Les codes se ressemblent beaucoup (1MAN3250, 2MAN3250, 3MAN3250) : lis chaque chiffre avec soin. Quand chaque matière a sa couleur, note la couleur de fond (« color ») de chaque case ET de chaque ligne du tableau, avec les mêmes mots (« jaune », « gris », « orange », « vert », « bleu », « bleu clair », « violet », « rose »…). En cas de doute sur un chiffre, c'est la couleur qui tranche.
 3. Pour chaque case : « label » = le texte principal tel qu'écrit ; « subject » = le nom complet de la matière.
    Sigles courants en Côte d'Ivoire : MATHS = Mathématiques ; PC ou SP = Physique-Chimie ; SVT = SVT ; FR = Français ; ANG = Anglais ; ESP = Espagnol ; ALL = Allemand ; ESP/ALL ou LV2 = LV2 (Espagnol / Allemand) ; HG = Histoire-Géographie ; EDHC = EDHC ; EPS = EPS ; PHILO = Philosophie ; AP = Arts plastiques ; MUS = Musique ; INFO ou TICE = Informatique.
    Un sigle que tu ne connais pas et que le document n'explique pas (ex. « CS », « TE ») : recopie-le tel quel, ne devine pas. S'il est expliqué dans une légende du document, utilise l'explication et ajoute-la dans « legend ».
@@ -225,7 +283,16 @@ function classKey(name) {
 /** Nettoie les cases d'une classe et renvoie les créneaux de cours + les alertes. */
 function cleanClassCells(cells, legend) {
   const warnings = [];
-  const legendMap = new Map((legend || []).filter((l) => l && l.abbr && l.meaning).map((l) => [strip(l.abbr), String(l.meaning).trim()]));
+  const legendItems = (Array.isArray(legend) ? legend : []).filter((l) => l && l.abbr && l.meaning);
+  const legendMap = new Map(legendItems.map((l) => [strip(l.abbr), String(l.meaning).trim()]));
+  const legendTeacher = new Map(legendItems.filter((l) => l.teacher).map((l) => [strip(l.abbr), String(l.teacher).trim()]));
+  // Couleur → ligne du tableau des codes, seulement quand cette couleur n'appartient qu'à UNE ligne (sinon elle ne prouve rien)
+  const colorKey = (c) => strip(c).replace(/\b(fonce|vif|pale)\b/g, '').replace(/\s+/g, ' ').trim();
+  const byColor = new Map();
+  for (const l of legendItems) {
+    const k = colorKey(l.color);
+    if (k && k !== 'blanc') byColor.set(k, byColor.has(k) ? null : l);
+  }
   const slots = [];
   for (const c of cells || []) {
     const day = normalizeDay(c.day);
@@ -237,8 +304,21 @@ function cleanClassCells(cells, legend) {
     if (kind === 'pause' || kind === 'administratif') continue;
     let subject = String(c.subject || '').trim();
     const label = String(c.label || '').trim();
-    // Sigle expliqué par la légende du document
-    if (legendMap.has(strip(subject)) || (!subject && legendMap.has(strip(label)))) subject = legendMap.get(strip(subject)) || legendMap.get(strip(label));
+    let code = String(c.code || '').trim();
+    // Code mal lu (1MAN3250 / 2MAN3250 / 3MAN3250 se ressemblent) : la couleur de la case, propre à une seule matière, tranche
+    //    (seulement pour une case qui contient un code : « APP 1 », violet comme une autre matière, n'est pas renommé)
+    const byCellColor = byColor.get(colorKey(c.color));
+    const looksLikeCode = (s) => /^\d?[a-z]{2,5}\d{3,6}$/i.test(String(s || '').replace(/\s+/g, ''));
+    let teacherFromColor = '';
+    if (byCellColor && kind !== 'evaluation' && (looksLikeCode(code) || looksLikeCode(label))) {
+      subject = String(byCellColor.meaning).trim();
+      code = String(byCellColor.abbr).trim();
+      teacherFromColor = String(byCellColor.teacher || '').trim();
+    }
+    // Sigle ou code d'ECUE expliqué par la légende du document (tableau des ECUE sous la grille)
+    const legendKey = [subject, code, label].map(strip).find((k) => k && legendMap.has(k));
+    if (legendKey && (!subject || strip(subject) === legendKey)) subject = legendMap.get(legendKey);
+    if (legendKey && !code && /\d/.test(legendKey)) code = legendKey.toUpperCase().replace(/\s+/g, '');
     // Nom de professeur, numéro de téléphone ou « +TP (…) » collés au nom de la matière : on les retire
     subject = subject
       .replace(/\s*0\d{9}\b/g, '')
@@ -252,8 +332,8 @@ function cleanClassCells(cells, legend) {
     slots.push({
       day, start, end, subject, type,
       room: String(c.room || '').trim(),
-      teacher: String(c.teacher || '').replace(/\s*0\d{9}\s*/g, ' ').trim(),
-      code: String(c.code || '').trim(),
+      teacher: teacherFromColor || String(c.teacher || '').replace(/\s*0\d{9}\s*/g, ' ').trim() || (legendKey && legendTeacher.get(legendKey)) || '',
+      code,
       weeks: String(c.weeks || '').trim(),
       group: String(c.group || '').trim(),
     });
@@ -302,6 +382,16 @@ function cleanClassCells(cells, legend) {
     merged.push({ ...s });
   }
 
+  // 3. Bande « journée entière » (Congés, Examens, Fête… mal reconnus) : un bloc d'au moins 5 h qui recouvre
+  //    au moins deux cours plus courts du même jour n'est pas un cours, il écraserait toute la journée.
+  const len = (s) => toMin(s.end) - toMin(s.start);
+  const covers = (a, b) => a !== b && a.day === b.day && toMin(b.start) < toMin(a.end) && toMin(a.start) < toMin(b.end) && len(b) < len(a);
+  const banners = merged.filter((a) => len(a) >= 300 && merged.filter((b) => covers(a, b)).length >= 2);
+  for (const b of banners) merged.splice(merged.indexOf(b), 1);
+  [...new Set(banners.map((b) => b.subject))].forEach((name) =>
+    warnings.push(`« ${name} » couvre des journées entières par-dessus d'autres cours : ce n'est pas un cours, il a été retiré.`),
+  );
+
   // Chevauchements de deux matières différentes le même jour (hors semaines ou groupes différents)
   for (let i = 0; i < merged.length; i++) {
     for (let j = i + 1; j < merged.length && merged[j].day === merged[i].day; j++) {
@@ -311,6 +401,22 @@ function cleanClassCells(cells, legend) {
       if ((a.group || b.group) && a.group !== b.group) continue;
       warnings.push(`${a.day.charAt(0) + a.day.slice(1).toLowerCase()} : « ${a.subject} » (${a.start}-${a.end}) et « ${b.subject} » (${b.start}-${b.end}) se chevauchent, vérifie ces deux cours.`);
     }
+  }
+
+  // Tableau des codes : un code lu deux fois, ou une matière du tableau absente de la grille → lecture douteuse, l'élève vérifie
+  const seenCodes = new Map();
+  for (const l of legendItems) {
+    const k = strip(l.abbr);
+    if (seenCodes.has(k) && strip(seenCodes.get(k)) !== strip(l.meaning)) {
+      warnings.push(`Le code ${String(l.abbr).trim()} a été lu pour deux matières (« ${seenCodes.get(k)} » et « ${String(l.meaning).trim()} ») : vérifie les matières de ta grille.`);
+    }
+    seenCodes.set(k, String(l.meaning).trim());
+  }
+  const foundSubjects = new Set(merged.map((s) => norm(s.subject)));
+  const foundCodes = new Set(merged.map((s) => norm(s.code)).filter(Boolean));
+  const missing = legendItems.filter((l) => !foundCodes.has(norm(l.abbr)) && !foundSubjects.has(norm(canonicalSubject(String(l.meaning), ''))) && !isNonCourseLabel(l.meaning));
+  if (missing.length && missing.length < legendItems.length) {
+    warnings.push(`${missing.map((l) => `« ${String(l.meaning).trim()} »`).join(', ')} ${missing.length > 1 ? 'figurent' : 'figure'} dans le tableau des matières mais pas dans la grille lue : ajoute ${missing.length > 1 ? 'ces cours' : 'ce cours'} si besoin.`);
   }
   return { slots: merged, warnings };
 }
@@ -389,13 +495,23 @@ function parseJsonLoose(text) {
  * { text, model, classes:[{name,text,slotCount,subjectCount}], chosenClass, warnings }
  * En dernier recours (réponse JSON impossible), revient à l'ancienne lecture en texte libre.
  */
-export async function extractTimetable({ apiKey, data, mimeType, format, classHint = '', models = STRUCTURED_MODELS }) {
+export async function extractTimetable({ apiKey, data, mimeType, format, classHint = '', models }) {
   const ai = new GoogleGenAI({ apiKey });
   const startedAt = Date.now();
-  const timeLeft = () => TOTAL_DEADLINE_MS - (Date.now() - startedAt);
+  const isLmd = format === 'lmd';
+  const deadline = isLmd ? LMD_DEADLINE_MS : TOTAL_DEADLINE_MS;
+  const timeLeft = () => deadline - (Date.now() - startedAt);
+  // Temps accordé à un modèle : on garde ~40 s pour le modèle rapide de secours (LMD)
+  const modelTimeout = () => (isLmd ? Math.min(LMD_MODEL_TIMEOUT_MS, Math.max(30_000, timeLeft() - 40_000)) : Math.min(75_000, timeLeft()));
   const prompt = buildStructuredPrompt(format, classHint);
-  for (const model of models) {
+  const modelList = models || (isLmd ? LMD_MODELS : STRUCTURED_MODELS);
+  // PDF de plusieurs pages : réflexion « medium » (en « low », une page entière peut être sautée)
+  const multiPage = /pdf/i.test(mimeType || '') && pdfPageCount(data) > 1;
+  let skipToLast = false;
+  for (const [index, model] of modelList.entries()) {
     if (timeLeft() < 20_000) break;
+    // Le modèle précis a dépassé son temps : le suivant, aussi lent, n'aurait pas le temps ; on passe au plus rapide (le dernier)
+    if (skipToLast && index < modelList.length - 1) continue;
     try {
       const response = await ai.models.generateContent({
         model,
@@ -404,16 +520,17 @@ export async function extractTimetable({ apiKey, data, mimeType, format, classHi
           responseMimeType: 'application/json',
           responseJsonSchema: RESPONSE_SCHEMA,
           temperature: 0,
-          // Lecture fine des petits caractères (photos floues, cases étroites) et réflexion plafonnée (temps de réponse)
+          // Lecture fine des petits caractères (photos floues, cases étroites) et réflexion réglée par modèle
           mediaResolution: 'MEDIA_RESOLUTION_HIGH',
-          thinkingConfig: { thinkingBudget: 4096 },
-          httpOptions: { timeout: Math.min(75_000, timeLeft()) },
+          thinkingConfig: thinkingConfigFor(model, { multiPage }),
+          httpOptions: { timeout: modelTimeout() },
         },
       });
       const json = parseJsonLoose(response.text);
       const result = json && postProcessTimetable(json, format, classHint);
       if (result && result.text) return { ...result, model };
     } catch (err) {
+      if (isLmd && /timeout|timed out|abort|deadline/i.test(String(err?.message || err))) skipToLast = true;
       console.warn(`[extract-timetable] ${model} (JSON) indisponible : ${String(err?.message || err).slice(0, 120)}`);
     }
   }

@@ -139,6 +139,12 @@ function checkComputedAnswer(where: string, prompt: string, options: string[], c
   if (caught.length !== 1) { console.error('Le contrôle ne détecte plus une réponse fausse : à réparer.'); process.exit(2); }
 }
 // Pièges d'affichage connus, contrôlés à chaque lancement (ils ont déjà fait refuser de bonnes réponses)
+// Dates comptables (2026-11-22 : « le 01/02/N » s'affichait 01 sur 02) : jamais de fraction empilée
+for (const date of ['La caisse contient 675 000 F au 01/02/N.', 'Le 07/12/N, lettre de change au 03/01/N+1', 'le 20/03/2026',
+  // Écritures comptables en ligne (même jour) : « 20 000 / C 571 » s'affichait 20 000 sur C
+  'D 624 Entretien 20 000 ; D 4454 TVA 3 600 / C 571 Caisse 23 600', 'D 521 Banque / C 162 Emprunts : 5 000 000']) {
+  if (stackedText(date).includes('((')) problems.push(`DATE OU ÉCRITURE AFFICHÉE EN FRACTION : « ${date} » → « ${stackedText(date)} »`);
+}
 for (const piege of ['4 − 35/11', '2 000 × (1 − 30/100)', '0,038 / (2 × 0,02)', '300 × 10 / 10 000', '2 × 3,14 × 0,5 / 2,0', '4,0 / (15,0 + 1,0)']) {
   checkDisplay('piège connu', piege);
 }
@@ -146,6 +152,9 @@ for (const piege of ['4 − 35/11', '2 000 × (1 − 30/100)', '0,038 / (2 × 0,
 // ---------- Parcours de toutes les leçons servies ----------
 const seen = new Map<string, any>();
 for (const g of GRADES) for (const s of SUBJECTS) for (const c of getCurriculumChapters(s, g)) seen.set(c.id, c);
+// Filière LMD ENTD L1 (24 matières) : contrôlée aussi depuis le 2026-11-22 (elle ne l'était pas)
+const { ENTD_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
+for (const s of ENTD_L1_SUBJECT_IDS) for (const c of getCurriculumChapters(s, 'lmd_entd_l1')) seen.set(c.id, c);
 let nEx = 0;
 const norm = (o: string) => String(o).toLowerCase().replace(/\s+/g, ' ').trim();
 for (const c of seen.values()) {

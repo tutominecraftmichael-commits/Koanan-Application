@@ -20,6 +20,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_microeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 1,
+    semesters: [1],
     title: 'Chapitre 1 : Objet, méthodologie et frontière des possibilités de production',
     summary:
       'Maîtriser le problème de la rareté, les systèmes économiques, la guillotine de Hume, la statique comparative, la FPP, le coût d’opportunité et l’équilibre de marché walrasien.',
@@ -822,6 +823,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_microeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 2,
+    semesters: [1],
     title: 'Chapitre 2 : Théorie du consommateur : préférences, utilité et équilibre optimal',
     summary:
       'Maîtriser les axiomes de préférence, l’utilité ordinale et marginale, les courbes d’indifférence, le TMS, la contrainte budgétaire, le Lagrangien, les courbes d’Engel et la décomposition revenu/substitution (cas Giffen).',
@@ -1827,6 +1829,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_microeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 3,
+    semesters: [1],
     title: 'Chapitre 3 : Élasticités de la demande, surplus et interventions publiques',
     summary:
       'Calculer et interpréter les élasticités prix, revenu (lois d’Engel), croisée et d’offre, mesurer les surplus économiques et analyser prix plafond, prix plancher, taxes et perte sèche.',
@@ -2839,6 +2842,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_microeconomie',
     gradeLevel: 'lmd_entd_l1',
     order: 4,
+    semesters: [1, 2],
     title: 'Chapitre 4 : Théorie du producteur, coûts et structures de marché',
     summary:
       'Maîtriser les fonctions de production (court/long terme, isoquantes, TMST, rendements d’échelle), la théorie des coûts (CF, CV, CT, CM, Cm, seuils), la CPP, le monopole et l’oligopole.',

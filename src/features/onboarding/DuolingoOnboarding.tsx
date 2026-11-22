@@ -488,7 +488,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     setActiveExtractedClass('');
     setExtractionError(null);
     setIsAnalyzing(true);
-    setAnalysisStatus(`Extraction & catégorisation ${activeSystem.title} en cours...`);
+    setAnalysisStatus(`Extraction & catégorisation ${activeSystem.title} en cours...${activeFormat === 'lmd' ? ' Lecture minutieuse : en général moins d’une minute' : ''}`);
 
     // 1. Extraction Vision IA Gemini catégorisée selon LMD / BTS / Lycée
     try {

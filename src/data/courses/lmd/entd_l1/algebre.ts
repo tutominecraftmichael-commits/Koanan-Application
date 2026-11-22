@@ -1398,7 +1398,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'Comme $d \\mid a$ et $d \\mid b$, $d$ divise toute combinaison linéaire $5a - 3b = 2$. Les diviseurs positifs de $2$ étant $1$ et $2$, on a $d \\in \\{1, 2\}$. Par exemple $(a, b) = (1, 1)$ donne $5 - 3 = 2$ avec $d = 1$, tandis que $(a, b) = (2, 2)$ donne $10 - 6 = 4$ — ou $(a, b) = (4, 6)$ donne $20 - 18 = 2$ avec $d = 2$.',
+                'Comme $d \\mid a$ et $d \\mid b$, $d$ divise toute combinaison linéaire $5a - 3b = 2$. Les diviseurs positifs de $2$ étant $1$ et $2$, on a $d \\in \\{1, 2\\}$. Par exemple $(a, b) = (1, 1)$ donne $5 - 3 = 2$ avec $d = 1$, tandis que $(a, b) = (2, 2)$ donne $10 - 6 = 4$ — ou $(a, b) = (4, 6)$ donne $20 - 18 = 2$ avec $d = 2$.',
             },
           },
           {
@@ -2811,7 +2811,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               note: 'L’argument principal est l’unique valeur θ ∈ ]−π, π].',
             },
             keyRule:
-              'Ne détermine JAMAIS $\\theta$ uniquement avec $\\arctan(b/a)$ ! Vérifie toujours les **signes** de $a$ ($\cos\\theta$) et $b$ ($\sin\\theta$) pour placer $M$ dans le bon quadrant.',
+              'Ne détermine JAMAIS $\\theta$ uniquement avec $\\arctan(b/a)$ ! Vérifie toujours les **signes** de $a$ ($\\cos\\theta$) et $b$ ($\\sin\\theta$) pour placer $M$ dans le bon quadrant.',
             konanTip:
               'Sur le schéma ci-dessous, observe la symétrie par rapport à l’axe réel : $z = a + ib = r e^{i\\theta}$ et $\\bar{z} = a - ib = r e^{-i\\theta}$ ont le même module $r$ et des arguments opposés !',
             visualSchema: {
@@ -3043,7 +3043,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               note: 'Vérifie toujours si l’argument obtenu nθ est un multiple entier de π ou π/2 pour simplifier instantanément.',
             },
             keyRule:
-              'Ne développe JAMAIS $(a + ib)^n$ par le binôme dès que $n \\geqslant 4$ si $(a + ib)$ possède un argument remarquable ($\pm\\frac{\\pi}{6}, \\pm\\frac{\\pi}{4}, \\pm\\frac{\\pi}{3}, \\pm\\frac{\\pi}{2}$) : passe en exponentielle !',
+              'Ne développe JAMAIS $(a + ib)^n$ par le binôme dès que $n \\geqslant 4$ si $(a + ib)$ possède un argument remarquable ($\\pm\\frac{\\pi}{6}, \\pm\\frac{\\pi}{4}, \\pm\\frac{\\pi}{3}, \\pm\\frac{\\pi}{2}$) : passe en exponentielle !',
             konanTip:
               'Un réel positif $(r e^{i\\theta})^n$ est réel ssi $n\\theta \\equiv 0 \\pmod{\\pi}$, et imaginaire pur ssi $n\\theta \\equiv \\frac{\\pi}{2} \\pmod{\\pi}$.',
             exercise: {
@@ -3145,7 +3145,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Étape 1** : remplacer chaque $\\cos\\theta$ et $\\sin\\theta$ par sa formule d’Euler.\n' +
               '• **Étape 2** : développer le produit grâce au binôme de Newton (triangle de Pascal).\n' +
               '• **Étape 3** : regrouper les termes par paires d’exposants opposés $e^{ik\\theta}$ et $e^{-ik\\theta}$ et réappliquer Euler.\n' +
-              '• **Exemple ($\cos^2\\theta \\sin^2\\theta$)** : $\\left(\\frac{e^{i\\theta}+e^{-i\\theta}}{2}\\right)^2 \\left(\\frac{e^{i\\theta}-e^{-i\\theta}}{2i}\\right)^2 = \\frac{(e^{2i\\theta} - e^{-2i\\theta})^2}{-16} = \\frac{e^{4i\\theta} - 2 + e^{-4i\\theta}}{-16} = \\frac{2 - 2\\cos(4\\theta)}{16} = \\frac{1 - \\cos(4\\theta)}{8}$ !',
+              '• **Exemple ($\\cos^2\\theta \\sin^2\\theta$)** : $\\left(\\frac{e^{i\\theta}+e^{-i\\theta}}{2}\\right)^2 \\left(\\frac{e^{i\\theta}-e^{-i\\theta}}{2i}\\right)^2 = \\frac{(e^{2i\\theta} - e^{-2i\\theta})^2}{-16} = \\frac{e^{4i\\theta} - 2 + e^{-4i\\theta}}{-16} = \\frac{2 - 2\\cos(4\\theta)}{16} = \\frac{1 - \\cos(4\\theta)}{8}$ !',
             formula: {
               name: 'Linéarisations classiques de degré 2 et 3',
               formula: '\\cos^2\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\quad \\sin^2\\theta = \\frac{1 - \\cos(2\\theta)}{2}, \\quad \\cos^3\\theta = \\frac{\\cos(3\\theta) + 3\\cos\\theta}{4}',
@@ -3251,7 +3251,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           'Le théorème de d’Alembert-Gauss affirme que tout polynôme non constant de degré $n$ à coefficients complexes admet exactement $n$ racines dans $\\mathbb{C}$ (comptées avec multiplicité).\n\n' +
           '• **Racines carrées d’un complexe $Z = A + iB$** : on cherche $z = x + iy$ tel que $z^2 = Z$, ce qui fournit trois équations (dont la troisième, sur les modules, simplifie grandement la résolution) : $x^2 - y^2 = A$, $x^2 + y^2 = \\sqrt{A^2 + B^2}$ et $2xy = B$.\n' +
-          '• **Équation du second degré $az^2 + bz + c = 0$ ($a \\neq 0$)** : on calcule $\\Delta = b^2 - 4ac$. Si $\\Delta \\in \\mathbb{C} \\setminus \\mathbb{R}_+$, on détermine une racine carrée $\\delta$ de $\\Delta$ ($\delta^2 = \\Delta$) et les solutions sont $z_{1,2} = \\frac{-b \\pm \\delta}{2a}$.\n' +
+          '• **Équation du second degré $az^2 + bz + c = 0$ ($a \\neq 0$)** : on calcule $\\Delta = b^2 - 4ac$. Si $\\Delta \\in \\mathbb{C} \\setminus \\mathbb{R}_+$, on détermine une racine carrée $\\delta$ de $\\Delta$ ($\\delta^2 = \\Delta$) et les solutions sont $z_{1,2} = \\frac{-b \\pm \\delta}{2a}$.\n' +
           '• **Racines $n$-ièmes** : les $n$ racines de $z^n = 1$ forment l’ensemble $\\mathbb{U}_n = \\{e^{2ik\\pi/n} \\mid 0 \\leqslant k \\leqslant n - 1\\}$, sommets d’un polygone régulier inscrit dans le cercle unité, de somme nulle pour $n \\geqslant 2$.',
         formulas: [
           {

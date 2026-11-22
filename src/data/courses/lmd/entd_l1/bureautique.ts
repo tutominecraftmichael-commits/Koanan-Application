@@ -933,7 +933,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     title: 'Tableur et analyse de données (Microsoft Excel)',
     summary:
-      'Maîtriser les références relatives, absolues ($A$1) et mixtes, les fonctions logiques et conditionnelles (SI, ET/OU, NB.SI, SOMME.SI.ENS), les fonctions de recherche (RECHERCHEV, RECHERCHEX), la validation des données, la mise en forme conditionnelle, les tableaux croisés dynamiques (TCD) et les graphiques.',
+      'Maîtriser les références relatives, absolues (＄A＄1) et mixtes, les fonctions logiques et conditionnelles (SI, ET/OU, NB.SI, SOMME.SI.ENS), les fonctions de recherche (RECHERCHEV, RECHERCHEX), la validation des données, la mise en forme conditionnelle, les tableaux croisés dynamiques (TCD) et les graphiques.',
     officialVolumeHours: 16,
     contentVersion: 2,
     source: 'ENTD L1 — Bureautique',
@@ -941,18 +941,18 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_bureautique_ch2_p1',
         order: 1,
-        title: 'Références relatives, absolues ($A$1) et mixtes, et formules de base',
+        title: 'Références relatives, absolues (＄A＄1) et mixtes, et formules de base',
         summary:
           'Distinguer les trois types de références de cellules lors de la recopie incrémentée et fiabiliser les calculs de synthèse (SOMME, MOYENNE, MIN, MAX).',
         conceptExplanation:
-          'Dans Microsoft Excel, la puissance d’un modèle financier ou commercial repose sur la capacité à écrire une formule une seule fois puis à la recopier sur des centaines de lignes sans erreur. Pour cela, il est indispensable de comprendre comment le signe dollar `$` verrouille une colonne, une ligne ou les deux lors de la recopie.',
+          'Dans Microsoft Excel, la puissance d’un modèle financier ou commercial repose sur la capacité à écrire une formule une seule fois puis à la recopier sur des centaines de lignes sans erreur. Pour cela, il est indispensable de comprendre comment le signe dollar `＄` verrouille une colonne, une ligne ou les deux lors de la recopie.',
         keyRule:
-          'Le symbole `$` fige uniquement l’élément qui le suit immédiatement : `$A1` fige la colonne A, `A$1` fige la ligne 1, et `$A$1` fige la cellule entière.',
+          'Le symbole `＄` fige uniquement l’élément qui le suit immédiatement : `＄A1` fige la colonne A, `A＄1` fige la ligne 1, et `＄A＄1` fige la cellule entière.',
         formulas: [
           {
-            name: 'Calcul d’un montant TTC avec taux de TVA figé en $B$1',
+            name: 'Calcul d’un montant TTC avec taux de TVA figé en ＄B＄1',
             formula: '=\\text{C4} \\times (1 + \\$B\\$1)',
-            note: 'En recopiant vers le bas, C4 devient C5, C6… tandis que $B$1 reste strictement bloqué sur la cellule du taux de TVA (18 % en Côte d’Ivoire).',
+            note: 'En recopiant vers le bas, C4 devient C5, C6… tandis que ＄B＄1 reste strictement bloqué sur la cellule du taux de TVA (18 % en Côte d’Ivoire).',
           },
         ],
         workedExample: {
@@ -960,8 +960,8 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           statement:
             'Dans une feuille Excel, la cellule `B1` contient le taux de TVA `18 %`. Les prix HT des articles figurent de `C4` à `C203`. Quelle formule saisir en `D4` avant de recopier jusqu’en `D203` ?',
           methodSteps: [
-            'Écrire `=C4*(1+$B$1)` en `D4` : `C4` est relatif (doit changer à chaque ligne) et `$B$1` est absolu (doit rester figé sur le taux).',
-            'Appuyer sur la touche `F4` juste après avoir sélectionné `B1` pour insérer automatiquement les deux `$`.',
+            'Écrire `=C4*(1+＄B＄1)` en `D4` : `C4` est relatif (doit changer à chaque ligne) et `＄B＄1` est absolu (doit rester figé sur le taux).',
+            'Appuyer sur la touche `F4` juste après avoir sélectionné `B1` pour insérer automatiquement les deux `＄`.',
             'Double-cliquer sur la poignée de recopie en bas à droite de `D4` pour propager la formule jusqu’en `D203`.',
           ],
           conclusion:
@@ -989,7 +989,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
                 '=B2*C2',
                 '=B5*C5',
                 '=E2*F2',
-                '=$B$5*$C$5',
+                '=＄B＄5*＄C＄5',
               ],
               correctAnswerIndex: 1,
               explanation:
@@ -1000,19 +1000,19 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepNumber: 2,
             stepKind: 'propriete',
             stepBadge: 'Référence absolue',
-            stepTheme: 'Verrouillage $A$1',
-            stepTitle: 'Figer une constante unique grâce à la référence absolue ($A$1)',
+            stepTheme: 'Verrouillage ＄A＄1',
+            stepTitle: 'Figer une constante unique grâce à la référence absolue (＄A＄1)',
             paragraphText:
-              'Dès qu’une formule fait appel à un paramètre global unique — taux de TVA (18 %), taux de change EUR/FCFA (655,957), taux de commission — une référence relative provoque un désastre dès la deuxième ligne.\n• **Mécanisme du `$`** : `$B$1` verrouille simultanément la colonne `B` et la ligne `1`.\n• **Raccourci magique `F4`** : en mode édition sur une référence, chaque appui sur `F4` fait défiler les 4 états : `B1` → `$B$1` → `B$1` → `$B1`.\n• **Exemple concret** : pour convertir 100 prix en euros (`A4:A103`) en FCFA à l’aide du taux placé en `B1`, on écrit `=A4*$B$1`.',
+              'Dès qu’une formule fait appel à un paramètre global unique — taux de TVA (18 %), taux de change EUR/FCFA (655,957), taux de commission — une référence relative provoque un désastre dès la deuxième ligne.\n• **Mécanisme du `＄`** : `＄B＄1` verrouille simultanément la colonne `B` et la ligne `1`.\n• **Raccourci magique `F4`** : en mode édition sur une référence, chaque appui sur `F4` fait défiler les 4 états : `B1` → `＄B＄1` → `B＄1` → `＄B1`.\n• **Exemple concret** : pour convertir 100 prix en euros (`A4:A103`) en FCFA à l’aide du taux placé en `B1`, on écrit `=A4*＄B＄1`.',
             formula: {
               name: 'Cycle de la touche F4 sur une référence',
               formula: 'B1 \\xrightarrow{\\text{F4}} \\$B\\$1 \\xrightarrow{\\text{F4}} B\\$1 \\xrightarrow{\\text{F4}} \\$B1',
               note: 'Sur certains ordinateurs portables, la combinaison requise est Fn + F4.',
             },
             keyRule:
-              'Ne tapez jamais un taux fixe en dur dans 100 formules (ex. `*0,18`) : placez-le dans une cellule dédiée et référencez-le en absolu (`$B$1`).',
+              'Ne tapez jamais un taux fixe en dur dans 100 formules (ex. `*0,18`) : placez-le dans une cellule dédiée et référencez-le en absolu (`＄B＄1`).',
             konanTip:
-              'Si votre formule recopiée affiche soudainement `0` ou `#VALEUR!` à partir de la ligne 2, vérifiez en priorité si vous avez oublié les `$` sur votre cellule de paramètre !',
+              'Si votre formule recopiée affiche soudainement `0` ou `#VALEUR!` à partir de la ligne 2, vérifiez en priorité si vous avez oublié les `＄` sur votre cellule de paramètre !',
             exercise: {
               id: 'lmd_entd_l1_bureautique_ch2_p1_q2',
               type: 'mcq',
@@ -1020,13 +1020,13 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
                 'Le taux de change fixe `655,957` est saisi dans la cellule `F1`. Les montants en euros figurent en `B4:B50`. Quelle formule en `C4` peut être recopiée sans erreur jusqu’en `C50` ?',
               options: [
                 '=B4*F1',
-                '=$B$4*F1',
-                '=B4*$F$1',
-                '=B4+$F$1',
+                '=＄B＄4*F1',
+                '=B4*＄F＄1',
+                '=B4+＄F＄1',
               ],
               correctAnswerIndex: 2,
               explanation:
-                '`B4` doit rester relatif pour évoluer en `B5`, `B6`… tandis que `$F$1` doit être figé en absolu pour continuer de pointer vers le taux de change unique.',
+                '`B4` doit rester relatif pour évoluer en `B5`, `B6`… tandis que `＄F＄1` doit être figé en absolu pour continuer de pointer vers le taux de change unique.',
             },
           },
           {
@@ -1034,27 +1034,27 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Références mixtes',
             stepTheme: 'Tableaux à double entrée',
-            stepTitle: 'Construire un tableau à double entrée avec les références mixtes ($A1 / A$1)',
+            stepTitle: 'Construire un tableau à double entrée avec les références mixtes (＄A1 / A＄1)',
             paragraphText:
-              'Les références mixtes brillent dans les grilles budgétaires, les simulateurs de remises ou les tables de multiplication où l’on recopie une unique formule à la fois vers le bas ET vers la droite.\n• **Colonne figée (`$A2`)** : lors d’une recopie vers la droite, la colonne `A` ne bouge pas ; vers le bas, la ligne `2` s’incrémente (`$A3`, `$A4`).\n• **Ligne figée (`B$1`)** : lors d’une recopie vers le bas, la ligne `1` ne bouge pas ; vers la droite, la colonne `B` s’incrémente (`C$1`, `D$1`).\n• **Exemple concret** : prix de base en colonne `A` (`A2:A10`) et taux de remise en ligne `1` (`B1:E1`) → une seule formule en `B2` : `=$A2*(1-B$1)` remplit toute la matrice.',
+              'Les références mixtes brillent dans les grilles budgétaires, les simulateurs de remises ou les tables de multiplication où l’on recopie une unique formule à la fois vers le bas ET vers la droite.\n• **Colonne figée (`＄A2`)** : lors d’une recopie vers la droite, la colonne `A` ne bouge pas ; vers le bas, la ligne `2` s’incrémente (`＄A3`, `＄A4`).\n• **Ligne figée (`B＄1`)** : lors d’une recopie vers le bas, la ligne `1` ne bouge pas ; vers la droite, la colonne `B` s’incrémente (`C＄1`, `D＄1`).\n• **Exemple concret** : prix de base en colonne `A` (`A2:A10`) et taux de remise en ligne `1` (`B1:E1`) → une seule formule en `B2` : `=＄A2*(1-B＄1)` remplit toute la matrice.',
             visualSchema: {
               type: 'custom_svg',
               title: 'Références Excel et formules essentielles',
-              caption: 'Synthèse opérationnelle du verrouillage par `$` et des fonctions incontournables.',
+              caption: 'Synthèse opérationnelle du verrouillage par `＄` et des fonctions incontournables.',
               tableData: {
                 headers: ['Type / Formule', 'Syntaxe', 'Effet en recopie / Rôle'],
                 rows: [
                   ['Relative', 'A1', 'Colonne et ligne s’adaptent librement'],
-                  ['Absolue', '$A$1', 'Cellule totalement figée (taux TVA, change)'],
-                  ['Mixte (colonne)', '$A1', 'Colonne A figée, ligne libre (en-tête gauche)'],
-                  ['Mixte (ligne)', 'A$1', 'Ligne 1 figée, colonne libre (en-tête haut)'],
+                  ['Absolue', '＄A＄1', 'Cellule totalement figée (taux TVA, change)'],
+                  ['Mixte (colonne)', '＄A1', 'Colonne A figée, ligne libre (en-tête gauche)'],
+                  ['Mixte (ligne)', 'A＄1', 'Ligne 1 figée, colonne libre (en-tête haut)'],
                   ['SI logique', '=SI(test; vrai; faux)', 'Affiche un résultat selon une condition'],
                   ['SOMME.SI.ENS', '=SOMME.SI.ENS(som; p1; c1)', 'Additionne selon 1 ou plusieurs critères'],
                 ],
               },
             },
             keyRule:
-              'Dans une matrice à double entrée, figez la colonne pour les en-têtes situés à gauche (`$A2`) et figez la ligne pour les en-têtes situés en haut (`B$1`).',
+              'Dans une matrice à double entrée, figez la colonne pour les en-têtes situés à gauche (`＄A2`) et figez la ligne pour les en-têtes situés en haut (`B＄1`).',
             exercise: {
               id: 'lmd_entd_l1_bureautique_ch2_p1_q3',
               type: 'mcq',
@@ -1062,13 +1062,13 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
                 'Dans un simulateur commercial, les prix unitaires sont en `A2:A15` et les quantités commandées en `B1:F1`. Quelle formule unique en `B2` peut être recopiée sur toute la plage `B2:F15` ?',
               options: [
                 '=A2*B1',
-                '=$A$2*$B$1',
-                '=$A2*B$1',
-                '=A$2*$B1',
+                '=＄A＄2*＄B＄1',
+                '=＄A2*B＄1',
+                '=A＄2*＄B1',
               ],
               correctAnswerIndex: 2,
               explanation:
-                '`$A2` maintient toujours la lecture sur la colonne A des prix tout en changeant de ligne ; `B$1` maintient toujours la lecture sur la ligne 1 des quantités tout en changeant de colonne.',
+                '`＄A2` maintient toujours la lecture sur la colonne A des prix tout en changeant de ligne ; `B＄1` maintient toujours la lecture sur la ligne 1 des quantités tout en changeant de colonne.',
             },
           },
           {
@@ -1081,7 +1081,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Les fonctions d’agrégation résument en un clin d’œil une colonne entière de données chiffrées.\n• **`SOMME(plage)` / `MOYENNE(plage)`** : additionnent ou calculent la moyenne arithmétique en ignorant automatiquement les cellules vides ou textuelles.\n• **`MIN(plage)` et `MAX(plage)`** : identifient respectivement la plus petite et la plus grande valeur numérique.\n• **`NB(plage)` vs `NBVAL(plage)`** : `NB` compte uniquement les cellules contenant un NOMBRE ; `NBVAL` compte toutes les cellules NON VIDES (nombres et textes).\n• **Exemple concret** : sur une liste de 45 étudiants, `=NBVAL(A2:A46)` compte les noms présents tandis que `=NB(C2:C46)` compte les notes déjà saisies.',
             formula: {
               name: 'Distinction NB et NBVAL',
-              formula: '\\text{NB}(C2:C46) = \\text{effectif num\\acute{e}rique} \\quad|\\quad \\text{NBVAL}(A2:A46) = \\text{cellules non vides}',
+              formula: '\\text{NB}(C2:C46) = \\text{effectif numérique} \\quad|\\quad \\text{NBVAL}(A2:A46) = \\text{cellules non vides}',
               note: 'Le raccourci Alt + = insère instantanément une fonction SOMME automatique.',
             },
             konanTip:
@@ -1200,7 +1200,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'La fonction `SI` tranche entre deux issues possibles en fonction d’un test logique évalué à VRAI ou FAUX.\n• **Structure en 3 arguments séparés par `;`** : `=SI(test_logique ; valeur_si_vrai ; valeur_si_faux)`.\n• **Opérateurs de comparaison** : `=` (égal), `<>` (différent de), `>`, `<`, `>=`, `<=`.\n• **Exemple concret** : dans un relevé de notes où la moyenne est en `E2`, la formule `=SI(E2>=10; "Admis"; "Ajourné")` attribue automatiquement le statut de l’étudiant.',
             formula: {
               name: 'Structure de la fonction SI',
-              formula: '=\\text{SI}(E2 \\ge 10;\\; \\text{"Admis"};\\; \\text{"Ajourn\\acute{e}"})',
+              formula: '=\\text{SI}(E2 \\ge 10;\\; \\text{"Admis"};\\; \\text{"Ajourné"})',
               note: 'En version française d’Excel, le séparateur d’arguments est le point-virgule (;).',
             },
             keyRule:
@@ -1343,7 +1343,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'KPI commerciaux',
             stepTitle: 'Construire un mini-tableau de bord commercial dynamique',
             paragraphText:
-              'En combinant références mixtes/absolues et `SOMME.SI.ENS` / `NB.SI.ENS`, un gestionnaire transforme un journal de 2 000 transactions en tableau de bord instantané.\n• **Architecture** : onglet `Journal_Ventes` pour les données brutes en Tableau structuré, et onglet `Dashboard` pour les indicateurs (CA par agence, nombre de commandes, panier moyen = CA / Nb).\n• **Évolutivité** : les noms d’agences sont référencés dans des cellules (`A5`, `A6`…) plutôt que tapés en dur dans les formules, permettant une recopie immédiate.\n• **Exemple concret** : `=SOMME.SI.ENS(Ventes!$D$2:$D$500; Ventes!$B$2:$B$500; A5)` donne le CA de chaque agence en une recopie.',
+              'En combinant références mixtes/absolues et `SOMME.SI.ENS` / `NB.SI.ENS`, un gestionnaire transforme un journal de 2 000 transactions en tableau de bord instantané.\n• **Architecture** : onglet `Journal_Ventes` pour les données brutes en Tableau structuré, et onglet `Dashboard` pour les indicateurs (CA par agence, nombre de commandes, panier moyen = CA / Nb).\n• **Évolutivité** : les noms d’agences sont référencés dans des cellules (`A5`, `A6`…) plutôt que tapés en dur dans les formules, permettant une recopie immédiate.\n• **Exemple concret** : `=SOMME.SI.ENS(Ventes!＄D＄2:＄D＄500; Ventes!＄B＄2:＄B＄500; A5)` donne le CA de chaque agence en une recopie.',
             keyRule:
               'Séparez toujours les données brutes (1 onglet) et les indicateurs de synthèse (1 onglet Tableau de bord) reliés par formules dynamiques.',
             exercise: {
@@ -1377,7 +1377,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'RECHERCHEV (classique) vs RECHERCHEX (moderne)',
-            formula: '=\\text{RECHERCHEV}(\\text{cl\\acute{e}};\\; \\text{table};\\; \\text{no\\_col};\\; \\text{FAUX}) \\quad|\\quad =\\text{RECHERCHEX}(\\text{cl\\acute{e}};\\; \\text{col\\_rech};\\; \\text{col\\_retour};\\; \\text{"Introuvable"})',
+            formula: '=\\text{RECHERCHEV}(\\text{clé};\\; \\text{table};\\; \\text{no\\_col};\\; \\text{FAUX}) \\quad|\\quad =\\text{RECHERCHEX}(\\text{clé};\\; \\text{col\\_rech};\\; \\text{col\\_retour};\\; \\text{"Introuvable"})',
             note: 'RECHERCHEX cherche aussi vers la gauche, utilise la correspondance exacte par défaut et intègre nativement la gestion d’erreur.',
           },
         ],
@@ -1386,9 +1386,9 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           statement:
             'Sur la feuille `Facture`, on saisit un code produit en `A5` (ex. `PRD-014`). La feuille `Catalogue` recense en `A2:C150` les colonnes `Code`, `Désignation`, `Prix_HT`. Comment rapatrier automatiquement le Prix HT en `C5` ?',
           methodSteps: [
-            'Avec `RECHERCHEV` : `=SIERREUR(RECHERCHEV(A5; Catalogue!$A$2:$C$150; 3; FAUX); "Code inconnu")` (`3` car `Prix_HT` est la 3e colonne de la table, `FAUX` pour correspondance exacte).',
-            'Avec `RECHERCHEX` (Excel 365/2021) : `=RECHERCHEX(A5; Catalogue!$A$2:$A$150; Catalogue!$C$2:$C$150; "Code inconnu")`.',
-            'Ajouter une Validation des données (Liste) sur `A5:A30` pointant vers `Catalogue!$A$2:$A$150` pour empêcher toute faute de frappe sur le code.',
+            'Avec `RECHERCHEV` : `=SIERREUR(RECHERCHEV(A5; Catalogue!＄A＄2:＄C＄150; 3; FAUX); "Code inconnu")` (`3` car `Prix_HT` est la 3e colonne de la table, `FAUX` pour correspondance exacte).',
+            'Avec `RECHERCHEX` (Excel 365/2021) : `=RECHERCHEX(A5; Catalogue!＄A＄2:＄A＄150; Catalogue!＄C＄2:＄C＄150; "Code inconnu")`.',
+            'Ajouter une Validation des données (Liste) sur `A5:A30` pointant vers `Catalogue!＄A＄2:＄A＄150` pour empêcher toute faute de frappe sur le code.',
           ],
           conclusion:
             'La facturation devient instantanée, sans erreur de prix ni faute de référence produit.',
@@ -1401,7 +1401,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Croisement de tables',
             stepTitle: 'Maîtriser les 4 arguments de RECHERCHEV et son 4e paramètre FAUX',
             paragraphText:
-              '`RECHERCHEV` (Recherche Verticale) cherche une clé unique dans la PREMIÈRE colonne d’une table de référence et renvoie la valeur située sur la même ligne dans la colonne indiquée.\n• **Les 4 arguments** : 1) `valeur_cherchée` (la clé), 2) `table_matrice` (à figer en absolu `$A$2:$D$100`), 3) `no_index_col` (numéro de colonne dans la table : 2, 3…), 4) `valeur_proche` (`FAUX` ou `0` pour une correspondance exacte).\n• **Piège classique** : omettre le 4e argument active `VRAI` par défaut (recherche approximative), ce qui renvoie des résultats faux sur une table non triée !',
+              '`RECHERCHEV` (Recherche Verticale) cherche une clé unique dans la PREMIÈRE colonne d’une table de référence et renvoie la valeur située sur la même ligne dans la colonne indiquée.\n• **Les 4 arguments** : 1) `valeur_cherchée` (la clé), 2) `table_matrice` (à figer en absolu `＄A＄2:＄D＄100`), 3) `no_index_col` (numéro de colonne dans la table : 2, 3…), 4) `valeur_proche` (`FAUX` ou `0` pour une correspondance exacte).\n• **Piège classique** : omettre le 4e argument active `VRAI` par défaut (recherche approximative), ce qui renvoie des résultats faux sur une table non triée !',
             formula: {
               name: 'Syntaxe sécurisée de RECHERCHEV',
               formula: '=\\text{RECHERCHEV}(A2;\\; \\text{Catalogue}!\\$A\\$2:\\$D\\$100;\\; 3;\\; \\text{FAUX})',
@@ -1413,16 +1413,16 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_bureautique_ch2_p3_q1',
               type: 'mcq',
               prompt:
-                'La table `Clients!$A$2:$D$80` contient : col. 1 = `Code_Client`, col. 2 = `Nom`, col. 3 = `Ville`, col. 4 = `Plafond_Crédit`. Quelle formule renvoie exactement la `Ville` du client dont le code est en `B5` ?',
+                'La table `Clients!＄A＄2:＄D＄80` contient : col. 1 = `Code_Client`, col. 2 = `Nom`, col. 3 = `Ville`, col. 4 = `Plafond_Crédit`. Quelle formule renvoie exactement la `Ville` du client dont le code est en `B5` ?',
               options: [
-                '=RECHERCHEV(B5; Clients!$A$2:$D$80; 2; FAUX)',
-                '=RECHERCHEV(B5; Clients!$A$2:$D$80; 3; FAUX)',
-                '=RECHERCHEV(B5; Clients!$A$2:$D$80; 3; VRAI)',
-                '=RECHERCHEV(Clients!$A$2:$D$80; B5; 3; FAUX)',
+                '=RECHERCHEV(B5; Clients!＄A＄2:＄D＄80; 2; FAUX)',
+                '=RECHERCHEV(B5; Clients!＄A＄2:＄D＄80; 3; FAUX)',
+                '=RECHERCHEV(B5; Clients!＄A＄2:＄D＄80; 3; VRAI)',
+                '=RECHERCHEV(Clients!＄A＄2:＄D＄80; B5; 3; FAUX)',
               ],
               correctAnswerIndex: 1,
               explanation:
-                'La clé est `B5`, la table figée est `Clients!$A$2:$D$80`, `Ville` est en 3e position (`3`) et `FAUX` impose une correspondance exacte sur le code client.',
+                'La clé est `B5`, la table figée est `Clients!＄A＄2:＄D＄80`, `Ville` est en 3e position (`3`) et `FAUX` impose une correspondance exacte sur le code client.',
             },
           },
           {
@@ -1458,14 +1458,14 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Successeur moderne',
             stepTitle: 'Adopter RECHERCHEX pour des recherches robustes dans tous les sens',
             paragraphText:
-              'Introduite dans Excel 2021 et Microsoft 365, `RECHERCHEX` remplace avantageusement `RECHERCHEV`, `RECHERCHEH` et `INDEX/EQUIV`.\n• **Syntaxe intuitive** : `=RECHERCHEX(valeur_cherchée; tableau_recherche; tableau_renvoyé; [si_non_trouvé])`.\n• **Trois progrès décisifs** : 1) recherche à gauche comme à droite sans compter de numéro de colonne ; 2) correspondance EXACTE activée par défaut ; 3) 4e argument intégré pour personnaliser le message si la clé est absente (plus besoin d’imbriquer `SIERREUR`).\n• **Exemple concret** : `=RECHERCHEX(E2; $C$2:$C$100; $A$2:$A$100; "Absent")` retrouve le nom en colonne A à partir d’un matricule en colonne C.',
+              'Introduite dans Excel 2021 et Microsoft 365, `RECHERCHEX` remplace avantageusement `RECHERCHEV`, `RECHERCHEH` et `INDEX/EQUIV`.\n• **Syntaxe intuitive** : `=RECHERCHEX(valeur_cherchée; tableau_recherche; tableau_renvoyé; [si_non_trouvé])`.\n• **Trois progrès décisifs** : 1) recherche à gauche comme à droite sans compter de numéro de colonne ; 2) correspondance EXACTE activée par défaut ; 3) 4e argument intégré pour personnaliser le message si la clé est absente (plus besoin d’imbriquer `SIERREUR`).\n• **Exemple concret** : `=RECHERCHEX(E2; ＄C＄2:＄C＄100; ＄A＄2:＄A＄100; "Absent")` retrouve le nom en colonne A à partir d’un matricule en colonne C.',
             keyRule:
               'Privilégiez `RECHERCHEX` sur les versions récentes d’Excel : elle survit aux insertions de colonnes, cherche vers la gauche et gère nativement les absences.',
             exercise: {
               id: 'lmd_entd_l1_bureautique_ch2_p3_q3',
               type: 'mcq',
               prompt:
-                'Dans la formule `=RECHERCHEX(A2; $D$2:$D$50; $B$2:$B$50; "Inconnu")`, que réalise précisément Excel ?',
+                'Dans la formule `=RECHERCHEX(A2; ＄D＄2:＄D＄50; ＄B＄2:＄B＄50; "Inconnu")`, que réalise précisément Excel ?',
               options: [
                 'Il additionne les colonnes D et B',
                 'Il cherche A2 dans la colonne D, renvoie la valeur correspondante située à gauche en colonne B, et affiche « Inconnu » si A2 n’existe pas',
@@ -1484,7 +1484,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Listes déroulantes',
             stepTitle: 'Sécuriser la saisie avec la Validation des données et les listes déroulantes',
             paragraphText:
-              'La première cause de formules cassées dans un fichier partagé est la saisie libre incohérente (« Abidjan », « abidjan », « ABIDJAN », « Abijdan »).\n• **Accès** : onglet `Données > Validation des données`.\n• **Liste déroulante** : choisir Autoriser = `Liste` et pointer la Source vers une plage de référence (`=$G$2:$G$8`) contenant les valeurs officielles.\n• **Autres contrôles** : imposer un nombre entier entre 0 et 20 pour des notes, ou une date postérieure à aujourd’hui, avec un « Message d’erreur » personnalisé qui bloque toute saisie hors règle.',
+              'La première cause de formules cassées dans un fichier partagé est la saisie libre incohérente (« Abidjan », « abidjan », « ABIDJAN », « Abijdan »).\n• **Accès** : onglet `Données > Validation des données`.\n• **Liste déroulante** : choisir Autoriser = `Liste` et pointer la Source vers une plage de référence (`=＄G＄2:＄G＄8`) contenant les valeurs officielles.\n• **Autres contrôles** : imposer un nombre entier entre 0 et 20 pour des notes, ou une date postérieure à aujourd’hui, avec un « Message d’erreur » personnalisé qui bloque toute saisie hors règle.',
             keyRule:
               'Combinez toujours une Validation par Liste déroulante avec vos fonctions `SOMME.SI.ENS` et `RECHERCHEV` afin d’éliminer 100 % des fautes d’orthographe sur les clés.',
             konanTip:
@@ -1512,23 +1512,23 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Alertes visuelles',
             stepTitle: 'Faire parler les chiffres grâce à la Mise en forme conditionnelle',
             paragraphText:
-              'L’œil humain repère instantanément une couleur ou une barre visuelle, alors qu’il peine à scanner 500 nombres bruts.\n• **Règles de mise en surbrillance** (`Accueil > Mise en forme conditionnelle`) : colorer automatiquement en rouge toute note `< 10`, tout stock `< 15` ou toute facture échue.\n• **Visualisations intégrées** : « Barres de données » (mini-histogramme dans la cellule), « Nuances de couleurs » (carte de chaleur vert/jaune/rouge) et « Jeux d’icônes » (feux tricolores, flèches de tendance).\n• **Formule personnalisée** : colorer toute une ligne entière selon la valeur d’une colonne grâce à une référence mixte (ex. `=$E2="Impayé"`).',
+              'L’œil humain repère instantanément une couleur ou une barre visuelle, alors qu’il peine à scanner 500 nombres bruts.\n• **Règles de mise en surbrillance** (`Accueil > Mise en forme conditionnelle`) : colorer automatiquement en rouge toute note `< 10`, tout stock `< 15` ou toute facture échue.\n• **Visualisations intégrées** : « Barres de données » (mini-histogramme dans la cellule), « Nuances de couleurs » (carte de chaleur vert/jaune/rouge) et « Jeux d’icônes » (feux tricolores, flèches de tendance).\n• **Formule personnalisée** : colorer toute une ligne entière selon la valeur d’une colonne grâce à une référence mixte (ex. `=＄E2="Impayé"`).',
             keyRule:
-              'Pour colorer toute une ligne avec une formule de mise en forme conditionnelle, figez uniquement la colonne testée (`=$E2="Impayé"`) et laissez la ligne relative.',
+              'Pour colorer toute une ligne avec une formule de mise en forme conditionnelle, figez uniquement la colonne testée (`=＄E2="Impayé"`) et laissez la ligne relative.',
             exercise: {
               id: 'lmd_entd_l1_bureautique_ch2_p3_q5',
               type: 'mcq',
               prompt:
                 'Dans un tableau de suivi des stocks (`A2:F100`), vous souhaitez que toute la ligne se colore en rouge dès que le statut en colonne `F` vaut `"Rupture"`. Quelle formule saisir dans la règle de mise en forme conditionnelle ?',
               options: [
-                '=$F$2="Rupture"',
-                '=$F2="Rupture"',
-                '=F$2="Rupture"',
+                '=＄F＄2="Rupture"',
+                '=＄F2="Rupture"',
+                '=F＄2="Rupture"',
                 '=F2=Rupture',
               ],
               correctAnswerIndex: 1,
               explanation:
-                'En figeant la colonne `$F` et en laissant la ligne `2` relative, chaque cellule d’une ligne vérifie la colonne F de SA propre ligne.',
+                'En figeant la colonne `＄F` et en laissant la ligne `2` relative, chaque cellule d’une ligne vérifie la colonne F de SA propre ligne.',
             },
           },
           {
@@ -2241,7 +2241,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Raccourcis clés de projection PowerPoint',
-            formula: '\\text{F5 : D\\acute{e}but} \\;|\\; \\text{Maj+F5 : Slide actuelle} \\;|\\; \\text{B : \\acute{E}cran noir} \\;|\\; \\text{N° + Entr\\acute{e}e : Saut direct}',
+            formula: '\\text{F5 : Début} \\;|\\; \\text{Maj+F5 : Slide actuelle} \\;|\\; \\text{B : Écran noir} \\;|\\; \\text{N° + Entrée : Saut direct}',
             note: 'En mode Diaporama, appuyer sur B (Black) ou W (White) masque temporairement la slide pour recentrer l’attention sur votre voix.',
           },
         ],

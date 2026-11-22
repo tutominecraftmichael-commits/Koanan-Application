@@ -20,6 +20,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 1,
+    semesters: [1],
     title: 'Chapitre 1 : Fondements, Bilan patrimonial, Compte de résultat et SYSCOHADA',
     summary:
       'Définition de l’entreprise et des flux économiques, principe de la partie double, structure du Bilan (Actif/Passif et situation nette), Compte de résultat et architecture des 8 classes du Plan Comptable SYSCOHADA révisé.',
@@ -40,7 +41,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Équilibre d’un échange économique',
-            formula: '\\text{Flux r\\acute{e}el (bien / service)} \\iff \\text{Flux financier (monnaie / cr\\acute{e}ance / dette)}',
+            formula: '\\text{Flux réel (bien / service)} \\iff \\text{Flux financier (monnaie / créance / dette)}',
             note: 'Chaque opération marchande lie un emploi et une ressource de même valeur.',
           },
         ],
@@ -263,7 +264,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
           {
             name: 'Résultat net au Bilan',
-            formula: '\\text{R\\acute{e}sultat net} = \\text{Situation nette} - \\text{Capital social}',
+            formula: '\\text{Résultat net} = \\text{Situation nette} - \\text{Capital social}',
             note: 'En l’absence de réserves ou de prélèvements : positif = bénéfice, négatif = perte.',
           },
         ],
@@ -349,8 +350,8 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Calculer la Situation nette (patrimoine réel)',
             paragraphText:
               'Pour connaître la richesse réelle d’une entreprise à un instant t, il ne suffit pas d’additionner ses biens : il faut en retrancher tout ce qu’elle doit aux tiers.\n' +
-              '• **Approche patrimoniale** : $\\text{Situation nette} = \\text{Biens} + \\text{Cr\\acute{e}ances} + \\text{Tr\\acute{e}sorerie-Actif} - \\text{Dettes}$.\n' +
-              '• **Approche par les ressources internes** : $\\text{Situation nette} = \\text{Capital} + \\text{R\\acute{e}serves} \\pm \\text{R\\acute{e}sultat net}$.\n' +
+              '• **Approche patrimoniale** : $\\text{Situation nette} = \\text{Biens} + \\text{Créances} + \\text{Trésorerie-Actif} - \\text{Dettes}$.\n' +
+              '• **Approche par les ressources internes** : $\\text{Situation nette} = \\text{Capital} + \\text{Réserves} \\pm \\text{Résultat net}$.\n' +
               '• **Exemple** : avec 29 000 000 F d’Actif et 13 500 000 F de dettes (emprunt + fournisseurs), la situation nette vaut 15 500 000 FCFA.',
             formula: {
               name: 'Double détermination de la Situation nette',
@@ -388,7 +389,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Règle SYSCOHADA** : une perte figure toujours au Passif dans les capitaux propres avec le signe moins (−), jamais à l’Actif.',
             formula: {
               name: 'Équation d’équilibre du Bilan',
-              formula: '\\text{Total Actif} = \\text{Capital} + \\text{R\\acute{e}serves} + \\text{R\\acute{e}sultat} + \\text{Dettes}',
+              formula: '\\text{Total Actif} = \\text{Capital} + \\text{Réserves} + \\text{Résultat} + \\text{Dettes}',
               note: 'Le signe du Résultat est positif en cas de bénéfice et négatif en cas de perte.',
             },
             konanTip:
@@ -495,11 +496,11 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           'Alors que le Bilan décrit l’état du patrimoine à une date précise (« au 31/12/N »), le Compte de résultat retrace l’activité de toute une période (« exercice N ») en confrontant les Produits (enrichissements) et les Charges (appauvrissements).\n\n' +
           'Le Plan comptable SYSCOHADA classe les comptes en 8 grandes familles : les classes 1 à 5 forment les comptes de Bilan (situation patrimoniale), les classes 6 et 7 regroupent les charges et produits des Activités Ordinaires (AO), et la classe 8 rassemble les charges (8 impair) et produits (8 pair) Hors Activités Ordinaires (HAO).\n\n' +
-          'Le Résultat net calculé au Compte de résultat ($\text{Produits} - \text{Charges}$) est rigoureusement identique à celui inscrit dans les Capitaux propres du Bilan.',
+          'Le Résultat net calculé au Compte de résultat ($\\text{Produits} - \\text{Charges}$) est rigoureusement identique à celui inscrit dans les Capitaux propres du Bilan.',
         formulas: [
           {
             name: 'Résultat net par le Compte de résultat',
-            formula: '\\text{R\\acute{e}sultat net} = \\sum \\text{Produits (cl. 7 + cl. 8 pair)} - \\sum \\text{Charges (cl. 6 + cl. 8 impair)}',
+            formula: '\\text{Résultat net} = \\sum \\text{Produits (cl. 7 + cl. 8 pair)} - \\sum \\text{Charges (cl. 6 + cl. 8 impair)}',
             note: 'Bénéfice si Produits > Charges ; Perte si Charges > Produits.',
           },
           {
@@ -639,7 +640,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Exemple** : achats = 10 M, SI = 2 M, SF = 3,5 M → 603 = −1,5 M (créditeur) → achats consommés = 8,5 M.',
             formula: {
               name: 'Achats consommés de marchandises',
-              formula: '\\text{Achats consomm\\acute{e}s} = \\text{Achats (601)} + (\\text{SI} - \\text{SF})',
+              formula: '\\text{Achats consommés} = \\text{Achats (601)} + (\\text{SI} - \\text{SF})',
               note: 'Le compte 6031 est créditeur lorsque SF > SI et débiteur lorsque SI > SF.',
             },
             konanTip:
@@ -703,7 +704,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Exemple** : si RAO = +7 000 000 F, résultat HAO = −500 000 F et IS (891) = 1 625 000 F, alors Résultat net = 4 875 000 F.',
             formula: {
               name: 'Formation du Résultat net SYSCOHADA',
-              formula: '\\text{R\\acute{e}sultat net} = \\text{RAO} + \\text{RHAO} - \\text{Imp\\^ot sur le r\\acute{e}sultat (89)}',
+              formula: '\\text{Résultat net} = \\text{RAO} + \\text{RHAO} - \\text{Impôt sur le résultat (89)}',
               note: 'Permet de distinguer la rentabilité courante des éléments exceptionnels et fiscaux.',
             },
             konanTip:
@@ -737,6 +738,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 2,
+    semesters: [1],
     title: 'Chapitre 2 : Organisation comptable, mécanisme des comptes et Balance',
     summary:
       'Fonctionnement du compte en T (Débit/Crédit et calcul du solde), principe de la partie double au Livre-Journal, report au Grand-Livre et contrôles par la Balance à 2, 4 et 6 colonnes.',
@@ -757,7 +759,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Calcul du solde d’un compte',
-            formula: '\\text{Solde} = \\sum \\text{D\\acute{e}bits} - \\sum \\text{Cr\\acute{e}dits}',
+            formula: '\\text{Solde} = \\sum \\text{Débits} - \\sum \\text{Crédits}',
             note: 'SD (Solde Débiteur) si > 0 ; SC (Solde Créditeur) si < 0 ; Solde nul (compte soldé) si = 0.',
           },
         ],
@@ -886,12 +888,12 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Calculer un solde et arrêter correctement un compte',
             paragraphText:
               'À la fin d’une journée, d’un mois ou d’un exercice, le comptable « arrête » chaque compte pour connaître sa situation nette.\n' +
-              '• **Solde débiteur (SD)** : lorsque $\\sum \\text{D\\acute{e}bits} > \\sum \\text{Cr\\acute{e}dits}$. Pour égaliser les deux colonnes lors de l’arrêt, le SD s’écrit au Crédit (côté le plus faible), puis est reporté à nouveau au Débit à la réouverture.\n' +
-              '• **Solde créditeur (SC)** : lorsque $\\sum \\text{Cr\\acute{e}dits} > \\sum \\text{D\\acute{e}bits}$. Pour égaliser lors de l’arrêt, le SC s’écrit au Débit, puis est reporté au Crédit à la réouverture.\n' +
+              '• **Solde débiteur (SD)** : lorsque $\\sum \\text{Débits} > \\sum \\text{Crédits}$. Pour égaliser les deux colonnes lors de l’arrêt, le SD s’écrit au Crédit (côté le plus faible), puis est reporté à nouveau au Débit à la réouverture.\n' +
+              '• **Solde créditeur (SC)** : lorsque $\\sum \\text{Crédits} > \\sum \\text{Débits}$. Pour égaliser lors de l’arrêt, le SC s’écrit au Débit, puis est reporté au Crédit à la réouverture.\n' +
               '• **Exemple** : un compte Client totalisant 1 200 000 F au Débit et 850 000 F au Crédit a un SD de 350 000 F (le client doit encore 350 000 F).',
             formula: {
               name: 'Égalité d’arrêt d’un compte débiteur',
-              formula: '\\sum \\text{D\\acute{e}bits} = \\sum \\text{Cr\\acute{e}dits} + \\text{SD}',
+              formula: '\\sum \\text{Débits} = \\sum \\text{Crédits} + \\text{SD}',
               note: 'Inversement, pour un compte créditeur : Σ Crédits = Σ Débits + SC.',
             },
             konanTip:
@@ -987,7 +989,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Égalité fondamentale de la partie double',
-            formula: '\\sum \\text{Montants d\\acute{e}bit\\acute{e}s} = \\sum \\text{Montants cr\\acute{e}dit\\acute{e}s}',
+            formula: '\\sum \\text{Montants débités} = \\sum \\text{Montants crédités}',
             note: 'Valable pour chaque article du journal et pour le total général du journal.',
           },
         ],
@@ -1017,10 +1019,10 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Pourquoi enregistre-t-on chaque opération à deux endroits ? Parce qu’aucune richesse ne se crée ou ne disparaît sans origine ni destination.\n' +
               '• **Ressource (Crédit)** : c’est le point de départ, le moyen qui permet l’opération (vente, emprunt, caisse, crédit fournisseur).\n' +
               '• **Emploi (Débit)** : c’est le point d’arrivée, l’utilisation qui en est faite (achat, machine, créance client, dépôt en banque).\n' +
-              '• **Équilibre systématique** : dans tout article simple (1 compte débité, 1 compte crédité) ou composé (plusieurs comptes), $\\sum \\text{D\\acute{e}bit} = \\sum \\text{Cr\\acute{e}dit}$.',
+              '• **Équilibre systématique** : dans tout article simple (1 compte débité, 1 compte crédité) ou composé (plusieurs comptes), $\\sum \\text{Débit} = \\sum \\text{Crédit}$.',
             formula: {
               name: 'Principe de la partie double',
-              formula: '\\text{Total D\\acute{e}bit (Emplois)} = \\text{Total Cr\\acute{e}dit (Ressources)}',
+              formula: '\\text{Total Débit (Emplois)} = \\text{Total Crédit (Ressources)}',
               note: 'Ce contrôle empêche qu’une demi-écriture soit enregistrée isolément.',
             },
             keyRule:
@@ -1154,7 +1156,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Question 1 (Qui sommes-nous ?)** : vérifier si l’on tient la comptabilité de l’acheteur ou du vendeur !\n' +
               '• **Question 2 (Nature du flux)** : s’agit-il d’un achat/vente (classes 6/7), d’un investissement (classe 2) ou d’un règlement (classe 5) ?\n' +
               '• **Question 3 (Mode de règlement)** : au comptant (521 Banque / 571 Caisse) ou à crédit (401 Fournisseur / 411 Client) ?\n' +
-              '• **Question 4 (Équilibre)** : vérifier que $\\sum \\text{D\\acute{e}bit} = \\sum \\text{Cr\\acute{e}dit}$.',
+              '• **Question 4 (Équilibre)** : vérifier que $\\sum \\text{Débit} = \\sum \\text{Crédit}$.',
             konanTip:
               'Ne commence JAMAIS à écrire des numéros de comptes avant d’avoir identifié chez QUI tu passes l’écriture (client ou fournisseur) : c’est la source n°1 d’inversion entre 601/401 et 701/411 !',
             exercise: {
@@ -1276,7 +1278,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'À partir des comptes du Grand-Livre, on dresse la Balance dans l’ordre numérique croissant des comptes (classes 1 à 8).\n' +
               '• **Balance à 2 colonnes (balance des soldes)** : N° compte, Intitulé, puis 2 colonnes de soldes (SD, SC). Elle sert directement à construire le Bilan et le Compte de résultat, avec l’égalité $\\sum \\text{SD} = \\sum \\text{SC}$.\n' +
               '• **Balance à 4 colonnes** : ajoute deux colonnes pour les sommes cumulées (Débit, Crédit) avant les deux colonnes de soldes (SD, SC).\n' +
-              '• **Double contrôle de la 4 colonnes** : $\\sum \\text{D\\acute{e}bit} = \\sum \\text{Cr\\acute{e}dit}$ ET $\\sum \\text{SD} = \\sum \\text{SC}$.',
+              '• **Double contrôle de la 4 colonnes** : $\\sum \\text{Débit} = \\sum \\text{Crédit}$ ET $\\sum \\text{SD} = \\sum \\text{SC}$.',
             formula: {
               name: 'Double égalité de la balance à 4 colonnes',
               formula: '\\sum D = \\sum C \\quad \\text{et} \\quad \\sum SD = \\sum SC',
@@ -1446,6 +1448,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 3,
+    semesters: [1, 2],
     title: 'Chapitre 3 : Opérations courantes et facturation (Doit, TVA, Port, Avoir)',
     summary:
       'Établissement et comptabilisation des factures de Doit et d’Avoir selon le SYSCOHADA : cascade des RRR, escompte financier, TVA à 18 %, port facturé vs port débours, avances et retours.',
@@ -1581,7 +1584,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Attention au piège arithmétique classique sur les remises multiples : deux remises successives de 10 % et 20 % ne font JAMAIS 30 % !\n' +
               '• **Méthode de la cascade** : la 1re remise s’applique sur le Brut pour donner le 1er Net Commercial ; la 2e remise s’applique uniquement sur ce 1er Net Commercial pour donner le 2e Net Commercial.\n' +
-              '• **Exemple chiffré** : sur un Brut de 1 000 000 F avec remises de 10 % puis 20 % : Net 1 = $1\,000\,000 \\times 0{,}90 = 900\,000$ F ; Net 2 = $900\,000 \\times 0{,}80 = 720\,000$ F (taux global réel = 28 %, et non 30 % !).',
+              '• **Exemple chiffré** : sur un Brut de 1 000 000 F avec remises de 10 % puis 20 % : Net 1 = $1\\,000\\,000 \\times 0{,}90 = 900\\,000$ F ; Net 2 = $900\\,000 \\times 0{,}80 = 720\\,000$ F (taux global réel = 28 %, et non 30 % !).',
             formula: {
               name: 'Taux de réduction équivalent à deux remises',
               formula: 'r_{\\text{eq}} = 1 - (1 - r_1)(1 - r_2) = r_1 + r_2 - r_1 r_2',
@@ -1685,7 +1688,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
           {
             name: 'TVA à décaisser (reversée à l’État)',
-            formula: '\\text{TVA due} = \\text{TVA collect\\acute{e}e (443)} - \\text{TVA d\\acute{e}ductible (445)}',
+            formula: '\\text{TVA due} = \\text{TVA collectée (443)} - \\text{TVA déductible (445)}',
             note: 'Si TVA déductible > TVA collectée, l’entreprise détient un crédit de TVA (4449).',
           },
         ],
@@ -1793,7 +1796,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Liquidation mensuelle** : l’entreprise reverse à la DGI uniquement $\\text{TVA due} = 443 - 445$ (compte 4441).',
             formula: {
               name: 'Déclaration mensuelle de TVA',
-              formula: '\\text{TVA à payer (4441)} = \\text{TVA collect\\acute{e}e (443)} - \\text{TVA r\\acute{e}cup\\acute{e}rable (445)}',
+              formula: '\\text{TVA à payer (4441)} = \\text{TVA collectée (443)} - \\text{TVA récupérable (445)}',
               note: 'Les achats (601) et les ventes (701) sont donc toujours comptabilisés Hors Taxes (HT).',
             },
             konanTip:
@@ -1852,7 +1855,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Une erreur fréquente en examen consiste à calculer la TVA à 18 % sur le Net Commercial puis à soustraire l’escompte après.\n' +
               '• **Pourquoi c’est faux ?** L’escompte financier réduit le prix effectivement payé par le client ; fiscalement, la base imposable à la TVA est donc diminuée de cet escompte !\n' +
-              '• **Calcul exact** : avec NC = 722 000 F (760 000 − 5 %) et escompte 5 % (36 100 F), NF = 685 900 F ; la TVA vaut $685\,900 \\times 18\\,\\% = 123\,462$ F (et non $722\,000 \\times 18\\,\\% = 129\,960$ F).\n' +
+              '• **Calcul exact** : avec NC = 722 000 F (760 000 − 5 %) et escompte 5 % (36 100 F), NF = 685 900 F ; la TVA vaut $685\\,900 \\times 18\\,\\% = 123\\,462$ F (et non $722\\,000 \\times 18\\,\\% = 129\\,960$ F).\n' +
               '• **Exception** : les entreprises non assujetties à la TVA enregistrent leurs achats directement TTC en classe 6.',
             konanTip:
               'Retiens la formule express : $\\text{Base TVA} = \\text{Net Financier}$ (plus port facturé s’il y en a). Jamais le Net Commercial lorsqu’il y a un escompte !',
@@ -1882,7 +1885,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Sur les tickets de caisse ou certaines pièces commerciales, seul le montant TTC figure : il faut savoir extraire le HT et la TVA.\n' +
               '• **Formule de conversion** : puisque $\\text{TTC} = \\text{HT} \\times (1 + 0{,}18) = 1{,}18 \\times \\text{HT}$, on retrouve $\\text{HT} = \\text{TTC} / 1{,}18$.\n' +
               '• **Piège mortel** : ne JAMAIS calculer 18 % du TTC pour trouver la TVA ! $18\\,\\%$ s’applique au HT, pas au TTC.\n' +
-              '• **Exemple** : pour une réparation informatique réglée 23 600 F TTC en espèces : $\\text{HT} = 23\,600 / 1{,}18 = 20\,000$ F et $\\text{TVA} = 23\,600 - 20\,000 = 3\,600$ F.',
+              '• **Exemple** : pour une réparation informatique réglée 23 600 F TTC en espèces : $\\text{HT} = 23\\,600 / 1{,}18 = 20\\,000$ F et $\\text{TVA} = 23\\,600 - 20\\,000 = 3\\,600$ F.',
             formula: {
               name: 'Extraction du HT à partir du TTC (TVA 18 %)',
               formula: '\\text{HT} = \\frac{\\text{TTC}}{1{,}18} \\quad ; \\quad \\text{TVA} = \\text{TTC} - \\text{HT}',
@@ -1922,7 +1925,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Base TVA selon la nature du port',
-            formula: '\\text{Base TVA (port factur\\acute{e})} = \\text{NF} + \\text{Port} \\quad | \\quad \\text{Base TVA (port d\\acute{e}bours)} = \\text{NF}',
+            formula: '\\text{Base TVA (port facturé)} = \\text{NF} + \\text{Port} \\quad | \\quad \\text{Base TVA (port débours)} = \\text{NF}',
             note: 'Le port débours s’ajoute après la TVA pour éviter une double taxation.',
           },
         ],
@@ -2008,7 +2011,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               'Le tableau ci-dessous confronte pas à pas les deux présentations pour un même Net Financier de 9 030 700 F et un transport de 300 000 F (TVA 18 %).\n' +
               '• **Colonne Port facturé** : les 300 000 F s’ajoutent avant la ligne TVA, portant la base imposable à 9 330 700 F et la TVA à 1 679 526 F.\n' +
               '• **Colonne Port débours** : la TVA (1 625 526 F) est calculée sur le seul Net Financier de 9 030 700 F, puis les 300 000 F sont ajoutés après le TTC.\n' +
-              '• **Écart sur le NAP** : exactement 54 000 F ($18\\,\\% \\times 300\,000$).',
+              '• **Écart sur le NAP** : exactement 54 000 F ($18\\,\\% \\times 300\\,000$).',
             visualSchema: {
               type: 'custom_svg',
               title: 'Position du transport sur la facture de Doit (en FCFA)',
@@ -2081,7 +2084,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Un piège classique dans les sujets de facturation consiste à calculer l’escompte de règlement après avoir additionné les frais de transport.\n' +
               '• **Règle commerciale** : l’escompte porte uniquement sur le prix des marchandises (le Net Commercial), jamais sur les frais accessoires de port ni sur les consignations d’emballages.\n' +
-              '• **Vérification** : si NC marchandises = 495 000 F, escompte = 2 % et port facturé = 20 000 F, l’escompte vaut $2\\,\\% \\times 495\,000 = 9\,900$ F (et non $2\\,\\% \\times 515\,000 = 10\,300$ F).\n' +
+              '• **Vérification** : si NC marchandises = 495 000 F, escompte = 2 % et port facturé = 20 000 F, l’escompte vaut $2\\,\\% \\times 495\\,000 = 9\\,900$ F (et non $2\\,\\% \\times 515\\,000 = 10\\,300$ F).\n' +
               '• Le port n’intervient qu’après le calcul du Net Financier.',
             konanTip:
               'Ordre immuable : Net Commercial → Escompte → Net Financier → Port facturé → Base HT → TVA → Port débours → Net à Payer !',
@@ -2146,7 +2149,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         formulas: [
           {
             name: 'Base de retour partiel sur facture avec RRR et escompte',
-            formula: '\\text{Avoir HT} = \\text{Brut retourn\\acute{e}} \\times (1 - r_1)\\dots(1 - r_k) \\times (1 - e)',
+            formula: '\\text{Avoir HT} = \\text{Brut retourné} \\times (1 - r_1)\\dots(1 - r_k) \\times (1 - e)',
             note: 'Les mêmes taux de remise et d’escompte que la facture de Doit d’origine s’appliquent au lot retourné.',
           },
         ],
@@ -2355,6 +2358,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 4,
+    semesters: [2],
     title: 'Chapitre 4 : Emballages commerciaux et Effets de commerce',
     summary:
       'Traitement des emballages perdus vs récupérables (consignation, déconsignation, mali/boni, non-retour), effets de commerce (lettre de change, billet à ordre), remise à l’encaissement et à l’escompte (agios), impayés et renouvellement de traite.',
@@ -2496,7 +2500,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               '• **Exemple** : 1 000 casiers consignés à 900 F (900 000 F) repris à 800 F (800 000 F) → Mali/Boni = 100 000 F.',
             formula: {
               name: 'Différence de déconsignation',
-              formula: '\\text{Diff\\acute{e}rence} = \\text{Prix consign\\acute{e}} - \\text{Prix repris} \\;\\;\\Rightarrow\\;\\; \\text{6224 (Client)} \\;/\\; \\text{7074 (Fournisseur)}',
+              formula: '\\text{Différence} = \\text{Prix consigné} - \\text{Prix repris} \\;\\;\\Rightarrow\\;\\; \\text{6224 (Client)} \\;/\\; \\text{7074 (Fournisseur)}',
               note: 'Chez le client, Débit 401 (reprise) + Débit 6224 (mali) = Crédit 4094 (consignation).',
             },
             exercise: {
@@ -2552,7 +2556,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Vérifions l’emplacement exact des emballages consignés sur une facture comportant tous les éléments.\n' +
               '• **Données** : Marchandises Net Commercial = 2 800 000 F, Escompte 2 % = 56 000 F → Net Financier = 2 744 000 F ; TVA 18 % = 493 920 F ; Port avancé (débours) = 300 000 F ; Consignation 1 000 casiers × 900 F = 900 000 F.\n' +
-              '• **Calcul du Net à Payer** : $2\,744\,000 + 493\,920 + 300\,000 + 900\,000 = 4\,437\,920$ F.\n' +
+              '• **Calcul du Net à Payer** : $2\\,744\\,000 + 493\\,920 + 300\\,000 + 900\\,000 = 4\\,437\\,920$ F.\n' +
               '• **Imputation chez l’acheteur** : 601 (2 800 000), 6015 (300 000), 4452 (493 920), 4094 (900 000) au Débit ; 773 (56 000) et 401 (4 437 920) au Crédit.',
             konanTip:
               'Additionne toujours les colonnes de ton écriture : Débit (2 800 000 + 300 000 + 493 920 + 900 000 = 4 493 920) = Crédit (56 000 + 4 437 920 = 4 493 920) !',
@@ -2803,17 +2807,17 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Enregistrer la remise à l’encaissement et la négociation à l’escompte avec calcul des agios (escompte commercial, commissions, TOB/TVA), gérer un impayé et calculer la nouvelle traite de renouvellement.',
         conceptExplanation:
           'À l’approche de l’échéance, le porteur remet l’effet à sa banque pour encaissement (compte intermédiaire `512 Effets à l’encaissement`) : la banque crédite le compte `521` du nominal diminué d’une simple commission d’encaissement (`6312` + TVA/TOB).\n\n' +
-          'Si le porteur a besoin de liquidités AVANT l’échéance, il négocie (escompte) l’effet à sa banque (`415 Clients, effets escomptés non échus` ou `5114` en remise puis `521` / `565 Escompte de crédits ordinaires` + `675 Escompte des effets de commerce`). La banque retient des agios composés de l’escompte commercial ($e = V \\times t \\times n / 36\,000$), de commissions bancaires (`6312`) et de la TOB/TVA sur services bancaires.\n\n' +
-          'Si le client prévient qu’il ne pourra payer à l’échéance (ou si l’effet revient impayé), le fournisseur annule l’ancienne traite (reconstitution en `411`), récupère les frais bancaires et tire une nouvelle traite majorée des intérêts de retard ($I = V \\times t \\times n / 36\,000$), du timbre fiscal et des frais de correspondance.',
+          'Si le porteur a besoin de liquidités AVANT l’échéance, il négocie (escompte) l’effet à sa banque (`415 Clients, effets escomptés non échus` ou `5114` en remise puis `521` / `565 Escompte de crédits ordinaires` + `675 Escompte des effets de commerce`). La banque retient des agios composés de l’escompte commercial ($e = V \\times t \\times n / 36\\,000$), de commissions bancaires (`6312`) et de la TOB/TVA sur services bancaires.\n\n' +
+          'Si le client prévient qu’il ne pourra payer à l’échéance (ou si l’effet revient impayé), le fournisseur annule l’ancienne traite (reconstitution en `411`), récupère les frais bancaires et tire une nouvelle traite majorée des intérêts de retard ($I = V \\times t \\times n / 36\\,000$), du timbre fiscal et des frais de correspondance.',
         formulas: [
           {
             name: 'Agios bancaires à l’escompte d’un effet',
-            formula: '\\text{Escompte} = \\frac{V_n \\times t \\times n}{36\,000} \\quad ; \\quad \\text{Agios TTC} = \\text{Escompte} + \\text{Commissions} + \\text{TOB / TVA}',
+            formula: '\\text{Escompte} = \\frac{V_n \\times t \\times n}{36\\,000} \\quad ; \\quad \\text{Agios TTC} = \\text{Escompte} + \\text{Commissions} + \\text{TOB / TVA}',
             note: 'Net porté en banque = Valeur nominale (Vn) − Agios TTC (n = jours restant jusqu’à l’échéance).',
           },
           {
             name: 'Nominal d’une traite de renouvellement',
-            formula: 'V_{\\text{nouv}} = V_{\\text{anc}} + \\text{Int\\acute{e}r\\^ets de retard} + \\text{Timbre} + \\text{Frais de correspondance / impay\\acute{e}}',
+            formula: 'V_{\\text{nouv}} = V_{\\text{anc}} + \\text{Intérêts de retard} + \\text{Timbre} + \\text{Frais de correspondance / impayé}',
             note: 'Intérêts de retard = V_anc × taux × jours de prorogation / 36 000.',
           },
         ],
@@ -2870,12 +2874,12 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTitle: 'Calculer l’escompte commercial, les commissions et le net négocié',
             paragraphText:
               'Lorsque l’entreprise a besoin de trésorerie 30, 45 ou 60 jours avant l’échéance, elle négocie la traite auprès de sa banque : cette opération s’appelle l’escompte d’effet.\n' +
-              '• **Escompte bancaire (intérêt financier)** : $e = \\frac{V_n \\times t \\times n}{36\,000}$ où $V_n$ est le nominal, $t$ le taux annuel en % et $n$ le nombre exact de jours séparant la date de négociation de la date d’échéance.\n' +
+              '• **Escompte bancaire (intérêt financier)** : $e = \\frac{V_n \\times t \\times n}{36\\,000}$ où $V_n$ est le nominal, $t$ le taux annuel en % et $n$ le nombre exact de jours séparant la date de négociation de la date d’échéance.\n' +
               '• **Agios totaux** : $\\text{Agios} = \\text{Escompte} + \\text{Commissions bancaires} + \\text{TOB / TVA sur services}$.\n' +
-              '• **Exemple** : effet de 1 200 000 F négocié 45 jours avant échéance à 10 % + 6 000 F de frais = escompte $15\,000$ F + $6\,000$ F = $21\,000$ F d’agios → Net = 1 179 000 F.',
+              '• **Exemple** : effet de 1 200 000 F négocié 45 jours avant échéance à 10 % + 6 000 F de frais = escompte $15\\,000$ F + $6\\,000$ F = $21\\,000$ F d’agios → Net = 1 179 000 F.',
             formula: {
               name: 'Escompte bancaire et Net de négociation',
-              formula: 'e = \\frac{V_n \\times t \\times n}{36\,000} \\quad ; \\quad \\text{Net en banque} = V_n - \\text{Agios}',
+              formula: 'e = \\frac{V_n \\times t \\times n}{36\\,000} \\quad ; \\quad \\text{Net en banque} = V_n - \\text{Agios}',
               note: 'En année commerciale OHADA, le dénominateur est 36 000 (soit 360 jours × 100).',
             },
             exercise: {
@@ -2960,11 +2964,11 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             paragraphText:
               'Si le client prévient AVANT l’échéance qu’il ne pourra payer à temps, le fournisseur peut accepter de proroger (repousser) l’échéance en échange d’une nouvelle traite.\n' +
               '• **Étape 1 (Annulation de l’ancien effet)** : si l’effet était en portefeuille, Débit `411 Client` / Crédit `412 Effets à recevoir` pour l’ancien nominal $V_{\\text{anc}}$.\n' +
-              '• **Étape 2 (Calcul des frais de prorogation)** : Intérêts de retard = $\\frac{V_{\\text{anc}} \\times t \\times n}{36\,000}$, plus timbre fiscal et frais de correspondance.\n' +
+              '• **Étape 2 (Calcul des frais de prorogation)** : Intérêts de retard = $\\frac{V_{\\text{anc}} \\times t \\times n}{36\\,000}$, plus timbre fiscal et frais de correspondance.\n' +
               '• **Étape 3 (Émission de la nouvelle traite)** : Débit `412` (nouveau nominal) / Crédit `411` ($V_{\\text{anc}}$), Crédit `771` (intérêts), Crédit `646` (timbre récupéré), Crédit `628` (frais de correspondance).',
             formula: {
               name: 'Calcul de la nouvelle traite prorogée',
-              formula: 'V_{\\text{nouv}} = V_{\\text{anc}} + \\frac{V_{\\text{anc}} \\times t \\times n}{36\,000} + \\text{Timbre} + \\text{Frais}',
+              formula: 'V_{\\text{nouv}} = V_{\\text{anc}} + \\frac{V_{\\text{anc}} \\times t \\times n}{36\\,000} + \\text{Timbre} + \\text{Frais}',
               note: 'Exemple : 708 000 + 14 160 (60 j à 12 %) + 200 + 100 = 722 460 F.',
             },
             exercise: {

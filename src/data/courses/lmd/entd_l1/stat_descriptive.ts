@@ -2145,7 +2145,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'piege',
             stepBadge: 'Diviseur n vs n−1',
             stepTheme: 'orange',
-            stepTitle: 'Variance descriptive ($\div n$) versus variance d’échantillon corrigée ($\div (n - 1)$)',
+            stepTitle: 'Variance descriptive ($\\div n$) versus variance d’échantillon corrigée ($\\div (n - 1)$)',
             paragraphText:
               'En ouvrant Excel (`VAR.P` vs `VAR.S`) ou une calculatrice scientifique ($\\sigma_n$ vs $s_{n-1}$), deux variances différentes apparaissent ! Il est indispensable de savoir laquelle choisir.\n' +
               '• **Variance empirique / descriptive ($V(X) = \\sigma^2$)** : diviseur **$n$**. C’est la formule exacte de la **statistique descriptive** (population observée intégralement) : $V(X) = \\frac{1}{n}\\sum (x_i - \\bar{x})^2$.\n' +

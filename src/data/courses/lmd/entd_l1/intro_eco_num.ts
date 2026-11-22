@@ -1174,7 +1174,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             keyRule:
               'Le e-commerce mondial pèse ~26 700 milliards USD et la crise COVID-19 a fait passer la part du détail en ligne de 16 % à 19 %.',
             konanTip:
-              'Ne confonds pas le e-commerce total (~26 700 Md$, dominé par le B2B) avec le seul e-commerce B2C (grand public), qui n’en est qu’une fraction.',
+              'Ne confonds pas le e-commerce total (~26 700 milliards de dollars, dominé par le B2B) avec le seul e-commerce B2C (grand public), qui n’en est qu’une fraction.',
             exercise: {
               id: 'lmd_entd_l1_intro_eco_num_ch2_p1_q2',
               type: 'mcq',
