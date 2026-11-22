@@ -23,6 +23,7 @@ import { soundFX } from '../../lib/audioEffects';
 import { useTheme } from '../../context/ThemeContext';
 import { checkStudentName, nextNameChangeAt } from '../../../api/_nameRules.js';
 import { LMD_PROGRAMS } from '../../lib/curriculum/lmdTracks';
+import { COUNTRIES, OUTSIDE_PROGRAM_TEXT, PROGRAM_COUNTRY, followsIvorianProgram, normalizeCountry } from '../../lib/country';
 
 const PREDEFINED_LYCEE_CLASSES = [
   '3ème',
@@ -50,9 +51,13 @@ interface SettingsModalProps {
   onUpdateProfile?: (updated: { 
     name: string; 
     academicLevel: string; 
-    phoneNumber?: string; 
-    countryCode?: string 
+    phoneNumber?: string;
+    countryCode?: string;
+    /** Pays de l'élève (lib/country) */
+    country?: string;
   }) => void;
+  /** Pays enregistré (absent = ancien compte = Côte d'Ivoire) */
+  country?: string;
   /** Configuration d'avatar animé personnalisé + bouton d'ouverture de l'éditeur */
   avatarConfig?: AvatarConfig | null;
   hasCustomizedAvatar?: boolean;
@@ -110,6 +115,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onOpenPrivacyModal,
   nameChangedAt,
   totalXp,
+  country,
 }) => {
   const [lang] = useLanguage();
   const lockedUntil = nextNameChangeAt(nameChangedAt);
@@ -119,6 +125,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [editName, setEditName] = useState('');
   const [nameError, setNameError] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
+  const [editCountry, setEditCountry] = useState(PROGRAM_COUNTRY);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   const currentPlan = planTier || userAccount?.planTier || 'free';
@@ -128,9 +135,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     if (isOpen) {
       setEditName(studentName || userAccount?.name || '');
       setEditFiliere(academicLevel || userAccount?.academicLevel || '');
+      setEditCountry(normalizeCountry(country || userAccount?.country) || PROGRAM_COUNTRY);
       setSaveSuccess(false);
     }
-  }, [isOpen, studentName, academicLevel, userAccount]);
+  }, [isOpen, studentName, academicLevel, userAccount, country]);
 
   if (!isOpen) return null;
 
@@ -163,6 +171,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       onUpdateProfile({
         name: finalName,
         academicLevel: finalFiliere,
+        country: editCountry,
       });
       soundFX.playCheckmarkPop();
       setSaveSuccess(true);
@@ -322,6 +331,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       <p className="mt-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">Nom modifié récemment : prochain changement possible le {new Date(lockedUntil).toLocaleDateString('fr-FR')}.</p>
                     ) : (
                       <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Ton vrai nom : il apparaît dans le classement de la ligue. Après un changement, il faut attendre 3 mois pour en refaire un.</p>
+                    )}
+                  </div>
+
+                  {/* Pays : les cours et les devoirs suivent le programme de Côte d'Ivoire */}
+                  <div>
+                    <label htmlFor="settings-country" className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
+                      Pays où tu vas à l’école
+                    </label>
+                    <select
+                      id="settings-country"
+                      value={editCountry}
+                      onChange={(e) => setEditCountry(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:bg-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
+                    >
+                      {COUNTRIES.map((c) => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
+                    </select>
+                    {!followsIvorianProgram(editCountry) && (
+                      <p className="mt-1 text-[11px] font-semibold text-amber-800 dark:text-amber-300">{OUTSIDE_PROGRAM_TEXT}</p>
                     )}
                   </div>
 

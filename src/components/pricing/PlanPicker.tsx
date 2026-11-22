@@ -15,6 +15,8 @@ export interface PlanPickerProps {
   currentPlan?: PlanTier;
   /** Libellés des boutons, si le parent veut les adapter. */
   ctaLabels?: Partial<Record<PlanTier, string>>;
+  /** Formules non disponibles pour cet élève (autre pays, classe sans cours) : bouton grisé + explication. */
+  unavailable?: Partial<Record<PlanTier, string>>;
 }
 
 const THEME: Record<PlanTier, {
@@ -49,7 +51,7 @@ const DEFAULT_CTA: Record<PlanTier, string> = {
   plus: 'Me prévenir à l’ouverture',
 };
 
-export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, ctaLabels }) => {
+export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, ctaLabels, unavailable }) => {
   const [billing, setBilling] = useState<BillingPeriod>('monthly');
 
   return (
@@ -97,6 +99,7 @@ export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, c
             billing={billing}
             isCurrent={currentPlan === plan.id}
             cta={ctaLabels?.[plan.id] || DEFAULT_CTA[plan.id]}
+            unavailableText={unavailable?.[plan.id]}
             onSelect={onSelect}
           />
         ))}
@@ -110,8 +113,9 @@ const PlanCard: React.FC<{
   billing: BillingPeriod;
   isCurrent: boolean;
   cta: string;
+  unavailableText?: string;
   onSelect: (plan: PlanTier, billing: BillingPeriod) => void;
-}> = ({ plan, billing, isCurrent, cta, onSelect }) => {
+}> = ({ plan, billing, isCurrent, cta, unavailableText, onSelect }) => {
   const theme = THEME[plan.id];
   const price = plan.prices[billing];
   const paid = plan.id !== 'free';
@@ -183,17 +187,24 @@ const PlanCard: React.FC<{
         </ul>
       </div>
 
+      {/* Formule pas disponible pour cet élève : explication au-dessus du bouton grisé */}
+      {unavailableText && (
+        <p className="mt-5 text-xs font-bold leading-snug text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-2">
+          {unavailableText}
+        </p>
+      )}
+
       {/* Bouton */}
       <button
         type="button"
         id={`plan-${plan.id}`}
         onClick={paid ? afterShine(choose) : choose}
-        disabled={isCurrent}
+        disabled={isCurrent || Boolean(unavailableText)}
         className={`mt-6 w-full py-3.5 rounded-2xl text-sm font-black uppercase tracking-wide transition-colors cursor-pointer active:translate-y-1 active:shadow-none disabled:opacity-60 disabled:cursor-default disabled:active:translate-y-0 ${
           paid ? 'relative overflow-hidden konan-btn-shine' : ''
         } ${theme.button}`}
       >
-        {isCurrent ? 'Ta formule actuelle' : cta}
+        {isCurrent ? 'Ta formule actuelle' : unavailableText ? 'Pas encore disponible' : cta}
       </button>
     </div>
   );

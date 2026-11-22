@@ -27,9 +27,11 @@ interface Props {
   initialPeriod?: PaidPeriod;
   /** Classe de l'élève (identifiant) : le serveur vend Pro seulement aux classes qui ont les cours */
   gradeLevel?: string;
+  /** Pays de l'élève : le serveur vend Pro seulement en Côte d'Ivoire */
+  country?: string;
 }
 
-export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '' }) => {
+export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '', country = 'CI' }) => {
   const config = info?.config;
   const status = info?.status || null;
   const offers = useMemo(() => (config?.offers || []).filter((o) => o.tier === 'pro'), [config]);
@@ -66,7 +68,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
     if (!sentConfirmed) { setError('Coche la case pour confirmer que tu as bien envoyé l’argent.'); return; }
     setSending(true);
     setError('');
-    const r = await declarePayment({ tier: 'pro', period: offer.period, provider: chosenProvider, ref, payerPhone: phone, gradeLevel });
+    const r = await declarePayment({ tier: 'pro', period: offer.period, provider: chosenProvider, ref, payerPhone: phone, gradeLevel, country });
     setSending(false);
     if (!r.success) { setError(subscriptionErrorText(r.error)); return; }
     setRef('');

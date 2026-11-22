@@ -37,6 +37,15 @@ export const PRO_GRADES = [
 ];
 export const proAvailableForGrade = (grade) => PRO_GRADES.includes(String(grade || '').trim());
 
+/**
+ * Pro vendu seulement en Côte d'Ivoire : les cours et les devoirs suivent le programme ivoirien
+ * (src/lib/country.ts). Pays absent = ancien compte = Côte d'Ivoire.
+ */
+export const proAvailableForCountry = (country) => {
+  const c = String(country || '').trim().toUpperCase();
+  return !c || c === 'CI';
+};
+
 export const PROVIDERS = { wave: 'Wave', orange: 'Orange Money' };
 
 const DAY_MS = 24 * 3600 * 1000;
@@ -94,6 +103,7 @@ export function validateDeclaration(body, existing, { nowMs, sellable = SELLABLE
   const provider = String(body?.provider || '');
   if (!PRICES[tier] || !sellable.includes(tier)) return { ok: false, error: 'TIER_NOT_SOLD' };
   // Pro vendu seulement aux classes qui ont les cours (protège l'élève : il ne paie pas pour rien)
+  if (tier === 'pro' && !proAvailableForCountry(body?.country)) return { ok: false, error: 'PRO_NOT_FOR_COUNTRY' };
   if (tier === 'pro' && !proAvailableForGrade(body?.gradeLevel)) return { ok: false, error: 'PRO_NOT_FOR_GRADE' };
   if (!PERIOD_DAYS[period]) return { ok: false, error: 'BAD_PERIOD' };
   if (!PROVIDERS[provider]) return { ok: false, error: 'BAD_PROVIDER' };

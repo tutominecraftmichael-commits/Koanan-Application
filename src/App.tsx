@@ -108,6 +108,7 @@ import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; /
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { isExamPrepOpenFor } from './lib/featureFlags';
+import { followsIvorianProgram, normalizeCountry } from './lib/country';
 import { PAYMENTS_OPEN } from './lib/subscriptionPlans';
 import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
@@ -307,10 +308,13 @@ export function App() {
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
   const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
   const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
+  // Hors de Côte d'Ivoire : toujours Gratuit (Pro réservé au programme ivoirien, même pendant l'offre de lancement)
+  const countryForTier = state.preferences?.country || state.userAccount?.country;
   const effectivePlanTier = useMemo<PlanTier>(() => {
+    if (!followsIvorianProgram(countryForTier)) return 'free';
     if (serverTier) return serverTier;
     return state.planTier || state.userAccount?.planTier || 'free';
-  }, [serverTier, state.planTier, state.userAccount?.planTier]);
+  }, [serverTier, state.planTier, state.userAccount?.planTier, countryForTier]);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
@@ -322,10 +326,15 @@ export function App() {
   // est celle qui suit les changements (import d'emploi du temps, autre appareil) ; le compte en garde une
   // copie qui peut être ancienne. Avant, certains écrans lisaient l'une et d'autres l'autre.
   const studentGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel);
-  // KONAN Pro est vendu seulement aux classes qui ont les cours guidés et les devoirs (choix du fondateur,
-  // 2026-11-22) : les autres ne peuvent pas payer pour un Pro presque vide. Le serveur refuse aussi.
-  const proSellableForClass = isExamPrepOpenFor(studentGradeRaw);
-  const PRO_NOT_FOR_CLASS_TEXT = 'KONAN Pro arrive bientôt pour ta classe. Il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts.';
+  // Pays de l'élève : les cours et devoirs suivent le programme ivoirien (lib/country). Sans pays = ancien compte = CI.
+  const studentCountry = normalizeCountry(state.preferences?.country || state.userAccount?.country) || undefined;
+  const outsideIvorianProgram = !followsIvorianProgram(studentCountry);
+  // KONAN Pro est vendu seulement en Côte d'Ivoire, aux classes qui ont les cours guidés et les devoirs (choix
+  // du fondateur, 2026-11-22) : les autres ne peuvent pas payer pour un Pro presque vide. Le serveur refuse aussi.
+  const proSellableForClass = isExamPrepOpenFor(studentGradeRaw, studentCountry);
+  const PRO_NOT_FOR_CLASS_TEXT = outsideIvorianProgram
+    ? 'KONAN Pro est réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien. Tu peux continuer à utiliser KONAN gratuitement.'
+    : 'KONAN Pro arrive bientôt pour ta classe. Il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts.';
   const effectiveClassLabel = studentClassLabel(
     studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
@@ -686,7 +695,8 @@ export function App() {
         const finalSessions = synchronizeSessionsWithExamCountdowns(
           updatedSessions,
           validSubjects,
-          isProTier ? (prev.preferences?.gradeLevel || prev.preferences?.academicLevel || prev.academicLevel) : null
+          isProTier ? (prev.preferences?.gradeLevel || prev.preferences?.academicLevel || prev.academicLevel) : null,
+          prev.preferences?.country || prev.userAccount?.country
         );
         const hasSessionDurationChange = finalSessions.some(
           (s, idx) => s.durationMinutes !== baseSessions[idx]?.durationMinutes || s.endTime !== baseSessions[idx]?.endTime
@@ -2043,6 +2053,8 @@ export function App() {
       const effectiveTier = payload.planTier || prev.planTier || prev.userAccount?.planTier || 'free';
       const effectiveAcademicLevel = payload.preferences.academicLevel || prev.academicLevel;
       const effectiveGradeLevel = payload.preferences.gradeLevel || prev.preferences?.gradeLevel || prev.userAccount?.gradeLevel;
+      // Pays : celui de l'accueil, sinon celui déjà enregistré (un nouvel import d'emploi du temps ne l'efface pas)
+      const effectiveCountry = normalizeCountry(payload.preferences.country || prev.preferences?.country || prev.userAccount?.country) || undefined;
       const updated: AppState = {
         ...prev,
         academicLevel: effectiveAcademicLevel,
@@ -2053,6 +2065,7 @@ export function App() {
           ...payload.preferences,
           academicLevel: effectiveAcademicLevel,
           gradeLevel: effectiveGradeLevel,
+          country: effectiveCountry,
         },
         studySessions: sanitizedSessions,
         logs: [],
@@ -2061,6 +2074,7 @@ export function App() {
           ...prev.userAccount,
           academicLevel: effectiveAcademicLevel,
           gradeLevel: effectiveGradeLevel,
+          country: effectiveCountry,
           planTier: effectiveTier,
           pdfImportsCount: nextPdfCount,
         } : undefined,
@@ -2078,7 +2092,7 @@ export function App() {
       // Mode payant sans abonnement : on propose de payer au lieu d'ouvrir le guide Pro
       if (paidModeRef.current.paidMode && paidModeRef.current.serverTier !== 'pro') {
         setActiveView('dashboard');
-        if (!isExamPrepOpenFor(payload.preferences?.gradeLevel || studentGradeRaw)) {
+        if (!isExamPrepOpenFor(payload.preferences?.gradeLevel || studentGradeRaw, payload.preferences?.country || studentCountry)) {
           showToast('Emploi du temps enregistré ! ' + PRO_NOT_FOR_CLASS_TEXT);
           return;
         }
@@ -2155,10 +2169,13 @@ export function App() {
     name: string;
     academicLevel: string;
     phoneNumber?: string;
-    countryCode?: string
+    countryCode?: string;
+    country?: string;
   }) => {
     // Sécurité backend : assainit formellement le payload et empêche la modification frauduleuse de tier/isPro
     const safeData = sanitizeUserProfileUpdate(updated as any);
+    // Pays (liste fermée) : changer de pays ne touche pas aux autres réglages
+    const nextCountry = normalizeCountry(updated.country) || undefined;
 
     // Changement de nom : un seul tous les 3 mois (le classement de la ligue reste stable)
     const currentName = (state.userAccount?.name || state.studentName || '').trim();
@@ -2180,6 +2197,7 @@ export function App() {
         gradeLevel: nextGrade,
         phoneNumber: safeData.phoneNumber,
         countryCode: safeData.countryCode,
+        country: nextCountry || prev.userAccount.country,
         lastSyncedAt: new Date().toISOString(),
       } : {
         isLoggedIn: false,
@@ -2205,6 +2223,7 @@ export function App() {
           studentName: safeData.name,
           academicLevel: safeData.academicLevel,
           gradeLevel: nextGrade,
+          country: nextCountry || prev.preferences?.country || prev.userAccount?.country,
         }
       };
 
@@ -2744,7 +2763,7 @@ export function App() {
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
-            onComplete={({ subjects, classSlots, preferences, studySessions, planTier }) => {
+            onComplete={({ subjects, classSlots, preferences, studySessions, planTier, openSubscription }) => {
               handleApplyExtractedSchedule({
                 subjects,
                 classSlots,
@@ -2752,6 +2771,8 @@ export function App() {
                 studySessions,
                 planTier,
               });
+              // Pro choisi à l'accueil alors que le paiement est ouvert : fiche de paiement (Pro n'est plus offert)
+              if (openSubscription) setIsSubscriptionOpen(true);
             }}
           />
         )}
@@ -2928,6 +2949,7 @@ export function App() {
               subjects={state.subjects}
               isDemoMode={state.isDemoMode}
               gradeLevel={studentGradeRaw}
+              country={studentCountry}
               planTier={effectivePlanTier}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
@@ -3259,6 +3281,7 @@ export function App() {
         onLogout={() => { setProfileScreen(null); handleLogout(); }}
 
         onUpdateProfile={handleUpdateProfile}
+        country={studentCountry}
         nameChangedAt={state.nameChangedAt}
         // Total de tous les XP : le plus grand entre le téléphone et le serveur de la ligue (tous appareils confondus)
         totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0) : undefined}
@@ -3315,6 +3338,7 @@ export function App() {
             grace={Boolean(paidMode && subscriptionInfo?.status?.grace)}
             canRenew={paidMode}
             proAvailable={proSellableForClass}
+            unavailableText={PRO_NOT_FOR_CLASS_TEXT}
             onClose={() => setIsPlansOpen(false)}
             onChoosePro={(period) => {
               setIsPlansOpen(false);
@@ -3342,6 +3366,7 @@ export function App() {
           <SubscriptionView
             initialPeriod={subscriptionPeriod}
             gradeLevel={tryResolveGradeLevel(studentGradeRaw) || ''}
+            country={studentCountry || 'CI'}
             info={subscriptionInfo}
             loading={subscriptionLoading}
             loadError={subscriptionError}
