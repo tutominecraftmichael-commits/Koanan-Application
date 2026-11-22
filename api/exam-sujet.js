@@ -142,6 +142,11 @@ export function buildSujetPrompt({ template, classe, gradeId, matiere, chapitres
     structure,
     noteClasse ? `Niveau : ${noteClasse}` : '',
     `Chapitres au programme de CE devoir (choisis par l'étudiant) :\n${programme}`,
+    // LMD : les thèmes des exercices du modèle supposent tout le programme. Sans cette règle, un étudiant qui
+    // révise les chapitres 1-2 recevait des exercices sur les chapitres 3-4 (vu le 2026-11-22, Microéconomie).
+    isLmd
+      ? 'PRIORITÉ AUX CHAPITRES CHOISIS : les thèmes indiqués dans la structure ci-dessus valent pour un examen sur tout le programme. Garde exactement le nombre d’exercices, leur barème et leur forme (questions de cours, problème avec calculs, étude de cas…), mais chaque question doit porter UNIQUEMENT sur les chapitres choisis ci-dessus. Si le thème d’un exercice n’est pas dans ces chapitres, remplace-le par un exercice de même forme et de même difficulté sur un chapitre choisi (en t’appuyant sur ses notions). Aucune question hors de ces chapitres.'
+      : '',
     'Règles de rédaction :',
     ...styleRules.map((r) => `- ${r}`),
     ...(template.reglesMatiere || []).map((r) => `- ${r} (règle propre à la matière : elle passe avant les règles générales)`),

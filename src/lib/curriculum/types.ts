@@ -475,6 +475,9 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'oge',
       'organisation et gestion des entreprises',
       'organisation et gestion d entreprise',
+      // intitulé de l'ESATIC (tableau des ECUE, code 2MAN3251)
+      'organisation et gestion de l entreprise',
+      'organisation et gestion de l\'entreprise',
       'organisation gestion entreprise',
       'gestion des entreprises',
     ],
