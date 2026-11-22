@@ -1235,7 +1235,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2 text-sky-700 text-xs font-semibold shrink-0 dark:text-sky-300">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Extraction & Catégorisation ({FORMAT_CONFIG[selectedFormat].short})...{selectedFormat === 'lmd' ? ' Lecture minutieuse : jusqu’à 3 min' : ''}</span>
+                    <span>Extraction & Catégorisation ({FORMAT_CONFIG[selectedFormat].short})...{selectedFormat === 'lmd' ? ' Lecture minutieuse : en général moins d’une minute' : ''}</span>
                   </div>
                 ) : (
                   <button

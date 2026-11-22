@@ -12,24 +12,53 @@
 import { GoogleGenAI } from '@google/genai';
 import { buildTimetablePrompt, cleanTimetableOutput } from './_timetablePrompt.js';
 
-/** Modèles essayés dans l'ordre (le plus précis d'abord, repli automatique s'il est saturé). */
-export const STRUCTURED_MODELS = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.5-flash'];
+/**
+ * Modèles essayés dans l'ordre (repli automatique s'il est saturé). Depuis le 2026-11-22 : Gemini 3 en premier
+ * (plus juste ET deux fois plus rapide que 2.5-flash sur le banc lycée, voir thinkingConfigFor).
+ */
+export const STRUCTURED_MODELS = ['gemini-3.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash'];
 /** Dernier recours en texte libre (ancienne consigne) : un seul modèle léger, pour ménager le quota. */
 export const FALLBACK_TEXT_MODELS = ['gemini-flash-lite-latest'];
 /**
  * LMD : grilles denses par semaines avec codes d'ECUE presque identiques (1MAN3250 / 2MAN3250 / 3MAN3250).
- * Test du 2026-11-22 (EDT ESATIC ENTD 1) : gemini-2.5-flash répond en ~30 s mais confond les codes (jeudi et
- * vendredi faux à chaque essai, même avec l'image agrandie) ; gemini-flash-latest lit tout juste mais met
- * 110 à 165 s. Il était coupé à 75 s, donc c'était toujours le modèle rapide qui répondait. On commence donc
- * par le modèle précis et on lui laisse le temps ; le modèle rapide reste le dernier recours.
+ * Tests du 2026-11-22 (EDT ESATIC ENTD 1, 14 créneaux) :
+ *  - gemini-2.5-flash (réflexion 4096) : ~30 s mais confond les codes (jeudi et vendredi faux à chaque essai) ;
+ *  - gemini-3.5-flash / flash-latest avec l'ancien réglage « thinkingBudget » : 14/14 mais 110 à 165 s
+ *    (les modèles Gemini 3 ignorent ce budget et réfléchissent au maximum) ;
+ *  - gemini-3.5-flash avec thinkingLevel « low » : 14/14 en 10,7 s et 15,4 s (et 14/14 en 11,8 s en « minimal »).
+ * Le modèle Gemini 3 en réflexion « low » passe donc en premier ; 2.5-flash reste le dernier recours.
  */
-export const LMD_MODELS = ['gemini-flash-latest', 'gemini-3.5-flash', 'gemini-2.5-flash'];
+export const LMD_MODELS = ['gemini-3.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash'];
 /** Au-delà, on n'essaie plus d'autre modèle (l'élève attend). */
 const TOTAL_DEADLINE_MS = 110_000;
 /** LMD : temps total et temps par modèle. Doit rester sous la limite de la fonction (vercel.json : maxDuration 300 s,
  *  le maximum du plan Hobby avec Fluid compute) pour que le serveur réponde avant d'être coupé. */
 const LMD_DEADLINE_MS = 250_000;
-const LMD_MODEL_TIMEOUT_MS = 190_000;
+const LMD_MODEL_TIMEOUT_MS = 90_000;
+
+/**
+ * Réglage de la réflexion selon le modèle : les Gemini 3 (et les alias « -latest ») se règlent par niveau,
+ * les Gemini 2.5 gardent un budget de jetons.
+ * Tests du 2026-11-22 avec gemini-3.5-flash :
+ *  - une seule page (photo, image, PDF d'une page) en « low » : ENTD 1 14/14 (×3, 11-15 s), 2nde C photo 22/23 en 16 s
+ *    (2.5-flash : 21/23 en 35 s), PDF 6 classes : les 6 classes en 29 s ;
+ *  - PDF BTS de 2 pages en « low » : la 2e page est SAUTÉE (une classe manquante) ; en « medium » : les 2 pages, 32 s.
+ * D'où « medium » dès que le PDF a plusieurs pages.
+ */
+export function thinkingConfigFor(model, { multiPage = false } = {}) {
+  if (!/gemini-3|latest/.test(model)) return { thinkingBudget: 4096 };
+  return { thinkingLevel: multiPage ? 'medium' : 'low' };
+}
+
+/** Nombre de pages d'un PDF en base64 (0 si ce n'est pas un PDF lisible). Sans bibliothèque : marqueurs « /Type /Page ». */
+export function pdfPageCount(base64) {
+  try {
+    const bin = typeof Buffer !== 'undefined' ? Buffer.from(base64, 'base64').toString('latin1') : atob(base64);
+    return (bin.match(/\/Type\s*\/Page(?![s\w])/g) || []).length;
+  } catch {
+    return 0;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Matières : sigles et variantes d'écriture → nom standard
@@ -476,6 +505,8 @@ export async function extractTimetable({ apiKey, data, mimeType, format, classHi
   const modelTimeout = () => (isLmd ? Math.min(LMD_MODEL_TIMEOUT_MS, Math.max(30_000, timeLeft() - 40_000)) : Math.min(75_000, timeLeft()));
   const prompt = buildStructuredPrompt(format, classHint);
   const modelList = models || (isLmd ? LMD_MODELS : STRUCTURED_MODELS);
+  // PDF de plusieurs pages : réflexion « medium » (en « low », une page entière peut être sautée)
+  const multiPage = /pdf/i.test(mimeType || '') && pdfPageCount(data) > 1;
   let skipToLast = false;
   for (const [index, model] of modelList.entries()) {
     if (timeLeft() < 20_000) break;
@@ -489,9 +520,9 @@ export async function extractTimetable({ apiKey, data, mimeType, format, classHi
           responseMimeType: 'application/json',
           responseJsonSchema: RESPONSE_SCHEMA,
           temperature: 0,
-          // Lecture fine des petits caractères (photos floues, cases étroites) et réflexion plafonnée (temps de réponse)
+          // Lecture fine des petits caractères (photos floues, cases étroites) et réflexion réglée par modèle
           mediaResolution: 'MEDIA_RESOLUTION_HIGH',
-          thinkingConfig: { thinkingBudget: 4096 },
+          thinkingConfig: thinkingConfigFor(model, { multiPage }),
           httpOptions: { timeout: modelTimeout() },
         },
       });
