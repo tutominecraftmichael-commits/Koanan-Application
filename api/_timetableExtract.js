@@ -26,7 +26,8 @@ export const FALLBACK_TEXT_MODELS = ['gemini-flash-lite-latest'];
 export const LMD_MODELS = ['gemini-flash-latest', 'gemini-3.5-flash', 'gemini-2.5-flash'];
 /** Au-delà, on n'essaie plus d'autre modèle (l'élève attend). */
 const TOTAL_DEADLINE_MS = 110_000;
-/** LMD : temps total et temps par modèle (doit rester sous la limite de la fonction Vercel, 300 s par défaut). */
+/** LMD : temps total et temps par modèle. Doit rester sous la limite de la fonction (vercel.json : maxDuration 300 s,
+ *  le maximum du plan Hobby avec Fluid compute) pour que le serveur réponde avant d'être coupé. */
 const LMD_DEADLINE_MS = 250_000;
 const LMD_MODEL_TIMEOUT_MS = 190_000;
 
