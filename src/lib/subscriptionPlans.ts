@@ -159,7 +159,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     tagline: 'Pour progresser vite',
     prices: { monthly: 2500, semester: 9950 },
     includesLabel: 'Tout le Gratuit, plus :',
-    note: 'Mobile money ou carte',
+    note: 'Wave, Orange Money, MTN, Moov',
     available: true,
     recommended: true,
     features: [

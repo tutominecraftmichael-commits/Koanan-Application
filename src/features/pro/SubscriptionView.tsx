@@ -124,7 +124,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
             <span className="w-9 h-9 rounded-xl bg-yellow-400 flex items-center justify-center shadow"><Crown className="w-5 h-5 text-yellow-900" /></span>
             <div>
               <h2 className="text-base font-black text-slate-900 dark:text-white leading-tight">KONAN Pro</h2>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400">{useSaspay ? 'Mobile money (Wave, Orange Money…) ou carte' : 'Paiement par Wave ou Orange Money'}</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">{useSaspay ? 'Wave, Orange Money, MTN, Moov ou Djamo' : 'Paiement par Wave ou Orange Money'}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" aria-label="Fermer"><X className="w-5 h-5" /></button>
@@ -222,7 +222,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
                 className="w-full rounded-2xl py-3.5 text-base font-black bg-sky-600 hover:bg-sky-500 text-white shadow-lg disabled:opacity-60 inline-flex items-center justify-center gap-2">
                 {redirecting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Crown className="w-5 h-5" />} Payer {fcfa(offer.amount)}
               </button>
-              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu paies sur la page sécurisée de SasPay, par mobile money (Wave, Orange Money…) ou par carte. KONAN Pro s’active dès que le paiement est confirmé.</p>
+              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu paies sur la page sécurisée de SasPay avec Wave, Orange Money, MTN MoMo, Moov Money ou Djamo. KONAN Pro s’active dès que le paiement est confirmé.</p>
             </div>
           )}
 
