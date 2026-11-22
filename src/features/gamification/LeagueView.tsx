@@ -294,56 +294,8 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
           })}
         </div>
 
-        {/* Légende des 3 zones du classement (Excellence Or, Montée Vert, Relégation Rouge) */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="p-2.5 rounded-2xl border border-amber-300/90 dark:border-[#F5C451]/45 bg-amber-50/90 dark:bg-[#F5C451]/10 flex flex-col gap-0.5">
-            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-[#F5C451]">
-              <Crown className="w-3.5 h-3.5 shrink-0" />
-              <span>Top {EXCELLENCE_COUNT}</span>
-            </span>
-            <span className="text-[11px] font-extrabold text-amber-900 dark:text-amber-200 leading-tight">Zone d’excellence</span>
-          </div>
-          <div className="p-2.5 rounded-2xl border border-emerald-300/90 dark:border-emerald-500/45 bg-emerald-50/90 dark:bg-emerald-500/10 flex flex-col gap-0.5">
-            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
-              <ArrowUp className="w-3.5 h-3.5 shrink-0 stroke-[2.8]" />
-              <span>Top {promoteLimit}</span>
-            </span>
-            <span className="text-[11px] font-extrabold text-emerald-900 dark:text-emerald-200 leading-tight">
-              {board.division === 5 ? 'Zone de maintien' : 'Zone de montée'}
-            </span>
-          </div>
-          <div className="p-2.5 rounded-2xl border border-rose-300/90 dark:border-rose-500/45 bg-rose-50/90 dark:bg-rose-500/10 flex flex-col gap-0.5">
-            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-rose-700 dark:text-rose-300">
-              <ArrowDown className="w-3.5 h-3.5 shrink-0 stroke-[2.8]" />
-              <span>16 derniers</span>
-            </span>
-            <span className="text-[11px] font-extrabold text-rose-900 dark:text-rose-200 leading-tight">Zone de relégation</span>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between px-0.5">
-          <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">
-            {board.division === 5
-              ? `Les ${promoteLimit} premiers restent en Perle (Top ${EXCELLENCE_COUNT} Excellence)`
-              : `Les ${promoteLimit} premiers montent en grade · Top ${EXCELLENCE_COUNT} Excellence`}
-          </span>
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">{size} élève{size > 1 ? 's' : ''}</span>
-        </div>
-
         {/* Classement : séparé visuellement en 3 zones (Excellence en Jaune Gold, Montée en Vert, Relégation en Rouge) */}
         <ol className="space-y-1.5">
-          {size > 0 && (
-            <li aria-hidden="true" className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/20 border border-amber-400/60 dark:border-[#F5C451]/50 text-amber-800 dark:text-[#F5C451]">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider">
-                <Crown className="w-3.5 h-3.5 shrink-0" />
-                <span>Zone d’excellence · {EXCELLENCE_COUNT} premiers</span>
-              </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase">
-                <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
-                <span>{board.division === 5 ? 'Élite Perle' : 'Montée en grade'}</span>
-              </span>
-            </li>
-          )}
           {board.rows.map((row, idx) => {
             const zone = zoneOf(board, row.rank);
             const isLastOfExcellence = row.rank === EXCELLENCE_COUNT || (row.rank < EXCELLENCE_COUNT && idx === size - 1);
@@ -428,37 +380,30 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
                   </span>
                 </li>
 
-                {/* Séparateur Duolingo après les 5 premiers : fin de la Zone d'excellence (or) → début de la Zone de montée (vert) */}
+                {/* Séparateur Duolingo après les 5 premiers : Zone d'excellence (or) */}
                 {isLastOfExcellence && (
-                  <li aria-hidden="true" className="py-1.5 space-y-1.5">
+                  <li aria-hidden="true" className="py-1.5">
                     <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/50 dark:border-[#F5C451]/45 text-amber-800 dark:text-[#F5C451] text-[10.5px] font-black uppercase tracking-wider">
                       <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
-                      <span>Zone d’excellence · {EXCELLENCE_COUNT} premiers</span>
+                      <span>Zone d’excellence</span>
                       <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
-                    </div>
-                    <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-emerald-500/15 border border-emerald-400/60 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-300">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider">
-                        <ArrowUp className="w-3.5 h-3.5 stroke-[2.8] shrink-0" />
-                        <span>{board.division === 5 ? `Zone de maintien · ${promoteLimit} premiers` : `Zone de montée · ${promoteLimit} premiers`}</span>
-                      </span>
-                      <span className="text-[10px] font-extrabold uppercase">Places 6 à {promoteLimit}</span>
                     </div>
                   </li>
                 )}
 
-                {/* Séparateur Duolingo après les 15 premiers : fin de la Zone de montée (vert) → début de la Zone de relégation (rouge) */}
+                {/* Séparateur Duolingo après les 15 premiers : Zone de montée (vert) / Zone de relégation (rouge) */}
                 {(isLastOfPromotion || (size <= EXCELLENCE_COUNT && idx === size - 1)) && (
                   <li aria-hidden="true" className="py-1.5 space-y-1.5">
                     {size > EXCELLENCE_COUNT && (
                       <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/60 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-300 text-[10.5px] font-black uppercase tracking-wider">
                         <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
-                        <span>{board.division === 5 ? `Zone de maintien · les ${promoteLimit} premiers restent en Perle` : `Zone de montée · les ${promoteLimit} premiers montent en grade`}</span>
+                        <span>{board.division === 5 ? 'Zone de maintien' : 'Zone de montée'}</span>
                         <ArrowUp className="w-3.5 h-3.5 stroke-[2.8]" />
                       </div>
                     )}
-                    <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-rose-500/15 border border-rose-400/60 dark:border-rose-500/50 text-rose-800 dark:text-rose-300 text-[10.5px] font-black uppercase tracking-wider">
+                    <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/15 border border-rose-400/60 dark:border-rose-500/50 text-rose-800 dark:text-rose-300 text-[10.5px] font-black uppercase tracking-wider">
                       <ArrowDown className="w-3.5 h-3.5 stroke-[2.8]" />
-                      <span>Zone de relégation · les 16 derniers descendent</span>
+                      <span>Zone de relégation</span>
                       <ArrowDown className="w-3.5 h-3.5 stroke-[2.8]" />
                     </div>
                   </li>
