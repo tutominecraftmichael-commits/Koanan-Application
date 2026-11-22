@@ -16,6 +16,9 @@ export interface StructuredTimetableResult {
 }
 
 export const STRUCTURED_MODELS: string[];
+/** Modèles pour le LMD (le plus précis d'abord, avec plus de temps). */
+export const LMD_MODELS: string[];
+export const RESPONSE_SCHEMA: Record<string, unknown>;
 export const FALLBACK_TEXT_MODELS: string[];
 export function canonicalSubject(subject: string, label?: string): string;
 export function isNonCourseLabel(text: string): boolean;
