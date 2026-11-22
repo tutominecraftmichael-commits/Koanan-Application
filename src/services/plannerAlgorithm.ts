@@ -233,7 +233,7 @@ export function generateOptimizedStudyPlan(
   // Préparation aux devoirs/examens ouverte seulement pour certaines classes (2nde A, 2nde C) :
   // ailleurs, les dates d'épreuve sont ignorées
   const examGrade = preferences.gradeLevel || preferences.academicLevel;
-  subjects = withoutPausedExamPrep(subjects, examGrade);
+  subjects = withoutPausedExamPrep(subjects, examGrade, preferences.country);
 
   // RÈGLE STRICTE : Exclure systématiquement toute matière non révisable (EPS, Sport, Coaching, devoirs, permanence)
   const revisableSubjects = subjects.filter(sub => !isNonAcademicSubject(sub.name));
@@ -246,7 +246,7 @@ export function generateOptimizedStudyPlan(
 
   const resolvedTier: PlanTier = (userContext?.planTier || (userContext as any)?.tier) ?? 'free';
   // Fonction devoirs/examens : réservée à Pro/Plus, et ouverte seulement pour certaines classes
-  const isExamFeatureAllowed = (resolvedTier === 'pro' || resolvedTier === 'plus') && isExamPrepOpenFor(examGrade);
+  const isExamFeatureAllowed = (resolvedTier === 'pro' || resolvedTier === 'plus') && isExamPrepOpenFor(examGrade, preferences.country);
 
   let effectivePreferences = preferences;
   if (userContext) {
@@ -1099,11 +1099,12 @@ export function replanFromToday(existing: StudySession[], fresh: StudySession[],
 export function synchronizeSessionsWithExamCountdowns(
   sessions: StudySession[],
   subjects: Subject[],
-  rawGrade?: string | null
+  rawGrade?: string | null,
+  country?: string | null
 ): StudySession[] {
   if (!sessions || sessions.length === 0) return [];
-  // Préparation aux devoirs ouverte seulement pour certaines classes (2nde A, 2nde C)
-  if (!isExamPrepOpenFor(rawGrade)) return sessions;
+  // Préparation aux devoirs ouverte seulement pour certaines classes, et seulement en Côte d'Ivoire
+  if (!isExamPrepOpenFor(rawGrade, country)) return sessions;
   const subjectsMap = new Map(subjects.map(s => [s.id, s]));
 
   const referenceDate = new Date();

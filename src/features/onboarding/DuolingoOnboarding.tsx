@@ -35,13 +35,16 @@ import {
   Loader2,
   Volume2,
   VolumeX,
-  LogIn
+  LogIn,
+  Globe
 } from 'lucide-react';
+import { COUNTRIES, OUTSIDE_PROGRAM_TEXT, PROGRAM_COUNTRY, followsIvorianProgram } from '../../lib/country';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { PlanPicker } from '../../components/pricing/PlanPicker';
-import { isProMethod } from '../../lib/subscriptionPlans';
+import { isProMethod, PAYMENTS_OPEN } from '../../lib/subscriptionPlans';
+import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { LMD_PROGRAMS, LMD_TRACKS, isLmdTrackGrade } from '../../lib/curriculum/lmdTracks';
 import { soundFX } from '../../lib/audioEffects';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
@@ -104,6 +107,8 @@ export interface DuolingoOnboardingProps {
     studySessions: StudySession[];
     planTier?: 'free' | 'pro' | 'plus';
     launchProWizard?: boolean;
+    /** Paiement ouvert : l'élève a choisi Pro → ouvrir la fiche de paiement (Pro n'est plus offert) */
+    openSubscription?: boolean;
   }) => void;
   onOpenLogin: () => void;
   onOpenAdmin?: () => void;
@@ -266,6 +271,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
   // Étape 2 : Système d'études choisi (LMD, BTS, Lycée)
   const [studyType, setStudyType] = useState<StudySystemChoice | null>('lmd');
+  // Pays de l'élève : les cours et devoirs suivent le programme ivoirien ; Pro seulement en Côte d'Ivoire
+  const [country, setCountry] = useState<string>(PROGRAM_COUNTRY);
+  const outsideProgram = !followsIvorianProgram(country);
   const activeSystem = STUDY_SYSTEM_CONFIG[studyType || 'lmd'];
   const activeFormat: ScheduleFormatType = activeSystem.format;
 
@@ -801,11 +809,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           studentName: cleanName,
           gradeLevel: selectedGradeLevel,
           academicLevel: resolvedAcademicLevel,
+          country,
         }
       : {
           studentName: cleanName,
           academicLevel: resolvedAcademicLevel,
           gradeLevel: selectedGradeLevel,
+          country,
           targetDailyStudyMinutes: 120,
           chronotype,
           pacing: selectedPacings[0] || 'pomodoro',
@@ -993,6 +1003,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       setIsWaitlistOpen(true);
       return;
     }
+    // Pro seulement en Côte d'Ivoire, pour les classes qui ont les cours ; et payant quand le paiement est ouvert
+    const proSellable = isExamPrepOpenFor(selectedGradeLevel, country);
+    if (planId === 'pro' && !proSellable) return; // la carte Pro est grisée, sécurité en plus
+    const wantsPaidPro = planId === 'pro' && PAYMENTS_OPEN;
+    if (wantsPaidPro) planId = 'free';
     setSelectedPlan(planId);
 
     const effectiveName = (registeredProfile?.name || authFullName || 'Étudiant').trim();
@@ -1017,6 +1032,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     onComplete({
       ...payload,
       launchProWizard: planId === 'pro',
+      openSubscription: wantsPaidPro,
     });
   };
 
@@ -1698,6 +1714,28 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
                   Ce choix configure le moteur d'extraction et structure ton emploi du temps en fichier texte (<code className="text-sky-700 font-mono dark:text-sky-300">.txt</code>) adapté à ton niveau.
                 </p>
+              </div>
+
+              {/* Pays : les cours et les devoirs suivent le programme de Côte d'Ivoire */}
+              <div className="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 space-y-2">
+                <label htmlFor="onboarding-country" className="flex items-center gap-2 text-sm font-extrabold text-slate-900 dark:text-white">
+                  <Globe className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Dans quel pays vas-tu à l’école ?
+                </label>
+                <select
+                  id="onboarding-country"
+                  value={country}
+                  onChange={(e) => { setCountry(e.target.value); soundFX.playCheckmarkPop(); }}
+                  className="w-full rounded-xl px-3 py-2.5 text-sm font-bold bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c.code} value={c.code}>{c.flag} {c.name}</option>
+                  ))}
+                </select>
+                {outsideProgram && (
+                  <p className="text-xs leading-relaxed text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-2">
+                    {OUTSIDE_PROGRAM_TEXT}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-3">
@@ -2718,6 +2756,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* Gratuit, Pro, Plus : par mois ou par semestre */}
               <PlanPicker
                 onSelect={(planId) => handleSelectAccompanimentModel(planId)}
+                unavailable={isExamPrepOpenFor(selectedGradeLevel, country) ? undefined : {
+                  pro: outsideProgram
+                    ? 'Réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien.'
+                    : 'Bientôt pour ta classe : Pro est ouvert de la Seconde à la Terminale et en Licence 1 ENTD.',
+                }}
               />
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-500 dark:text-slate-400">

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { AlertTriangle, CheckCircle2, Clock, Copy, Crown, Loader2, RefreshCw, X } from 'lucide-react';
 import {
-  PERIOD_LABEL, declarePayment, subscriptionErrorText,
+  PERIOD_LABEL, checkSaspayPayment, declarePayment, startSaspayPayment, subscriptionErrorText,
   type PaidPeriod, type PaymentProvider, type SubscriptionInfo,
 } from '../../services/subscriptionApi';
 
@@ -25,9 +25,13 @@ interface Props {
   onRefresh: () => void;
   /** Durée choisie dans la fiche des formules (mois ou semestre) */
   initialPeriod?: PaidPeriod;
+  /** Classe de l'élève (identifiant) : le serveur vend Pro seulement aux classes qui ont les cours */
+  gradeLevel?: string;
+  /** Pays de l'élève : le serveur vend Pro seulement en Côte d'Ivoire */
+  country?: string;
 }
 
-export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois' }) => {
+export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '', country = 'CI' }) => {
   const config = info?.config;
   const status = info?.status || null;
   const offers = useMemo(() => (config?.offers || []).filter((o) => o.tier === 'pro'), [config]);
@@ -58,13 +62,51 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
     } catch { /* presse-papiers indisponible : le numéro reste affiché */ }
   };
 
+  // ---- SasPay : page de paiement hébergée (Wave, Orange Money, carte), vérifiée par le serveur ----
+  const useSaspay = Boolean(config?.enabled && config?.saspay);
+  const saspayPending = status?.saspayPending || null;
+  const [redirecting, setRedirecting] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [checkNote, setCheckNote] = useState('');
+
+  const paySaspay = async () => {
+    if (!offer || redirecting) return;
+    setRedirecting(true);
+    setError('');
+    const r = await startSaspayPayment({ period: offer.period, gradeLevel, country });
+    if (!r.success) { setRedirecting(false); setError(subscriptionErrorText(r.error)); return; }
+    // Même onglet : à la fin du paiement, SasPay ramène l'élève dans KONAN, qui vérifie aussitôt
+    window.location.assign(r.checkoutUrl);
+  };
+
+  const verifySaspay = async () => {
+    if (checking) return;
+    setChecking(true);
+    setCheckNote('');
+    setError('');
+    const r = await checkSaspayPayment();
+    setChecking(false);
+    if (!r.success) { setError(subscriptionErrorText(r.error)); return; }
+    const st = r.info.status;
+    if (st?.saspayPending) {
+      // Rien de confirmé : on n'active rien, on met juste l'affichage à jour
+      onUpdated(r.info);
+      setCheckNote('Ton paiement n’est pas encore confirmé. Si tu viens de payer, attends une minute puis vérifie à nouveau.');
+      return;
+    }
+    const last = st?.history?.[0];
+    const justPaid = last?.provider === 'saspay' && last.status === 'confirmed' && Date.now() - Date.parse(last.declaredAt) < 3 * 3600 * 1000;
+    onUpdated(r.info);
+    if (!justPaid) setCheckNote('Aucun paiement réussi trouvé : tu n’as pas été débité. Tu peux recommencer.');
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!offer || !chosenProvider || sending) return;
     if (!sentConfirmed) { setError('Coche la case pour confirmer que tu as bien envoyé l’argent.'); return; }
     setSending(true);
     setError('');
-    const r = await declarePayment({ tier: 'pro', period: offer.period, provider: chosenProvider, ref, payerPhone: phone });
+    const r = await declarePayment({ tier: 'pro', period: offer.period, provider: chosenProvider, ref, payerPhone: phone, gradeLevel, country });
     setSending(false);
     if (!r.success) { setError(subscriptionErrorText(r.error)); return; }
     setRef('');
@@ -82,7 +124,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
             <span className="w-9 h-9 rounded-xl bg-yellow-400 flex items-center justify-center shadow"><Crown className="w-5 h-5 text-yellow-900" /></span>
             <div>
               <h2 className="text-base font-black text-slate-900 dark:text-white leading-tight">KONAN Pro</h2>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400">Paiement par Wave ou Orange Money</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">{useSaspay ? 'Wave, Orange Money, MTN, Moov ou Djamo' : 'Paiement par Wave ou Orange Money'}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" aria-label="Fermer"><X className="w-5 h-5" /></button>
@@ -132,12 +174,60 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
           {info && !config?.enabled && (
             <p className="text-sm text-slate-700 dark:text-slate-300">Le paiement de KONAN Pro n’est pas encore ouvert. Reviens bientôt.</p>
           )}
-          {info && config?.enabled && providers.length === 0 && (
+          {info && config?.enabled && !useSaspay && providers.length === 0 && (
             <p className="text-sm text-slate-700 dark:text-slate-300">Le numéro de paiement n’est pas encore configuré. Reviens bientôt.</p>
           )}
 
+          {/* Paiement SasPay : choisir la formule, payer sur la page sécurisée, Pro activé dès la confirmation */}
+          {info && useSaspay && offer && (
+            <div className="space-y-4">
+              {config?.saspaySandbox && (
+                <p className="text-[11px] font-bold text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-2">Mode test SasPay : aucun argent réel n’est débité.</p>
+              )}
+
+              {saspayPending && !isActive && (
+                <div className="rounded-2xl p-4 border-2 border-amber-400 bg-amber-50 dark:bg-amber-500/10 space-y-2.5">
+                  <p className="text-sm font-black text-slate-900 dark:text-white inline-flex items-center gap-1.5"><Clock className="w-4 h-4" /> Paiement commencé ({fcfa(saspayPending.amount)})</p>
+                  <p className="text-xs text-slate-700 dark:text-slate-300">Tu deviens Pro dès que SasPay confirme ton paiement. Si tu as déjà payé, touche « Vérifier mon paiement ».</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={verifySaspay} disabled={checking}
+                      className="flex-1 min-w-[150px] rounded-xl py-2.5 text-sm font-black bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-60 inline-flex items-center justify-center gap-1.5">
+                      {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />} Vérifier mon paiement
+                    </button>
+                    {saspayPending.checkoutUrl && (
+                      <a href={saspayPending.checkoutUrl}
+                        className="flex-1 min-w-[150px] rounded-xl py-2.5 text-sm font-black text-center border-2 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 hover:bg-white dark:hover:bg-slate-800">
+                        Continuer le paiement
+                      </a>
+                    )}
+                  </div>
+                  {checkNote && <p className="text-xs font-bold text-slate-800 dark:text-slate-200">{checkNote}</p>}
+                </div>
+              )}
+
+              <p className="text-sm font-bold text-slate-900 dark:text-white">{isActive ? 'Prolonger mon abonnement' : 'Choisis ta formule'}</p>
+              <div className="grid grid-cols-2 gap-2">
+                {offers.map((o) => (
+                  <button type="button" key={o.period} onClick={() => setPeriod(o.period)}
+                    className={`rounded-2xl p-3 text-left border-2 transition ${o.period === offer.period ? 'border-sky-500 bg-sky-50 dark:bg-sky-500/10' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60'}`}>
+                    <span className="block text-xs font-bold text-slate-600 dark:text-slate-300">Pro · {PERIOD_LABEL[o.period]}</span>
+                    <span className="block text-lg font-black text-slate-900 dark:text-white">{fcfa(o.amount)}</span>
+                  </button>
+                ))}
+              </div>
+
+              {error && <p className="text-sm font-bold text-rose-700 dark:text-rose-300">{error}</p>}
+
+              <button type="button" onClick={paySaspay} disabled={redirecting}
+                className="w-full rounded-2xl py-3.5 text-base font-black bg-sky-600 hover:bg-sky-500 text-white shadow-lg disabled:opacity-60 inline-flex items-center justify-center gap-2">
+                {redirecting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Crown className="w-5 h-5" />} Payer {fcfa(offer.amount)}
+              </button>
+              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu paies sur la page sécurisée de SasPay avec Wave, Orange Money, MTN MoMo, Moov Money ou Djamo. KONAN Pro s’active dès que le paiement est confirmé.</p>
+            </div>
+          )}
+
           {/* Formulaire : seulement s'il n'y a pas déjà un paiement en attente */}
-          {info && config?.enabled && providers.length > 0 && offer && !pending && (
+          {info && config?.enabled && !useSaspay && providers.length > 0 && offer && !pending && (
             <form onSubmit={submit} className="space-y-4">
               <p className="text-sm font-bold text-slate-900 dark:text-white">{isActive ? 'Prolonger mon abonnement' : 'Choisis ta formule'}</p>
 

@@ -137,7 +137,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
   // Même source de classe que le reste de l'appli : les préférences d'abord (synchronisées), puis le compte
   const examGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || state.academicLevel;
-  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(examGradeRaw);
+  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(examGradeRaw, state.preferences?.country || state.userAccount?.country);
 
   // État Étape 2 : Matières & Devoirs / Examens (initialisé d'abord)
   const [subjectsList, setSubjectsList] = useState<Subject[]>(() => {

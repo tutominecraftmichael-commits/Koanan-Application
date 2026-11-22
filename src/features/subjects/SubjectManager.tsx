@@ -36,6 +36,8 @@ export interface SubjectManagerProps {
   onTriggerPlanner?: () => void;
   /** Classe de l'élève : la préparation aux devoirs n'est ouverte que pour certaines classes. */
   gradeLevel?: string;
+  /** Pays de l'élève : devoirs seulement pour le programme ivoirien */
+  country?: string;
 }
 
 const PRESET_COLORS = [
@@ -82,9 +84,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   onUpgradeToPro,
   onTriggerPlanner,
   gradeLevel,
+  country,
 }) => {
-  // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
-  const examOpenForGrade = isExamPrepOpenFor(gradeLevel);
+  // Préparation aux devoirs : classes qui ont les cours et les QCM, programme ivoirien seulement
+  const examOpenForGrade = isExamPrepOpenFor(gradeLevel, country);
   // Devoirs et examens = KONAN Pro : un élève Gratuit ne peut ni planifier ni préparer un devoir
   const examLockedByPlan = examOpenForGrade && planTier !== 'pro' && planTier !== 'plus';
   const EXAM_PREP_PAUSED = !examOpenForGrade || examLockedByPlan;

@@ -5,6 +5,8 @@
  * Élève :
  *   { action: 'status' }                                         → réglages (prix, numéros) + son abonnement
  *   { action: 'declare', tier, period, provider, ref, payerPhone } → « J'ai payé » : activé tout de suite
+ *   { action: 'saspay_start', period, gradeLevel, country }       → page de paiement SasPay (checkoutUrl)
+ *   { action: 'saspay_check' }                                    → revérifie auprès de SasPay (Pro si SUCCESS)
  * Administrateur (compte Google avec l'autorisation « admin », connexion de moins de 12 h) :
  *   { action: 'admin_list' }                                     → paiements à vérifier + derniers traités
  *   { action: 'admin_confirm', paymentId }                       → l'argent est bien arrivé
@@ -16,7 +18,17 @@
 import { getDb, send, readBody, isAllowedOrigin } from './_examCommon.js';
 import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyAdminIdToken, verifyFirebaseIdToken } from './_firebaseToken.js';
-import { adminDecide, adminList, declarePayment, getStatus, paymentConfig } from './_subscriptionStore.js';
+import {
+  adminDecide, adminList, checkSaspayForUser, declarePayment, getStatus, paymentConfig, saspayPendingFor, startSaspayCheckout,
+} from './_subscriptionStore.js';
+
+/** Adresse de l'application pour le retour après paiement : APP_URL, sinon l'origine (déjà contrôlée) de la requête. */
+function requestAppUrl(req) {
+  const origin = String(req.headers.origin || '');
+  if (/^https?:\/\/[^\s/]+$/.test(origin)) return origin;
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '');
+  return /^[a-z0-9.-]+(:\d+)?$/i.test(host) ? `https://${host}` : '';
+}
 
 const ADMIN_ACTIONS = new Set(['admin_list', 'admin_confirm', 'admin_reject']);
 
@@ -63,12 +75,27 @@ export default async function handler(req, res) {
     }
     const uid = payload.sub;
     const config = paymentConfig();
-    const publicConfig = { enabled: config.enabled, testMode: config.testMode, receiverName: config.receiverName, receivers: config.receivers, offers: config.offers };
+    const publicConfig = {
+      enabled: config.enabled, testMode: config.testMode, receiverName: config.receiverName, receivers: config.receivers, offers: config.offers,
+      saspay: config.saspay, saspaySandbox: config.saspaySandbox,
+    };
+    // État de l'abonnement + session SasPay encore ouverte ; vérifie d'abord auprès de SasPay les paiements en cours
+    const statusWithSaspay = async (db) => {
+      if (config.saspay) await checkSaspayForUser(db, uid);
+      const status = await getStatus(db, uid);
+      return config.saspay ? { ...status, saspayPending: await saspayPendingFor(db, uid) } : status;
+    };
 
-    if (action === 'status') {
+    if (action === 'status' || action === 'saspay_check') {
       if (!config.enabled) return send(res, 200, { success: true, config: publicConfig, status: null });
       const db = await getDb();
-      return send(res, 200, { success: true, config: publicConfig, status: await getStatus(db, uid) });
+      return send(res, 200, { success: true, config: publicConfig, status: await statusWithSaspay(db) });
+    }
+    if (action === 'saspay_start') {
+      const db = await getDb();
+      const out = await startSaspayCheckout(db, uid, body, { name: payload.name, email: payload.email }, { appUrl: requestAppUrl(req) });
+      if (!out.ok) return send(res, out.error === 'SASPAY_UNAVAILABLE' ? 502 : 409, { success: false, error: out.error });
+      return send(res, 200, { success: true, checkoutUrl: out.checkoutUrl, sessionId: out.sessionId });
     }
     if (action === 'declare') {
       const db = await getDb();

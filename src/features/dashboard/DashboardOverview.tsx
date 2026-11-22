@@ -121,7 +121,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenAvatarEditor,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
-  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel);
+  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel, preferences?.country);
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
 

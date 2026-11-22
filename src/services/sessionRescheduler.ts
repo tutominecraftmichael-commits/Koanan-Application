@@ -293,7 +293,7 @@ export function evaluateDailyCatchup(
   subjects: Array<{ id: string; name: string; examDate?: string; examTime?: string; examType?: string }> = []
 ): RescheduleResult {
   // Préparation aux devoirs/examens ouverte seulement pour certaines classes : sinon les dates d'épreuve sont ignorées
-  subjects = withoutPausedExamPrep(subjects, preferences.gradeLevel || preferences.academicLevel);
+  subjects = withoutPausedExamPrep(subjects, preferences.gradeLevel || preferences.academicLevel, preferences.country);
   const todayDayOfWeek = getTodayDayOfWeek(currentDate);
   const todayDateStr = getTodayDateString(currentDate);
   const currentMinute = currentDate.getHours() * 60 + currentDate.getMinutes();

@@ -24,6 +24,28 @@ export const PERIOD_DAYS = { mois: 30, semestre: 183 };
 /** Formules en vente aujourd'hui : KONAN Plus reste en liste d'attente. */
 export const SELLABLE_TIERS = ['pro'];
 
+/**
+ * Classes où KONAN Pro est EN VENTE (choix du fondateur, 2026-11-22) : seulement celles qui ont les cours
+ * guidés et la préparation aux devoirs. Ailleurs, Pro n'apporterait presque que de l'organisation :
+ * on ne le fait pas payer. Même liste que EXAM_PREP_GRADES (src/lib/exam/examPrepRules.ts).
+ */
+export const PRO_GRADES = [
+  'seconde_a', 'seconde_c',
+  'premiere_a', 'premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d',
+  'terminale_a', 'terminale_a1', 'terminale_a2', 'terminale_c', 'terminale_d',
+  'lmd_entd_l1',
+];
+export const proAvailableForGrade = (grade) => PRO_GRADES.includes(String(grade || '').trim());
+
+/**
+ * Pro vendu seulement en Côte d'Ivoire : les cours et les devoirs suivent le programme ivoirien
+ * (src/lib/country.ts). Pays absent = ancien compte = Côte d'Ivoire.
+ */
+export const proAvailableForCountry = (country) => {
+  const c = String(country || '').trim().toUpperCase();
+  return !c || c === 'CI';
+};
+
 export const PROVIDERS = { wave: 'Wave', orange: 'Orange Money' };
 
 const DAY_MS = 24 * 3600 * 1000;
@@ -80,6 +102,9 @@ export function validateDeclaration(body, existing, { nowMs, sellable = SELLABLE
   const period = String(body?.period || '');
   const provider = String(body?.provider || '');
   if (!PRICES[tier] || !sellable.includes(tier)) return { ok: false, error: 'TIER_NOT_SOLD' };
+  // Pro vendu seulement aux classes qui ont les cours (protège l'élève : il ne paie pas pour rien)
+  if (tier === 'pro' && !proAvailableForCountry(body?.country)) return { ok: false, error: 'PRO_NOT_FOR_COUNTRY' };
+  if (tier === 'pro' && !proAvailableForGrade(body?.gradeLevel)) return { ok: false, error: 'PRO_NOT_FOR_GRADE' };
   if (!PERIOD_DAYS[period]) return { ok: false, error: 'BAD_PERIOD' };
   if (!PROVIDERS[provider]) return { ok: false, error: 'BAD_PROVIDER' };
   const ref = normalizeTransactionRef(body?.ref);
@@ -97,6 +122,25 @@ export function validateDeclaration(body, existing, { nowMs, sellable = SELLABLE
   const recent = list.filter((p) => nowMs - Date.parse(p.declaredAt) < DAY_MS).length;
   if (recent >= 5) return { ok: false, error: 'TOO_MANY' };
   return { ok: true, clean: { tier, period, provider, ref, payerPhone } };
+}
+
+/**
+ * Démarrage d'un paiement SasPay (page de paiement hébergée). Mêmes règles que la déclaration manuelle
+ * pour la formule, le pays et la classe ; pas de numéro de transaction à recopier (SasPay le fournit).
+ * `sessionsLast24h` = nombre de sessions SasPay créées par l'élève ces dernières 24 h.
+ */
+export function validateSaspayStart(body, existing, { nowMs, sessionsLast24h = 0, maxPerDay = 8, sellable = SELLABLE_TIERS } = {}) {
+  const tier = String(body?.tier || 'pro');
+  const period = String(body?.period || '');
+  if (!PRICES[tier] || !sellable.includes(tier)) return { ok: false, error: 'TIER_NOT_SOLD' };
+  if (tier === 'pro' && !proAvailableForCountry(body?.country)) return { ok: false, error: 'PRO_NOT_FOR_COUNTRY' };
+  if (tier === 'pro' && !proAvailableForGrade(body?.gradeLevel)) return { ok: false, error: 'PRO_NOT_FOR_GRADE' };
+  if (!PERIOD_DAYS[period]) return { ok: false, error: 'BAD_PERIOD' };
+  const list = Array.isArray(existing) ? existing : [];
+  const ent = computeEntitlement(list, nowMs);
+  if (ent.tier !== 'free' && ent.tier !== tier) return { ok: false, error: 'OTHER_TIER_ACTIVE' };
+  if (sessionsLast24h >= maxPerDay) return { ok: false, error: 'TOO_MANY' };
+  return { ok: true, clean: { tier, period, amount: expectedAmount(tier, period) } };
 }
 
 /**
@@ -222,11 +266,11 @@ export function serverTierFrom({ paymentsEnabled, subscriptionDoc, userDoc, nowM
 
 /**
  * Interrupteur principal dans le code : tant qu'il vaut false, le paiement est ÉTEINT partout, même si
- * KONAN_PAYMENTS=on est resté sur Vercel (choix du fondateur, 2026-11-16 : KONAN Pro redevient offert à
- * tous en attendant de retravailler les paiements). Pour rallumer : true ici ET KONAN_PAYMENTS=on, et
- * PAYMENTS_OPEN = true dans src/lib/subscriptionPlans.ts.
+ * KONAN_PAYMENTS=on est resté sur Vercel. Éteint le 2026-11-16, RALLUMÉ le 2026-11-22 (choix du fondateur :
+ * Pro payant, seulement pour les classes qui ont les cours). Le paiement ne démarre vraiment qu'avec
+ * KONAN_PAYMENTS=on sur Vercel (et PAYMENTS_OPEN = true dans src/lib/subscriptionPlans.ts).
  */
-export const PAYMENTS_ALLOWED_IN_CODE = false;
+export const PAYMENTS_ALLOWED_IN_CODE = true;
 
 /** Interrupteur général : le paiement n'est actif que si le code l'autorise ET KONAN_PAYMENTS=on sur le serveur. */
 export function paymentsEnabled(env = process.env) {

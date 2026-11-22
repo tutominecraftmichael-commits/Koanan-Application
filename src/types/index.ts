@@ -84,6 +84,8 @@ export interface StudyPreferences {
   studentName: string;
   academicLevel: string;
   gradeLevel?: string;
+  /** Pays de l'élève (code « CI », « GH »…, voir lib/country). Absent = ancien compte = Côte d'Ivoire. */
+  country?: string;
   targetDailyStudyMinutes: number;
   chronotype: Chronotype;
   pacing: StudyPacing;
@@ -201,6 +203,8 @@ export interface UserAccount {
   gradeLevel?: string;
   phoneNumber?: string;
   countryCode?: string;
+  /** Pays de l'élève (copie de preferences.country) */
+  country?: string;
   isLoggedIn: boolean;
   isDemo?: boolean;
   planTier?: PlanTier;

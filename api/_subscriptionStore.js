@@ -9,8 +9,12 @@
 import {
   PAYMENT_STATUS, PERIOD_DAYS, PRICES, PROVIDERS, SELLABLE_TIERS,
   adminDecision, computeEntitlement, expectedAmount, isTrustBlocked, paymentCollectionPrefix,
-  launchGraceUntil, paymentsEnabled, publicStatus, serverTierFrom, validateDeclaration,
+  launchGraceUntil, paymentsEnabled, publicStatus, serverTierFrom, validateDeclaration, validateSaspayStart,
 } from './_subscriptionRules.js';
+import {
+  SASPAY_CHECK_WINDOW_MS, SASPAY_MAX_SESSIONS_PER_DAY, createCheckoutSession, getCheckoutStatus,
+  isSaspayId, judgeSaspay, saspayConfig, saspayPaymentId, verifyPayment,
+} from './_saspay.js';
 
 export const isProduction = (env = process.env) => Boolean(env.VERCEL) || env.NODE_ENV === 'production';
 
@@ -28,10 +32,14 @@ export function paymentConfig(env = process.env) {
   const offers = SELLABLE_TIERS.flatMap((tier) => Object.keys(PERIOD_DAYS).map((period) => ({
     tier, period, days: PERIOD_DAYS[period], amount: expectedAmount(tier, period), normalAmount: PRICES[tier][period],
   })));
+  const saspay = saspayConfig(env, production);
   return {
     enabled: paymentsEnabled(env),
     production,
     testMode: !production,
+    // SasPay configuré (clé API sur le serveur) : paiement automatique, l'élève ne recopie plus de numéro
+    saspay: saspay.enabled,
+    saspaySandbox: Boolean(saspay.enabled && saspay.sandbox),
     receiverName: String(env.KONAN_PAYMENT_NAME || '').replace(/[<>]/g, '').trim().slice(0, 60),
     receivers,
     offers,
@@ -113,6 +121,170 @@ export async function declarePayment(db, uid, body, who = {}, nowMs = Date.now()
     if (e?.code === 6 || /ALREADY_EXISTS|already exists/i.test(String(e?.message || ''))) return { ok: false, error: 'REF_USED' };
     throw e;
   }
+}
+
+// ---------------------------------------------------------------------------------------------
+// SasPay : page de paiement hébergée. Collection <préfixe>saspay_sessions/{id de session SasPay}.
+// ---------------------------------------------------------------------------------------------
+
+const SASPAY_OPEN = 'PENDING';
+
+async function saspaySessionsOf(db, uid, env) {
+  const snap = await payCol(db, 'saspay_sessions', env).where('uid', '==', uid).get();
+  return snap.docs.map(docData);
+}
+
+/** Session de paiement encore ouverte, montrée à l'élève (« continuer le paiement »). */
+export function saspayPendingView(sessions, nowMs) {
+  const open = (sessions || [])
+    .filter((s) => s.status === SASPAY_OPEN && nowMs - Date.parse(s.createdAt) < SASPAY_CHECK_WINDOW_MS)
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))[0];
+  if (!open) return null;
+  const expired = Date.parse(open.expiresAt) <= nowMs;
+  return { sessionId: open.id, period: open.period, amount: open.amount, createdAt: open.createdAt, checkoutUrl: expired ? null : open.checkoutUrl };
+}
+
+/**
+ * L'élève choisit sa formule : on crée la page de paiement SasPay et on la retient dans la base.
+ * Le prix vient des règles du serveur. Renvoie { ok, checkoutUrl, sessionId } ou { ok:false, error }.
+ */
+export async function startSaspayCheckout(db, uid, body, who = {}, { appUrl = '', nowMs = Date.now(), env = process.env, fetchImpl } = {}) {
+  const config = paymentConfig(env);
+  if (!config.enabled) return { ok: false, error: 'PAYMENTS_DISABLED' };
+  const sp = saspayConfig(env, config.production);
+  if (!sp.enabled) return { ok: false, error: 'SASPAY_NOT_CONFIGURED' };
+  const email = String(who.email || '').trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, error: 'NO_EMAIL' };
+
+  const [payments, sessions] = await Promise.all([paymentsOf(db, uid, null, env), saspaySessionsOf(db, uid, env)]);
+  const sessionsLast24h = sessions.filter((s) => nowMs - Date.parse(s.createdAt) < 24 * 3600 * 1000).length;
+  const check = validateSaspayStart(body, payments, { nowMs, sessionsLast24h, maxPerDay: SASPAY_MAX_SESSIONS_PER_DAY });
+  if (!check.ok) return { ok: false, error: check.error };
+  const { tier, period, amount } = check.clean;
+
+  const base = sp.appUrl || appUrl;
+  const created = await createCheckoutSession(sp, {
+    amount,
+    description: `KONAN Pro · ${period === 'mois' ? '1 mois' : '6 mois'}`,
+    email,
+    name: who.name,
+    returnUrl: base ? `${base}/?paiement=saspay` : '',
+    metadata: { app: 'konan', tier, period },
+    nowMs,
+  }, { fetchImpl });
+  if (!created.ok) {
+    console.error('[saspay] création de session refusée :', created.status, created.error);
+    return { ok: false, error: created.status === 429 ? 'TOO_MANY' : 'SASPAY_UNAVAILABLE' };
+  }
+  const s = created.data || {};
+  if (!isSaspayId(s.id) || !/^https:\/\//.test(String(s.checkout_url || ''))) {
+    console.error('[saspay] réponse de création inattendue');
+    return { ok: false, error: 'SASPAY_UNAVAILABLE' };
+  }
+  await payCol(db, 'saspay_sessions', env).doc(s.id).set({
+    uid, tier, period, amount,
+    status: SASPAY_OPEN,
+    checkoutUrl: s.checkout_url,
+    createdAt: new Date(nowMs).toISOString(),
+    expiresAt: s.expires_at || new Date(nowMs + 3600_000).toISOString(),
+    studentName: String(who.name || '').slice(0, 80),
+    studentEmail: email.slice(0, 120),
+    sandbox: sp.sandbox,
+  });
+  return { ok: true, checkoutUrl: s.checkout_url, sessionId: s.id };
+}
+
+/**
+ * Vérifie auprès de SasPay une session de l'élève et, SEULEMENT si le paiement est « SUCCESS », active Pro.
+ * Livraison unique : le paiement porte l'identifiant de la transaction SasPay (« create » échoue s'il existe déjà).
+ */
+async function settleSaspaySession(db, session, { nowMs, env, sp, fetchImpl }) {
+  const st = await getCheckoutStatus(sp, session.id, { fetchImpl });
+  if (!st.ok) return { outcome: 'pending', reason: st.error };
+  let verify = null;
+  if (String(st.data?.status || '').toUpperCase() === 'PAID' && isSaspayId(st.data?.transaction_id)) {
+    const v = await verifyPayment(sp, st.data.transaction_id, { fetchImpl });
+    if (!v.ok) return { outcome: 'pending', reason: v.error };
+    verify = v.data;
+  }
+  const decision = judgeSaspay({ session, status: st.data, verify });
+  const sessionRef = payCol(db, 'saspay_sessions', env).doc(session.id);
+  const at = new Date(nowMs).toISOString();
+
+  if (decision.outcome === 'closed' || decision.outcome === 'failed') {
+    await sessionRef.update({ status: decision.outcome === 'closed' ? String(decision.reason || 'CLOSED') : 'FAILED', checkedAt: at, failReason: decision.reason || null });
+    if (decision.outcome === 'failed') console.error('[saspay] paiement non livré :', session.id, decision.reason);
+    return decision;
+  }
+  if (decision.outcome !== 'paid') return decision;
+
+  const paymentId = saspayPaymentId(st.data.transaction_id);
+  const payRef = payCol(db, 'payments', env).doc(paymentId);
+  const subRef = payCol(db, 'subscriptions', env).doc(session.uid);
+  await db.runTransaction(async (tx) => {
+    const [sessSnap, paySnap] = await Promise.all([tx.get(sessionRef), tx.get(payRef)]);
+    await tx.get(subRef);
+    if (paySnap.exists) {
+      // Déjà livré (deux vérifications au même moment) : on referme seulement la session
+      if (sessSnap.exists && sessSnap.data().status === SASPAY_OPEN) tx.update(sessionRef, { status: 'PAID', paymentId, checkedAt: at });
+      return;
+    }
+    const existing = await paymentsOf(db, session.uid, tx, env);
+    const payment = {
+      id: paymentId,
+      uid: session.uid,
+      tier: session.tier,
+      period: session.period,
+      provider: 'saspay',
+      ref: String(verify?.reference || st.data.transaction_reference || st.data.transaction_id).slice(0, 60),
+      amount: session.amount,
+      status: PAYMENT_STATUS.confirmed,
+      declaredAt: at,
+      checkedAt: at,
+      checkedBy: 'saspay',
+      saspaySessionId: session.id,
+      saspayTransactionId: st.data.transaction_id,
+      network: String(verify?.network_code || '').slice(0, 30), // « wave_ci », « orange_ci »…
+      netAmount: verify?.net_amount ?? null, // ce qui revient à KONAN
+      debitedAmount: verify?.debited_amount ?? null, // ce que l'élève a payé (frais compris)
+      fee: verify?.amounts?.fee ?? verify?.client_fee ?? null,
+      studentName: session.studentName || '',
+      studentEmail: session.studentEmail || '',
+      testMode: !isProduction(env) || Boolean(session.sandbox),
+    };
+    tx.create(payRef, payment);
+    tx.update(sessionRef, { status: 'PAID', paymentId, checkedAt: at });
+    tx.set(subRef, subscriptionDoc([...existing, payment], nowMs, env));
+  }, { maxAttempts: 5 });
+  return { outcome: 'paid' };
+}
+
+/**
+ * Vérifie les sessions SasPay encore ouvertes d'un élève (au plus 3, des 48 dernières heures).
+ * Appelé à chaque lecture de l'abonnement : l'élève qui revient dans l'appli après avoir payé devient Pro.
+ */
+export async function checkSaspayForUser(db, uid, { nowMs = Date.now(), env = process.env, fetchImpl } = {}) {
+  const sp = saspayConfig(env, isProduction(env));
+  if (!sp.enabled) return [];
+  const open = (await saspaySessionsOf(db, uid, env))
+    .filter((s) => s.status === SASPAY_OPEN && nowMs - Date.parse(s.createdAt) < SASPAY_CHECK_WINDOW_MS)
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+    .slice(0, 3);
+  const results = [];
+  for (const s of open) {
+    try {
+      results.push({ sessionId: s.id, ...(await settleSaspaySession(db, s, { nowMs, env, sp, fetchImpl })) });
+    } catch (e) {
+      console.error('[saspay] vérification impossible :', s.id, e?.message || e);
+      results.push({ sessionId: s.id, outcome: 'pending', reason: 'error' });
+    }
+  }
+  return results;
+}
+
+/** Session ouverte de l'élève (pour l'écran d'abonnement). */
+export async function saspayPendingFor(db, uid, nowMs = Date.now(), env = process.env) {
+  return saspayPendingView(await saspaySessionsOf(db, uid, env), nowMs);
 }
 
 /** Liste pour l'administrateur : paiements à vérifier d'abord, puis les derniers traités. */
