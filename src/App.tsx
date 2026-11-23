@@ -86,12 +86,14 @@ import type { AvatarConfig } from './lib/avatar/avatarCatalog';
 import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
 import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
+import { getTutorStatus, type TutorContext, type TutorStatus } from './services/tutorApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
 import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
 import { getDisplayAvatar } from './lib/avatar';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
+import { TutorFab } from './features/tutor/TutorFab';
 import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
@@ -108,8 +110,9 @@ import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; /
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { isExamPrepOpenFor } from './lib/featureFlags';
-import { followsIvorianProgram, normalizeCountry } from './lib/country';
-import { PAYMENTS_OPEN } from './lib/subscriptionPlans';
+import { normalizeCountry } from './lib/country';
+import { setCurriculumCountry } from './lib/curriculum/subjectVisibility';
+import { PAYMENTS_OPEN, PRO_NO_COURSES_NOTICE } from './lib/subscriptionPlans';
 import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
@@ -125,6 +128,7 @@ const loadMiniGamesHubView = () => import('./features/gamification/MiniGamesHubV
 const MiniGamesHubView = lazyView(loadMiniGamesHubView);
 const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorModal').then((m) => m.AvatarEditorModal));
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
+const TutorChat = lazyView(() => import('./features/tutor/TutorChat').then((m) => m.TutorChat));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
@@ -308,13 +312,12 @@ export function App() {
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
   const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
   const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
-  // Hors de Côte d'Ivoire : toujours Gratuit (Pro réservé au programme ivoirien, même pendant l'offre de lancement)
-  const countryForTier = state.preferences?.country || state.userAccount?.country;
+  // Tous les pays ont accès à KONAN, Pro compris (choix du fondateur, 2026-11-22 au soir) : seule différence,
+  // pas d'Histoire-Géographie du lycée hors Côte d'Ivoire (voir setCurriculumCountry plus bas).
   const effectivePlanTier = useMemo<PlanTier>(() => {
-    if (!followsIvorianProgram(countryForTier)) return 'free';
     if (serverTier) return serverTier;
     return state.planTier || state.userAccount?.planTier || 'free';
-  }, [serverTier, state.planTier, state.userAccount?.planTier, countryForTier]);
+  }, [serverTier, state.planTier, state.userAccount?.planTier]);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
@@ -326,15 +329,17 @@ export function App() {
   // est celle qui suit les changements (import d'emploi du temps, autre appareil) ; le compte en garde une
   // copie qui peut être ancienne. Avant, certains écrans lisaient l'une et d'autres l'autre.
   const studentGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel);
-  // Pays de l'élève : les cours et devoirs suivent le programme ivoirien (lib/country). Sans pays = ancien compte = CI.
+  // Pays de l'élève (lib/country). Sans pays = ancien compte = Côte d'Ivoire.
   const studentCountry = normalizeCountry(state.preferences?.country || state.userAccount?.country) || undefined;
-  const outsideIvorianProgram = !followsIvorianProgram(studentCountry);
-  // KONAN Pro est vendu seulement en Côte d'Ivoire, aux classes qui ont les cours guidés et les devoirs (choix
-  // du fondateur, 2026-11-22) : les autres ne peuvent pas payer pour un Pro presque vide. Le serveur refuse aussi.
-  const proSellableForClass = isExamPrepOpenFor(studentGradeRaw, studentCountry);
-  const PRO_NOT_FOR_CLASS_TEXT = outsideIvorianProgram
-    ? 'KONAN Pro est réservé à la Côte d’Ivoire pour l’instant : les cours et les devoirs suivent le programme ivoirien. Tu peux continuer à utiliser KONAN gratuitement.'
-    : 'KONAN Pro arrive bientôt pour ta classe. Il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts.';
+  // Hors Côte d'Ivoire : pas d'Histoire-Géographie du lycée (réglage du catalogue des cours, avant tout affichage)
+  setCurriculumCountry(studentCountry);
+  // KONAN Pro est vendu à TOUTES les classes et dans tous les pays (choix du fondateur, 2026-11-22 au soir).
+  // Les classes qui n'ont pas encore les cours guidés ni les devoirs sont prévenues AVANT de payer
+  // (PRO_NO_COURSES_NOTICE + case « J'ai compris »). On ne parle jamais du « programme ivoirien » à l'élève.
+  const proSellableForClass = true;
+  const classHasCourses = isExamPrepOpenFor(studentGradeRaw, studentCountry);
+  const proNoCoursesNotice = !classHasCourses ? PRO_NO_COURSES_NOTICE : undefined;
+  const PRO_NOT_FOR_CLASS_TEXT = 'KONAN Pro n’est pas encore disponible pour toi.';
   const effectiveClassLabel = studentClassLabel(
     studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
@@ -917,6 +922,21 @@ export function App() {
     ? (state.userAccount.googleId || auth?.currentUser?.uid || '')
     : '';
 
+  // Mode « Je ne comprends pas » (professeur particulier, KONAN Pro payant). Le serveur dit s'il est allumé
+  // (KONAN_TUTOR=on), si l'élève y a droit et combien de messages il lui reste aujourd'hui.
+  const [tutorStatus, setTutorStatus] = useState<TutorStatus | null>(null);
+  const [tutorOpen, setTutorOpen] = useState<{ context?: TutorContext } | null>(null);
+  const subscriptionTierKey = `${subscriptionInfo?.status?.tier || ''}|${subscriptionInfo?.status?.endsAt || ''}`;
+  useEffect(() => {
+    if (!subscriptionAccount) { setTutorStatus(null); return; }
+    let alive = true;
+    getTutorStatus().then((s) => { if (alive) setTutorStatus(s); });
+    return () => { alive = false; };
+  }, [subscriptionAccount, subscriptionTierKey]);
+  // Réservé aux abonnés KONAN Pro (rappel du fondateur, 2026-11-23) : un élève Gratuit ne voit ni la peluche,
+  // ni les boutons « Je ne comprends pas » (le serveur refuse aussi tout élève sans abonnement payé).
+  const tutorAvailable = Boolean(tutorStatus?.enabled && tutorStatus.paid);
+
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
   const [friendsError, setFriendsError] = useState('');
@@ -1179,7 +1199,7 @@ export function App() {
       const rejected = subscriptionInfo?.status?.lastRejected;
       showToast(rejected && subscriptionInfo?.status?.history[0]?.id === rejected.id
         ? 'Ton paiement n’a pas été validé : KONAN Pro est retiré de ton compte.'
-        : 'KONAN Pro n’est pas actif sur ton compte. Abonne-toi pour en profiter.');
+        : 'KONAN Pro n’est plus actif sur ton compte (fin de l’offre gratuite ou de ton abonnement). Abonne-toi (2 500 F par mois) pour retrouver tes avantages Pro.');
     } else {
       // Déjà appliqué, ou passage à Pro : simple mise à jour de la formule, sans recalcul du planning
       setState((prev) => {
@@ -3066,6 +3086,8 @@ export function App() {
             }}
             // KONAN Pro : « Explique à KONAN » (Feynman) après chaque mini-leçon ; il faut un compte connecté (serveur)
             canExplain={(effectivePlanTier === 'pro' || effectivePlanTier === 'plus') && Boolean(state.userAccount?.isLoggedIn) && !state.isDemoMode}
+            // « Je ne comprends pas » dans la leçon : KONAN part de cette notion et de ce que dit le cours
+            onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
           />
         )}
 
@@ -3086,6 +3108,7 @@ export function App() {
                 setActiveExamSession(null);
                 handleCompleteTutorSession(sessionId, durationSec, mistakes);
               }}
+              onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
             />
           ) : (
             <ExamSujetView
@@ -3102,6 +3125,8 @@ export function App() {
                 setActiveExamSession(null);
                 handleCompleteTutorSession(sessionId, undefined, undefined, opts?.noXp);
               }}
+              // « Je ne comprends pas mon erreur » : KONAN explique la question ratée du devoir
+              onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
             />
           )
         )}
@@ -3167,6 +3192,28 @@ export function App() {
       {/* Bouton flottant jaune des Mini-Jeux KONAN (XP à gogo, etc., avec charges ⚡) */}
       {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
+      )}
+      {/* Peluche KONAN « Je ne comprends pas » : en bas à droite (les mini-jeux sont en bas à gauche) */}
+      {tutorAvailable && !tutorOpen && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
+        <TutorFab onOpen={() => setTutorOpen({})} />
+      )}
+      {tutorOpen && tutorStatus && subscriptionAccount && (
+        <Suspense fallback={null}>
+          <TutorChat
+            uid={subscriptionAccount}
+            classe={effectiveClassLabel || ''}
+            prenom={String(effectiveStudentName || '').trim().split(/\s+/)[0] === 'Étudiant' ? undefined : String(effectiveStudentName || '').trim().split(/\s+/)[0]}
+            context={tutorOpen.context}
+            paid={tutorStatus.paid}
+            remaining={tutorStatus.remaining}
+            limit={tutorStatus.limit}
+            voiceRemaining={tutorStatus.voiceRemaining}
+            onRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, remaining: n } : s))}
+            onVoiceRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, voiceRemaining: n } : s))}
+            onSubscribe={proSellableForClass ? () => { setTutorOpen(null); setIsSubscriptionOpen(true); } : undefined}
+            onClose={() => setTutorOpen(null)}
+          />
+        </Suspense>
       )}
       {isExerciseOpen && (
         <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
@@ -3354,6 +3401,7 @@ export function App() {
             canRenew={paidMode}
             proAvailable={proSellableForClass}
             unavailableText={PRO_NOT_FOR_CLASS_TEXT}
+            noticeText={proNoCoursesNotice}
             onClose={() => setIsPlansOpen(false)}
             onChoosePro={(period) => {
               setIsPlansOpen(false);
@@ -3382,6 +3430,7 @@ export function App() {
             initialPeriod={subscriptionPeriod}
             gradeLevel={tryResolveGradeLevel(studentGradeRaw) || ''}
             country={studentCountry || 'CI'}
+            noCoursesNotice={proNoCoursesNotice}
             info={subscriptionInfo}
             loading={subscriptionLoading}
             loadError={subscriptionError}

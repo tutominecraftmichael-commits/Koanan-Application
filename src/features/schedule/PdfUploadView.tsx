@@ -877,7 +877,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <GraduationCap className="w-4 h-4 text-sky-700 shrink-0 dark:text-sky-300" />
                   <span>
                     {selectedFormat === 'scolaire' 
-                      ? 'Classe officielle (Programme national de Côte d’Ivoire)' 
+                      ? 'Classe officielle (programme national)' 
                       : selectedFormat === 'tpcm' 
                       ? 'Filière technique (BTS / Prépa)' 
                       : 'Niveau & Filière universitaire (LMD / Grandes Écoles)'}

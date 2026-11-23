@@ -17,6 +17,8 @@ export interface PlanPickerProps {
   ctaLabels?: Partial<Record<PlanTier, string>>;
   /** Formules non disponibles pour cet élève (autre pays, classe sans cours) : bouton grisé + explication. */
   unavailable?: Partial<Record<PlanTier, string>>;
+  /** Avertissement montré sur la carte, bouton toujours actif (ex. classe qui n'a pas encore de cours). */
+  notice?: Partial<Record<PlanTier, string>>;
 }
 
 const THEME: Record<PlanTier, {
@@ -51,7 +53,7 @@ const DEFAULT_CTA: Record<PlanTier, string> = {
   plus: 'Me prévenir à l’ouverture',
 };
 
-export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, ctaLabels, unavailable }) => {
+export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, ctaLabels, unavailable, notice }) => {
   const [billing, setBilling] = useState<BillingPeriod>('monthly');
 
   return (
@@ -100,6 +102,7 @@ export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, c
             isCurrent={currentPlan === plan.id}
             cta={ctaLabels?.[plan.id] || DEFAULT_CTA[plan.id]}
             unavailableText={unavailable?.[plan.id]}
+            noticeText={notice?.[plan.id]}
             onSelect={onSelect}
           />
         ))}
@@ -114,8 +117,9 @@ const PlanCard: React.FC<{
   isCurrent: boolean;
   cta: string;
   unavailableText?: string;
+  noticeText?: string;
   onSelect: (plan: PlanTier, billing: BillingPeriod) => void;
-}> = ({ plan, billing, isCurrent, cta, unavailableText, onSelect }) => {
+}> = ({ plan, billing, isCurrent, cta, unavailableText, noticeText, onSelect }) => {
   const theme = THEME[plan.id];
   const price = plan.prices[billing];
   const paid = plan.id !== 'free';
@@ -186,6 +190,13 @@ const PlanCard: React.FC<{
           ))}
         </ul>
       </div>
+
+      {/* Formule disponible mais avec une limite à connaître avant de payer (classe sans cours) */}
+      {noticeText && !unavailableText && (
+        <p className="mt-5 text-xs font-bold leading-snug text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-2">
+          ⚠️ {noticeText}
+        </p>
+      )}
 
       {/* Formule pas disponible pour cet élève : explication au-dessus du bouton grisé */}
       {unavailableText && (

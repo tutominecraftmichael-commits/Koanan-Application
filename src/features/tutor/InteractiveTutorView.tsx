@@ -21,8 +21,10 @@ import {
   Shapes,
   Landmark,
   Globe,
-  Mic
+  Mic,
+  HelpCircle
 } from 'lucide-react';
+import type { TutorContext } from '../../services/tutorApi';
 import type {
   CurriculumChapter,
   CurriculumGradeLevel,
@@ -80,6 +82,8 @@ export interface InteractiveTutorViewProps {
   onSessionCompleted: (sessionId?: string, stats?: { mistakes: number }) => void;
   /** KONAN Pro : bouton « Explique à KONAN » (méthode Feynman) à la fin de chaque mini-leçon. */
   canExplain?: boolean;
+  /** Mode « Je ne comprends pas » (KONAN Pro) : ouvre la discussion avec KONAN sur l'étape affichée. */
+  onNotUnderstood?: (context: TutorContext) => void;
 }
 
 /** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
@@ -348,6 +352,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   onExit,
   onSessionCompleted,
   canExplain = false,
+  onNotUnderstood,
 }) => {
   // Feynman à la demande (Pro) : mini-leçons déjà expliquées à KONAN pendant cette séance
   const [explainedPointIds, setExplainedPointIds] = useState<Set<string>>(() => new Set());
@@ -1195,7 +1200,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            En Côte d’Ivoire, le programme officiel de <strong>{subjectTitle}</strong> comporte deux volets complémentaires.
+            Le programme officiel de <strong>{subjectTitle}</strong> comporte deux volets complémentaires.
             Choisis librement par lequel tu démarres : Konan alternera ensuite automatiquement à chaque séance !
           </p>
 
@@ -1598,6 +1603,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           notion={currentPoint.title}
           reference={reference}
           classe={gradeLevel.replace(/_/g, ' ')}
+          matiere={subjectTitle}
+          onNotUnderstood={onNotUnderstood}
           onDone={() => {
             const id = currentPoint.id;
             setExplainedPointIds((prev) => new Set(prev).add(id));
@@ -1823,7 +1830,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         {/* Feynman : la règle du jeu en une ligne */}
         {isFeynman && activeItemIndex === 0 && (
           <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-left text-xs sm:text-sm text-amber-900 dark:text-amber-100 font-semibold leading-relaxed">
-            <strong>Séance Feynman :</strong> à la fin de chaque leçon, tu l’expliques avec tes mots, à l’oral ou par écrit. KONAN te dit si c’est juste, clair et simple.
+            <strong>Séance Feynman :</strong> à la fin de chaque leçon, tu l’expliques avec tes mots, à l’oral ou par écrit. KONE, le meilleur ami de KONAN, te dit si c’est juste, clair et simple.
           </div>
         )}
 
@@ -2097,6 +2104,26 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
           )}
 
+          {/* Mode « Je ne comprends pas » : KONAN réexplique CETTE étape du cours, en discussion */}
+          {showCourseCard && onNotUnderstood && (
+            <button
+              type="button"
+              onClick={() => {
+                const point = (phase === 'warmup' ? warmupItem?.point : undefined) || currentPoint;
+                const reference = [
+                  activeCourseSlice.paragraphText,
+                  activeCourseSlice.formula ? `${activeCourseSlice.formula.name} : ${activeCourseSlice.formula.formula}` : '',
+                  activeCourseSlice.keyRule,
+                  point?.summary,
+                ].filter(Boolean).join('\n').slice(0, 1800);
+                onNotUnderstood({ matiere: subjectTitle, notion: point?.title || subjectTitle, reference });
+              }}
+              className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/40 bg-white dark:bg-slate-900 text-sky-800 dark:text-sky-200 text-sm font-extrabold hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+            >
+              <HelpCircle className="w-4 h-4" strokeWidth={2.4} /> Je ne comprends pas cette étape
+            </button>
+          )}
+
           {/* PARTIE 2 (charte Excellence, comme la maquette) : la mascotte pose la question, réponses A-D à relief */}
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-2">
@@ -2321,12 +2348,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 <div className="konan-hairline mx-auto max-w-md rounded-[20px] bg-slate-50 dark:bg-slate-900 border border-amber-300 dark:border-[#F5C451]/45 p-4 text-left space-y-2.5">
                   <div className="flex items-center justify-between">
                     <p className="text-[15px] font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Mic className="w-[18px] h-[18px] text-amber-700 dark:text-[#F5C451]" /> Explique à KONAN
+                      <Mic className="w-[18px] h-[18px] text-amber-700 dark:text-[#F5C451]" /> Explique à KONE
                     </p>
                     <span className="px-2 py-0.5 rounded-full border border-amber-400 dark:border-[#F5C451]/50 text-amber-800 dark:text-[#F5C451] text-[10px] font-extrabold tracking-[0.12em]">PRO</span>
                   </div>
                   <p className="text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Explique la notion avec tes mots, à l’oral ou par écrit. KONAN te dit en quelques secondes si c’est juste, clair et simple.
+                    Explique la notion avec tes mots, à l’oral ou par écrit. KONE, le meilleur ami de KONAN, te dit en quelques secondes si c’est juste, clair et simple.
                   </p>
                   <button type="button" onClick={() => setPhase('feynman')} className="konan-btn-gold w-full h-[46px] text-sm cursor-pointer">
                     <Mic className="w-4 h-4" /> J’explique (environ 1 minute)

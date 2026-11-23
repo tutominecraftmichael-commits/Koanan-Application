@@ -8,7 +8,8 @@
  */
 import { cleanSeriesPrompt } from '../../lib/gamification/exerciseContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, CheckCircle2, AlertCircle, Clock, RotateCcw } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, AlertCircle, Clock, RotateCcw, HelpCircle } from 'lucide-react';
+import type { TutorContext } from '../../services/tutorApi';
 import type { StudySession } from '../../types';
 import type { CurriculumGradeLevel, StemSubjectId } from '../../lib/curriculum/types';
 import { MathRenderer } from '../../components/common/MathRenderer';
@@ -31,6 +32,8 @@ export interface ExamQcmViewProps {
   onExit: () => void;
   /** `mistakes` : réponses fausses de la série (chacune retire 1 XP à la séance). */
   onComplete: (sessionId: string, durationSec?: number, mistakes?: number) => void;
+  /** KONAN Pro : « Je ne comprends pas » sur une question ratée → KONAN l'explique en discussion. */
+  onNotUnderstood?: (context: TutorContext) => void;
 }
 
 interface SavedProgress {
@@ -63,7 +66,7 @@ function writeSaved(sessionId: string, p: SavedProgress) {
 
 const fmt = (sec: number) => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
 
-export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subjectName, stemSubjectId, gradeLevel, onExit, onComplete }) => {
+export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subjectName, stemSubjectId, gradeLevel, onExit, onComplete, onNotUnderstood }) => {
   const [series, setSeries] = useState<ExamQcmItem[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
@@ -433,6 +436,29 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           </p>
           {exercise.explanation && (
             <div className="text-slate-700 dark:text-slate-200"><MathRenderer text={exercise.explanation} /></div>
+          )}
+          {/* KONAN Pro : explication de l'erreur en discussion */}
+          {!isCorrect && onNotUnderstood && (
+            <button
+              type="button"
+              onClick={() => {
+                const options = exercise.options || [];
+                onNotUnderstood({
+                  matiere: subjectName,
+                  notion: item.chapterTitle,
+                  reference: [
+                    `Question : ${cleanSeriesPrompt(exercise.prompt)}`,
+                    options.length ? `Propositions : ${options.map((o, i) => `${String.fromCharCode(65 + i)}) ${o}`).join(' ; ')}` : '',
+                    selected !== null && options[selected] ? `Réponse choisie par l'élève : ${options[selected]}` : '',
+                    typeof exercise.correctAnswerIndex === 'number' && options[exercise.correctAnswerIndex] ? `Bonne réponse : ${options[exercise.correctAnswerIndex]}` : '',
+                    exercise.explanation ? `Explication du cours : ${exercise.explanation}` : '',
+                  ].filter(Boolean).join('\n').slice(0, 1800),
+                });
+              }}
+              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold border-2 border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-200 bg-white dark:bg-slate-900 hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+            >
+              <HelpCircle className="w-3.5 h-3.5" /> Je ne comprends pas
+            </button>
           )}
         </div>
       )}

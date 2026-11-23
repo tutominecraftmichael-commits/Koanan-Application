@@ -635,6 +635,12 @@ export interface PointVisualSchema {
   cycle?: CycleDiagramSpec;
   /** Scène illustrée (dessin d'ambiance façon livre illustré) plutôt qu'un schéma. */
   scene?: boolean;
+  /**
+   * Image illustrée (générée à l'avance par l'IA, vérifiée, sans aucun texte dedans) : adresse du fichier
+   * dans public/ (ex. « /course-images/<leçon>/<mini-leçon>.webp ») et sa description pour les lecteurs d'écran.
+   */
+  imageSrc?: string;
+  imageAlt?: string;
   /** Description de scène dessinée par le moteur de KONAN (src/lib/scenes). */
   sceneSpec?: import('../scenes/sceneTypes').SceneSpec;
 }

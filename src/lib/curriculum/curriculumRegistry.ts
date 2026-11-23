@@ -1,6 +1,7 @@
 import type { CurriculumChapter, CurriculumGradeLevel, StemSubjectId } from './types';
 import { expandChapterTo6MiniLessons } from './curriculumExpander';
 import { applyIllustrations } from '../../data/illustrations';
+import { isSubjectHidden } from './subjectVisibility';
 
 // ============================================================================
 // COURS AUTHENTIQUES UNIQUEMENT
@@ -92,6 +93,10 @@ const PACK_LOADERS: Partial<Record<PackKey, () => Promise<{ CHAPTERS: Curriculum
   lmd_entd_l1_gestion_droit: () => import('../../data/coursePacks/lmd_entd_l1_gestion_droit'),
   lmd_entd_l1_comm_bureau: () => import('../../data/coursePacks/lmd_entd_l1_comm_bureau'),
 };
+// Pays de l'élève (subjectVisibility) : hors Côte d'Ivoire, pas d'Histoire-Géographie du lycée.
+// Sans cours, la matière n'a ni leçons guidées, ni QCM, ni sujet de 2 h (« Cours en préparation »).
+const visible = (c: CurriculumChapter) => !isSubjectHidden(c.subjectId);
+
 const loadedPacks = new Map<PackKey, CurriculumChapter[]>();
 const pendingPacks = new Map<PackKey, Promise<void>>();
 let AUTHORED_CHAPTERS: CurriculumChapter[] = [];
@@ -186,7 +191,7 @@ export function hasCurriculumChapters(
   gradeLevel: CurriculumGradeLevel
 ): boolean {
   return AUTHORED_CHAPTERS.some(
-    (c) => c.subjectId === subjectId && chapterServesGrade(c, gradeLevel)
+    (c) => c.subjectId === subjectId && visible(c) && chapterServesGrade(c, gradeLevel)
   );
 }
 
@@ -201,7 +206,7 @@ export function getCurriculumChapters(
   gradeLevel: CurriculumGradeLevel
 ): CurriculumChapter[] {
   return AUTHORED_CHAPTERS
-    .filter((c) => c.subjectId === subjectId && chapterServesGrade(c, gradeLevel))
+    .filter((c) => c.subjectId === subjectId && visible(c) && chapterServesGrade(c, gradeLevel))
     .map((c) => ({ chapter: c, order: chapterOrderForGrade(c, gradeLevel) }))
     .sort((a, b) => a.order - b.order)
     .map(({ chapter, order }) => {
@@ -230,7 +235,7 @@ export function getCurriculumChapterById(
   gradeLevel?: CurriculumGradeLevel
 ): CurriculumChapter | undefined {
   const chap = AUTHORED_CHAPTERS.find(
-    (c) => c.id === chapterId && (!gradeLevel || chapterServesGrade(c, gradeLevel))
+    (c) => c.id === chapterId && visible(c) && (!gradeLevel || chapterServesGrade(c, gradeLevel))
   );
   return chap ? getExpandedChapter(chap) : undefined;
 }

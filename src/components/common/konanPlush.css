@@ -1,0 +1,67 @@
+/*
+ * Peluche KONAN animée image par image (voir KonanPlush.tsx).
+ * Les gestes viennent des images ; ici : fondu entre deux images, respiration douce, rond du buste,
+ * et les petits effets du bouton flottant (halo, bulle « ? », « boing » au toucher).
+ * Choix du fondateur (2026-11-22) : pas de sauts, pas d'étoiles, pas de balancements de robot.
+ */
+.kp { position: relative; display: inline-block; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+.kp-stage { position: absolute; inset: 0; }
+.kp-stage--bust { border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, #f0f9ff 0%, #dbeefe 70%, #cfe6fb 100%); }
+.dark .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #1c3554 0%, #13243b 70%, #0f1d31 100%); }
+.kp-body { position: absolute; inset: 0; transform-origin: 50% 92%; animation: kp-breathe 3.2s ease-in-out infinite; }
+@keyframes kp-breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.008, 1.018); } }
+
+/* Images du geste : la nouvelle apparaît en fondu (70 ms) PAR-DESSUS la précédente, qui reste opaque dessous
+   le temps du fondu : la peluche ne devient jamais transparente, et le mouvement reste fluide. */
+.kp-frame {
+  position: absolute; max-width: none; user-select: none; -webkit-user-drag: none; pointer-events: none;
+  opacity: 0; z-index: 0;
+}
+.kp-frame.is-prev { opacity: 1; z-index: 1; }
+.kp-frame.is-on { opacity: 1; z-index: 2; animation: kp-fade-in 70ms linear; }
+.kp--talk .kp-frame.is-on { animation-duration: 40ms; }
+@keyframes kp-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Bouton flottant : anneau blanc (jour) ou bleu nuit + liseré ciel (nuit) */
+.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #fff, 0 8px 22px rgba(2, 132, 199, 0.35); }
+.dark .kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #0f172a, 0 0 0 5px rgba(56, 189, 248, 0.55), 0 10px 26px rgba(0, 0, 0, 0.5); }
+
+/* Toucher : « boing » de peluche (écrasée puis relâchée) */
+.kp.is-boing .kp-stage { animation: kp-boing 0.42s cubic-bezier(.3,.7,.4,1) 1; transform-origin: 50% 90%; }
+@keyframes kp-boing {
+  0% { transform: none; }
+  30% { transform: scale(1.1, 0.88); }
+  60% { transform: scale(0.95, 1.06); }
+  100% { transform: none; }
+}
+
+/* Apparition */
+.kp-enter { animation: kp-enter 0.6s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes kp-enter { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- Bouton flottant : halo qui respire + bulle « ? » ---------- */
+.kp-halo { position: absolute; inset: 0; border-radius: 50%; background: rgba(56, 189, 248, 0.45); animation: kp-halo 3.2s ease-out infinite; pointer-events: none; }
+@keyframes kp-halo { 0% { transform: scale(0.95); opacity: 0.7; } 70%, 100% { transform: scale(1.45); opacity: 0; } }
+.kp-ask { position: absolute; left: -10%; top: -12%; width: 34%; height: 34%; border-radius: 50% 50% 50% 12%;
+  display: flex; align-items: center; justify-content: center; font-weight: 900; line-height: 1;
+  animation: kp-ask 8s ease-in-out infinite; animation-delay: 2s; transform-origin: 100% 100%; pointer-events: none; }
+@keyframes kp-ask {
+  0%, 4% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  8% { transform: scale(1.15) rotate(6deg); opacity: 1; }
+  11%, 52% { transform: scale(1) rotate(0); opacity: 1; }
+  56% { transform: scale(1.1) rotate(-4deg); }
+  60%, 100% { transform: scale(0); opacity: 0; }
+}
+.kp-hint { animation: kp-hint 6s ease-in-out both; transform-origin: 100% 50%; }
+@keyframes kp-hint {
+  0% { transform: scale(0.6) translateX(10px); opacity: 0; }
+  8%, 88% { transform: none; opacity: 1; }
+  100% { transform: scale(0.8) translateX(10px); opacity: 0; }
+}
+
+/* Moins d'animations demandé par le téléphone : pas de respiration ni d'effets ; les gestes restent (images) */
+@media (prefers-reduced-motion: reduce) {
+  .kp-body, .kp-halo, .kp-ask, .kp-enter, .kp-hint, .kp.is-boing .kp-stage { animation: none !important; }
+  .kp-ask { transform: none; opacity: 1; }
+  .kp-hint { opacity: 1; }
+}

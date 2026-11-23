@@ -1,9 +1,10 @@
 /**
  * Pays de l'élève (choix du fondateur, 2026-11-22).
  *
- * Les cours, les QCM et les devoirs de KONAN suivent le PROGRAMME IVOIRIEN. Un élève d'un autre pays peut
- * utiliser KONAN (planning, méthodes, ligue) en Gratuit, mais KONAN Pro et la préparation aux devoirs
- * sont réservés à la Côte d'Ivoire : ailleurs, les matières et les sujets ne correspondraient pas.
+ * Les cours de KONAN sont écrits à partir du programme ivoirien, mais ON NE LE DIT JAMAIS à l'élève.
+ * Depuis le 2026-11-22 au soir, TOUS les pays ont accès à tout (Pro et devoirs compris), avec deux différences
+ * hors Côte d'Ivoire : pas d'Histoire-Géographie du lycée (subjectVisibility), et aucune mention
+ * « Côte d'Ivoire », « DRENA », « MENA » (en-têtes des sujets, tuteur).
  *
  * Un compte créé avant cette question n'a pas de pays : il est considéré comme ivoirien (tous les
  * élèves inscrits jusque-là suivaient le programme ivoirien). L'élève peut corriger dans les Paramètres.
@@ -59,4 +60,4 @@ export function followsIvorianProgram(raw?: string | null): boolean {
 }
 
 export const OUTSIDE_PROGRAM_TEXT =
-  'Les cours et les devoirs de KONAN suivent le programme de Côte d’Ivoire. Dans ton pays, tu peux utiliser KONAN gratuitement pour organiser tes révisions (planning, méthodes, ligue). KONAN Pro est réservé à la Côte d’Ivoire pour l’instant.';
+  'Dans ton pays, l’Histoire-Géographie du lycée n’est pas encore disponible dans KONAN. Tout le reste fonctionne pour toi.';

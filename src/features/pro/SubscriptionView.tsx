@@ -29,9 +29,12 @@ interface Props {
   gradeLevel?: string;
   /** Pays de l'élève : le serveur vend Pro seulement en Côte d'Ivoire */
   country?: string;
+  /** Classe sans cours guidés ni devoirs : avertissement + case « J'ai compris » obligatoire avant de payer */
+  noCoursesNotice?: string;
 }
 
-export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '', country = 'CI' }) => {
+export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '', country = 'CI', noCoursesNotice }) => {
+  const [understood, setUnderstood] = useState(false);
   const config = info?.config;
   const status = info?.status || null;
   const offers = useMemo(() => (config?.offers || []).filter((o) => o.tier === 'pro'), [config]);
@@ -71,6 +74,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
 
   const paySaspay = async () => {
     if (!offer || redirecting) return;
+    if (noCoursesNotice && !isActive && !understood) return;
     setRedirecting(true);
     setError('');
     const r = await startSaspayPayment({ period: offer.period, gradeLevel, country });
@@ -216,9 +220,19 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
                 ))}
               </div>
 
+              {noCoursesNotice && !isActive && (
+                <div className="rounded-2xl p-3.5 bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-300 dark:border-amber-500/40 space-y-2.5">
+                  <p className="text-[13px] font-bold leading-snug text-amber-900 dark:text-amber-100">⚠️ {noCoursesNotice}</p>
+                  <label className="flex items-start gap-2.5 cursor-pointer">
+                    <input type="checkbox" checked={understood} onChange={(e) => setUnderstood(e.target.checked)} className="mt-0.5 w-5 h-5 accent-sky-600 shrink-0" />
+                    <span className="text-[13px] font-extrabold text-slate-900 dark:text-white">J’ai compris : ma classe n’a pas encore de cours dans KONAN.</span>
+                  </label>
+                </div>
+              )}
+
               {error && <p className="text-sm font-bold text-rose-700 dark:text-rose-300">{error}</p>}
 
-              <button type="button" onClick={paySaspay} disabled={redirecting}
+              <button type="button" onClick={paySaspay} disabled={redirecting || Boolean(noCoursesNotice && !isActive && !understood)}
                 className="w-full rounded-2xl py-3.5 text-base font-black bg-sky-600 hover:bg-sky-500 text-white shadow-lg disabled:opacity-60 inline-flex items-center justify-center gap-2">
                 {redirecting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Crown className="w-5 h-5" />} Payer {fcfa(offer.amount)}
               </button>

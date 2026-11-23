@@ -79,7 +79,7 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: '2 500 F CFA / mois • 9 950 F CFA / semestre • Paiement Wave ou Orange Money',
+    tagline: '2 500 F CFA / mois • 12 500 F CFA / semestre • Paiement Wave ou Orange Money',
     priceLabel: '2 500 F',
     periodLabel: 'CFA / mois',
     priceAmount: 2500,
@@ -157,15 +157,16 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     id: 'pro',
     name: 'KONAN PRO',
     tagline: 'Pour progresser vite',
-    prices: { monthly: 2500, semester: 9950 },
+    prices: { monthly: 2500, semester: 12500 },
     includesLabel: 'Tout le Gratuit, plus :',
     note: 'Wave, Orange Money, MTN, Moov',
     available: true,
     recommended: true,
     features: [
       { title: 'Préparation aux devoirs (Seconde, Première, Terminale et Licence 1 ENTD)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
+      { title: 'Mode « Je ne comprends pas »', detail: 'KONE, le meilleur ami de KONAN, devient ton professeur particulier : il t’explique, te fait faire des exercices et vérifie que tu as compris. Toutes les matières, 30 messages par jour.' },
       { title: 'Énergie illimitée ∞', detail: 'Autant de séries d’exercices que tu veux.' },
-      { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONAN te corrige : 3 vocaux par jour.' },
+      { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONE te corrige : 3 vocaux par jour.' },
       { title: 'Time Blocking', detail: 'De longs blocs en mode concentration, sans distraction.' },
       { title: 'Jusqu’à 3 méthodes combinées', detail: 'Dans le même planning, selon tes matières.' },
       { title: 'Planning configuré avec KONAN, pas à pas' },
@@ -198,9 +199,16 @@ export const PLUS_VISIBLE = false;
  * Paiement ouvert aux élèves ? Tant que c'est false, KONAN Pro est OFFERT (activation libre, comme avant) :
  * la fiche des tarifs l'annonce « Offert pendant le lancement ». À passer à true en même temps que KONAN_PAYMENTS=on
  * et PAYMENTS_ALLOWED_IN_CODE (api/_subscriptionRules.js). Éteint le 2026-11-16, rallumé le 2026-11-22
- * (Pro payant, vendu seulement aux classes qui ont les cours : voir PRO_GRADES côté serveur).
+ * (Pro payant). Depuis le 2026-11-22 au soir : Pro vendu à TOUTES les classes de Côte d'Ivoire ; celles qui
+ * n'ont pas encore les cours sont prévenues avant de payer (PRO_NO_COURSES_NOTICE).
  */
 export const PAYMENTS_OPEN = true;
+
+/** Avertissement montré AVANT de payer Pro aux classes qui n'ont pas encore les cours guidés ni les devoirs. */
+export const PRO_NO_COURSES_NOTICE =
+  'Ta classe n’a pas encore les cours guidés ni la préparation aux devoirs dans KONAN. '
+  + 'Avec Pro, tu as le planning complet, les méthodes Pro, le mode « Je ne comprends pas » (toutes les matières) '
+  + 'et l’énergie illimitée, mais pas encore de cours.';
 
 /** Formules affichées aux élèves. */
 export const VISIBLE_DISPLAY_PLANS: DisplayPlan[] = DISPLAY_PLANS.filter((p) => p.id !== 'plus' || PLUS_VISIBLE);

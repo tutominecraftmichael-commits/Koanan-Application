@@ -4,6 +4,7 @@ import { GEO_TERMINALE_ILLUSTRATIONS } from './geo_terminale';
 import { SECONDE_A_ILLUSTRATIONS } from './seconde_a';
 import { SCENE_ILLUSTRATIONS } from './scenes';
 import { GENERATED_SCENES } from './generatedScenes';
+import { COURSE_IMAGES } from './courseImages';
 
 /**
  * Figure(s) rattachée(s) à une question, repérée par l'identifiant ORIGINAL de l'exercice :
@@ -33,9 +34,18 @@ const GENERATED_ILLUSTRATIONS: Record<string, ExerciseIllustration> = Object.fro
   ]),
 );
 
+/** Images illustrées générées à l'avance (toutes les matières, sans texte dans l'image). */
+const IMAGE_ILLUSTRATIONS: Record<string, ExerciseIllustration> = Object.fromEntries(
+  Object.entries(COURSE_IMAGES).map(([id, im]) => [
+    id,
+    { course: { type: 'custom_svg', title: im.title, caption: im.caption, imageSrc: im.src, imageAlt: im.alt } },
+  ]),
+);
+
 const ALL_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
-  // Ordre de priorité (le dernier gagne) : scènes générées < scènes dessinées à la main < figures
+  // Ordre de priorité (le dernier gagne) : images < scènes générées < scènes dessinées à la main < figures
   // (schéma, carte, courbe…) déjà prévues pour la même étape.
+  ...IMAGE_ILLUSTRATIONS,
   ...GENERATED_ILLUSTRATIONS,
   ...SCENE_ILLUSTRATIONS,
   ...MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS,

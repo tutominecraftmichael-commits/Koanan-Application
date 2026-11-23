@@ -1,0 +1,553 @@
+/**
+ * Mode « Je ne comprends pas » : discussion avec KONE, professeur particulier.
+ * KONE cherche où ça bloque, explique, vérifie par une question, réexplique autrement, et une jauge
+ * montre où en est la compréhension (je découvre → je maîtrise).
+ * La discussion est gardée sur le téléphone seulement (une par élève, effacée après 7 jours).
+ * Lisible en mode jour ET en mode nuit.
+ */
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square } from 'lucide-react';
+import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
+import { MathRenderer } from '../../components/common/MathRenderer';
+import { sendTutorMessage, speakTutor, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
+import { getReviewMap } from '../../lib/curriculum/reviewMemory';
+import { STEM_SUBJECTS } from '../../lib/curriculum/types';
+import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
+
+/** Son muet très court : joué pendant un toucher pour que le téléphone accepte ensuite la voix de KONE. */
+const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
+
+const LEVELS = ['Je découvre', 'Je commence à comprendre', 'J’ai compris', 'Je maîtrise'];
+const KEEP_MS = 7 * 24 * 3600 * 1000;
+const MAX_INPUT = 1200;
+
+const ERRORS: Record<TutorError, string> = {
+  PAID_PRO_REQUIRED: 'Le mode « Je ne comprends pas » est réservé aux abonnés KONAN Pro.',
+  DAILY_LIMIT: 'Tu as utilisé tous tes messages d’aujourd’hui. KONE t’attend demain pour continuer !',
+  TUTOR_BUSY: 'KONE a beaucoup d’élèves en ce moment. Réessaie dans quelques minutes.',
+  AI_UNAVAILABLE: 'KONE n’a pas pu répondre. Réessaie dans un moment.',
+  TUTOR_OFF: 'Le mode « Je ne comprends pas » arrive bientôt.',
+  UNAUTHORIZED: 'Connecte-toi à ton compte pour discuter avec KONE.',
+  TOKEN_EXPIRED: 'Ta connexion a expiré, réessaie.',
+  EMPTY_MESSAGE: 'Écris ton message d’abord.',
+  NETWORK: 'Pas de connexion Internet. Réessaie quand tu es connecté.',
+  UNKNOWN: 'Une erreur est survenue. Réessaie.',
+  VOICE_DAILY_LIMIT: 'La voix de KONE revient demain.',
+  VOICE_UNAVAILABLE: 'KONE n’a pas pu parler cette fois.',
+};
+
+interface Stored { messages: TutorMessage[]; context: TutorContext; updatedAt: number }
+
+const storageKey = (uid: string) => `konan_tutor_chat_${uid}`;
+function readStored(uid: string): Stored | null {
+  try {
+    const raw = localStorage.getItem(storageKey(uid));
+    const s = raw ? (JSON.parse(raw) as Stored) : null;
+    if (!s || !Array.isArray(s.messages) || Date.now() - Number(s.updatedAt || 0) > KEEP_MS) return null;
+    return s;
+  } catch {
+    return null;
+  }
+}
+function writeStored(uid: string, s: Stored | null) {
+  try {
+    if (s) localStorage.setItem(storageKey(uid), JSON.stringify({ ...s, messages: s.messages.slice(-60) }));
+    else localStorage.removeItem(storageKey(uid));
+  } catch { /* stockage plein ou bloqué : la discussion n'est simplement pas gardée */ }
+}
+
+const newId = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
+
+/** Texte de KONE : paragraphes, listes « - », gras ** et formules $…$. */
+const RichText: React.FC<{ text: string }> = ({ text }) => {
+  const blocks = useMemo(() => text.split(/\n{2,}/).map((b) => b.split('\n')), [text]);
+  return (
+    <div className="space-y-2">
+      {blocks.map((lines, i) => {
+        const bullets = lines.every((l) => /^\s*[-•*]\s+/.test(l));
+        if (bullets) {
+          return (
+            <ul key={i} className="list-disc pl-5 space-y-1">
+              {lines.map((l, j) => <li key={j}><MathRenderer text={l.replace(/^\s*[-•*]\s+/, '')} /></li>)}
+            </ul>
+          );
+        }
+        return (
+          <p key={i}>
+            {lines.map((l, j) => (
+              <React.Fragment key={j}>
+                {j > 0 && <br />}
+                <MathRenderer text={/^\s*[-•*]\s+/.test(l) ? `• ${l.replace(/^\s*[-•*]\s+/, '')}` : l} />
+              </React.Fragment>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
+const Gauge: React.FC<{ niveau: number; notion?: string }> = ({ niveau, notion }) => (
+  <div className="space-y-1">
+    <div className="flex items-center justify-between gap-2 text-[11px] font-extrabold">
+      <span className="text-slate-600 dark:text-slate-300 truncate">{notion || 'Ma compréhension'}</span>
+      <span className={niveau >= 3 ? 'text-emerald-700 dark:text-emerald-300' : 'text-sky-700 dark:text-sky-300'}>{LEVELS[niveau]}</span>
+    </div>
+    <div className="grid grid-cols-4 gap-1" role="meter" aria-valuemin={0} aria-valuemax={3} aria-valuenow={niveau} aria-label="Niveau de compréhension">
+      {LEVELS.map((label, i) => (
+        <span
+          key={label}
+          className={`h-2 rounded-full transition-colors duration-500 ${
+            i <= niveau
+              ? niveau >= 3 ? 'bg-emerald-500' : 'bg-sky-500'
+              : 'bg-slate-200 dark:bg-slate-800'
+          }`}
+        />
+      ))}
+    </div>
+  </div>
+);
+
+export interface TutorChatProps {
+  uid: string;
+  classe: string;
+  /** Prénom de l'élève : KONE l'appelle par son prénom */
+  prenom?: string;
+  /** Leçon d'où vient l'élève (cours guidé) : la discussion repart sur cette notion. */
+  context?: TutorContext;
+  paid: boolean;
+  remaining: number | null;
+  limit: number;
+  /** Lectures à voix haute restantes aujourd'hui (null : inconnu) */
+  voiceRemaining?: number | null;
+  onRemainingChange: (n: number) => void;
+  onVoiceRemainingChange?: (n: number) => void;
+  onSubscribe?: () => void;
+  onClose: () => void;
+}
+
+const VOICE_KEY = 'konan_tutor_voice';
+
+/**
+ * Dernières erreurs de l'élève : cours guidés (mémoire de révision du téléphone) et devoirs corrigés
+ * (clé « konan_devoir_errors_<uid> », écrite par ExamSujetView). KONE s'en sert pour trouver ce qui bloque.
+ */
+function recentMistakes(uid: string): TutorContext['erreurs'] {
+  type M = { matiere: string; question: string; reponse?: string; at: number };
+  const list: M[] = [];
+  try {
+    for (const e of Object.values(getReviewMap(uid))) {
+      if (e.lastResult !== 'ko' || !e.prompt) continue;
+      list.push({ matiere: STEM_SUBJECTS[e.subject]?.name || '', question: String(e.prompt).slice(0, 220), reponse: e.wrongAnswer ? String(e.wrongAnswer).slice(0, 120) : undefined, at: Number(e.wrongAt || e.updatedAt || 0) });
+    }
+  } catch { /* mémoire des cours indisponible */ }
+  try {
+    const devoirs = JSON.parse(localStorage.getItem(`konan_devoir_errors_${uid}`) || '[]');
+    if (Array.isArray(devoirs)) {
+      for (const d of devoirs.slice(0, 10)) {
+        if (!d?.question) continue;
+        list.push({ matiere: `${d.matiere || ''} (devoir)`.trim(), question: String(d.question).slice(0, 220), reponse: d.reponse ? String(d.reponse).slice(0, 120) : undefined, at: Number(d.at || 0) });
+      }
+    }
+  } catch { /* erreurs des devoirs indisponibles */ }
+  return list.sort((a, b) => b.at - a.at).slice(0, 5).map(({ matiere, question, reponse }) => ({ matiere, question, reponse }));
+}
+
+export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose }) => {
+  const [state, setState] = useState<Stored>(() => {
+    const stored = readStored(uid);
+    // Venu d'une autre leçon : nouvelle discussion sur cette notion
+    if (context?.notion && stored?.context?.notion !== context.notion) return { messages: [], context: { ...context, classe }, updatedAt: Date.now() };
+    return stored || { messages: [], context: { ...(context || {}), classe }, updatedAt: Date.now() };
+  });
+  const [input, setInput] = useState('');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // Humeur passagère de la peluche après une réponse (saut de joie, hochement, fête)
+  const [flash, setFlash] = useState<PlushMood | null>(null);
+  const [typing, setTyping] = useState(false);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(flashTimer.current), []);
+  const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // ---------- Voix de KONE : lit ses réponses à voix haute (réglage gardé sur le téléphone) ----------
+  const [voiceOn, setVoiceOn] = useState<boolean>(() => {
+    try { return localStorage.getItem(VOICE_KEY) !== 'off'; } catch { return true; }
+  });
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [voiceLoadingId, setVoiceLoadingId] = useState<string | null>(null);
+  const [voiceNote, setVoiceNote] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCache = useRef(new Map<string, string>());
+  const voiceRequest = useRef(0);
+
+  // Bouche synchronisée avec la voix : volume du son mesuré en direct (0 à 1), transmis à la peluche
+  const [talkLevel, setTalkLevel] = useState<number | undefined>(undefined);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceAttached = useRef(false);
+  const rafRef = useRef(0);
+
+  /** Prépare le lecteur pendant un toucher de l'élève (sinon iPhone refuse de jouer le son plus tard). */
+  const unlockAudio = () => {
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (Ctx) audioCtxRef.current = new Ctx();
+      }
+      void audioCtxRef.current?.resume();
+    } catch { /* mesure du volume indisponible : la bouche bougera au hasard */ }
+    if (audioRef.current) return;
+    const a = new Audio();
+    a.preload = 'auto';
+    audioRef.current = a;
+    try {
+      a.src = SILENT_WAV;
+      a.play().then(() => a.pause()).catch(() => { /* rien à débloquer */ });
+    } catch { /* lecteur indisponible */ }
+  };
+
+  /** Branche la mesure du volume sur le lecteur (une seule fois), seulement si le son peut passer par elle. */
+  const startLevelMeter = (a: HTMLAudioElement) => {
+    const ctx = audioCtxRef.current;
+    if (!ctx || ctx.state !== 'running') return;
+    try {
+      if (!sourceAttached.current) {
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 512;
+        ctx.createMediaElementSource(a).connect(analyser);
+        analyser.connect(ctx.destination);
+        analyserRef.current = analyser;
+        sourceAttached.current = true;
+      }
+    } catch { return; }
+    const analyser = analyserRef.current;
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.fftSize);
+    let smooth = 0;
+    let last = 0;
+    const tick = (t: number) => {
+      analyser.getByteTimeDomainData(data);
+      let sum = 0;
+      for (let i = 0; i < data.length; i++) { const v = (data[i] - 128) / 128; sum += v * v; }
+      const rms = Math.min(1, Math.sqrt(sum / data.length) * 4);
+      smooth = smooth * 0.55 + rms * 0.45;
+      if (t - last > 80) { last = t; setTalkLevel(smooth); }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(tick);
+  };
+  const stopLevelMeter = () => { cancelAnimationFrame(rafRef.current); setTalkLevel(undefined); };
+
+  const stopVoice = () => {
+    voiceRequest.current += 1;
+    const a = audioRef.current;
+    if (a) { a.pause(); a.onended = null; }
+    stopLevelMeter();
+    setSpeakingId(null);
+    setVoiceLoadingId(null);
+  };
+  useEffect(() => () => stopVoice(), []); // en fermant la discussion, KONE se tait
+
+  const speak = async (m: TutorMessage) => {
+    unlockAudio();
+    if (speakingId === m.id || voiceLoadingId === m.id) { stopVoice(); return; }
+    stopVoice();
+    const req = voiceRequest.current;
+    let src = audioCache.current.get(m.id);
+    if (!src) {
+      if (voiceRemaining !== null && voiceRemaining <= 0) { setVoiceNote('La voix de KONE revient demain. Tu peux continuer à lire ses messages.'); return; }
+      setVoiceLoadingId(m.id);
+      const r = await speakTutor(m.text);
+      if (req !== voiceRequest.current) return; // l'élève a demandé autre chose entre-temps
+      setVoiceLoadingId(null);
+      if (!r.ok) {
+        if (typeof r.voiceRemaining === 'number') onVoiceRemainingChange?.(r.voiceRemaining);
+        setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONE revient demain. Tu peux continuer à lire ses messages.' : 'KONE n’a pas pu parler cette fois. Tu peux lire son message.');
+        return;
+      }
+      onVoiceRemainingChange?.(r.voiceRemaining);
+      src = r.src;
+      audioCache.current.set(m.id, src);
+    }
+    const a = audioRef.current || new Audio();
+    audioRef.current = a;
+    a.src = src;
+    a.onended = () => { stopLevelMeter(); setSpeakingId((cur) => (cur === m.id ? null : cur)); };
+    setVoiceNote(null);
+    setSpeakingId(m.id);
+    a.play()
+      .then(() => startLevelMeter(a))
+      .catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONE.'); });
+  };
+
+  const toggleVoice = () => {
+    unlockAudio();
+    const next = !voiceOn;
+    setVoiceOn(next);
+    if (!next) stopVoice();
+    try { localStorage.setItem(VOICE_KEY, next ? 'on' : 'off'); } catch { /* sans effet */ }
+  };
+
+  useEffect(() => { writeStored(uid, state.messages.length ? state : null); }, [uid, state]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [state.messages.length, sending]);
+  // Échap ferme ; on bloque le défilement de la page derrière
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [onClose]);
+
+  const lastKonan = [...state.messages].reverse().find((m) => m.role === 'konan');
+  const niveau = lastKonan?.niveau ?? 0;
+  const notion = lastKonan?.notion || state.context.notion;
+  const outOfMessages = remaining !== null && remaining <= 0;
+  const canWrite = paid && !outOfMessages && !sending;
+  const mood: PlushMood = sending ? 'think' : flash || (speakingId ? 'talk' : typing && input.trim() ? 'listen' : 'idle');
+
+  const send = async (raw: string) => {
+    const text = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
+    if (!text || !canWrite) return;
+    unlockAudio();
+    stopVoice();
+    const mine: TutorMessage = { id: newId(), role: 'eleve', text };
+    const messages = [...state.messages, mine];
+    setState((s) => ({ ...s, messages, updatedAt: Date.now() }));
+    setInput('');
+    setError(null);
+    setSending(true);
+    // « KONE se souvient » : prénom, pays et dernières erreurs des cours accompagnent chaque message
+    const res = await sendTutorMessage(messages, {
+      ...state.context,
+      classe,
+      prenom,
+      country: getStudentCountry() || undefined,
+      erreurs: recentMistakes(uid),
+    });
+    setSending(false);
+    if (!res.ok) {
+      setError(ERRORS[res.error] || ERRORS.UNKNOWN);
+      if (typeof res.remaining === 'number') onRemainingChange(res.remaining);
+      // Le message n'a pas été traité : on le rend à l'élève pour qu'il puisse le renvoyer
+      setState((s) => ({ ...s, messages: s.messages.filter((m) => m.id !== mine.id) }));
+      setInput(text);
+      return;
+    }
+    onRemainingChange(res.remaining);
+    const { texte, niveau: lvl, etape, notion: n, choix } = res.reply;
+    const before = niveau;
+    const next: PlushMood | null = etape === 'conclusion' || (lvl === 3 && before < 3) ? 'celebrate'
+      : (lvl ?? 0) > before ? 'happy'
+      : (lvl ?? 0) < before ? 'encourage'
+      : null;
+    if (next) {
+      setFlash(next);
+      clearTimeout(flashTimer.current);
+      flashTimer.current = setTimeout(() => setFlash(null), next === 'celebrate' ? 2800 : 2000);
+    }
+    const answer: TutorMessage = { id: newId(), role: 'konan', text: texte, niveau: lvl, etape, notion: n, choix };
+    setState((s) => ({ ...s, messages: [...s.messages, answer], updatedAt: Date.now() }));
+    // Voix allumée : KONE lit sa réponse tout de suite
+    if (voiceOn) void speak(answer);
+  };
+
+  const restart = () => {
+    stopVoice();
+    audioCache.current.clear();
+    setState({ messages: [], context: { ...(context || {}), classe }, updatedAt: Date.now() });
+    setError(null);
+    setInput('');
+    inputRef.current?.focus();
+  };
+
+  const starters = state.context.notion
+    ? [`Je ne comprends rien à « ${state.context.notion} »`, 'Je ne comprends pas l’exemple', 'Explique-moi avec des mots simples']
+    : ['Je ne comprends pas une leçon de maths', 'Explique-moi une notion de physique', 'Aide-moi à comprendre ma leçon de SVT'];
+  const quickReplies = lastKonan && !sending
+    ? [...(lastKonan.choix || []), 'Je ne comprends toujours pas', 'J’ai compris, un exercice !']
+    : [];
+
+  return (
+    <div className="fixed inset-0 z-[95] bg-slate-900/40 dark:bg-black/60 flex sm:items-center sm:justify-center sm:p-4 animate-in fade-in duration-150" role="dialog" aria-modal="true" aria-label="Je ne comprends pas : discussion avec KONE">
+      <div className="flex flex-col w-full min-w-0 h-full sm:h-[min(820px,92vh)] sm:max-w-2xl bg-white dark:bg-[#0B1120] sm:rounded-3xl sm:border sm:border-slate-200 dark:sm:border-slate-800 shadow-2xl overflow-hidden">
+        {/* En-tête : KONE + jauge de compréhension */}
+        <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-slate-200 dark:border-slate-800 bg-sky-50 dark:bg-slate-900/80 space-y-2.5">
+          <div className="flex items-center gap-3">
+            <KonanPlush variant="bust" size={54} mood={mood} talkLevel={talkLevel} />
+            <div className="flex-1 min-w-0">
+              <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">KONE t’explique jusqu’à ce que tu comprennes</p>
+            </div>
+            {paid && (
+              <button
+                type="button"
+                onClick={toggleVoice}
+                title={voiceOn ? 'KONE lit ses réponses à voix haute (toucher pour couper)' : 'Voix coupée (toucher pour que KONE parle)'}
+                aria-label={voiceOn ? 'Couper la voix de KONE' : 'Activer la voix de KONE'}
+                aria-pressed={voiceOn}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer ${voiceOn ? 'text-sky-700 dark:text-sky-300 bg-white dark:bg-slate-800' : 'text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800'}`}
+              >
+                {voiceOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              </button>
+            )}
+            {state.messages.length > 0 && (
+              <button type="button" onClick={restart} title="Nouvelle discussion" aria-label="Nouvelle discussion" className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 cursor-pointer">
+                <RotateCcw className="w-[18px] h-[18px]" />
+              </button>
+            )}
+            <button type="button" onClick={onClose} title="Fermer" aria-label="Fermer" className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 cursor-pointer">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          {paid && state.messages.length > 0 && <Gauge niveau={niveau} notion={notion} />}
+        </div>
+
+        {/* Discussion */}
+        <div className="flex-1 overflow-y-auto px-3 sm:px-5 py-4 space-y-3 overscroll-contain">
+          {/* Accueil : la peluche entière dit bonjour */}
+          {state.messages.length === 0 && (
+            <div className="flex justify-center pt-2 pb-3">
+              <KonanPlush variant="body" size={150} mood={mood} talkLevel={talkLevel} enter waves />
+            </div>
+          )}
+          <div className="flex items-end gap-2">
+            <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
+            <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
+              {state.context.notion
+                ? <>{prenom ? `${prenom}, tu` : 'Tu'} bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
+                : <>Salut{prenom ? ` ${prenom}` : ''} ! Moi, c’est <strong>KONE</strong>, le meilleur ami de KONAN. Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
+            </div>
+          </div>
+
+          {state.messages.map((m) => (
+            m.role === 'eleve' ? (
+              <div key={m.id} className="flex justify-end">
+                <div className="max-w-[85%] px-4 py-2.5 rounded-2xl rounded-br-md bg-sky-600 text-white text-sm leading-relaxed whitespace-pre-wrap break-words">{m.text}</div>
+              </div>
+            ) : (
+              <div key={m.id} className="flex items-end gap-2">
+                <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
+                <div className={`max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md text-sm leading-relaxed break-words text-slate-800 dark:text-slate-100 ${
+                  m.etape === 'conclusion' ? 'bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800/80'
+                } ${speakingId === m.id ? 'ring-2 ring-sky-400/70' : ''}`}>
+                  <RichText text={m.text} />
+                  {paid && (
+                    <button
+                      type="button"
+                      onClick={() => void speak(m)}
+                      aria-label={speakingId === m.id ? 'Arrêter la voix de KONE' : 'Écouter KONE'}
+                      className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold text-sky-800 dark:text-sky-200 bg-white/80 dark:bg-slate-900/60 border border-sky-200 dark:border-sky-400/30 hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+                    >
+                      {voiceLoadingId === m.id
+                        ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONE prépare sa voix…</>
+                        : speakingId === m.id
+                          ? <><Square className="w-3 h-3 fill-current" /> Arrêter</>
+                          : <><Volume2 className="w-3.5 h-3.5" /> Écouter</>}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          ))}
+
+          {sending && (
+            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 font-semibold" aria-live="polite">
+              <span className="flex gap-1" aria-hidden="true">
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce" />
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce [animation-delay:120ms]" />
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce [animation-delay:240ms]" />
+              </span>
+              KONE réfléchit…
+            </div>
+          )}
+
+          {error && <p className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 text-amber-900 dark:text-amber-200 text-sm font-semibold" role="alert">{error}</p>}
+          {voiceNote && <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 text-center" aria-live="polite">{voiceNote}</p>}
+          <div ref={endRef} />
+        </div>
+
+        {/* Bas : réservé Pro, ou réponses rapides + zone d'écriture */}
+        <div className="shrink-0 border-t border-slate-200 dark:border-slate-800 px-3 sm:px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] space-y-2.5 bg-white dark:bg-[#0B1120]">
+          {!paid ? (
+            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-[#F5C451]/40 space-y-2.5">
+              <p className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <Lock className="w-4 h-4 text-amber-700 dark:text-[#F5C451]" /> Réservé aux abonnés KONAN Pro
+              </p>
+              <p className="text-[13px] text-slate-700 dark:text-slate-300 leading-relaxed">
+                Un professeur particulier dans ta poche, pour toutes tes matières : il t’explique, te fait faire des exercices et vérifie que tu as compris.
+              </p>
+              {onSubscribe && (
+                <button type="button" onClick={onSubscribe} className="konan-btn-gold w-full h-[46px] text-sm cursor-pointer">
+                  <Sparkles className="w-4 h-4" /> M’abonner à KONAN Pro
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              {state.messages.length === 0 && !sending && (
+                <div className="flex flex-wrap gap-2">
+                  {starters.map((s) => (
+                    <button key={s} type="button" onClick={() => send(s)} disabled={!canWrite} className="px-3 py-2 rounded-full border-2 border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-200 text-xs font-bold hover:bg-sky-50 dark:hover:bg-sky-400/10 disabled:opacity-50 cursor-pointer text-left">
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {quickReplies.length > 0 && canWrite && (
+                <div className="flex flex-wrap gap-2">
+                  {quickReplies.map((q, i) => (
+                    <button
+                      key={`${q}-${i}`}
+                      type="button"
+                      onClick={() => send(q === 'J’ai compris, un exercice !' ? 'J’ai compris ! Donne-moi un exercice pour vérifier.' : q)}
+                      className={`px-3 py-2 rounded-full text-xs font-bold border-2 cursor-pointer ${
+                        q === 'Je ne comprends toujours pas'
+                          ? 'border-amber-300 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-50 dark:hover:bg-amber-500/10'
+                          : q.startsWith('J’ai compris')
+                            ? 'border-emerald-300 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-50 dark:hover:bg-emerald-500/10'
+                            : 'border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-200 hover:bg-sky-50 dark:hover:bg-sky-400/10'
+                      }`}
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <form
+                className="flex items-end gap-2"
+                onSubmit={(e) => { e.preventDefault(); send(input); }}
+              >
+                <label htmlFor="tutor-input" className="sr-only">Ton message à KONE</label>
+                <textarea
+                  id="tutor-input"
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT))}
+                  onFocus={() => setTyping(true)}
+                  onBlur={() => setTyping(false)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !('ontouchstart' in window)) { e.preventDefault(); send(input); } }}
+                  rows={1}
+                  disabled={!canWrite}
+                  placeholder={outOfMessages ? 'Plus de messages aujourd’hui' : 'Écris ce que tu ne comprends pas…'}
+                  className="flex-1 min-h-[46px] max-h-32 resize-none px-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white text-sm placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:border-sky-400 disabled:opacity-60"
+                />
+                <button type="submit" disabled={!canWrite || !input.trim()} aria-label="Envoyer" className="w-[46px] h-[46px] shrink-0 rounded-2xl bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white flex items-center justify-center cursor-pointer">
+                  <Send className="w-5 h-5" />
+                </button>
+              </form>
+              {remaining !== null && (
+                <p className="text-[11px] text-center text-slate-500 dark:text-slate-400">
+                  {outOfMessages ? 'Messages du jour utilisés · ça revient demain' : `${remaining}/${limit} messages aujourd’hui`} · KONE explique, il ne fait pas tes devoirs
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

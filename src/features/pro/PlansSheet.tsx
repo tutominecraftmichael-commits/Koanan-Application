@@ -20,8 +20,10 @@ interface Props {
   canRenew?: boolean;
   /** Pro vendu pour la classe de l'élève ? (seulement les classes qui ont les cours et les devoirs) */
   proAvailable?: boolean;
-  /** Explication quand Pro n'est pas vendu (autre pays ou classe sans cours) */
+  /** Explication quand Pro n'est pas vendu (autre pays) */
   unavailableText?: string;
+  /** Avertissement avant de payer (classe qui n'a pas encore les cours) : le bouton reste actif */
+  noticeText?: string;
   onClose: () => void;
   onChoosePro: (period: 'mois' | 'semestre') => void;
   onJoinPlus: () => void;
@@ -44,7 +46,7 @@ const Feature: React.FC<{ title: string; detail?: string; muted?: boolean }> = (
   </li>
 );
 
-export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, proAvailable = true, unavailableText, onClose, onChoosePro, onJoinPlus }) => {
+export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, proAvailable = true, unavailableText, noticeText, onClose, onChoosePro, onJoinPlus }) => {
   const [billing, setBilling] = useState<BillingPeriod>('semester');
   const isPro = currentTier === 'pro';
   const isPlus = currentTier === 'plus';
@@ -134,6 +136,11 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
                   <p className="text-[13px] font-bold text-slate-900 dark:text-white inline-flex items-center gap-1.5"><Clock className="w-4 h-4 text-amber-700 dark:text-amber-300" /> Pas encore disponible pour toi</p>
                   <p className="mt-1 text-[11.5px] text-slate-600 dark:text-slate-400">{unavailableText || 'KONAN Pro est ouvert de la Seconde à la Terminale et en Licence 1 ENTD, là où les cours et les devoirs sont prêts. Ta classe arrive : tu n’as rien à payer d’ici là.'}</p>
                 </div>
+              )}
+              {!isPlus && !(isPro && !canRenew) && proAvailable && noticeText && (
+                <p className="mt-6 rounded-2xl px-4 py-3 text-[12px] font-bold leading-snug text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30">
+                  ⚠️ {noticeText}
+                </p>
               )}
               {!isPlus && !(isPro && !canRenew) && proAvailable && (
                 <button type="button" onClick={() => onChoosePro(period)}

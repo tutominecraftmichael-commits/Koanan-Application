@@ -11,6 +11,7 @@
  * panne de l'IA n'est pas décomptée : l'élève peut renvoyer ses photos.
  */
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, examTiming } from './_examCommon.js';
+import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
 
 export const DAILY_CORRECTIONS = 1;
 const IMAGE_TYPES = /^image\/(jpeg|jpg|png|webp)$/;
@@ -275,7 +276,8 @@ export default async function handler(req, res) {
   } catch (e) {
     return send(res, 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
   }
-  if (usage.used >= DAILY_CORRECTIONS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_CORRECTIONS, remaining: 0 });
+  // Compte administrateur : pas de limite du jour (pour tester librement)
+  if (!ctx.admin && usage.used >= DAILY_CORRECTIONS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_CORRECTIONS, remaining: 0 });
 
   // Temps mis (chrono du serveur) : au-delà de 2 h + 15 min, copie « hors temps » (corrigée, mais sans XP)
   let timing = null;
@@ -287,7 +289,10 @@ export default async function handler(req, res) {
 
   let correction;
   try {
-    const prompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
+    const country = str(body.country, 4);
+    const basePrompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
+    // Élève hors Côte d'Ivoire : aucune mention ivoirienne dans la correction
+    const prompt = isOutsideCI(country) ? `${neutralizeForCountry(basePrompt, country)}\n${NEUTRAL_COUNTRY_RULE}` : basePrompt;
     // Correction avec réflexion poussée (40 s pour une photo, mesuré le 2026-11-22 ; plus avec 4 photos) :
     // 230 s au total (vercel.json : 300 s), photos lues en haute résolution (écriture manuscrite),
     // essai principal plafonné à 160 s pour laisser 60 s au modèle de secours

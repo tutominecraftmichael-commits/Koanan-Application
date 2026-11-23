@@ -11,8 +11,9 @@
  * Le compteur du jour est gardé dans Firestore (feynman_usage/<uid>), écrit par le serveur seulement.
  */
 import { loadLocalEnvIfPresent } from './_env.js';
-import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { isAdminPayload, verifyFirebaseIdToken } from './_firebaseToken.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
+import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
 
 export const DAILY_LIMITS = { audio: 3, text: 10 };
 const MAX_AUDIO_BYTES = 3 * 1024 * 1024; // ~3 Mo : largement plus qu'une minute de voix compressée
@@ -78,9 +79,16 @@ const str = (v, max) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().s
 /** Jour civil à Abidjan (UTC), pour le compteur quotidien. */
 const today = () => new Date().toISOString().slice(0, 10);
 
-export function buildFeynmanPrompt({ notion, reference, classe, written }) {
+export function buildFeynmanPrompt({ notion, reference, classe, written, country }) {
+  const prompt = buildFeynmanPromptCI({ notion, reference, classe, written });
+  // Élève hors Côte d'Ivoire : aucune mention ivoirienne dans le conseil
+  return isOutsideCI(country) ? `${neutralizeForCountry(prompt, country)}\n${NEUTRAL_COUNTRY_RULE}` : prompt;
+}
+
+function buildFeynmanPromptCI({ notion, reference, classe, written }) {
   return [
-    "Tu es KONAN, un professeur bienveillant d'une application d'étude pour les élèves de Côte d'Ivoire.",
+    // KONE, le meilleur ami de KONAN, écoute les explications Feynman (même peluche que « Je ne comprends pas »)
+    "Tu es KONE, le meilleur ami de KONAN : un professeur bienveillant de l'application d'étude KONAN pour les élèves de Côte d'Ivoire.",
     `Un élève${classe ? ` de ${classe}` : ''} doit expliquer avec SES mots, comme à un élève de 6ème, la notion : « ${notion} ».`,
     `Ce que dit le cours (référence) : ${reference || '(non fourni)'}`,
     written
@@ -95,7 +103,10 @@ export function buildFeynmanPrompt({ notion, reference, classe, written }) {
     'conseil : 1 ou 2 phrases, tutoiement, encourageant, concret (dis ce qui manque ou ce qu’il faut simplifier). Jamais de moquerie.',
     'L’élève peut être une fille ou un garçon : aucune formule genrée (pas de « mon grand », « ma grande », « mon petit »), aucun accord au masculin ou au féminin qui le désigne (écris « Bravo ! » plutôt que « tu es doué »).',
     'Une explication vague ou incomplète (l’idée principale du cours manque) n’est pas « juste » : note de 6 au plus.',
-    'Réponds UNIQUEMENT en JSON : {"transcription":"…","juste":true,"clair":true,"simple":true,"recite":false,"note":8,"conseil":"…"} (note de 0 à 10).',
+    'transcription : écris FIDÈLEMENT ce que l’élève a dit, mot pour mot (sans corriger ses erreurs).',
+    'manquants : les idées clés du cours qui MANQUENT ou sont FAUSSES dans son explication (3 au plus, quelques mots chacune, ex. « le rôle de la membrane ») ; [] si rien ne manque.',
+    'modele : une explication modèle de la notion en 2 ou 3 phrases très simples, avec un exemple de la vie de tous les jours, comme KONAN l’expliquerait à un élève de 6ème. Formules éventuelles en LaTeX entre $…$.',
+    'Réponds UNIQUEMENT en JSON : {"transcription":"…","juste":true,"clair":true,"simple":true,"recite":false,"note":8,"conseil":"…","manquants":["…"],"modele":"…"} (note de 0 à 10).',
   ].join('\n');
 }
 
@@ -112,6 +123,9 @@ export function cleanVerdict(raw) {
     recite: raw.recite === true,
     note,
     conseil,
+    // Écoute plus fine (2026-11-23) : idées clés oubliées + explication modèle à comparer
+    manquants: Array.isArray(raw.manquants) ? raw.manquants.map((m) => str(String(m ?? ''), 120)).filter(Boolean).slice(0, 3) : [],
+    modele: typeof raw.modele === 'string' ? raw.modele.replace(/[ \t]+/g, ' ').trim().slice(0, 600) : '',
   };
 }
 
@@ -156,8 +170,11 @@ export default async function handler(req, res) {
   const authHeader = String(req.headers.authorization || '');
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
   let uid;
+  let admin = false;
   try {
-    uid = (await verifyFirebaseIdToken(token)).sub;
+    const payload = await verifyFirebaseIdToken(token);
+    uid = payload.sub;
+    admin = isAdminPayload(payload); // compte administrateur : tout est ouvert (Pro, KONE, voix)
   } catch (e) {
     return send(res, 401, { success: false, error: e?.message === 'TOKEN_EXPIRED' ? 'TOKEN_EXPIRED' : 'UNAUTHORIZED' });
   }
@@ -169,8 +186,15 @@ export default async function handler(req, res) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
   }
 
+  // Mode « Je ne comprends pas » (professeur particulier) : même fonction serveur, Vercel gratuit = 12 fonctions au plus
+  if (body?.action === 'tutor' || body?.action === 'tutor_status' || body?.action === 'tutor_voice') {
+    const { handleTutorAction } = await import('./_tutor.js');
+    const { status, data } = await handleTutorAction({ body, uid, getDb, admin });
+    return send(res, status, data);
+  }
+
   // Feynman = KONAN Pro. Quand le paiement est ouvert, seul un abonnement payé (vérifié par le serveur) y donne accès.
-  if (paymentsEnabled()) {
+  if (paymentsEnabled() && !admin) {
     try {
       const { serverPlanTier } = await import('./_subscriptionStore.js');
       const tier = await serverPlanTier(await getDb(), uid, null);
@@ -183,6 +207,7 @@ export default async function handler(req, res) {
   const notion = str(body.notion, 200);
   const reference = str(body.reference, 1800);
   const classe = str(body.classe, 40);
+  const country = str(body.country, 4);
   const written = typeof body.text === 'string';
   const kind = written ? 'text' : 'audio';
   if (!notion) return send(res, 400, { success: false, error: 'MISSING_NOTION' });
@@ -191,13 +216,13 @@ export default async function handler(req, res) {
   if (written) {
     const text = str(body.text, 1500);
     if (text.length < 15) return send(res, 400, { success: false, error: 'TOO_SHORT' });
-    parts = [{ text: `${buildFeynmanPrompt({ notion, reference, classe, written: true })}\n\nExplication de l’élève :\n${text}` }];
+    parts = [{ text: `${buildFeynmanPrompt({ notion, reference, classe, written: true, country })}\n\nExplication de l’élève :\n${text}` }];
   } else {
     const mimeType = String(body.mimeType || '').split(';')[0].trim();
     const audio = typeof body.audio === 'string' ? body.audio : '';
     if (!AUDIO_TYPES.test(mimeType) || !audio) return send(res, 400, { success: false, error: 'BAD_AUDIO' });
     if (audio.length * 0.75 > MAX_AUDIO_BYTES) return send(res, 413, { success: false, error: 'AUDIO_TOO_LONG' });
-    parts = [{ inlineData: { mimeType, data: audio } }, { text: buildFeynmanPrompt({ notion, reference, classe, written: false }) }];
+    parts = [{ inlineData: { mimeType, data: audio } }, { text: buildFeynmanPrompt({ notion, reference, classe, written: false, country }) }];
   }
 
   const apiKey = String(process.env.GEMINI_API_KEY || '').trim();
@@ -217,7 +242,8 @@ export default async function handler(req, res) {
     return send(res, 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
   }
   const limit = DAILY_LIMITS[kind];
-  if (used >= limit) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit, remaining: 0, kind });
+  // Compte administrateur : pas de limite du jour (pour tester librement)
+  if (!admin && used >= limit) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit, remaining: 0, kind });
 
   let verdict;
   try {

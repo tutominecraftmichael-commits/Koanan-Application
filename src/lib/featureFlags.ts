@@ -8,7 +8,6 @@
  * Les dates déjà saisies restent enregistrées.
  */
 import { isExamPrepGrade } from './exam/examPrepRules';
-import { followsIvorianProgram } from './country';
 
 export const EXAM_PREP_PAUSED = false;
 
@@ -16,11 +15,12 @@ export const EXAM_PREP_PAUSED_TITLE = 'Préparation aux devoirs et examens';
 export const EXAM_PREP_PAUSED_MESSAGE = 'Disponible en Seconde, Première, Terminale et Licence 1 ENTD. Les autres filières arrivent bientôt.';
 
 /**
- * La préparation aux devoirs est-elle ouverte pour cette classe ? Seulement pour le programme ivoirien :
- * un élève d'un autre pays (country) n'a pas ces sujets (voir lib/country).
+ * La préparation aux devoirs est-elle ouverte pour cette classe ? Tous les pays depuis le 2026-11-22 au soir
+ * (hors Côte d'Ivoire, l'Histoire-Géographie du lycée n'a simplement pas de cours : voir subjectVisibility).
+ * `country` est gardé pour les appels existants.
  */
-export function isExamPrepOpenFor(rawGrade?: string | null, country?: string | null): boolean {
-  return !EXAM_PREP_PAUSED && followsIvorianProgram(country) && isExamPrepGrade(rawGrade);
+export function isExamPrepOpenFor(rawGrade?: string | null, _country?: string | null): boolean {
+  return !EXAM_PREP_PAUSED && isExamPrepGrade(rawGrade);
 }
 
 type WithExamFields = { examDate?: string; examType?: string; examTime?: string };
