@@ -10,13 +10,13 @@
 export const VOICE_MODELS = ['gemini-3.8-flash-tts', 'gemini-3.8-flash-lite-tts'];
 export const VOICE_NAME = process.env.KONAN_VOICE_NAME || 'Puck';
 /**
- * Voix rendue plus enfantine par traitement du son (childVoice) : Puck reste une voix d'adulte quelle que soit
- * la consigne (testé le 2026-11-22). 1 = voix d'origine, 1.3 = « un petit peu plus enfant » (défaut),
- * 1.4 = enfant de 8-9 ans (un peu déformé). Réglable sur Vercel : KONAN_VOICE_PITCH.
+ * Voix rendue plus enfantine par traitement du son (childVoice), si on le demande. Après écoute (2026-11-22),
+ * le fondateur garde la voix Puck D'ORIGINE : 1 par défaut (aucun traitement). 1.2 à 1.4 = plus enfantin.
+ * Réglable sur Vercel : KONAN_VOICE_PITCH.
  */
 export function voicePitch(env = process.env) {
   const n = Number.parseFloat(String(env.KONAN_VOICE_PITCH || ''));
-  return Number.isFinite(n) && n >= 1 && n <= 1.6 ? n : 1.3;
+  return Number.isFinite(n) && n >= 1 && n <= 1.6 ? n : 1;
 }
 /**
  * Consigne de jeu SÉPARÉE du texte à lire (« notes du metteur en scène » puis « TRANSCRIPT ») : sans cette
