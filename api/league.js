@@ -175,6 +175,14 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
 
   // Place dans un groupe : toute classe admise dans la ligue
   let player = result.next;
+  // Groupe vidé par le regroupement de la semaine (ou élève absent de sa liste) : on le replace
+  if (isParticipant(player) && player.groupId) {
+    const g = await leagueCol(db, 'league_groups').doc(player.groupId).get();
+    if (!g.exists || g.get('mergedInto') || !(g.get('members') || []).includes(uid)) {
+      await playerRef.update({ groupId: null });
+      player = { ...player, groupId: null };
+    }
+  }
   if (isParticipant(player) && !player.groupId) {
     try {
       const groupId = await assignGroup(db, uid, weekId, clampDivision(player.division));
