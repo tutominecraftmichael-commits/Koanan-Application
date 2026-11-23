@@ -3200,6 +3200,9 @@ export function App() {
             goalLabel={studyGoalInfo(studyGoal)?.short}
             onRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, remaining: n } : s))}
             onVoiceRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, voiceRemaining: n } : s))}
+            plus={tutorStatus.plus}
+            photoRemaining={tutorStatus.plus ? tutorStatus.photoRemaining : null}
+            onPhotoRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, photoRemaining: n } : s))}
             onSubscribe={proSellableForClass ? () => { setTutorOpen(null); setIsSubscriptionOpen(true); } : undefined}
             onClose={() => setTutorOpen(null)}
           />

@@ -6,10 +6,10 @@
  * Lisible en mode jour ET en mode nuit.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square } from 'lucide-react';
+import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square, Camera, Mic } from 'lucide-react';
 import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
 import { MathRenderer } from '../../components/common/MathRenderer';
-import { sendTutorMessage, speakTutor, splitForVoice, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
+import { prepareExercisePhoto, sendTutorMessage, speakTutor, splitForVoice, type TutorContext, type TutorError, type TutorMessage, type TutorPiece } from '../../services/tutorApi';
 import { getReviewMap } from '../../lib/curriculum/reviewMemory';
 import { STEM_SUBJECTS } from '../../lib/curriculum/types';
 import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
@@ -34,7 +34,28 @@ const ERRORS: Record<TutorError, string> = {
   UNKNOWN: 'Une erreur est survenue. Réessaie.',
   VOICE_DAILY_LIMIT: 'La voix de KONE revient demain.',
   VOICE_UNAVAILABLE: 'KONE n’a pas pu parler cette fois.',
+  PLUS_REQUIRED: 'La photo de l’exercice et les questions à l’oral font partie de KONAN Plus.',
+  PHOTO_DAILY_LIMIT: 'Tu as envoyé toutes tes photos d’aujourd’hui. Écris l’énoncé à la place, ou reviens demain.',
+  BAD_PIECE: 'KONE n’a pas pu ouvrir ce fichier. Reprends une photo, ou réenregistre ta question.',
+  PIECE_TOO_LARGE: 'C’est trop lourd à envoyer. Reprends la photo, ou parle moins d’une minute.',
 };
+
+// Question à l'oral (KONAN Plus) : une minute au plus, comme l'explication Feynman
+const MAX_REC_SECONDS = 60;
+function pickAudioType(): string {
+  const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus', 'audio/ogg'];
+  if (typeof MediaRecorder === 'undefined') return '';
+  return candidates.find((t) => MediaRecorder.isTypeSupported?.(t)) || '';
+}
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(String(reader.result || '').split(',')[1] || '');
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
 interface Stored { messages: TutorMessage[]; context: TutorContext; updatedAt: number }
 
@@ -122,6 +143,10 @@ export interface TutorChatProps {
   voiceRemaining?: number | null;
   /** KONAN Plus : objectif de l'élève (KONE adapte son ton côté serveur) */
   goalLabel?: string;
+  /** KONAN Plus : photo de l'exercice et question à l'oral */
+  plus?: boolean;
+  photoRemaining?: number | null;
+  onPhotoRemainingChange?: (n: number) => void;
   onRemainingChange: (n: number) => void;
   onVoiceRemainingChange?: (n: number) => void;
   onSubscribe?: () => void;
@@ -155,7 +180,10 @@ function recentMistakes(uid: string): TutorContext['erreurs'] {
   return list.sort((a, b) => b.at - a.at).slice(0, 5).map(({ matiere, question, reponse }) => ({ matiere, question, reponse }));
 }
 
-export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, goalLabel, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose }) => {
+export const TutorChat: React.FC<TutorChatProps> = ({
+  uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, goalLabel,
+  plus = false, photoRemaining = null, onPhotoRemainingChange, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose,
+}) => {
   const [state, setState] = useState<Stored>(() => {
     const stored = readStored(uid);
     // Venu d'une autre leçon : nouvelle discussion sur cette notion
@@ -172,6 +200,21 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
   useEffect(() => () => clearTimeout(flashTimer.current), []);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // ---------- KONAN Plus : photo de l'exercice (prête à partir avec le prochain message) ----------
+  const [pendingPhoto, setPendingPhoto] = useState<{ piece: TutorPiece; thumb: string } | null>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const outOfPhotos = photoRemaining !== null && photoRemaining <= 0;
+
+  // ---------- KONAN Plus : question à l'oral (enregistrée, envoyée à KONE, jamais gardée) ----------
+  const [recSeconds, setRecSeconds] = useState<number | null>(null); // null = pas d'enregistrement
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const recStartRef = useRef(0);
+  const recCancelRef = useRef(false);
+  const sendRef = useRef<(raw: string, piece?: TutorPiece | null, thumb?: string) => Promise<void>>(async () => {});
 
   // ---------- Voix de KONE : lit ses réponses à voix haute (réglage gardé sur le téléphone) ----------
   const [voiceOn, setVoiceOn] = useState<boolean>(() => {
@@ -340,18 +383,32 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
   const niveau = lastKonan?.niveau ?? 0;
   const notion = lastKonan?.notion || state.context.notion;
   const outOfMessages = remaining !== null && remaining <= 0;
-  const canWrite = paid && !outOfMessages && !sending;
-  const mood: PlushMood = sending ? 'think' : flash || (speakingId ? 'talk' : typing && input.trim() ? 'listen' : 'idle');
+  const recording = recSeconds !== null;
+  const canWrite = paid && !outOfMessages && !sending && !recording;
+  const mood: PlushMood = sending ? 'think' : recording ? 'listen' : flash || (speakingId ? 'talk' : typing && input.trim() ? 'listen' : 'idle');
 
-  const send = async (raw: string) => {
-    const text = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
-    if (!text || !canWrite) return;
+  /**
+   * Envoie un message. KONAN Plus : avec une photo de l'exercice ou une question à l'oral (`piece`), envoyée
+   * une seule fois ; KONE renvoie l'énoncé lu (ou ce qu'il a entendu), gardé dans la discussion à la place.
+   */
+  const send = async (raw: string, piece: TutorPiece | null = null, thumb?: string) => {
+    const typed = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
+    if ((!typed && !piece) || !canWrite) return;
     unlockAudio();
     stopVoice();
-    const mine: TutorMessage = { id: newId(), role: 'eleve', text };
+    const isAudio = piece?.kind === 'audio';
+    const text = typed || (piece?.kind === 'image' ? 'Je ne comprends pas cet exercice (photo jointe).' : '(question à l’oral)');
+    const mine: TutorMessage = {
+      id: newId(), role: 'eleve', text,
+      ...(piece ? { pieceKind: piece.kind } : {}),
+      ...(thumb ? { thumb } : {}),
+      ...(!typed ? { autoText: true } : {}),
+      ...(isAudio ? { pending: true } : {}),
+    };
     const messages = [...state.messages, mine];
     setState((s) => ({ ...s, messages, updatedAt: Date.now() }));
     setInput('');
+    setPendingPhoto(null);
     setError(null);
     setSending(true);
     // « KONE se souvient » : prénom, pays et dernières erreurs des cours accompagnent chaque message
@@ -361,17 +418,32 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
       prenom,
       country: getStudentCountry() || undefined,
       erreurs: recentMistakes(uid),
-    });
+    }, piece);
+    if (typeof res.photoRemaining === 'number') onPhotoRemainingChange?.(res.photoRemaining);
     if (!res.ok) {
       setSending(false);
       setError(ERRORS[res.error] || ERRORS.UNKNOWN);
       if (typeof res.remaining === 'number') onRemainingChange(res.remaining);
-      // Le message n'a pas été traité : on le rend à l'élève pour qu'il puisse le renvoyer
+      // Le message n'a pas été traité : on le rend à l'élève pour qu'il puisse le renvoyer (photo comprise)
       setState((s) => ({ ...s, messages: s.messages.filter((m) => m.id !== mine.id) }));
-      setInput(text);
+      setInput(typed);
+      if (piece?.kind === 'image' && thumb && res.error !== 'PHOTO_DAILY_LIMIT') setPendingPhoto({ piece, thumb });
       return;
     }
     onRemainingChange(res.remaining);
+    // Ce que KONE a lu sur la photo / entendu : gardé sur le message de l'élève (l'image ne repart jamais)
+    if (piece) {
+      const heard = String(res.reply.piece || '').trim();
+      setState((s) => ({
+        ...s,
+        messages: s.messages.map((m) => (m.id !== mine.id ? m : {
+          ...m,
+          pending: false,
+          ...(heard ? { pieceText: heard } : {}),
+          ...(isAudio && heard ? { text: heard, autoText: false } : {}),
+        })),
+      }));
+    }
     const { texte, niveau: lvl, etape, notion: n, choix } = res.reply;
     const before = niveau;
     const next: PlushMood | null = etape === 'conclusion' || (lvl === 3 && before < 3) ? 'celebrate'
@@ -401,8 +473,96 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     show();
   };
 
+  // La fin d'un enregistrement envoie avec la version à jour de `send` (discussion la plus récente)
+  useEffect(() => { sendRef.current = send; });
+
+  /** Photo choisie (appareil photo ou galerie) : réduite sur le téléphone, puis prête à partir. */
+  const onPhotoPicked = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // la même photo peut être reprise
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { setError('Choisis une photo de ton exercice.'); return; }
+    setPhotoBusy(true);
+    setError(null);
+    try {
+      setPendingPhoto(await prepareExercisePhoto(file));
+      setTimeout(() => inputRef.current?.focus(), 50);
+    } catch {
+      setError('Cette photo ne peut pas être ouverte. Reprends-la avec l’appareil photo.');
+    } finally {
+      setPhotoBusy(false);
+    }
+  };
+
+  const stopStream = () => {
+    streamRef.current?.getTracks().forEach((tr) => tr.stop());
+    streamRef.current = null;
+  };
+
+  /** Question à l'oral : le micro s'ouvre, KONE écoute (1 minute au plus). */
+  const startRecording = async () => {
+    if (!canWrite) return;
+    setError(null);
+    unlockAudio();
+    stopVoice();
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      setError('Ton téléphone ne permet pas d’enregistrer ici. Écris ta question à la place.');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const type = pickAudioType();
+      const recorder = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+      chunksRef.current = [];
+      recCancelRef.current = false;
+      recorder.ondataavailable = (ev) => { if (ev.data.size) chunksRef.current.push(ev.data); };
+      recorder.onstop = async () => {
+        stopStream();
+        setRecSeconds(null);
+        const chunks = chunksRef.current;
+        chunksRef.current = []; // la voix n'est gardée nulle part
+        if (recCancelRef.current) return;
+        if (Date.now() - recStartRef.current < 1200) { setError('C’était trop court : parle quelques secondes, puis touche « Envoyer ».'); return; }
+        const blob = new Blob(chunks, { type: recorder.mimeType || type || 'audio/webm' });
+        const data = await blobToBase64(blob);
+        await sendRef.current('', { kind: 'audio', mimeType: blob.type || 'audio/webm', data });
+      };
+      recorderRef.current = recorder;
+      recStartRef.current = Date.now();
+      recorder.start();
+      setRecSeconds(0);
+    } catch {
+      stopStream();
+      setError('Le micro est refusé. Autorise-le dans les réglages du téléphone, ou écris ta question.');
+    }
+  };
+  const stopRecording = (cancel = false) => {
+    recCancelRef.current = cancel;
+    try { recorderRef.current?.stop(); } catch { /* déjà arrêté */ }
+    if (cancel) { stopStream(); setRecSeconds(null); }
+  };
+  // Chrono de l'enregistrement : le micro se coupe tout seul après une minute (et la question part)
+  useEffect(() => {
+    if (!recording) return;
+    const timer = setInterval(() => {
+      const s = Math.floor((Date.now() - recStartRef.current) / 1000);
+      setRecSeconds(Math.min(s, MAX_REC_SECONDS));
+      if (s >= MAX_REC_SECONDS) stopRecording(false);
+    }, 250);
+    return () => clearInterval(timer);
+  }, [recording]); // eslint-disable-line react-hooks/exhaustive-deps
+  // En fermant la discussion : micro coupé, rien n'est envoyé
+  useEffect(() => () => {
+    recCancelRef.current = true;
+    const rec = recorderRef.current;
+    try { if (rec && rec.state !== 'inactive') rec.stop(); } catch { /* déjà arrêté */ }
+    streamRef.current?.getTracks().forEach((tr) => tr.stop());
+  }, []);
+
   const restart = () => {
     stopVoice();
+    setPendingPhoto(null);
     audioCache.current.clear();
     setState({ messages: [], context: { ...(context || {}), classe }, updatedAt: Date.now() });
     setError(null);
@@ -471,13 +631,26 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
               {state.context.notion
                 ? <>{prenom ? `${prenom}, tu` : 'Tu'} bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
                 : <>Salut{prenom ? ` ${prenom}` : ''} ! Moi, c’est <strong>KONE</strong>, le meilleur ami de KONAN. Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
+              {plus && <> Tu peux aussi <strong>prendre en photo ton exercice</strong> 📷 ou <strong>me parler</strong> 🎤.</>}
             </div>
           </div>
 
           {state.messages.map((m) => (
             m.role === 'eleve' ? (
               <div key={m.id} className="flex justify-end">
-                <div className="max-w-[85%] px-4 py-2.5 rounded-2xl rounded-br-md bg-sky-600 text-white text-sm leading-relaxed whitespace-pre-wrap break-words">{m.text}</div>
+                <div className="max-w-[85%] px-4 py-2.5 rounded-2xl rounded-br-md bg-sky-600 text-white text-sm leading-relaxed whitespace-pre-wrap break-words space-y-1.5">
+                  {/* KONAN Plus : photo de l'exercice (miniature gardée sur le téléphone) */}
+                  {m.thumb && <img src={m.thumb} alt="Photo de l’exercice" className="block rounded-xl max-h-52 w-auto bg-white/10" />}
+                  {m.pieceKind === 'image' && !m.thumb && <span className="inline-flex items-center gap-1.5 font-bold"><Camera className="w-4 h-4" /> Photo de l’exercice</span>}
+                  {m.pieceKind === 'audio' && (
+                    <span className="flex items-center gap-1.5 text-[11.5px] font-black uppercase tracking-wide text-sky-100">
+                      {m.pending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Mic className="w-3.5 h-3.5" />}
+                      {m.pending ? 'KONE écoute ta question…' : 'Question à l’oral'}
+                    </span>
+                  )}
+                  {!m.autoText && <div>{m.text}</div>}
+                  {m.pieceKind === 'audio' && m.autoText && !m.pending && <div className="italic opacity-90">Message vocal</div>}
+                </div>
               </div>
             ) : (
               <div key={m.id} className="flex items-end gap-2">
@@ -539,7 +712,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
             </div>
           ) : (
             <>
-              {state.messages.length === 0 && !sending && (
+              {state.messages.length === 0 && !sending && !pendingPhoto && !recording && (
                 <div className="flex flex-wrap gap-2">
                   {starters.map((s) => (
                     <button key={s} type="button" onClick={() => send(s)} disabled={!canWrite} className="px-3 py-2 rounded-full border-2 border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-200 text-xs font-bold hover:bg-sky-50 dark:hover:bg-sky-400/10 disabled:opacity-50 cursor-pointer text-left">
@@ -548,7 +721,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
                   ))}
                 </div>
               )}
-              {quickReplies.length > 0 && canWrite && (
+              {quickReplies.length > 0 && canWrite && !pendingPhoto && (
                 <div className="flex flex-wrap gap-2">
                   {quickReplies.map((q, i) => (
                     <button
@@ -568,10 +741,60 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
                   ))}
                 </div>
               )}
+              {/* KONAN Plus : photo prête à partir avec le message */}
+              {pendingPhoto && (
+                <div className="flex items-center gap-3 p-2 pr-3 rounded-2xl bg-sky-50 dark:bg-sky-400/10 border border-sky-200 dark:border-sky-400/30">
+                  <img src={pendingPhoto.thumb} alt="Photo de l’exercice" className="w-14 h-14 rounded-xl object-cover shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] font-black text-slate-900 dark:text-white">Photo de l’exercice prête</p>
+                    <p className="text-[11.5px] text-slate-600 dark:text-slate-300">Dis à KONE ce qui te bloque (facultatif), puis envoie.</p>
+                  </div>
+                  <button type="button" onClick={() => setPendingPhoto(null)} aria-label="Retirer la photo" className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 cursor-pointer">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* KONAN Plus : enregistrement de la question à l'oral */}
+              {recording ? (
+                <div className="flex items-center gap-2" role="status" aria-live="polite">
+                  <button type="button" onClick={() => stopRecording(true)} aria-label="Annuler l’enregistrement" className="w-[46px] h-[46px] shrink-0 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center cursor-pointer">
+                    <X className="w-5 h-5" />
+                  </button>
+                  <div className="relative overflow-hidden flex-1 min-w-0 h-[46px] px-3.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border-2 border-rose-200 dark:border-rose-500/30 flex items-center gap-2.5">
+                    <span className="relative flex w-3 h-3 shrink-0">
+                      <span className="absolute inset-0 rounded-full bg-rose-500 animate-ping opacity-60" />
+                      <span className="relative w-3 h-3 rounded-full bg-rose-500" />
+                    </span>
+                    <span className="min-w-0 text-sm font-bold text-rose-900 dark:text-rose-100 truncate">KONE écoute…</span>
+                    <span className="ml-auto shrink-0 whitespace-nowrap text-sm font-black tabular-nums text-rose-800 dark:text-rose-200">{clock(recSeconds ?? 0)}</span>
+                    {/* Temps utilisé sur la minute permise */}
+                    <span className="absolute left-0 bottom-0 h-[3px] bg-rose-400/80 transition-[width] duration-300" style={{ width: `${((recSeconds ?? 0) / MAX_REC_SECONDS) * 100}%` }} aria-hidden="true" />
+                  </div>
+                  <button type="button" onClick={() => stopRecording(false)} aria-label="Envoyer ta question à l’oral" className="h-[46px] px-3.5 shrink-0 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-sm flex items-center gap-1.5 cursor-pointer">
+                    <Send className="w-4 h-4" /> Envoyer
+                  </button>
+                </div>
+              ) : (
               <form
                 className="flex items-end gap-2"
-                onSubmit={(e) => { e.preventDefault(); send(input); }}
+                onSubmit={(e) => { e.preventDefault(); void send(input, pendingPhoto?.piece || null, pendingPhoto?.thumb); }}
               >
+                {plus && (
+                  <>
+                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPhotoPicked} />
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      disabled={!canWrite || photoBusy || outOfPhotos}
+                      aria-label="Prendre en photo ton exercice"
+                      title={outOfPhotos ? 'Photos du jour utilisées' : 'Prends en photo ton exercice'}
+                      className="w-[46px] h-[46px] shrink-0 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-400/10 disabled:opacity-40 flex items-center justify-center cursor-pointer"
+                    >
+                      {photoBusy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
+                    </button>
+                  </>
+                )}
                 <label htmlFor="tutor-input" className="sr-only">Ton message à KONE</label>
                 <textarea
                   id="tutor-input"
@@ -580,19 +803,28 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
                   onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT))}
                   onFocus={() => setTyping(true)}
                   onBlur={() => setTyping(false)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !('ontouchstart' in window)) { e.preventDefault(); send(input); } }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !('ontouchstart' in window)) { e.preventDefault(); void send(input, pendingPhoto?.piece || null, pendingPhoto?.thumb); } }}
                   rows={1}
                   disabled={!canWrite}
-                  placeholder={outOfMessages ? 'Plus de messages aujourd’hui' : 'Écris ce que tu ne comprends pas…'}
-                  className="flex-1 min-h-[46px] max-h-32 resize-none px-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white text-sm placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:border-sky-400 disabled:opacity-60"
+                  placeholder={outOfMessages ? 'Plus de messages aujourd’hui' : pendingPhoto ? 'Ta question (facultatif)' : plus ? 'Écris, photo ou micro…' : 'Écris ce que tu ne comprends pas…'}
+                  className="flex-1 min-w-0 min-h-[46px] max-h-32 resize-none px-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white text-sm placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:border-sky-400 disabled:opacity-60"
                 />
-                <button type="submit" disabled={!canWrite || !input.trim()} aria-label="Envoyer" className="w-[46px] h-[46px] shrink-0 rounded-2xl bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white flex items-center justify-center cursor-pointer">
-                  <Send className="w-5 h-5" />
-                </button>
+                {/* KONAN Plus : rien d'écrit et pas de photo → le bouton devient le micro (comme une messagerie) */}
+                {plus && !input.trim() && !pendingPhoto ? (
+                  <button type="button" onClick={() => void startRecording()} disabled={!canWrite} aria-label="Poser ta question à l’oral" title="Pose ta question à l’oral" className="w-[46px] h-[46px] shrink-0 rounded-2xl bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white flex items-center justify-center cursor-pointer">
+                    <Mic className="w-5 h-5" />
+                  </button>
+                ) : (
+                  <button type="submit" disabled={!canWrite || (!input.trim() && !pendingPhoto)} aria-label="Envoyer" className="w-[46px] h-[46px] shrink-0 rounded-2xl bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white flex items-center justify-center cursor-pointer">
+                    <Send className="w-5 h-5" />
+                  </button>
+                )}
               </form>
+              )}
               {remaining !== null && (
                 <p className="text-[11px] text-center text-slate-500 dark:text-slate-400">
-                  {outOfMessages ? 'Messages du jour utilisés · ça revient demain' : `${remaining}/${limit} messages aujourd’hui`} · KONE explique, il ne fait pas tes devoirs
+                  {outOfMessages ? 'Messages du jour utilisés · ça revient demain' : `${remaining}/${limit} messages aujourd’hui`}
+                  {plus && photoRemaining !== null && ` · ${photoRemaining} photo${photoRemaining > 1 ? 's' : ''}`} · KONE explique, il ne fait pas tes devoirs
                 </p>
               )}
             </>

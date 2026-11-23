@@ -181,6 +181,10 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     note: 'Bientôt disponible',
     available: false,
     features: [
+      { title: 'KONE s’adapte à ton objectif', detail: '12 de moyenne, une mention ou major : sa façon de te parler, son exigence et tes devoirs changent.' },
+      { title: 'KONE presque sans limite', detail: '100 messages et 40 réponses à voix haute par jour.' },
+      { title: 'Photo de ton exercice', detail: 'Prends-le en photo : KONE le lit et t’explique la méthode (20 photos par jour).' },
+      { title: 'Pose ta question à l’oral', detail: 'Parle à KONE au lieu d’écrire.' },
       { title: 'Planning réglé sur ton objectif', detail: '12 de moyenne, une mention ou major de promo.' },
       { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
     ],

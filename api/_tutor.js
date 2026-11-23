@@ -22,7 +22,14 @@ import { isOutsideCI, NEUTRAL_COUNTRY_RULE } from './_country.js';
 import { activeStudyGoal, goalLines } from './_studyGoal.js';
 
 export const TUTOR_DAILY_LIMIT = 30;
+// KONAN Plus (étape 2, 2026-11-23) : KONE presque sans limite, photo de l'exercice et question à l'oral.
+// Plafonds larges plutôt que « illimité » : un message ≈ 4 F, une voix ≈ 5 à 8 F, une photo un peu plus.
+export const PLUS_TUTOR_LIMITS = { count: 100, voice: 40, photo: 20 };
 export const TUTOR_DEFAULT_BUDGET = 500;
+// Pièces jointes (KONAN Plus) : photo d'un exercice (déjà réduite par l'appli) ou question à l'oral (1 minute)
+const PIECE_IMAGE_TYPES = /^image\/(jpeg|png|webp)$/;
+const PIECE_AUDIO_TYPES = /^audio\/(webm|ogg|mp4|mpeg|aac|wav|x-m4a|m4a)$/;
+const PIECE_MAX_BYTES = { image: 2_500_000, audio: 2_000_000 };
 export const TUTOR_MAX_MESSAGE = 1200; // caractères par message de l'élève
 const HISTORY_MESSAGES = 16; // messages relus par l'IA (les plus récents)
 const HISTORY_CHARS = 12_000;
@@ -121,7 +128,10 @@ export function cleanTutorHistory(raw) {
   for (const m of list) {
     if (!m || typeof m !== 'object') continue;
     const role = m.role === 'konan' ? 'model' : m.role === 'eleve' ? 'user' : null;
-    const text = multiLine(m.text, role === 'user' ? TUTOR_MAX_MESSAGE : 4000);
+    let text = multiLine(m.text, role === 'user' ? TUTOR_MAX_MESSAGE : 4000);
+    // Photo envoyée plus tôt (KONAN Plus) : l'image n'est envoyée qu'une fois ; KONE relit l'énoncé qu'il y a lu
+    const photoText = role === 'user' && m.pieceKind === 'image' ? oneLine(m.pieceText, 800) : '';
+    if (photoText) text = `[Photo de l’exercice envoyée par l’élève. Énoncé lu sur la photo : « ${photoText} »]\n${text}`;
     if (!role || !text) continue;
     const meta = role === 'model' ? cleanMeta(m) : null;
     const full = meta ? `${text}\n${META_TAG} ${JSON.stringify({ niveau: meta.niveau, etape: meta.etape, notion: meta.notion })}` : text;
@@ -203,6 +213,25 @@ export function buildTutorSystem(ctx, memory = null, nowMs = Date.now()) {
   // KONAN Plus : ton et exigence selon l'objectif de l'élève (lu par le serveur, jamais envoyé par l'appli)
   lines.push(...goalLines(ctx.objectif, 'tutor'));
 
+  // KONAN Plus : photo de l'exercice ou question à l'oral jointe au DERNIER message de l'élève
+  if (ctx.piece === 'image') {
+    lines.push(
+      '',
+      'PIÈCE JOINTE : l’élève a joint une PHOTO de son exercice ou de sa leçon (avec son dernier message).',
+      '- Lis-la attentivement : texte imprimé ou manuscrit, figures, tableaux, numéros de questions. S’il y a plusieurs questions et qu’il ne dit pas laquelle le bloque, demande-lui laquelle (ou commence par la première).',
+      '- Photo floue, coupée, trop sombre ou sans exercice : dis-le simplement et demande une nouvelle photo (bien à plat, avec de la lumière). N’invente jamais un énoncé que tu ne lis pas.',
+      '- Comme toujours, tu ne fais PAS l’exercice à sa place : tu l’aides à trouver la méthode, étape par étape, et tu le laisses calculer. Ne donne JAMAIS le résultat d’une question de l’exercice (ni d’une question précédente dont elle dépend) : si la question qui le bloque utilise un résultat précédent, demande-lui d’abord ce qu’il a trouvé.',
+      `- Dans la ligne ${META_TAG}, ajoute la clé "piece" : l’énoncé lu sur la photo, recopié fidèlement avec ses accents (600 caractères au plus, écris x^2 ou racine(x), JAMAIS de $ ni de barre oblique inversée) ; "" si tu ne peux pas le lire.`,
+    );
+  } else if (ctx.piece === 'audio') {
+    lines.push(
+      '',
+      'PIÈCE JOINTE : l’élève t’a parlé à l’ORAL (fichier audio joint à son dernier message). Il parle français, parfois avec l’accent et des mots ivoiriens : c’est normal.',
+      '- Réponds à ce qu’il a dit, comme s’il l’avait écrit. Si l’audio est vide ou incompréhensible, dis-le gentiment et demande-lui de répéter ou d’écrire.',
+      `- Dans la ligne ${META_TAG}, ajoute la clé "piece" : la transcription fidèle de ce qu’il a dit (400 caractères au plus, sans $ ni barre oblique inversée) ; "" si tu n’as rien compris.`,
+    );
+  }
+
   if (ctx.matiere || ctx.notion || ctx.reference) {
     lines.push('', "L'élève vient de cette leçon de l'appli :");
     if (ctx.matiere) lines.push(`- Matière : ${ctx.matiere}`);
@@ -225,6 +254,8 @@ function cleanMeta(raw) {
     notion: oneLine(r.notion, 60).replace(/[$\\]/g, ''),
     choix: [...new Set(choix)],
     blocage: oneLine(r.blocage, 120).replace(/[$\\]/g, ''),
+    // KONAN Plus : énoncé lu sur la photo, ou transcription de la question à l'oral
+    piece: oneLine(typeof r.piece === 'string' ? r.piece : '', 800).replace(/[$\\]/g, ''),
   };
 }
 
@@ -278,20 +309,51 @@ export async function askTutor(apiKey, ctx, contents, { totalMs = 55_000, memory
   throw lastErr || new Error('AI_UNAVAILABLE');
 }
 
-/** Abonnement Pro PAYÉ (vérifié par le serveur). L'offre de lancement gratuite ne compte pas ici. */
-export async function hasPaidPro(db, uid, nowMs = Date.now(), env = process.env) {
-  if (!paymentsEnabled(env)) return true; // paiement éteint (ordinateur) : tout le monde, comme Feynman
+/**
+ * Formule PAYÉE (vérifiée par le serveur) : 'plus', 'pro' ou 'free'. L'offre de lancement gratuite ne compte pas.
+ * Paiement éteint (ordinateur) : 'plus', pour tout essayer.
+ */
+export async function tutorPaidTier(db, uid, nowMs = Date.now(), env = process.env) {
+  if (!paymentsEnabled(env)) return 'plus';
   const { payCol } = await import('./_subscriptionStore.js');
   const snap = await payCol(db, 'subscriptions', env).doc(uid).get();
   const sub = snap.exists ? snap.data() : null;
   const endsAt = Date.parse(sub?.endsAt || '');
-  return (sub?.tier === 'pro' || sub?.tier === 'plus') && Number.isFinite(endsAt) && endsAt > nowMs;
+  if (!(Number.isFinite(endsAt) && endsAt > nowMs)) return 'free';
+  return sub?.tier === 'plus' ? 'plus' : sub?.tier === 'pro' ? 'pro' : 'free';
 }
 
-/** Compteurs du jour d'un document tutor_usage ({ date, count, voice }) : remis à zéro chaque jour. */
+/** Abonnement Pro ou Plus PAYÉ (vérifié par le serveur). L'offre de lancement gratuite ne compte pas ici. */
+export async function hasPaidPro(db, uid, nowMs = Date.now(), env = process.env) {
+  return (await tutorPaidTier(db, uid, nowMs, env)) !== 'free';
+}
+
+/** Plafonds du jour selon la formule : Pro 30 messages / 10 voix / pas de photo ; Plus (et admin) bien plus. */
+export function tutorLimits(tier, admin = false) {
+  if (admin || tier === 'plus') return { ...PLUS_TUTOR_LIMITS };
+  return { count: TUTOR_DAILY_LIMIT, voice: TUTOR_VOICE_DAILY_LIMIT, photo: 0 };
+}
+
+/**
+ * Pièce jointe d'un message (KONAN Plus) : { kind: 'image' | 'audio', mimeType, data (base64) }.
+ * @returns null (pas de pièce), { error } (refusée) ou la pièce propre
+ */
+export function cleanPiece(raw) {
+  if (raw == null) return null;
+  const kind = raw?.kind === 'image' || raw?.kind === 'audio' ? raw.kind : '';
+  const mimeType = String(raw?.mimeType || '').split(';')[0].trim().toLowerCase();
+  const data = typeof raw?.data === 'string' ? raw.data.trim() : '';
+  if (!kind || !data || !/^[A-Za-z0-9+/=]+$/.test(data.slice(0, 4000))) return { error: 'BAD_PIECE' };
+  if (!(kind === 'image' ? PIECE_IMAGE_TYPES : PIECE_AUDIO_TYPES).test(mimeType)) return { error: 'BAD_PIECE' };
+  if (data.length * 0.75 > PIECE_MAX_BYTES[kind]) return { error: 'PIECE_TOO_LARGE' };
+  return { kind, mimeType, data };
+}
+
+/** Compteurs du jour d'un document tutor_usage ({ date, count, voice, photo }) : remis à zéro chaque jour. */
 function dayCounts(snapData, day) {
   const same = snapData?.date === day;
-  return { count: same ? Number(snapData?.count || 0) : 0, voice: same ? Number(snapData?.voice || 0) : 0 };
+  const n = (k) => (same ? Number(snapData?.[k] || 0) : 0);
+  return { count: n('count'), voice: n('voice'), photo: n('photo') };
 }
 
 // La voix coûte plus cher que le texte (≈ 5 à 8 F par réponse lue, estimation) : plafonds prudents pour que la
@@ -321,13 +383,16 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
     return { status: 503, data: { success: false, error: 'SERVER_UNAVAILABLE' } };
   }
 
-  let paid;
+  let tier;
   try {
     // Compte administrateur : accès complet sans abonnement (choix du fondateur, 2026-11-23)
-    paid = admin || await hasPaidPro(db, uid, nowMs, env);
+    tier = admin ? 'plus' : await tutorPaidTier(db, uid, nowMs, env);
   } catch {
     return { status: 503, data: { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' } };
   }
+  const paid = tier !== 'free';
+  const plus = tier === 'plus';
+  const limits = tutorLimits(tier, admin);
 
   const usageRef = db.collection('tutor_usage').doc(uid);
   const globalRef = db.collection('tutor_usage').doc('_global');
@@ -342,16 +407,19 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
     return { status: 503, data: { success: false, error: 'SERVER_UNAVAILABLE' } };
   }
   // Compte administrateur : pas de limite du jour (les compteurs restent tenus, rien n'est bloqué)
-  if (admin) { mine.count = 0; mine.voice = 0; }
-  const remainingOf = (used) => (admin ? TUTOR_DAILY_LIMIT : Math.max(0, TUTOR_DAILY_LIMIT - used));
-  const voiceRemainingOf = (used) => (admin ? TUTOR_VOICE_DAILY_LIMIT : Math.max(0, TUTOR_VOICE_DAILY_LIMIT - used));
+  if (admin) { mine.count = 0; mine.voice = 0; mine.photo = 0; }
+  const left = (field, used) => (admin ? limits[field] : Math.max(0, limits[field] - used));
+  const remainingOf = (used) => left('count', used);
+  const voiceRemainingOf = (used) => left('voice', used);
+  const photoRemainingOf = (used) => left('photo', used);
 
   if (body.action === 'tutor_status') {
     return {
       status: 200,
       data: {
-        success: true, enabled: true, paid, limit: TUTOR_DAILY_LIMIT, remaining: remainingOf(mine.count),
-        voiceLimit: TUTOR_VOICE_DAILY_LIMIT, voiceRemaining: voiceRemainingOf(mine.voice),
+        success: true, enabled: true, paid, plus, limit: limits.count, remaining: remainingOf(mine.count),
+        voiceLimit: limits.voice, voiceRemaining: voiceRemainingOf(mine.voice),
+        photoLimit: limits.photo, photoRemaining: photoRemainingOf(mine.photo),
       },
     };
   }
@@ -362,23 +430,27 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
 
   // Compteurs (seules les réponses réussies comptent), élève + toute l'appli, en une transaction
   // `forStudent: false` : compté seulement pour toute l'appli (suite d'une réponse déjà comptée à l'élève)
-  const bump = async (field, { forStudent = true } = {}) => {
-    let used = 0;
+  // Plusieurs compteurs à la fois (message + photo) : renvoie le nombre utilisé pour chacun
+  const bump = async (fieldOrFields, { forStudent = true } = {}) => {
+    const fields = Array.isArray(fieldOrFields) ? fieldOrFields : [fieldOrFields];
+    const used = {};
     try {
       await db.runTransaction(async (tx) => {
         const [a, b] = await Promise.all([tx.get(usageRef), tx.get(globalRef)]);
         const ua = dayCounts(a.exists ? a.data() : null, day);
         const ub = dayCounts(b.exists ? b.data() : null, day);
-        if (forStudent) ua[field] += 1;
-        ub[field] += 1;
+        for (const f of fields) {
+          if (forStudent) ua[f] += 1;
+          ub[f] += 1;
+          used[f] = ua[f];
+        }
         if (forStudent) tx.set(usageRef, { date: day, ...ua, userId: uid, updatedAt: new Date(nowMs).toISOString() });
         tx.set(globalRef, { date: day, ...ub });
-        used = ua[field];
       });
     } catch {
-      used = mine[field] + (forStudent ? 1 : 0); // compteur non mis à jour : sans gravité
+      for (const f of fields) used[f] = mine[f] + (forStudent ? 1 : 0); // compteur non mis à jour : sans gravité
     }
-    return used;
+    return Array.isArray(fieldOrFields) ? used : used[fieldOrFields];
   };
 
   // ---------- KONAN lit sa réponse à voix haute ----------
@@ -386,7 +458,7 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
     // Une réponse est lue en 2 morceaux préparés en même temps (début court = la voix démarre plus vite) :
     // seul le premier morceau (part 0) compte comme une lecture de l'élève ; tous comptent pour toute l'appli.
     const part = Math.max(0, Math.min(3, Number(body.part) || 0));
-    if (part === 0 && mine.voice >= TUTOR_VOICE_DAILY_LIMIT) return { status: 429, data: { success: false, error: 'VOICE_DAILY_LIMIT', voiceRemaining: 0 } };
+    if (part === 0 && mine.voice >= limits.voice) return { status: 429, data: { success: false, error: 'VOICE_DAILY_LIMIT', voiceRemaining: 0 } };
     if (all.voice >= tutorVoiceBudget(env)) return { status: 503, data: { success: false, error: 'TUTOR_BUSY' } };
     const { speakableText, synthesizeSpeech } = await import('./_tutorVoice.js');
     const text = speakableText(body.text);
@@ -404,12 +476,25 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   }
 
   // ---------- Message de l'élève ----------
-  if (mine.count >= TUTOR_DAILY_LIMIT) return { status: 429, data: { success: false, error: 'DAILY_LIMIT', limit: TUTOR_DAILY_LIMIT, remaining: 0 } };
+  if (mine.count >= limits.count) return { status: 429, data: { success: false, error: 'DAILY_LIMIT', limit: limits.count, remaining: 0 } };
   if (all.count >= tutorBudget(env)) return { status: 503, data: { success: false, error: 'TUTOR_BUSY' } };
+
+  // KONAN Plus : photo de l'exercice ou question à l'oral (jamais gardées : envoyées à l'IA puis oubliées)
+  const piece = cleanPiece(body.piece);
+  if (piece?.error) return { status: piece.error === 'PIECE_TOO_LARGE' ? 413 : 400, data: { success: false, error: piece.error } };
+  if (piece && !plus) return { status: 403, data: { success: false, error: 'PLUS_REQUIRED' } };
+  if (piece?.kind === 'image' && mine.photo >= limits.photo) {
+    return { status: 429, data: { success: false, error: 'PHOTO_DAILY_LIMIT', photoRemaining: 0 } };
+  }
 
   const contents = cleanTutorHistory(body.messages);
   if (!contents.length) return { status: 400, data: { success: false, error: 'EMPTY_MESSAGE' } };
   const ctx = cleanTutorContext(body.context);
+  if (piece) {
+    // La pièce va avec le DERNIER message de l'élève (le seul qui la contient vraiment)
+    contents[contents.length - 1].parts.unshift({ inlineData: { mimeType: piece.mimeType, data: piece.data } });
+    ctx.piece = piece.kind;
+  }
 
   // Mémoire de KONAN (notions déjà travaillées) : sans elle, la discussion marche quand même.
   // Objectif KONAN Plus (12, 16, major) lu en même temps : sans lui, KONE garde son ton habituel.
@@ -430,11 +515,21 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
     return { status: 502, data: { success: false, error: busy ? 'TUTOR_BUSY' : 'AI_UNAVAILABLE' } };
   }
 
-  const used = await bump('count');
+  // Une photo compte comme un message ET une photo (sauf si KONE n'a rien pu y lire : floue, coupée…) ;
+  // une question à l'oral compte comme un message
+  const photoRead = piece?.kind === 'image' && Boolean(reply.piece);
+  const used = await bump(photoRead ? ['count', 'photo'] : ['count']);
   try {
     await memoryRef.set(updatedMemory(memory, reply, ctx, nowMs));
   } catch { /* mémoire non mise à jour : sans gravité */ }
 
   const { model, blocage, ...clean } = reply;
-  return { status: 200, data: { success: true, reply: clean, limit: TUTOR_DAILY_LIMIT, remaining: remainingOf(used) } };
+  if (!piece) delete clean.piece;
+  return {
+    status: 200,
+    data: {
+      success: true, reply: clean, limit: limits.count, remaining: remainingOf(used.count),
+      photoRemaining: photoRemainingOf(used.photo ?? mine.photo),
+    },
+  };
 }

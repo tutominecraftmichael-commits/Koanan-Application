@@ -14,7 +14,20 @@ export interface TutorMessage {
   etape?: TutorStep;
   notion?: string;
   choix?: string[];
+  /** KONAN Plus : pièce jointe à ce message de l'élève (photo de l'exercice ou question à l'oral) */
+  pieceKind?: 'image' | 'audio';
+  /** Énoncé lu sur la photo par KONE (renvoyé au serveur ensuite : l'image n'est envoyée qu'une fois) */
+  pieceText?: string;
+  /** Miniature de la photo (affichage sur le téléphone seulement, jamais envoyée) */
+  thumb?: string;
+  /** Texte écrit par l'appli à la place de l'élève (photo sans question) : pas affiché dans la bulle */
+  autoText?: boolean;
+  /** Question à l'oral pas encore transcrite */
+  pending?: boolean;
 }
+
+/** Pièce jointe envoyée UNE fois avec un message (KONAN Plus). */
+export interface TutorPiece { kind: 'image' | 'audio'; mimeType: string; data: string }
 
 export interface TutorContext {
   classe?: string;
@@ -36,12 +49,17 @@ export interface TutorStatus {
   remaining: number;
   voiceLimit: number;
   voiceRemaining: number;
+  /** KONAN Plus : photo de l'exercice et question à l'oral */
+  plus: boolean;
+  photoLimit: number;
+  photoRemaining: number;
 }
 
 export type TutorError =
   | 'PAID_PRO_REQUIRED' | 'DAILY_LIMIT' | 'TUTOR_BUSY' | 'AI_UNAVAILABLE' | 'TUTOR_OFF'
   | 'UNAUTHORIZED' | 'TOKEN_EXPIRED' | 'EMPTY_MESSAGE' | 'NETWORK' | 'UNKNOWN'
-  | 'VOICE_DAILY_LIMIT' | 'VOICE_UNAVAILABLE';
+  | 'VOICE_DAILY_LIMIT' | 'VOICE_UNAVAILABLE'
+  | 'PLUS_REQUIRED' | 'PHOTO_DAILY_LIMIT' | 'BAD_PIECE' | 'PIECE_TOO_LARGE';
 
 async function call(body: Record<string, unknown>): Promise<{ ok: boolean; json: any }> {
   const user = auth?.currentUser;
@@ -68,27 +86,63 @@ export async function getTutorStatus(): Promise<TutorStatus | null> {
       remaining: Number(json.remaining) || 0,
       voiceLimit: Number(json.voiceLimit) || 0,
       voiceRemaining: Number(json.voiceRemaining) || 0,
+      plus: json.plus === true,
+      photoLimit: Number(json.photoLimit) || 0,
+      photoRemaining: Number(json.photoRemaining) || 0,
     };
   } catch {
     return null;
   }
 }
 
+export type TutorReply = Pick<TutorMessage, 'niveau' | 'etape' | 'notion' | 'choix'> & {
+  texte: string;
+  /** Énoncé lu sur la photo, ou transcription de la question à l'oral (KONAN Plus) */
+  piece?: string;
+};
+
 export async function sendTutorMessage(
   messages: TutorMessage[],
   context: TutorContext,
-): Promise<{ ok: true; reply: Omit<TutorMessage, 'id' | 'role' | 'text'> & { texte: string }; remaining: number } | { ok: false; error: TutorError; remaining?: number }> {
+  piece?: TutorPiece | null,
+): Promise<{ ok: true; reply: TutorReply; remaining: number; photoRemaining?: number } | { ok: false; error: TutorError; remaining?: number; photoRemaining?: number }> {
   try {
     const { ok, json } = await call({
       action: 'tutor',
       context,
-      messages: messages.slice(-24).map(({ role, text, niveau, etape, notion }) => ({ role, text, niveau, etape, notion })),
+      messages: messages.slice(-24).map(({ role, text, niveau, etape, notion, pieceKind, pieceText }) => ({
+        role, text, niveau, etape, notion, ...(pieceKind && pieceText ? { pieceKind, pieceText } : {}),
+      })),
+      ...(piece ? { piece } : {}),
     });
-    if (!ok) return { ok: false, error: (json?.error as TutorError) || 'UNKNOWN', remaining: typeof json?.remaining === 'number' ? json.remaining : undefined };
-    return { ok: true, reply: json.reply, remaining: Number(json.remaining) || 0 };
+    const photoRemaining = typeof json?.photoRemaining === 'number' ? json.photoRemaining : undefined;
+    if (!ok) return { ok: false, error: (json?.error as TutorError) || 'UNKNOWN', remaining: typeof json?.remaining === 'number' ? json.remaining : undefined, photoRemaining };
+    return { ok: true, reply: json.reply, remaining: Number(json.remaining) || 0, photoRemaining };
   } catch {
     return { ok: false, error: 'NETWORK' };
   }
+}
+
+/**
+ * Photo d'exercice réduite (≈ 1600 px, JPEG) : lisible (écriture, figures) et légère à envoyer,
+ * plus une miniature (≈ 240 px) gardée dans la discussion.
+ */
+export async function prepareExercisePhoto(file: File): Promise<{ piece: TutorPiece; thumb: string }> {
+  const bitmap = await createImageBitmap(file);
+  const draw = (max: number, quality: number) => {
+    const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('CANVAS');
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', quality);
+  };
+  const full = draw(1600, 0.78);
+  const thumb = draw(240, 0.7);
+  bitmap.close?.();
+  return { piece: { kind: 'image', mimeType: 'image/jpeg', data: full.split(',')[1] || '' }, thumb };
 }
 
 /**
