@@ -3415,7 +3415,7 @@ export function App() {
               setWaitlistModalInfo({
                 isOpen: true,
                 featureTitle: 'KONAN Plus',
-                featureDescription: 'Planning réglé sur ton objectif, pack groupe de 5 comptes et musiques de concentration. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
+                featureDescription: 'Planning réglé sur ton objectif et pack groupe de 5 comptes. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
                 requiredTier: 'plus',
               });
             }}

@@ -116,10 +116,10 @@ export function checkPdfImportAccess(
 }
 
 /**
- * Vérifie l'accès à une fonctionnalité spécifique (notifs, musiques, objectifs, parrainage)
+ * Vérifie l'accès à une fonctionnalité spécifique (notifs, objectifs, parrainage)
  */
 export function checkFeatureAccess(
-  feature: 'reminders_30m' | 'academic_goals' | 'focus_soundtracks' | 'group_invitations' | 'smart_coefficients',
+  feature: 'reminders_30m' | 'academic_goals' | 'group_invitations' | 'smart_coefficients',
   userTier: PlanTier = 'free'
 ): AccessCheckResult {
   const tier = userTier;
@@ -135,7 +135,6 @@ export function checkFeatureAccess(
       };
 
     case 'academic_goals':
-    case 'focus_soundtracks':
     case 'group_invitations':
       if (tier === 'plus') return { allowed: true, requiredTier: 'plus' };
       return {
@@ -158,7 +157,6 @@ export type BackendAction =
   | 'IMPORT_PDF_SCHEDULE'
   | 'SEND_REMINDER'
   | 'SET_ACADEMIC_GOAL'
-  | 'PLAY_FOCUS_AUDIO'
   | 'MANAGE_INVITATIONS'
   | 'UPDATE_USER_PROFILE';
 
@@ -235,16 +233,6 @@ export function validateBackendPermissions(
       if (actualTier !== 'plus') {
         throw new SubscriptionForbiddenError(
           'La configuration d’objectifs académiques est réservée aux membres Konan Plus',
-          'plus'
-        );
-      }
-      break;
-    }
-
-    case 'PLAY_FOCUS_AUDIO': {
-      if (actualTier !== 'plus') {
-        throw new SubscriptionForbiddenError(
-          'L’accès aux pistes audio de concentration et relaxation est réservé aux membres Konan Plus',
           'plus'
         );
       }

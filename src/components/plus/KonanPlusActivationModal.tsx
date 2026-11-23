@@ -2,24 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
   Users, 
-  Target, 
-  Headphones, 
-  Sparkles, 
+  Target,
+  Sparkles,
   ArrowRight,
   ArrowLeft,
   X,
   UserPlus,
-  Play,
-  Pause,
   Clock,
-  Volume2,
   ShieldCheck
 } from 'lucide-react';
 import type { AcademicGoal, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
-import { focusAudioEngine, FOCUS_SOUNDTRACKS } from '../../lib/focusAudioEngine';
-import type { FocusSoundtrackId } from '../../lib/focusAudioEngine';
 import { isTargetAlreadyPlus, savePlusInvitation, getPlusInvitations } from '../../services/storage';
 import { generateId } from '../../lib/utils';
 
@@ -63,8 +57,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   // Step 0: Welcome Royal Screen
   // Step 1: 4 Accounts via Konan ID
   // Step 2: 3 Academic Goals
-  // Step 3: Focus Soundscapes
-  const [currentStep, setCurrentStep] = useState<0 | 1 | 2 | 3>(0);
+  const [currentStep, setCurrentStep] = useState<0 | 1 | 2>(0);
 
   // Step 1 state
   const [friendIdInput, setFriendIdInput] = useState('');
@@ -74,22 +67,11 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   // Step 2 state (Academic goal)
   const [selectedGoal, setSelectedGoal] = useState<AcademicGoal>(academicGoal);
 
-  // Step 4 state (Audio player preview)
-  const [selectedTrack, setSelectedTrack] = useState<FocusSoundtrackId>('alpha_waves');
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [audioVolume, setAudioVolume] = useState(0.7);
-
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(0);
       setSelectedGoal(academicGoal);
       soundFX.playVictoryCelebration();
-    } else {
-      // Stop audio if modal is closed
-      if (focusAudioEngine.isPlaying()) {
-        focusAudioEngine.stop();
-        setIsPlayingAudio(false);
-      }
     }
   }, [isOpen, academicGoal]);
 
@@ -151,34 +133,10 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
     onSelectAcademicGoal?.(goal);
   };
 
-  // STEP 4 HANDLERS: Audio Test
-  const handleToggleAudio = () => {
-    if (isPlayingAudio) {
-      focusAudioEngine.stop();
-      setIsPlayingAudio(false);
-    } else {
-      focusAudioEngine.setVolume(audioVolume);
-      focusAudioEngine.play(selectedTrack);
-      setIsPlayingAudio(true);
-    }
-  };
-
-  const handleSelectSoundtrack = (trackId: FocusSoundtrackId) => {
-    setSelectedTrack(trackId);
-    focusAudioEngine.setVolume(audioVolume);
-    focusAudioEngine.play(trackId);
-    setIsPlayingAudio(true);
-  };
-
-  const handleVolumeChange = (vol: number) => {
-    setAudioVolume(vol);
-    focusAudioEngine.setVolume(vol);
-  };
-
   const handleNextStep = () => {
     soundFX.playCheckmarkPop();
-    if (currentStep < 3) {
-      setCurrentStep((prev) => (prev + 1) as 0 | 1 | 2 | 3);
+    if (currentStep < 2) {
+      setCurrentStep((prev) => (prev + 1) as 0 | 1 | 2);
     } else {
       handleFinalFinish();
     }
@@ -187,15 +145,11 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   const handlePrevStep = () => {
     soundFX.playCheckmarkPop();
     if (currentStep > 0) {
-      setCurrentStep((prev) => (prev - 1) as 0 | 1 | 2 | 3);
+      setCurrentStep((prev) => (prev - 1) as 0 | 1 | 2);
     }
   };
 
   const handleFinalFinish = () => {
-    if (focusAudioEngine.isPlaying()) {
-      focusAudioEngine.stop();
-      setIsPlayingAudio(false);
-    }
     soundFX.playVictoryCelebration();
     onClose();
   };
@@ -220,7 +174,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           <div className="h-1.5 bg-slate-800 w-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-indigo-500 via-amber-400 to-purple-500 transition-all duration-500 ease-out"
-              style={{ width: `${currentStep === 0 ? 10 : (currentStep / 4) * 100}%` }}
+              style={{ width: `${currentStep === 0 ? 10 : (currentStep / 2) * 100}%` }}
             />
           </div>
 
@@ -228,11 +182,11 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           {currentStep > 0 && (
             <div className="px-6 py-2.5 flex items-center justify-between text-xs border-b border-slate-800/40 bg-slate-900/40">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                {[1, 2, 3].map((stepNum) => (
+                {[1, 2].map((stepNum) => (
                   <button
                     key={stepNum}
                     type="button"
-                    onClick={() => setCurrentStep(stepNum as 1 | 2 | 3)}
+                    onClick={() => setCurrentStep(stepNum as 1 | 2)}
                     className={`w-6 h-6 rounded-full text-[11px] font-black flex items-center justify-center transition-all cursor-pointer ${
                       currentStep === stepNum
                         ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/30 ring-2 ring-amber-400/40'
@@ -246,7 +200,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 ))}
               </div>
               <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">
-                Étape {currentStep} sur 3
+                Étape {currentStep} sur 2
               </span>
             </div>
           )}
@@ -298,9 +252,9 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
               {/* 3 Super Exclusive Features summary teaser */}
               <div className="p-4 rounded-2xl bg-indigo-950/20 border border-indigo-500/30 text-left space-y-2.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 block">
-                  Configurons ensemble vos 3 super-pouvoirs étape par étape :
+                  Configurons ensemble vos 2 super-pouvoirs étape par étape :
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-200">
                   <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                     <Users className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span className="truncate">1. Inviter 4 amis</span>
@@ -308,10 +262,6 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                   <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                     <Target className="w-4 h-4 text-amber-400 shrink-0" />
                     <span className="truncate">2. Objectif Scolaire</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                    <Headphones className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span className="truncate">3. Musiques de Focus</span>
                   </div>
                 </div>
               </div>
@@ -323,7 +273,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 onClick={() => setCurrentStep(1)}
                 className="w-full font-black text-sm py-3.5 shadow-xl shadow-indigo-600/30 cursor-pointer"
               >
-                Démarrer la configuration guidée (Étape 1/3)
+                Démarrer la configuration guidée (Étape 1/2)
               </Button>
             </div>
           )}
@@ -339,7 +289,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">
-                    Étape 1 sur 4 • Multi-comptes
+                    Étape 1 sur 2 • Multi-comptes
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                     {isGroupGuest ? "Votre Groupe d'Étude Konan Plus" : "Invitez jusqu'à 4 amis avec leur adresse email"}
@@ -478,7 +428,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">
-                    Étape 2 sur 4 • Calibrage Académique
+                    Étape 2 sur 2 • Calibrage Académique
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                     Choisissez votre Objectif Scolaire
@@ -578,112 +528,6 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
             </div>
           )}
 
-          {/* ========================================================= */}
-          {/* ÉTAPE 3 : MUSIQUES DE FOCUS & RÉVISION                     */}
-          {/* ========================================================= */}
-          {currentStep === 3 && (
-            <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
-              <div className="flex items-start gap-3">
-                <div className="p-3 rounded-2xl bg-purple-500/20 border border-purple-500/40 text-purple-300 shrink-0">
-                  <Headphones className="w-6 h-6 text-purple-400" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-purple-400">
-                    Étape 3 sur 3 • Ambiance Neuro-Focus
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    Musiques de Révision & Ondes Alpha 40Hz
-                  </h3>
-                  <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                    5 ambiances sonores synthétisées par votre navigateur, 100% hors-ligne et gratuites, pour plonger en état de concentration immédiat.
-                  </p>
-                </div>
-              </div>
-
-              {/* Soundscapes Selector & Live Player */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-purple-500/40 space-y-4 shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Volume2 className="w-4 h-4 text-purple-400" />
-                    <span className="text-xs font-bold text-white uppercase tracking-wider">
-                      Écouter un extrait en direct :
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleToggleAudio}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md ${
-                      isPlayingAudio
-                        ? 'bg-amber-400 text-slate-950 font-bold'
-                        : 'bg-indigo-600 hover:bg-indigo-500 text-white'
-                    }`}
-                  >
-                    {isPlayingAudio ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                    <span>{isPlayingAudio ? 'En cours de lecture' : 'Tester le son'}</span>
-                  </button>
-                </div>
-
-                {/* 5 Sound Chips with dedicated scrollable container for mobile */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px] text-slate-400">
-                    <span className="font-semibold uppercase tracking-wider">Ambiances Disponibles (5) :</span>
-                    <span className="text-[10px] text-purple-300 font-mono">Défilez pour voir tout</span>
-                  </div>
-                  <div className="max-h-48 sm:max-h-56 overflow-y-auto pr-1 space-y-1.5 custom-scrollbar">
-                    {FOCUS_SOUNDTRACKS.map((t) => (
-                      <button
-                        key={t.id}
-                        type="button"
-                        onClick={() => handleSelectSoundtrack(t.id)}
-                        className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
-                          selectedTrack === t.id
-                            ? 'bg-purple-950/40 border-purple-400 text-white shadow-md shadow-purple-500/20 ring-1 ring-purple-400/40'
-                            : 'bg-slate-950/50 border-slate-800 hover:border-slate-700 text-slate-300'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                          <span className="text-xl shrink-0">{t.icon}</span>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-bold truncate text-white">{t.name}</p>
-                            <p className="text-[10px] text-slate-400 truncate">{t.tagline}</p>
-                          </div>
-                        </div>
-                        {selectedTrack === t.id && (
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="text-[10px] font-bold text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-500/30">
-                              Sélectionné
-                            </span>
-                            {isPlayingAudio && (
-                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                            )}
-                          </div>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Volume slider (Up to 200% Max) */}
-                <div className="flex items-center gap-3 pt-1 border-t border-slate-800/80">
-                  <span className="text-[11px] text-slate-400 font-semibold shrink-0">Volume :</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="2"
-                    step="0.05"
-                    value={audioVolume}
-                    onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                    className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
-                  />
-                  <span className={`text-[11px] font-mono shrink-0 ${
-                    audioVolume > 1.0 ? 'text-amber-300 font-bold' : 'text-purple-300'
-                  }`}>
-                    {audioVolume > 1.0 ? `⚡ ${Math.round(audioVolume * 100)}% (Boost)` : `${Math.round(audioVolume * 100)}%`}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
 
         </div>
 
@@ -703,7 +547,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
             <div />
           )}
 
-          {currentStep > 0 && currentStep < 3 ? (
+          {currentStep === 1 ? (
             <Button
               variant="glow"
               size="sm"
@@ -711,9 +555,9 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
               onClick={handleNextStep}
               className="text-xs font-bold py-2.5 px-4 cursor-pointer"
             >
-              Continuer (Étape {currentStep + 1}/3) →
+              Continuer (Étape 2/2) →
             </Button>
-          ) : currentStep === 3 ? (
+          ) : currentStep === 2 ? (
             <Button
               variant="glow"
               size="md"

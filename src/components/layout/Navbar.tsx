@@ -18,7 +18,6 @@ import { AnimatedAvatar } from '../../features/avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { Badge } from '../ui/Badge';
 import { KonanCube } from '../common/KonanCube';
-import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
@@ -1064,11 +1063,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                     document.body
                   )}
                 </div>
-
-                {/* Ambient Focus Audio Player for KONAN PLUS */}
-                {userAccount && userAccount.isLoggedIn && effectivePlan === 'plus' && (
-                  <FocusAudioPlayerWidget compact className="hidden lg:inline-flex mr-1" />
-                )}
 
                 {/* User / Google Profile Pill -> opens Settings Modal on click (Masqué sur mobile pour éviter le doublon avec la barre inférieure) */}
                 {userAccount && userAccount.isLoggedIn ? (
