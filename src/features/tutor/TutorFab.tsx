@@ -5,7 +5,7 @@ const SIZE = 84;
 const HINT_KEY = 'konan_plush_hint_day';
 
 /**
- * Bouton flottant « Je ne comprends pas » : la peluche KONAN animée, en bas à droite
+ * Bouton flottant « Je ne comprends pas » : la peluche KONE animée, en bas à droite
  * (les mini-jeux sont en bas à gauche). Halo qui respire, bulle « ? » de temps en temps,
  * « boing » au toucher, et une fois par jour la bulle « Tu bloques ? Je t'explique ! ».
  * Fichier léger : la discussion (et KaTeX) ne se charge qu'à l'ouverture.
@@ -50,8 +50,8 @@ export const TutorFab: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
       <button
         type="button"
         onClick={open}
-        aria-label="Je ne comprends pas : discuter avec KONAN"
-        title="Je ne comprends pas ? KONAN t’explique"
+        aria-label="Je ne comprends pas : discuter avec KONE"
+        title="Je ne comprends pas ? KONE t’explique"
         className="pointer-events-auto relative rounded-full cursor-pointer focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/60"
         style={{ width: SIZE, height: SIZE }}
       >

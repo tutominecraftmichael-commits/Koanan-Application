@@ -27,10 +27,10 @@ interface Props {
   notion: string;
   reference: string;
   classe: string;
-  /** Matière (pour KONAN en discussion). */
+  /** Matière (pour KONE en discussion). */
   matiere?: string;
   onDone: () => void;
-  /** KONAN Pro : « Je ne comprends pas » (discussion) et voix de KONAN. Absent = fonctions cachées. */
+  /** KONAN Pro : « Je ne comprends pas » (discussion) et voix de KONE. Absent = fonctions cachées. */
   onNotUnderstood?: (context: TutorContext) => void;
 }
 
@@ -44,11 +44,11 @@ function pickMimeType(): string {
 
 const ERRORS: Record<string, string> = {
   DAILY_LIMIT: 'Tu as utilisé tes explications orales d’aujourd’hui. Tu peux écrire ton explication à la place.',
-  AI_UNAVAILABLE: 'KONAN n’a pas pu écouter ton explication pour l’instant. Réessaie dans un moment, ou écris-la.',
+  AI_UNAVAILABLE: 'KONE n’a pas pu écouter ton explication pour l’instant. Réessaie dans un moment, ou écris-la.',
   UNAUTHORIZED: 'Connecte-toi à ton compte pour utiliser l’explication orale.',
   TOKEN_EXPIRED: 'Ta connexion a expiré, réessaie.',
   AUDIO_TOO_LONG: 'L’enregistrement est trop long. Essaie en moins d’une minute.',
-  PRO_REQUIRED: 'Expliquer à KONAN fait partie de KONAN Pro.',
+  PRO_REQUIRED: 'Expliquer à KONE fait partie de KONAN Pro.',
   TOO_SHORT:'Ton explication est trop courte : écris au moins une phrase.',
 };
 
@@ -66,7 +66,7 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, m
   // Réaction de la peluche au résultat (pouce levé ou encouragement), puis repos
   const [reaction, setReaction] = useState<PlushMood | null>(null);
   const [showModele, setShowModele] = useState(false);
-  // Voix de KONAN (Pro) : lit son conseil et l'explication modèle
+  // Voix de KONE (Pro) : lit son conseil et l'explication modèle
   const [voice, setVoice] = useState<'idle' | 'loading' | 'playing'>('idle');
   const [voiceNote, setVoiceNote] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -188,13 +188,13 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, m
     const r = await speakTutor([verdict.conseil, verdict.modele ? `Par exemple : ${verdict.modele}` : ''].filter(Boolean).join(' '));
     if (!r.ok) {
       setVoice('idle');
-      setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONAN revient demain.' : 'KONAN n’a pas pu parler cette fois. Tu peux lire son conseil.');
+      setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONE revient demain.' : 'KONE n’a pas pu parler cette fois. Tu peux lire son conseil.');
       return;
     }
     a.src = r.src;
     a.onended = () => setVoice('idle');
     setVoice('playing');
-    a.play().catch(() => { setVoice('idle'); setVoiceNote('Touche encore « Écouter KONAN ».'); });
+    a.play().catch(() => { setVoice('idle'); setVoiceNote('Touche encore « Écouter KONE ».'); });
   };
 
   return (
@@ -239,7 +239,7 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, m
       {mode === 'sending' && (
         <div className="flex flex-col items-center gap-2 justify-center py-2">
           <KonanPlush variant="body" size={120} mood="think" />
-          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">KONAN réfléchit à ton explication…</p>
+          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">KONE réfléchit à ton explication…</p>
         </div>
       )}
 
@@ -286,9 +286,9 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, m
                   onClick={speak}
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold text-amber-900 dark:text-amber-100 bg-white/80 dark:bg-slate-900/60 border border-amber-300 dark:border-amber-500/40 cursor-pointer"
                 >
-                  {voice === 'loading' ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONAN prépare sa voix…</>
+                  {voice === 'loading' ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONE prépare sa voix…</>
                     : voice === 'playing' ? <><Square className="w-3 h-3 fill-current" /> Arrêter</>
-                    : <><Volume2 className="w-3.5 h-3.5" /> Écouter KONAN</>}
+                    : <><Volume2 className="w-3.5 h-3.5" /> Écouter KONE</>}
                 </button>
               )}
               {voiceNote && <p className="text-[11px] text-amber-800 dark:text-amber-200">{voiceNote}</p>}
@@ -311,7 +311,7 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, m
           {verdict.modele && (
             <div className="rounded-2xl border border-sky-200 dark:border-sky-500/30 overflow-hidden">
               <button type="button" onClick={() => setShowModele((v) => !v)} className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-sky-50 dark:bg-sky-500/10 text-sm font-extrabold text-sky-900 dark:text-sky-100 cursor-pointer">
-                Voir comment KONAN l’expliquerait
+                Voir comment KONE l’expliquerait
                 {showModele ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
               {showModele && (

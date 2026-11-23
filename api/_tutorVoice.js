@@ -156,6 +156,7 @@ export function speakableText(raw) {
     .replace(/≤/g, ' inférieur ou égal à ')
     .replace(/≥/g, ' supérieur ou égal à ')
     .replace(/\bKONAN\b/g, 'Konan')
+    .replace(/\bKONE\b/g, 'Koné') // prononcé « Ko-né »
     .replace(/[\\{}$*_#`]/g, ' ')
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{2,}/g, '\n')

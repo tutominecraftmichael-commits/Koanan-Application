@@ -1,6 +1,6 @@
 /**
- * Mode « Je ne comprends pas » : discussion avec KONAN, professeur particulier.
- * KONAN cherche où ça bloque, explique, vérifie par une question, réexplique autrement, et une jauge
+ * Mode « Je ne comprends pas » : discussion avec KONE, professeur particulier.
+ * KONE cherche où ça bloque, explique, vérifie par une question, réexplique autrement, et une jauge
  * montre où en est la compréhension (je découvre → je maîtrise).
  * La discussion est gardée sur le téléphone seulement (une par élève, effacée après 7 jours).
  * Lisible en mode jour ET en mode nuit.
@@ -14,7 +14,7 @@ import { getReviewMap } from '../../lib/curriculum/reviewMemory';
 import { STEM_SUBJECTS } from '../../lib/curriculum/types';
 import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
 
-/** Son muet très court : joué pendant un toucher pour que le téléphone accepte ensuite la voix de KONAN. */
+/** Son muet très court : joué pendant un toucher pour que le téléphone accepte ensuite la voix de KONE. */
 const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
 
 const LEVELS = ['Je découvre', 'Je commence à comprendre', 'J’ai compris', 'Je maîtrise'];
@@ -23,17 +23,17 @@ const MAX_INPUT = 1200;
 
 const ERRORS: Record<TutorError, string> = {
   PAID_PRO_REQUIRED: 'Le mode « Je ne comprends pas » est réservé aux abonnés KONAN Pro.',
-  DAILY_LIMIT: 'Tu as utilisé tous tes messages d’aujourd’hui. KONAN t’attend demain pour continuer !',
-  TUTOR_BUSY: 'KONAN a beaucoup d’élèves en ce moment. Réessaie dans quelques minutes.',
-  AI_UNAVAILABLE: 'KONAN n’a pas pu répondre. Réessaie dans un moment.',
+  DAILY_LIMIT: 'Tu as utilisé tous tes messages d’aujourd’hui. KONE t’attend demain pour continuer !',
+  TUTOR_BUSY: 'KONE a beaucoup d’élèves en ce moment. Réessaie dans quelques minutes.',
+  AI_UNAVAILABLE: 'KONE n’a pas pu répondre. Réessaie dans un moment.',
   TUTOR_OFF: 'Le mode « Je ne comprends pas » arrive bientôt.',
-  UNAUTHORIZED: 'Connecte-toi à ton compte pour discuter avec KONAN.',
+  UNAUTHORIZED: 'Connecte-toi à ton compte pour discuter avec KONE.',
   TOKEN_EXPIRED: 'Ta connexion a expiré, réessaie.',
   EMPTY_MESSAGE: 'Écris ton message d’abord.',
   NETWORK: 'Pas de connexion Internet. Réessaie quand tu es connecté.',
   UNKNOWN: 'Une erreur est survenue. Réessaie.',
-  VOICE_DAILY_LIMIT: 'La voix de KONAN revient demain.',
-  VOICE_UNAVAILABLE: 'KONAN n’a pas pu parler cette fois.',
+  VOICE_DAILY_LIMIT: 'La voix de KONE revient demain.',
+  VOICE_UNAVAILABLE: 'KONE n’a pas pu parler cette fois.',
 };
 
 interface Stored { messages: TutorMessage[]; context: TutorContext; updatedAt: number }
@@ -58,7 +58,7 @@ function writeStored(uid: string, s: Stored | null) {
 
 const newId = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 
-/** Texte de KONAN : paragraphes, listes « - », gras ** et formules $…$. */
+/** Texte de KONE : paragraphes, listes « - », gras ** et formules $…$. */
 const RichText: React.FC<{ text: string }> = ({ text }) => {
   const blocks = useMemo(() => text.split(/\n{2,}/).map((b) => b.split('\n')), [text]);
   return (
@@ -111,7 +111,7 @@ const Gauge: React.FC<{ niveau: number; notion?: string }> = ({ niveau, notion }
 export interface TutorChatProps {
   uid: string;
   classe: string;
-  /** Prénom de l'élève : KONAN l'appelle par son prénom */
+  /** Prénom de l'élève : KONE l'appelle par son prénom */
   prenom?: string;
   /** Leçon d'où vient l'élève (cours guidé) : la discussion repart sur cette notion. */
   context?: TutorContext;
@@ -130,7 +130,7 @@ const VOICE_KEY = 'konan_tutor_voice';
 
 /**
  * Dernières erreurs de l'élève : cours guidés (mémoire de révision du téléphone) et devoirs corrigés
- * (clé « konan_devoir_errors_<uid> », écrite par ExamSujetView). KONAN s'en sert pour trouver ce qui bloque.
+ * (clé « konan_devoir_errors_<uid> », écrite par ExamSujetView). KONE s'en sert pour trouver ce qui bloque.
  */
 function recentMistakes(uid: string): TutorContext['erreurs'] {
   type M = { matiere: string; question: string; reponse?: string; at: number };
@@ -171,7 +171,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // ---------- Voix de KONAN : lit ses réponses à voix haute (réglage gardé sur le téléphone) ----------
+  // ---------- Voix de KONE : lit ses réponses à voix haute (réglage gardé sur le téléphone) ----------
   const [voiceOn, setVoiceOn] = useState<boolean>(() => {
     try { return localStorage.getItem(VOICE_KEY) !== 'off'; } catch { return true; }
   });
@@ -249,7 +249,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     setSpeakingId(null);
     setVoiceLoadingId(null);
   };
-  useEffect(() => () => stopVoice(), []); // en fermant la discussion, KONAN se tait
+  useEffect(() => () => stopVoice(), []); // en fermant la discussion, KONE se tait
 
   const speak = async (m: TutorMessage) => {
     unlockAudio();
@@ -258,14 +258,14 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     const req = voiceRequest.current;
     let src = audioCache.current.get(m.id);
     if (!src) {
-      if (voiceRemaining !== null && voiceRemaining <= 0) { setVoiceNote('La voix de KONAN revient demain. Tu peux continuer à lire ses messages.'); return; }
+      if (voiceRemaining !== null && voiceRemaining <= 0) { setVoiceNote('La voix de KONE revient demain. Tu peux continuer à lire ses messages.'); return; }
       setVoiceLoadingId(m.id);
       const r = await speakTutor(m.text);
       if (req !== voiceRequest.current) return; // l'élève a demandé autre chose entre-temps
       setVoiceLoadingId(null);
       if (!r.ok) {
         if (typeof r.voiceRemaining === 'number') onVoiceRemainingChange?.(r.voiceRemaining);
-        setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONAN revient demain. Tu peux continuer à lire ses messages.' : 'KONAN n’a pas pu parler cette fois. Tu peux lire son message.');
+        setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONE revient demain. Tu peux continuer à lire ses messages.' : 'KONE n’a pas pu parler cette fois. Tu peux lire son message.');
         return;
       }
       onVoiceRemainingChange?.(r.voiceRemaining);
@@ -280,7 +280,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     setSpeakingId(m.id);
     a.play()
       .then(() => startLevelMeter(a))
-      .catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONAN.'); });
+      .catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONE.'); });
   };
 
   const toggleVoice = () => {
@@ -320,7 +320,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     setInput('');
     setError(null);
     setSending(true);
-    // « KONAN se souvient » : prénom, pays et dernières erreurs des cours accompagnent chaque message
+    // « KONE se souvient » : prénom, pays et dernières erreurs des cours accompagnent chaque message
     const res = await sendTutorMessage(messages, {
       ...state.context,
       classe,
@@ -351,7 +351,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     }
     const answer: TutorMessage = { id: newId(), role: 'konan', text: texte, niveau: lvl, etape, notion: n, choix };
     setState((s) => ({ ...s, messages: [...s.messages, answer], updatedAt: Date.now() }));
-    // Voix allumée : KONAN lit sa réponse tout de suite
+    // Voix allumée : KONE lit sa réponse tout de suite
     if (voiceOn) void speak(answer);
   };
 
@@ -372,22 +372,22 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     : [];
 
   return (
-    <div className="fixed inset-0 z-[95] bg-slate-900/40 dark:bg-black/60 flex sm:items-center sm:justify-center sm:p-4 animate-in fade-in duration-150" role="dialog" aria-modal="true" aria-label="Je ne comprends pas : discussion avec KONAN">
+    <div className="fixed inset-0 z-[95] bg-slate-900/40 dark:bg-black/60 flex sm:items-center sm:justify-center sm:p-4 animate-in fade-in duration-150" role="dialog" aria-modal="true" aria-label="Je ne comprends pas : discussion avec KONE">
       <div className="flex flex-col w-full min-w-0 h-full sm:h-[min(820px,92vh)] sm:max-w-2xl bg-white dark:bg-[#0B1120] sm:rounded-3xl sm:border sm:border-slate-200 dark:sm:border-slate-800 shadow-2xl overflow-hidden">
-        {/* En-tête : KONAN + jauge de compréhension */}
+        {/* En-tête : KONE + jauge de compréhension */}
         <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-slate-200 dark:border-slate-800 bg-sky-50 dark:bg-slate-900/80 space-y-2.5">
           <div className="flex items-center gap-3">
             <KonanPlush variant="bust" size={54} mood={mood} talkLevel={talkLevel} />
             <div className="flex-1 min-w-0">
               <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">KONAN t’explique jusqu’à ce que tu comprennes</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">KONE t’explique jusqu’à ce que tu comprennes</p>
             </div>
             {paid && (
               <button
                 type="button"
                 onClick={toggleVoice}
-                title={voiceOn ? 'KONAN lit ses réponses à voix haute (toucher pour couper)' : 'Voix coupée (toucher pour que KONAN parle)'}
-                aria-label={voiceOn ? 'Couper la voix de KONAN' : 'Activer la voix de KONAN'}
+                title={voiceOn ? 'KONE lit ses réponses à voix haute (toucher pour couper)' : 'Voix coupée (toucher pour que KONE parle)'}
+                aria-label={voiceOn ? 'Couper la voix de KONE' : 'Activer la voix de KONE'}
                 aria-pressed={voiceOn}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer ${voiceOn ? 'text-sky-700 dark:text-sky-300 bg-white dark:bg-slate-800' : 'text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800'}`}
               >
@@ -419,7 +419,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
             <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
               {state.context.notion
                 ? <>{prenom ? `${prenom}, tu` : 'Tu'} bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
-                : <>Salut{prenom ? ` ${prenom}` : ''} ! Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
+                : <>Salut{prenom ? ` ${prenom}` : ''} ! Moi, c’est <strong>KONE</strong>, le meilleur ami de KONAN. Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
             </div>
           </div>
 
@@ -439,11 +439,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
                     <button
                       type="button"
                       onClick={() => void speak(m)}
-                      aria-label={speakingId === m.id ? 'Arrêter la voix de KONAN' : 'Écouter KONAN'}
+                      aria-label={speakingId === m.id ? 'Arrêter la voix de KONE' : 'Écouter KONE'}
                       className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold text-sky-800 dark:text-sky-200 bg-white/80 dark:bg-slate-900/60 border border-sky-200 dark:border-sky-400/30 hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
                     >
                       {voiceLoadingId === m.id
-                        ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONAN prépare sa voix…</>
+                        ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONE prépare sa voix…</>
                         : speakingId === m.id
                           ? <><Square className="w-3 h-3 fill-current" /> Arrêter</>
                           : <><Volume2 className="w-3.5 h-3.5" /> Écouter</>}
@@ -461,7 +461,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
                 <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce [animation-delay:120ms]" />
                 <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce [animation-delay:240ms]" />
               </span>
-              KONAN réfléchit…
+              KONE réfléchit…
             </div>
           )}
 
@@ -521,7 +521,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
                 className="flex items-end gap-2"
                 onSubmit={(e) => { e.preventDefault(); send(input); }}
               >
-                <label htmlFor="tutor-input" className="sr-only">Ton message à KONAN</label>
+                <label htmlFor="tutor-input" className="sr-only">Ton message à KONE</label>
                 <textarea
                   id="tutor-input"
                   ref={inputRef}
@@ -541,7 +541,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
               </form>
               {remaining !== null && (
                 <p className="text-[11px] text-center text-slate-500 dark:text-slate-400">
-                  {outOfMessages ? 'Messages du jour utilisés · ça revient demain' : `${remaining}/${limit} messages aujourd’hui`} · KONAN explique, il ne fait pas tes devoirs
+                  {outOfMessages ? 'Messages du jour utilisés · ça revient demain' : `${remaining}/${limit} messages aujourd’hui`} · KONE explique, il ne fait pas tes devoirs
                 </p>
               )}
             </>

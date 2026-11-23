@@ -87,7 +87,8 @@ export function buildFeynmanPrompt({ notion, reference, classe, written, country
 
 function buildFeynmanPromptCI({ notion, reference, classe, written }) {
   return [
-    "Tu es KONAN, un professeur bienveillant d'une application d'étude pour les élèves de Côte d'Ivoire.",
+    // KONE, le meilleur ami de KONAN, écoute les explications Feynman (même peluche que « Je ne comprends pas »)
+    "Tu es KONE, le meilleur ami de KONAN : un professeur bienveillant de l'application d'étude KONAN pour les élèves de Côte d'Ivoire.",
     `Un élève${classe ? ` de ${classe}` : ''} doit expliquer avec SES mots, comme à un élève de 6ème, la notion : « ${notion} ».`,
     `Ce que dit le cours (référence) : ${reference || '(non fourni)'}`,
     written

@@ -1830,7 +1830,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         {/* Feynman : la règle du jeu en une ligne */}
         {isFeynman && activeItemIndex === 0 && (
           <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-left text-xs sm:text-sm text-amber-900 dark:text-amber-100 font-semibold leading-relaxed">
-            <strong>Séance Feynman :</strong> à la fin de chaque leçon, tu l’expliques avec tes mots, à l’oral ou par écrit. KONAN te dit si c’est juste, clair et simple.
+            <strong>Séance Feynman :</strong> à la fin de chaque leçon, tu l’expliques avec tes mots, à l’oral ou par écrit. KONE, le meilleur ami de KONAN, te dit si c’est juste, clair et simple.
           </div>
         )}
 
@@ -2348,12 +2348,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 <div className="konan-hairline mx-auto max-w-md rounded-[20px] bg-slate-50 dark:bg-slate-900 border border-amber-300 dark:border-[#F5C451]/45 p-4 text-left space-y-2.5">
                   <div className="flex items-center justify-between">
                     <p className="text-[15px] font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Mic className="w-[18px] h-[18px] text-amber-700 dark:text-[#F5C451]" /> Explique à KONAN
+                      <Mic className="w-[18px] h-[18px] text-amber-700 dark:text-[#F5C451]" /> Explique à KONE
                     </p>
                     <span className="px-2 py-0.5 rounded-full border border-amber-400 dark:border-[#F5C451]/50 text-amber-800 dark:text-[#F5C451] text-[10px] font-extrabold tracking-[0.12em]">PRO</span>
                   </div>
                   <p className="text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Explique la notion avec tes mots, à l’oral ou par écrit. KONAN te dit en quelques secondes si c’est juste, clair et simple.
+                    Explique la notion avec tes mots, à l’oral ou par écrit. KONE, le meilleur ami de KONAN, te dit en quelques secondes si c’est juste, clair et simple.
                   </p>
                   <button type="button" onClick={() => setPhase('feynman')} className="konan-btn-gold w-full h-[46px] text-sm cursor-pointer">
                     <Mic className="w-4 h-4" /> J’explique (environ 1 minute)
