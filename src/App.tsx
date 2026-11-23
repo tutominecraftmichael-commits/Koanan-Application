@@ -3122,6 +3122,8 @@ export function App() {
                 setActiveExamSession(null);
                 handleCompleteTutorSession(sessionId, undefined, undefined, opts?.noXp);
               }}
+              // « Je ne comprends pas mon erreur » : KONAN explique la question ratée du devoir
+              onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
             />
           )
         )}

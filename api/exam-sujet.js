@@ -171,6 +171,88 @@ function buildSujetPromptCI({ template, classe, gradeId, matiere, chapitres }) {
   ].filter(Boolean).join('\n');
 }
 
+// ---------------------------------------------------------------------------
+// RELECTEUR (2026-11-23) : un deuxième passage de l'IA relit le sujet AVANT l'élève, comme un collègue
+// professeur : corrigé juste, données suffisantes, barème, programme, clarté. Une erreur grave → le sujet
+// est réécrit une fois avec la liste des problèmes. Si la relecture échoue, le sujet d'origine est gardé.
+// ---------------------------------------------------------------------------
+export function buildReviewPrompt({ sujet, classe, chapitres }) {
+  const programme = (chapitres || []).map((c) => `• ${c.titre}`).join('\n');
+  return [
+    `Tu es un professeur expérimenté, RELECTEUR d'un devoir surveillé de ${sujet.matiere || 'la matière'} pour la classe de ${classe}, avant qu'il soit donné aux élèves.`,
+    `Chapitres au programme de ce devoir :\n${programme}`,
+    'Vérifie chaque exercice et chaque question, un par un :',
+    '1. CORRIGÉ : refais toi-même chaque calcul et chaque raisonnement. Le résultat du corrigé est-il exact (valeurs, unités, signes, lettre du QCM, Vrai/Faux) ?',
+    '2. DONNÉES : chaque question peut-elle être résolue avec les données, documents et tableaux fournis (rien ne manque, rien de contradictoire) ?',
+    '3. QCM / Vrai-Faux : une et une seule bonne réponse, sans ambiguïté.',
+    '4. BARÈME : les points des questions d’un exercice font bien les points de l’exercice (sauf exercice au choix).',
+    '5. PROGRAMME : aucune question hors des chapitres ci-dessus ni au-dessus du niveau de la classe.',
+    '6. CLARTÉ : consignes compréhensibles par un élève, sans faute de français grossière.',
+    'gravite = "grave" seulement si l’élève serait pénalisé (corrigé faux, donnée manquante ou contradictoire, question impossible, deux bonnes réponses, barème faux, hors programme) ; "mineur" sinon.',
+    'Ne signale PAS de problème imaginaire : si tout est juste, problemes = [].',
+    'Réponds UNIQUEMENT en JSON : {"problemes":[{"exercice":1,"question":"2","gravite":"grave","probleme":"ce qui ne va pas, en une phrase","correction":"ce qu’il faut changer, précisément"}]}',
+    '',
+    'SUJET ET CORRIGÉ À RELIRE (JSON) :',
+    JSON.stringify({ exercices: sujet.exercices, corrige: sujet.corrige }),
+  ].join('\n');
+}
+
+export function cleanReview(raw) {
+  if (!raw || typeof raw !== 'object' || !Array.isArray(raw.problemes)) return null;
+  const problemes = raw.problemes.slice(0, 12).map((p) => ({
+    exercice: Number(p?.exercice) || 0,
+    question: str(String(p?.question ?? ''), 12),
+    gravite: p?.gravite === 'grave' ? 'grave' : 'mineur',
+    probleme: str(p?.probleme, 300),
+    correction: str(p?.correction, 400),
+  })).filter((p) => p.probleme);
+  return { problemes };
+}
+
+/** Consigne de réécriture : la consigne d'origine + le sujet déjà rédigé + les problèmes du relecteur. */
+export function buildFixPrompt(basePrompt, sujet, problemes) {
+  return [
+    basePrompt,
+    '',
+    'UN SUJET A DÉJÀ ÉTÉ RÉDIGÉ (JSON ci-dessous), MAIS LE RELECTEUR Y A TROUVÉ CES ERREURS :',
+    ...problemes.map((p) => `- Exercice ${p.exercice}${p.question ? `, question ${p.question}` : ''} : ${p.probleme} → ${p.correction}`),
+    'Réécris le sujet COMPLET et son corrigé, au même format JSON, en corrigeant ces erreurs et en gardant tout ce qui est juste.',
+    JSON.stringify({ titre: sujet.titre, exercices: sujet.exercices, corrige: sujet.corrige }),
+  ].join('\n');
+}
+
+/**
+ * Relit le sujet et le corrige si besoin, dans le temps qui reste (`timeLeft()` en ms).
+ * Renvoie { sujet, relecture: { relu, corrigees, restantes } }.
+ */
+export async function reviewSujet({ apiKey, prompt, sujet, template, classe, chapitres, timeLeft, ask = askGeminiJson }) {
+  const relecture = { relu: false, corrigees: 0, restantes: 0 };
+  if (timeLeft() < 60_000) return { sujet, relecture };
+  let review;
+  try {
+    review = await ask(apiKey, [{ text: buildReviewPrompt({ sujet, classe, chapitres }) }], cleanReview, 0.2,
+      { thinkingConfig: { thinkingLevel: 'medium' } }, { budgetMs: Math.min(80_000, timeLeft() - 5_000), attemptMs: 30_000 });
+  } catch (e) {
+    console.warn('[exam-sujet] relecture impossible :', String(e?.message || e).slice(0, 120));
+    return { sujet, relecture };
+  }
+  relecture.relu = true;
+  const graves = review.problemes.filter((p) => p.gravite === 'grave');
+  if (!graves.length) return { sujet, relecture };
+  console.warn(`[exam-sujet] relecteur : ${graves.length} erreur(s) grave(s)`, graves.map((g) => `${g.exercice}.${g.question} ${g.probleme}`).join(' | ').slice(0, 400));
+  if (timeLeft() < 75_000) { relecture.restantes = graves.length; return { sujet, relecture }; }
+  try {
+    const fixed = await ask(apiKey, [{ text: buildFixPrompt(prompt, sujet, graves) }], (raw) => cleanSujet(raw, template), 0.3, {},
+      { budgetMs: timeLeft() - 5_000, attemptMs: 50_000, maxAttemptMs: timeLeft() - 8_000 });
+    relecture.corrigees = graves.length;
+    return { sujet: fixed, relecture };
+  } catch (e) {
+    console.warn('[exam-sujet] réécriture impossible :', String(e?.message || e).slice(0, 120));
+    relecture.restantes = graves.length;
+    return { sujet, relecture };
+  }
+}
+
 /**
  * Texte à lignes numérotées : si l'IA a quand même écrit les numéros (« 1. », « Ligne 1 : »…) en tête
  * de la plupart des lignes, on les retire (KONAN les affiche lui-même). Une ligne qui commence par
@@ -341,12 +423,15 @@ export default async function handler(req, res) {
   if (usage.used >= DAILY_SUJETS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_SUJETS, remaining: 0 });
 
   let sujet;
+  let prompt;
+  const t0 = Date.now();
+  // vercel.json : 300 s. Rédaction (≈ 50 s) puis relecture (≈ 20-30 s) puis, si besoin, réécriture (≈ 50 s).
+  const timeLeft = () => 285_000 - (Date.now() - t0);
   try {
-    const prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres, country: str(body.country, 4) });
-    // Un sujet complet prend 50 s environ (mesuré le 2026-11-22) : 230 s au total (vercel.json : 300 s),
-    // un essai du modèle principal plafonné à 150 s pour laisser 60 s au modèle de secours
+    prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres, country: str(body.country, 4) });
+    // Un essai du modèle principal plafonné à 120 s, pour garder 45 s au modèle de secours
     sujet = await askGeminiJson(ctx.apiKey, [{ text: prompt }], (raw) => cleanSujet(raw, template), 0.6, {}, {
-      budgetMs: 230_000, attemptMs: 60_000, maxAttemptMs: 150_000, reserveMs: 60_000,
+      budgetMs: 175_000, attemptMs: 60_000, maxAttemptMs: 120_000, reserveMs: 45_000,
     });
   } catch (e) {
     console.error('[exam-sujet]', String(e?.message || e).slice(0, 200));
@@ -354,10 +439,15 @@ export default async function handler(req, res) {
     return send(res, 503, { success: false, error: aiErrorCode(e) });
   }
 
+  // Relecture par un « collègue professeur » avant l'élève (corrigé recalculé, données, barème, programme)
+  const reviewed = await reviewSujet({
+    apiKey: ctx.apiKey, prompt, sujet: { ...sujet, matiere }, template, classe, chapitres, timeLeft,
+  });
+
   await addUsage(usage.ref, ctx.uid, 'sujet');
   return send(res, 200, {
     success: true,
-    sujet: { ...sujet, matiere: template.matiere, duree: template.duree, source: template.source },
+    sujet: { ...reviewed.sujet, matiere: template.matiere, duree: template.duree, source: template.source, relecture: reviewed.relecture },
     remaining: Math.max(0, DAILY_SUJETS - usage.used - 1),
   });
 }

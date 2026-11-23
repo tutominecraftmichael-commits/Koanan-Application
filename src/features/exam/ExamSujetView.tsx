@@ -15,6 +15,9 @@ import { GRADE_LEVELS } from '../../lib/curriculum/types';
 import { canonicalGradeLevel, studentClassLabel } from '../../lib/curriculum/curriculumMatcher';
 import { MathRenderer } from '../../components/common/MathRenderer';
 import { KonanMascot } from '../../components/common/KonanMascot';
+import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
+import type { TutorContext } from '../../services/tutorApi';
+import { HelpCircle } from 'lucide-react';
 import { auth } from '../../lib/firebase';
 import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
 import { afterShine } from '../../lib/shineClick';
@@ -31,6 +34,8 @@ export interface ExamSujetViewProps {
   onExit: () => void;
   /** noXp : copie rendue hors temps (plus de 2 h + 15 min) → séance validée sans XP. */
   onComplete: (sessionId: string, opts?: { noXp?: boolean }) => void;
+  /** « Je ne comprends pas » sur une question ratée : KONAN explique cette erreur dans la discussion. */
+  onNotUnderstood?: (context: TutorContext) => void;
 }
 
 interface SujetQuestion { numero: string; texte: string; points: number }
@@ -61,6 +66,8 @@ interface Sujet {
   source?: string;
   exercices: SujetExercice[];
   corrige: { exercice: number; question: string; reponse: string; etapes?: string[]; resultat?: string; points: number }[];
+  /** Relu par un deuxième passage de l'IA avant l'élève (sujets depuis le 2026-11-23). */
+  relecture?: { relu: boolean; corrigees: number; restantes: number };
 }
 type QuestionStatut = 'juste' | 'partiel' | 'faux' | 'absent';
 interface CorrectionQuestion {
@@ -387,7 +394,7 @@ export const ExamSujetView: React.FC<ExamSujetViewProps> = (props) => (
   </PlainTextContext.Provider>
 );
 
-const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, session, subjectName, stemSubjectId, gradeLevel, onExit, onComplete }) => {
+const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, session, subjectName, stemSubjectId, gradeLevel, onExit, onComplete, onNotUnderstood }) => {
   const [saved, setSaved] = useState<Saved | null>(() => readSaved(session.id));
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<'sujet' | 'correction' | null>(null);
@@ -531,6 +538,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
         const next = { ...saved, correction, timing };
         writeSaved(session.id, next);
         setSaved(next);
+        saveDevoirMistakes(_userId, saved.sujet, correction); // KONAN s'en souviendra dans « Je ne comprends pas »
         setPhotos([]); // les photos sont oubliées dès la correction
         try { soundFX.playVictoryJingle(); } catch { /* son */ }
       } else {
@@ -556,11 +564,11 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
       <div className="max-w-md mx-auto py-14 px-4 text-center space-y-4">
         {busy ? (
           <>
-            <div className="w-10 h-10 mx-auto rounded-full border-4 border-sky-200 border-t-sky-500 animate-spin" />
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Je rédige ton sujet de {subjectName} au format officiel…</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {retrying ? 'Le premier essai n’a pas abouti : je recommence, ne quitte pas cette page.' : 'Cela peut prendre jusqu’à une minute.'}
-            </p>
+            <p className="text-base font-black text-slate-900 dark:text-white">Ton sujet de {subjectName}</p>
+            <WaitingKonan
+              steps={SUJET_STEPS}
+              note={retrying ? 'Le premier essai n’a pas abouti : je recommence, ne quitte pas cette page.' : 'Environ une minute : je rédige, puis je relis tout avant de te le donner.'}
+            />
           </>
         ) : (
           <>
@@ -585,7 +593,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
     return (
       <div className="max-w-2xl mx-auto py-6 px-4 space-y-5 animate-in zoom-in-95 duration-300">
         <div className="text-center space-y-2">
-          <div className="flex justify-center"><KonanMascot pose={correction.note >= 10 ? 'jump' : 'encourage'} size={120} /></div>
+          <div className="flex justify-center"><ResultPlush note={correction.note} /></div>
           <h1 className="text-xl font-black text-slate-900 dark:text-white">Ta copie est corrigée</h1>
           <div className="inline-flex items-baseline gap-1 px-6 py-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-b-[6px] border-sky-300 dark:border-sky-600">
             <span className="text-5xl font-black text-sky-600 dark:text-sky-400 tabular-nums">{String(correction.note).replace('.', ',')}</span>
@@ -607,7 +615,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           </div>
         ))}
 
-        <CorrectionReport correction={correction} />
+        <CorrectionReport correction={correction} sujet={sujet} onAsk={onNotUnderstood} />
 
         <button type="button" onClick={() => setShowCorrige((v) => !v)} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-200 cursor-pointer">
           {showCorrige ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -655,6 +663,11 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
             <div className="min-w-0">
               <p className="text-lg font-black tracking-wide text-sky-600 dark:text-sky-400 leading-none">KONAN</p>
               <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-1">Devoir d’entraînement</p>
+              {sujet.relecture?.relu && (
+                <p className="mt-1 inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5" /> Relu et vérifié par KONAN
+                </p>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-[1fr_1.7fr_1fr] gap-2 text-center">
@@ -804,6 +817,15 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           >
             {busy === 'correction' ? (retrying ? 'Je recommence la correction…' : 'Je corrige ta copie…') : 'Envoyer ma copie à KONAN'}
           </button>
+          {/* KONAN corrige : la peluche réfléchit et dit où il en est (≈ 40 s) */}
+          {busy === 'correction' && (
+            <div className="pt-2">
+              <WaitingKonan
+                steps={CORRECTION_STEPS}
+                note={retrying ? 'Le premier essai n’a pas abouti : je recommence, ne quitte pas cette page.' : 'Environ 40 secondes. Ne quitte pas cette page.'}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -844,12 +866,90 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   <p className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">{children}</p>
 );
 
+// ---------------------------------------------------------------------------
+// KONAN pendant l'attente (2026-11-23) : la peluche réfléchit, main au menton, et dit ce qu'elle fait,
+// étape par étape (rédaction ≈ 1 min, relecture, correction ≈ 40 s) : l'attente paraît vivante, pas figée.
+// ---------------------------------------------------------------------------
+export const SUJET_STEPS: [number, string][] = [
+  [0, 'Je choisis les exercices dans tes chapitres…'],
+  [12, 'Je rédige les questions au format officiel…'],
+  [28, 'J’écris le corrigé détaillé et le barème…'],
+  [42, 'Je relis tout comme un professeur : je refais chaque calcul…'],
+  [62, 'Je corrige ce que la relecture a trouvé…'],
+  [100, 'Dernières vérifications, c’est presque prêt…'],
+];
+const CORRECTION_STEPS: [number, string][] = [
+  [0, 'Je lis ta copie…'],
+  [8, 'Je corrige l’exercice 1, question par question…'],
+  [18, 'Je compare chaque réponse avec le corrigé…'],
+  [30, 'Je compte tes points avec le barème officiel…'],
+  [40, 'Je prépare tes conseils pour le vrai devoir…'],
+];
+
+export const WaitingKonan: React.FC<{ steps: [number, string][]; note?: string }> = ({ steps, note }) => {
+  const [elapsed, setElapsed] = useState(0);
+  useEffect(() => {
+    const t0 = Date.now();
+    const t = setInterval(() => setElapsed(Math.floor((Date.now() - t0) / 1000)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const current = [...steps].reverse().find(([s]) => elapsed >= s)?.[1] || steps[0][1];
+  return (
+    <div className="flex flex-col items-center gap-3 text-center" aria-live="polite">
+      <KonanPlush variant="body" size={150} mood="think" />
+      <p key={current} className="text-sm font-bold text-slate-800 dark:text-slate-100 animate-in fade-in duration-300">{current}</p>
+      {note && <p className="text-xs text-slate-500 dark:text-slate-400">{note}</p>}
+    </div>
+  );
+};
+
+/** La peluche réagit à la note : applaudit (≥ 14), pouce levé (≥ 10), encourage (sinon), puis revient au repos. */
+const ResultPlush: React.FC<{ note: number }> = ({ note }) => {
+  const reaction: PlushMood = note >= 14 ? 'celebrate' : note >= 10 ? 'happy' : 'encourage';
+  const [mood, setMood] = useState<PlushMood>('idle');
+  useEffect(() => {
+    const a = setTimeout(() => setMood(reaction), 500);
+    const b = setTimeout(() => setMood('idle'), reaction === 'celebrate' ? 4200 : 3600);
+    return () => { clearTimeout(a); clearTimeout(b); };
+  }, [reaction]);
+  return <KonanPlush variant="body" size={140} mood={mood} />;
+};
+
+/**
+ * Erreurs du devoir gardées sur le téléphone : KONAN s'en souvient dans « Je ne comprends pas »
+ * (même clé lue par TutorChat). 20 dernières au plus.
+ */
+export const DEVOIR_ERRORS_KEY = (uid: string) => `konan_devoir_errors_${uid}`;
+function saveDevoirMistakes(uid: string, sujet: Sujet, correction: Correction) {
+  try {
+    const found = correction.exercices.flatMap((e) => (e.questions || [])
+      .filter((q) => q.statut === 'faux' || q.statut === 'partiel')
+      .map((q) => ({
+        matiere: sujet.matiere,
+        question: questionText(sujet, e.numero, q.numero) || `Exercice ${e.numero}, question ${q.numero}`,
+        reponse: q.copie,
+        erreur: q.erreur,
+        at: Date.now(),
+      })));
+    if (!found.length) return;
+    const prev = JSON.parse(localStorage.getItem(DEVOIR_ERRORS_KEY(uid)) || '[]');
+    localStorage.setItem(DEVOIR_ERRORS_KEY(uid), JSON.stringify([...found, ...(Array.isArray(prev) ? prev : [])].slice(0, 20)));
+  } catch { /* stockage indisponible : sans gravité */ }
+}
+
+const qNorm = (v: string) => String(v ?? '').toLowerCase().replace(/[\s.:)]+/g, '');
+function questionText(sujet: Sujet, exercice: number, numero: string): string {
+  const ex = sujet.exercices.find((e) => e.numero === exercice);
+  const q = ex?.questions.find((x) => qNorm(x.numero) === qNorm(numero));
+  return (q?.texte || ex?.consigne || '').slice(0, 400);
+}
+
 /**
  * Bulletin de correction : bilan chiffré, points forts / à revoir, puis chaque exercice question par question
  * (statut, points, ta réponse, l'attendu, ton erreur) et la grille critère par critère, enfin les conseils numérotés.
  * Une ancienne correction (sans détail) s'affiche avec le commentaire de l'exercice seulement.
  */
-const CorrectionReport: React.FC<{ correction: Correction }> = ({ correction }) => {
+const CorrectionReport: React.FC<{ correction: Correction; sujet: Sujet; onAsk?: (context: TutorContext) => void }> = ({ correction, sujet, onAsk }) => {
   const allQuestions = correction.exercices.flatMap((e) => e.questions || []);
   const count = (s: QuestionStatut) => allQuestions.filter((q) => q.statut === s).length;
   const pointsForts = correction.pointsForts || [];
@@ -948,6 +1048,25 @@ const CorrectionReport: React.FC<{ correction: Correction }> = ({ correction }) 
                         {q.attendu && <DetailRow label="Attendu" text={q.attendu} tone="good" />}
                         {q.erreur && <DetailRow label="Ton erreur" text={q.erreur} tone="bad" />}
                       </div>
+                      {/* KONAN explique cette erreur en discussion (mode « Je ne comprends pas ») */}
+                      {onAsk && q.statut !== 'juste' && (
+                        <button
+                          type="button"
+                          onClick={() => onAsk({
+                            matiere: sujet.matiere,
+                            notion: `Devoir — exercice ${e.numero}, question ${numLabel(q.numero).replace(/\.$/, '')}`,
+                            reference: [
+                              `Question : ${questionText(sujet, e.numero, q.numero)}`,
+                              q.copie ? `Réponse de l'élève : ${q.copie}` : 'L’élève n’a pas répondu.',
+                              q.attendu ? `Réponse attendue : ${q.attendu}` : '',
+                              q.erreur ? `Erreur relevée : ${q.erreur}` : '',
+                            ].filter(Boolean).join('\n'),
+                          })}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold border-2 border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-200 bg-white dark:bg-slate-900 hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+                        >
+                          <HelpCircle className="w-3.5 h-3.5" /> Je ne comprends pas mon erreur
+                        </button>
+                      )}
                     </li>
                   );
                 })}

@@ -128,17 +128,29 @@ export interface TutorChatProps {
 
 const VOICE_KEY = 'konan_tutor_voice';
 
-/** Dernières erreurs des cours guidés (mémoire de révision du téléphone) : KONAN s'en sert pour trouver ce qui bloque. */
+/**
+ * Dernières erreurs de l'élève : cours guidés (mémoire de révision du téléphone) et devoirs corrigés
+ * (clé « konan_devoir_errors_<uid> », écrite par ExamSujetView). KONAN s'en sert pour trouver ce qui bloque.
+ */
 function recentMistakes(uid: string): TutorContext['erreurs'] {
+  type M = { matiere: string; question: string; reponse?: string; at: number };
+  const list: M[] = [];
   try {
-    return Object.values(getReviewMap(uid))
-      .filter((e) => e.lastResult === 'ko' && e.prompt)
-      .sort((a, b) => Number(b.wrongAt || b.updatedAt || 0) - Number(a.wrongAt || a.updatedAt || 0))
-      .slice(0, 5)
-      .map((e) => ({ matiere: STEM_SUBJECTS[e.subject]?.name || '', question: String(e.prompt).slice(0, 220), reponse: e.wrongAnswer ? String(e.wrongAnswer).slice(0, 120) : undefined }));
-  } catch {
-    return [];
-  }
+    for (const e of Object.values(getReviewMap(uid))) {
+      if (e.lastResult !== 'ko' || !e.prompt) continue;
+      list.push({ matiere: STEM_SUBJECTS[e.subject]?.name || '', question: String(e.prompt).slice(0, 220), reponse: e.wrongAnswer ? String(e.wrongAnswer).slice(0, 120) : undefined, at: Number(e.wrongAt || e.updatedAt || 0) });
+    }
+  } catch { /* mémoire des cours indisponible */ }
+  try {
+    const devoirs = JSON.parse(localStorage.getItem(`konan_devoir_errors_${uid}`) || '[]');
+    if (Array.isArray(devoirs)) {
+      for (const d of devoirs.slice(0, 10)) {
+        if (!d?.question) continue;
+        list.push({ matiere: `${d.matiere || ''} (devoir)`.trim(), question: String(d.question).slice(0, 220), reponse: d.reponse ? String(d.reponse).slice(0, 120) : undefined, at: Number(d.at || 0) });
+      }
+    }
+  } catch { /* erreurs des devoirs indisponibles */ }
+  return list.sort((a, b) => b.at - a.at).slice(0, 5).map(({ matiere, question, reponse }) => ({ matiere, question, reponse }));
 }
 
 export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose }) => {
