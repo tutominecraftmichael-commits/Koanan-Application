@@ -120,6 +120,8 @@ export interface TutorChatProps {
   limit: number;
   /** Lectures à voix haute restantes aujourd'hui (null : inconnu) */
   voiceRemaining?: number | null;
+  /** KONAN Plus : objectif de l'élève (KONE adapte son ton côté serveur) */
+  goalLabel?: string;
   onRemainingChange: (n: number) => void;
   onVoiceRemainingChange?: (n: number) => void;
   onSubscribe?: () => void;
@@ -153,7 +155,7 @@ function recentMistakes(uid: string): TutorContext['erreurs'] {
   return list.sort((a, b) => b.at - a.at).slice(0, 5).map(({ matiere, question, reponse }) => ({ matiere, question, reponse }));
 }
 
-export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose }) => {
+export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, goalLabel, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose }) => {
   const [state, setState] = useState<Stored>(() => {
     const stored = readStored(uid);
     // Venu d'une autre leçon : nouvelle discussion sur cette notion
@@ -425,6 +427,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
             <div className="flex-1 min-w-0">
               <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
               <p className="text-xs text-slate-600 dark:text-slate-400">KONE t’explique jusqu’à ce que tu comprennes</p>
+              {goalLabel && (
+                <p className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-black text-amber-800 bg-amber-100 dark:text-amber-200 dark:bg-amber-400/15" title="KONE adapte son ton et son exigence à ton objectif">
+                  🎯 Objectif : {goalLabel}
+                </p>
+              )}
             </div>
             {paid && (
               <button

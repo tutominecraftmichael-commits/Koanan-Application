@@ -8,7 +8,8 @@
  * Les photos ne sont gardées nulle part : envoyées une fois pour la correction, puis oubliées.
  */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp, Check, X, Minus, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp, Check, X, Minus, AlertTriangle, Target } from 'lucide-react';
+import { studyGoalInfo } from '../../lib/studyGoals';
 import type { StudySession } from '../../types';
 import type { CurriculumGradeLevel, StemSubjectId } from '../../lib/curriculum/types';
 import { GRADE_LEVELS } from '../../lib/curriculum/types';
@@ -94,6 +95,9 @@ interface Correction {
   conseils: string[];
   pointsForts?: string[];
   aRevoir?: { notion: string; pourquoi: string }[];
+  /** KONAN Plus : ce qu'il faut corriger en priorité pour atteindre l'objectif, et l'objectif lui-même */
+  versObjectif?: string;
+  objectif?: string;
 }
 /** Temps mis, d'après le chrono du serveur (ou du téléphone s'il était hors ligne au départ). */
 interface ExamTiming { startedAt: number; endsAt: number; submittedAt: number; elapsedMinutes: number; lateMinutes: number }
@@ -1006,6 +1010,29 @@ const CorrectionReport: React.FC<{ correction: Correction; sujet: Sujet; onAsk?:
         <KonanMascot pose="encourage" size={44} className="shrink-0" />
         <p className="min-w-0 text-sm leading-relaxed text-sky-900 dark:text-sky-100">{correction.appreciation}</p>
       </div>
+
+      {/* 3 bis. KONAN Plus : vers ton objectif (la note reste celle du barème officiel) */}
+      {correction.versObjectif && (() => {
+        const goal = studyGoalInfo(correction.objectif);
+        if (!goal) return null;
+        const gap = correction.note != null ? Math.max(0, goal.targetValue - correction.note) : null;
+        const reached = gap === 0;
+        return (
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-slate-900 dark:bg-white/[0.03] dark:border-amber-300/50 space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                <Target className="w-4 h-4" /> Vers ton objectif : {goal.short}
+              </span>
+              {gap !== null && (
+                <span className={`shrink-0 px-2.5 py-0.5 rounded-full text-[12px] font-black tabular-nums ${reached ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200' : 'bg-amber-100 text-amber-900 dark:bg-amber-400/15 dark:text-amber-200'}`}>
+                  {reached ? 'Objectif atteint' : `Encore ${fr(gap)} pt${gap > 1 ? 's' : ''}`}
+                </span>
+              )}
+            </div>
+            <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">{correction.versObjectif}</p>
+          </div>
+        );
+      })()}
 
       {/* 4. Détail exercice par exercice */}
       <div className="space-y-3">

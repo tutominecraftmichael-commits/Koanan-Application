@@ -32,6 +32,8 @@ export interface KonanStudentContext {
   };
   urgence: { type: 'devoir' | 'examen' | 'rattrapage'; dansJours: number } | null;
   moment: 'matin' | 'après-midi' | 'soir' | 'nuit';
+  /** KONAN Plus : objectif de l'élève (target_12 | target_16 | major_promotion), ajouté par le serveur. */
+  objectif?: string;
 }
 
 export const SITUATIONS: { AVANT: '5_MIN_AVANT'; RETARD: 'RETARD_15_MIN'; MANQUEE: 'SEANCE_MANQUEE' };

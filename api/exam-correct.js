@@ -12,6 +12,7 @@
  */
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, examTiming } from './_examCommon.js';
 import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
+import { activeStudyGoal, goalLines, GOAL_TEXT } from './_studyGoal.js';
 
 export const DAILY_CORRECTIONS = 1;
 const IMAGE_TYPES = /^image\/(jpeg|jpg|png|webp)$/;
@@ -31,7 +32,7 @@ const cleanTableIn = (t) => (t && Array.isArray(t.colonnes) && Array.isArray(t.l
   ? { colonnes: t.colonnes.slice(0, 12).map((c) => str(String(c ?? ''), 200)), lignes: t.lignes.slice(0, 12).map((r) => (Array.isArray(r) ? r.slice(0, 12).map((c) => str(String(c ?? ''), 400)) : [])) }
   : null);
 
-export function buildCorrectionPrompt({ classe, matiere, sujet }) {
+export function buildCorrectionPrompt({ classe, matiere, sujet, objectif = '' }) {
   const lines = [];
   for (const e of sujet.exercices) {
     lines.push(`EXERCICE ${e.numero} (${e.points} points) — ${e.nature || ''}${e.auChoix ? ' — AU CHOIX : l’élève traite UN seul des sujets proposés' : ''}`);
@@ -81,6 +82,13 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     'Réponds UNIQUEMENT en JSON :',
     '{"lisible":true,"exercices":[{"numero":1,"commentaire":"J’ai vu que…","questions":[{"numero":"1","obtenu":0.5,"statut":"juste","copie":"…","attendu":"…","erreur":"","elements":[{"element":"…","present":true}]}],"grille":[{"critere":"CM1 : Pertinence","obtenu":0.5}]}],"pointsForts":["…"],"aRevoir":[{"notion":"…","pourquoi":"…"}],"appreciation":"Je …","conseils":["…"]}',
     '« grille » vaut [] pour un exercice sans grille.',
+    // KONAN Plus : conseils selon l'objectif de l'élève (la note, elle, ne change jamais)
+    ...(GOAL_TEXT[objectif]
+      ? [
+        ...goalLines(objectif, 'correction'),
+        `- Ajoute au JSON la clé « versObjectif » : 1 ou 2 phrases à la première personne, tutoiement, qui disent ce que l’élève doit corriger EN PRIORITÉ pour atteindre son objectif (${GOAL_TEXT[objectif]}), en citant les points perdus qu’il pouvait gagner. Pas de note chiffrée dans cette phrase.`,
+      ]
+      : []),
   ].join('\n');
 }
 
@@ -225,7 +233,9 @@ export function cleanCorrection(raw, sujet) {
   const aRevoir = Array.isArray(raw.aRevoir)
     ? raw.aRevoir.map((r) => ({ notion: str(r?.notion, 100), pourquoi: str(r?.pourquoi, 240) })).filter((r) => r.notion).slice(0, 3)
     : [];
-  return { lisible: true, note, exercices, appreciation, conseils, pointsForts, aRevoir };
+  // KONAN Plus : ce qu'il faut corriger en priorité pour atteindre l'objectif ('' sans objectif)
+  const versObjectif = str(raw.versObjectif, 360);
+  return { lisible: true, note, exercices, appreciation, conseils, pointsForts, aRevoir, ...(versObjectif ? { versObjectif } : {}) };
 }
 
 export default async function handler(req, res) {
@@ -287,10 +297,13 @@ export default async function handler(req, res) {
     // chrono illisible : la copie est corrigée sans indication de temps
   }
 
+  // Objectif KONAN Plus (lu par le serveur) : '' = conseils habituels
+  const objectif = await getDb().then((db) => activeStudyGoal(db, ctx.uid, { admin: ctx.admin })).catch(() => '');
+
   let correction;
   try {
     const country = str(body.country, 4);
-    const basePrompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
+    const basePrompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet, objectif });
     // Élève hors Côte d'Ivoire : aucune mention ivoirienne dans la correction
     const prompt = isOutsideCI(country) ? `${neutralizeForCountry(basePrompt, country)}\n${NEUTRAL_COUNTRY_RULE}` : basePrompt;
     // Correction avec réflexion poussée (40 s pour une photo, mesuré le 2026-11-22 ; plus avec 4 photos) :
@@ -305,6 +318,10 @@ export default async function handler(req, res) {
     // Rien n'est décompté : la correction ratée ne compte pas dans les 4 du jour
     return send(res, 503, { success: false, error: aiErrorCode(e) });
   }
+
+  // KONAN Plus : l'objectif accompagne « versObjectif » (l'appli affiche « il te manque X points »)
+  if (correction.versObjectif && objectif) correction.objectif = objectif;
+  else delete correction.versObjectif;
 
   // Une copie illisible ne compte pas dans la limite du jour
   if (correction.lisible) await addUsage(usage.ref, ctx.uid, 'correction');

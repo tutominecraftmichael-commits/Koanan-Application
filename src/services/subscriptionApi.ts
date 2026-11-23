@@ -121,6 +121,23 @@ export async function checkSaspayPayment(): Promise<{ success: true; info: Subsc
   return { success: true, info: { config: r.json.config, status: r.json.status } };
 }
 
+// ---------- KONAN Plus : objectif de l'élève (12, 16 / mention, major) ----------
+// Gardé par le SERVEUR (Firestore study_goals) : KONE, les corrections, les sujets et les notifications
+// adaptent leur ton à cet objectif. Seul un élève Plus (ou l'administrateur) peut le changer.
+export type StudyGoal = 'target_12' | 'target_16' | 'major_promotion';
+
+export async function fetchStudyGoal(): Promise<{ success: true; plus: boolean; goal: StudyGoal | '' } | { success: false; error: string }> {
+  const r = await asStudent({ action: 'goal_get' });
+  if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+  return { success: true, plus: r.json.plus === true, goal: (r.json.goal || '') as StudyGoal | '' };
+}
+
+export async function saveStudyGoal(goal: StudyGoal): Promise<{ success: true; goal: StudyGoal } | { success: false; error: string }> {
+  const r = await asStudent({ action: 'goal_set', goal });
+  if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+  return { success: true, goal: r.json.goal as StudyGoal };
+}
+
 // ---------- Administrateur ----------
 export interface AdminPayment extends Omit<PaymentView, 'rejectMessage' | 'checkedAt'> {
   uid: string; payerPhone: string; studentName: string; studentEmail: string; receiverNumber: string;

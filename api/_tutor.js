@@ -19,6 +19,7 @@
 import { isProductionRuntime } from './_env.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
 import { isOutsideCI, NEUTRAL_COUNTRY_RULE } from './_country.js';
+import { activeStudyGoal, goalLines } from './_studyGoal.js';
 
 export const TUTOR_DAILY_LIMIT = 30;
 export const TUTOR_DEFAULT_BUDGET = 500;
@@ -198,6 +199,9 @@ export function buildTutorSystem(ctx, memory = null, nowMs = Date.now()) {
     }
   }
   if (outside) lines.push('', NEUTRAL_COUNTRY_RULE);
+
+  // KONAN Plus : ton et exigence selon l'objectif de l'élève (lu par le serveur, jamais envoyé par l'appli)
+  lines.push(...goalLines(ctx.objectif, 'tutor'));
 
   if (ctx.matiere || ctx.notion || ctx.reference) {
     lines.push('', "L'élève vient de cette leçon de l'appli :");
@@ -407,12 +411,14 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   if (!contents.length) return { status: 400, data: { success: false, error: 'EMPTY_MESSAGE' } };
   const ctx = cleanTutorContext(body.context);
 
-  // Mémoire de KONAN (notions déjà travaillées) : sans elle, la discussion marche quand même
-  let memory = null;
-  try {
-    const snap = await memoryRef.get();
-    memory = snap.exists ? snap.data() : null;
-  } catch { /* mémoire indisponible */ }
+  // Mémoire de KONAN (notions déjà travaillées) : sans elle, la discussion marche quand même.
+  // Objectif KONAN Plus (12, 16, major) lu en même temps : sans lui, KONE garde son ton habituel.
+  const [memorySnap, objectif] = await Promise.all([
+    memoryRef.get().catch(() => null),
+    activeStudyGoal(db, uid, { admin, env, nowMs }),
+  ]);
+  const memory = memorySnap?.exists ? memorySnap.data() : null;
+  ctx.objectif = objectif;
 
   let reply;
   try {
