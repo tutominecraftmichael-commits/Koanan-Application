@@ -5,21 +5,33 @@
  * 3 explications orales par jour et par élève (10 écrites) : la limite est tenue par le serveur.
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { Mic, Square, Send, PenLine, RotateCcw, ArrowRight, Check, X } from 'lucide-react';
+import { Mic, Square, Send, PenLine, RotateCcw, ArrowRight, Check, X, Volume2, Loader2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { auth } from '../../lib/firebase';
 import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
-import { KonanMascot } from '../../components/common/KonanMascot';
+import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
+import { MathRenderer } from '../../components/common/MathRenderer';
+import { speakTutor, type TutorContext } from '../../services/tutorApi';
 
 const MAX_SECONDS = 60;
 const MIN_SECONDS = 3;
 
-interface Verdict { transcription: string; juste: boolean; clair: boolean; simple: boolean; recite: boolean; note: number; conseil: string }
+interface Verdict {
+  transcription: string; juste: boolean; clair: boolean; simple: boolean; recite: boolean; note: number; conseil: string;
+  /** Idées clés du cours oubliées ou fausses (depuis le 2026-11-23). */
+  manquants?: string[];
+  /** Explication modèle, très simple, à comparer avec la sienne. */
+  modele?: string;
+}
 
 interface Props {
   notion: string;
   reference: string;
   classe: string;
+  /** Matière (pour KONAN en discussion). */
+  matiere?: string;
   onDone: () => void;
+  /** KONAN Pro : « Je ne comprends pas » (discussion) et voix de KONAN. Absent = fonctions cachées. */
+  onNotUnderstood?: (context: TutorContext) => void;
 }
 
 type Mode = 'start' | 'recording' | 'sending' | 'result' | 'write';
@@ -49,8 +61,16 @@ async function blobToBase64(blob: Blob): Promise<string> {
   });
 }
 
-export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, onDone }) => {
+export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, matiere, onDone, onNotUnderstood }) => {
   const [mode, setMode] = useState<Mode>('start');
+  // Réaction de la peluche au résultat (pouce levé ou encouragement), puis repos
+  const [reaction, setReaction] = useState<PlushMood | null>(null);
+  const [showModele, setShowModele] = useState(false);
+  // Voix de KONAN (Pro) : lit son conseil et l'explication modèle
+  const [voice, setVoice] = useState<'idle' | 'loading' | 'playing'>('idle');
+  const [voiceNote, setVoiceNote] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => () => { audioRef.current?.pause(); }, []);
   const [secondsLeft, setSecondsLeft] = useState(MAX_SECONDS);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [remaining, setRemaining] = useState<number | null>(null);
@@ -108,6 +128,9 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
       setVerdict(json.verdict);
       setRemaining(typeof json.remaining === 'number' ? json.remaining : null);
       setMode('result');
+      setShowModele(false);
+      setReaction(json.verdict.note >= 7 ? 'happy' : 'encourage');
+      setTimeout(() => setReaction(null), 3500);
     } catch {
       setError('Pas de connexion Internet. Réessaie quand tu es connecté.');
       setMode('start');
@@ -150,7 +173,29 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
     }
   };
 
-  const mascotPose = !verdict ? 'idle' : verdict.note >= 7 ? 'jump' : verdict.note >= 4 ? 'encourage' : 'sad';
+  // La peluche : écoute (main à l'oreille) pendant l'enregistrement, réfléchit pendant l'analyse, réagit au résultat
+  const plushMood: PlushMood = mode === 'recording' ? 'listen' : mode === 'sending' ? 'think' : voice === 'playing' ? 'talk' : reaction || 'idle';
+
+  const speak = async () => {
+    if (!verdict) return;
+    if (voice === 'playing') { audioRef.current?.pause(); setVoice('idle'); return; }
+    if (voice === 'loading') return;
+    // Lecteur préparé pendant le toucher (sinon certains téléphones refusent de jouer le son plus tard)
+    const a = audioRef.current || new Audio();
+    audioRef.current = a;
+    setVoice('loading');
+    setVoiceNote(null);
+    const r = await speakTutor([verdict.conseil, verdict.modele ? `Par exemple : ${verdict.modele}` : ''].filter(Boolean).join(' '));
+    if (!r.ok) {
+      setVoice('idle');
+      setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONAN revient demain.' : 'KONAN n’a pas pu parler cette fois. Tu peux lire son conseil.');
+      return;
+    }
+    a.src = r.src;
+    a.onended = () => setVoice('idle');
+    setVoice('playing');
+    a.play().catch(() => { setVoice('idle'); setVoiceNote('Touche encore « Écouter KONAN ».'); });
+  };
 
   return (
     <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-amber-300 dark:border-amber-600/60 space-y-4 shadow-sm animate-in fade-in duration-200">
@@ -176,6 +221,10 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
         </div>
       )}
 
+      {(mode === 'recording' || mode === 'start') && (
+        <div className="flex justify-center"><KonanPlush variant="body" size={mode === 'recording' ? 120 : 96} mood={plushMood} preload="all" /></div>
+      )}
+
       {mode === 'recording' && (
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-black">
@@ -188,9 +237,9 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
       )}
 
       {mode === 'sending' && (
-        <div className="flex items-center gap-3 justify-center py-4">
-          <KonanMascot pose="notes" size={70} />
-          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">KONAN écoute ton explication…</p>
+        <div className="flex flex-col items-center gap-2 justify-center py-2">
+          <KonanPlush variant="body" size={120} mood="think" />
+          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">KONAN réfléchit à ton explication…</p>
         </div>
       )}
 
@@ -228,9 +277,66 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
             <span className="px-3 py-1 rounded-full text-xs font-black bg-sky-100 text-sky-900 dark:bg-sky-400/20 dark:text-sky-300">{verdict.note}/10</span>
           </div>
           <div className="flex items-end gap-2">
-            <KonanMascot pose={mascotPose} size={80} />
-            <p className="flex-1 p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-sm font-bold text-amber-900 dark:text-amber-100">{verdict.conseil}</p>
+            <KonanPlush variant="body" size={90} mood={plushMood} />
+            <div className="flex-1 min-w-0 p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 space-y-2">
+              <p className="text-sm font-bold text-amber-900 dark:text-amber-100">{verdict.conseil}</p>
+              {onNotUnderstood && (
+                <button
+                  type="button"
+                  onClick={speak}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold text-amber-900 dark:text-amber-100 bg-white/80 dark:bg-slate-900/60 border border-amber-300 dark:border-amber-500/40 cursor-pointer"
+                >
+                  {voice === 'loading' ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> KONAN prépare sa voix…</>
+                    : voice === 'playing' ? <><Square className="w-3 h-3 fill-current" /> Arrêter</>
+                    : <><Volume2 className="w-3.5 h-3.5" /> Écouter KONAN</>}
+                </button>
+              )}
+              {voiceNote && <p className="text-[11px] text-amber-800 dark:text-amber-200">{voiceNote}</p>}
+            </div>
           </div>
+
+          {/* Ce qui manquait dans son explication (idées clés du cours) */}
+          {(verdict.manquants?.length || 0) > 0 && (
+            <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 space-y-1.5">
+              <p className="text-[11px] font-black uppercase tracking-wider text-rose-800 dark:text-rose-200">Il manquait</p>
+              <ul className="space-y-1">
+                {verdict.manquants!.map((m, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-rose-900 dark:text-rose-100"><X className="w-4 h-4 shrink-0 mt-0.5" />{m}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Explication modèle, à comparer avec la sienne (cachée d'abord : l'élève réessaie seul s'il veut) */}
+          {verdict.modele && (
+            <div className="rounded-2xl border border-sky-200 dark:border-sky-500/30 overflow-hidden">
+              <button type="button" onClick={() => setShowModele((v) => !v)} className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-sky-50 dark:bg-sky-500/10 text-sm font-extrabold text-sky-900 dark:text-sky-100 cursor-pointer">
+                Voir comment KONAN l’expliquerait
+                {showModele ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+              {showModele && (
+                <div className="px-3 py-2.5 text-sm text-slate-800 dark:text-slate-100 leading-relaxed"><MathRenderer text={verdict.modele} /></div>
+              )}
+            </div>
+          )}
+
+          {onNotUnderstood && (
+            <button
+              type="button"
+              onClick={() => onNotUnderstood({
+                matiere,
+                notion,
+                reference: [
+                  reference ? `Ce que dit le cours : ${reference}` : '',
+                  verdict.transcription ? `Explication donnée par l'élève : ${verdict.transcription}` : '',
+                  verdict.manquants?.length ? `Idées manquantes : ${verdict.manquants.join(' ; ')}` : '',
+                ].filter(Boolean).join('\n').slice(0, 1800),
+              })}
+              className="w-full py-2.5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-200 text-sm font-extrabold flex items-center justify-center gap-2 hover:bg-sky-50 dark:hover:bg-sky-400/10 cursor-pointer"
+            >
+              <HelpCircle className="w-4 h-4" /> Je ne comprends pas cette notion
+            </button>
+          )}
           <div className="grid gap-2">
             {remaining !== null && remaining > 0 && (
               <button type="button" onClick={() => { setVerdict(null); setMode('start'); }} className="w-full py-3 rounded-2xl border-2 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 font-bold flex items-center justify-center gap-2 cursor-pointer">

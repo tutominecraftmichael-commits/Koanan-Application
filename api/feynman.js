@@ -102,7 +102,10 @@ function buildFeynmanPromptCI({ notion, reference, classe, written }) {
     'conseil : 1 ou 2 phrases, tutoiement, encourageant, concret (dis ce qui manque ou ce qu’il faut simplifier). Jamais de moquerie.',
     'L’élève peut être une fille ou un garçon : aucune formule genrée (pas de « mon grand », « ma grande », « mon petit »), aucun accord au masculin ou au féminin qui le désigne (écris « Bravo ! » plutôt que « tu es doué »).',
     'Une explication vague ou incomplète (l’idée principale du cours manque) n’est pas « juste » : note de 6 au plus.',
-    'Réponds UNIQUEMENT en JSON : {"transcription":"…","juste":true,"clair":true,"simple":true,"recite":false,"note":8,"conseil":"…"} (note de 0 à 10).',
+    'transcription : écris FIDÈLEMENT ce que l’élève a dit, mot pour mot (sans corriger ses erreurs).',
+    'manquants : les idées clés du cours qui MANQUENT ou sont FAUSSES dans son explication (3 au plus, quelques mots chacune, ex. « le rôle de la membrane ») ; [] si rien ne manque.',
+    'modele : une explication modèle de la notion en 2 ou 3 phrases très simples, avec un exemple de la vie de tous les jours, comme KONAN l’expliquerait à un élève de 6ème. Formules éventuelles en LaTeX entre $…$.',
+    'Réponds UNIQUEMENT en JSON : {"transcription":"…","juste":true,"clair":true,"simple":true,"recite":false,"note":8,"conseil":"…","manquants":["…"],"modele":"…"} (note de 0 à 10).',
   ].join('\n');
 }
 
@@ -119,6 +122,9 @@ export function cleanVerdict(raw) {
     recite: raw.recite === true,
     note,
     conseil,
+    // Écoute plus fine (2026-11-23) : idées clés oubliées + explication modèle à comparer
+    manquants: Array.isArray(raw.manquants) ? raw.manquants.map((m) => str(String(m ?? ''), 120)).filter(Boolean).slice(0, 3) : [],
+    modele: typeof raw.modele === 'string' ? raw.modele.replace(/[ \t]+/g, ' ').trim().slice(0, 600) : '',
   };
 }
 

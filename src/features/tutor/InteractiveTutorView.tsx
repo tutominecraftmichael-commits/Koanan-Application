@@ -1603,6 +1603,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           notion={currentPoint.title}
           reference={reference}
           classe={gradeLevel.replace(/_/g, ' ')}
+          matiere={subjectTitle}
+          onNotUnderstood={onNotUnderstood}
           onDone={() => {
             const id = currentPoint.id;
             setExplainedPointIds((prev) => new Set(prev).add(id));
