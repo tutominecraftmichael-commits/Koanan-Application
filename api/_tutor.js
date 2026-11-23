@@ -357,28 +357,32 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   if (!apiKey) return { status: 503, data: { success: false, error: 'AI_NOT_CONFIGURED' } };
 
   // Compteurs (seules les réponses réussies comptent), élève + toute l'appli, en une transaction
-  const bump = async (field) => {
+  // `forStudent: false` : compté seulement pour toute l'appli (suite d'une réponse déjà comptée à l'élève)
+  const bump = async (field, { forStudent = true } = {}) => {
     let used = 0;
     try {
       await db.runTransaction(async (tx) => {
         const [a, b] = await Promise.all([tx.get(usageRef), tx.get(globalRef)]);
         const ua = dayCounts(a.exists ? a.data() : null, day);
         const ub = dayCounts(b.exists ? b.data() : null, day);
-        ua[field] += 1;
+        if (forStudent) ua[field] += 1;
         ub[field] += 1;
-        tx.set(usageRef, { date: day, ...ua, userId: uid, updatedAt: new Date(nowMs).toISOString() });
+        if (forStudent) tx.set(usageRef, { date: day, ...ua, userId: uid, updatedAt: new Date(nowMs).toISOString() });
         tx.set(globalRef, { date: day, ...ub });
         used = ua[field];
       });
     } catch {
-      used = mine[field] + 1; // compteur non mis à jour : sans gravité
+      used = mine[field] + (forStudent ? 1 : 0); // compteur non mis à jour : sans gravité
     }
     return used;
   };
 
   // ---------- KONAN lit sa réponse à voix haute ----------
   if (body.action === 'tutor_voice') {
-    if (mine.voice >= TUTOR_VOICE_DAILY_LIMIT) return { status: 429, data: { success: false, error: 'VOICE_DAILY_LIMIT', voiceRemaining: 0 } };
+    // Une réponse est lue en 2 morceaux préparés en même temps (début court = la voix démarre plus vite) :
+    // seul le premier morceau (part 0) compte comme une lecture de l'élève ; tous comptent pour toute l'appli.
+    const part = Math.max(0, Math.min(3, Number(body.part) || 0));
+    if (part === 0 && mine.voice >= TUTOR_VOICE_DAILY_LIMIT) return { status: 429, data: { success: false, error: 'VOICE_DAILY_LIMIT', voiceRemaining: 0 } };
     if (all.voice >= tutorVoiceBudget(env)) return { status: 503, data: { success: false, error: 'TUTOR_BUSY' } };
     const { speakableText, synthesizeSpeech } = await import('./_tutorVoice.js');
     const text = speakableText(body.text);
@@ -391,7 +395,7 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
       console.error('[tutor-voice]', msg.split(apiKey).join('***').slice(0, 200));
       return { status: 502, data: { success: false, error: /429|RESOURCE_EXHAUSTED|quota/i.test(msg) ? 'TUTOR_BUSY' : 'VOICE_UNAVAILABLE' } };
     }
-    const used = await bump('voice');
+    const used = await bump('voice', { forStudent: part === 0 });
     return { status: 200, data: { success: true, audio: audio.base64, mimeType: audio.mimeType, seconds: audio.seconds, voiceRemaining: voiceRemainingOf(used) } };
   }
 

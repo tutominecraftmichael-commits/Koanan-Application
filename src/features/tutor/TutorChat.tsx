@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square } from 'lucide-react';
 import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
 import { MathRenderer } from '../../components/common/MathRenderer';
-import { sendTutorMessage, speakTutor, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
+import { sendTutorMessage, speakTutor, splitForVoice, type TutorContext, type TutorError, type TutorMessage } from '../../services/tutorApi';
 import { getReviewMap } from '../../lib/curriculum/reviewMemory';
 import { STEM_SUBJECTS } from '../../lib/curriculum/types';
 import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
@@ -179,8 +179,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
   const [voiceLoadingId, setVoiceLoadingId] = useState<string | null>(null);
   const [voiceNote, setVoiceNote] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioCache = useRef(new Map<string, string>());
+  // Voix déjà reçue pour un message (ses morceaux, dans l'ordre) : réécouter ne recoûte rien
+  const audioCache = useRef(new Map<string, string[]>());
   const voiceRequest = useRef(0);
+  // Fin du morceau en cours (appelée aussi quand l'élève coupe la voix, pour ne rien laisser en attente)
+  const playDone = useRef<(() => void) | null>(null);
 
   // Bouche synchronisée avec la voix : volume du son mesuré en direct (0 à 1), transmis à la peluche
   const [talkLevel, setTalkLevel] = useState<number | undefined>(undefined);
@@ -245,42 +248,71 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     voiceRequest.current += 1;
     const a = audioRef.current;
     if (a) { a.pause(); a.onended = null; }
+    playDone.current?.();
+    playDone.current = null;
     stopLevelMeter();
     setSpeakingId(null);
     setVoiceLoadingId(null);
   };
   useEffect(() => () => stopVoice(), []); // en fermant la discussion, KONE se tait
 
-  const speak = async (m: TutorMessage) => {
-    unlockAudio();
-    if (speakingId === m.id || voiceLoadingId === m.id) { stopVoice(); return; }
-    stopVoice();
-    const req = voiceRequest.current;
-    let src = audioCache.current.get(m.id);
-    if (!src) {
-      if (voiceRemaining !== null && voiceRemaining <= 0) { setVoiceNote('La voix de KONE revient demain. Tu peux continuer à lire ses messages.'); return; }
-      setVoiceLoadingId(m.id);
-      const r = await speakTutor(m.text);
-      if (req !== voiceRequest.current) return; // l'élève a demandé autre chose entre-temps
-      setVoiceLoadingId(null);
-      if (!r.ok) {
-        if (typeof r.voiceRemaining === 'number') onVoiceRemainingChange?.(r.voiceRemaining);
-        setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? 'La voix de KONE revient demain. Tu peux continuer à lire ses messages.' : 'KONE n’a pas pu parler cette fois. Tu peux lire son message.');
-        return;
-      }
-      onVoiceRemainingChange?.(r.voiceRemaining);
-      src = r.src;
-      audioCache.current.set(m.id, src);
-    }
+  type VoicePart = Awaited<ReturnType<typeof speakTutor>>;
+  const VOICE_LIMIT_NOTE = 'La voix de KONE revient demain. Tu peux continuer à lire ses messages.';
+
+  /** Demande la voix d'un message : tous ses morceaux EN MÊME TEMPS (le début, court, est prêt le premier). */
+  const prepareVoice = (m: TutorMessage): Promise<VoicePart>[] => {
+    const cached = audioCache.current.get(m.id);
+    if (cached) return cached.map((src) => Promise.resolve({ ok: true as const, src, voiceRemaining: voiceRemaining ?? 0 }));
+    return splitForVoice(m.text).map((text, i) => speakTutor(text, i));
+  };
+
+  /** Joue un morceau ; se termine à la fin du son (ou si l'élève coupe la voix). */
+  const playOne = (id: string, src: string) => new Promise<boolean>((resolve) => {
     const a = audioRef.current || new Audio();
     audioRef.current = a;
     a.src = src;
-    a.onended = () => { stopLevelMeter(); setSpeakingId((cur) => (cur === m.id ? null : cur)); };
-    setVoiceNote(null);
-    setSpeakingId(m.id);
+    playDone.current = () => resolve(false);
+    a.onended = () => { playDone.current = null; resolve(true); };
+    setSpeakingId(id);
     a.play()
       .then(() => startLevelMeter(a))
-      .catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONE.'); });
+      .catch(() => { setVoiceNote('Touche 🔊 sur le message pour écouter KONE.'); resolve(false); });
+  });
+
+  /** Joue les morceaux dans l'ordre, chacun dès qu'il est prêt : la voix enchaîne sans trou. */
+  const playParts = async (id: string, parts: Promise<VoicePart>[], req: number) => {
+    const srcs: string[] = [];
+    for (let i = 0; i < parts.length; i++) {
+      const r = await parts[i];
+      if (req !== voiceRequest.current) return; // l'élève a demandé autre chose entre-temps
+      if (i === 0) setVoiceLoadingId(null);
+      if (!r.ok) {
+        if (i === 0) {
+          if (typeof r.voiceRemaining === 'number') onVoiceRemainingChange?.(r.voiceRemaining);
+          setVoiceNote(r.error === 'VOICE_DAILY_LIMIT' ? VOICE_LIMIT_NOTE : 'KONE n’a pas pu parler cette fois. Tu peux lire son message.');
+        }
+        break;
+      }
+      if (i === 0) onVoiceRemainingChange?.(r.voiceRemaining);
+      srcs.push(r.src);
+      setVoiceNote(null);
+      const finished = await playOne(id, r.src);
+      if (!finished || req !== voiceRequest.current) return;
+    }
+    if (srcs.length === parts.length) audioCache.current.set(id, srcs);
+    stopLevelMeter();
+    setSpeakingId((cur) => (cur === id ? null : cur));
+  };
+
+  /** Bouton « Écouter » d'un message (ou « Arrêter » s'il parle déjà). */
+  const speak = (m: TutorMessage) => {
+    unlockAudio();
+    if (speakingId === m.id || voiceLoadingId === m.id) { stopVoice(); return; }
+    stopVoice();
+    if (!audioCache.current.has(m.id) && voiceRemaining !== null && voiceRemaining <= 0) { setVoiceNote(VOICE_LIMIT_NOTE); return; }
+    const req = voiceRequest.current;
+    setVoiceLoadingId(m.id);
+    void playParts(m.id, prepareVoice(m), req);
   };
 
   const toggleVoice = () => {
@@ -328,8 +360,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
       country: getStudentCountry() || undefined,
       erreurs: recentMistakes(uid),
     });
-    setSending(false);
     if (!res.ok) {
+      setSending(false);
       setError(ERRORS[res.error] || ERRORS.UNKNOWN);
       if (typeof res.remaining === 'number') onRemainingChange(res.remaining);
       // Le message n'a pas été traité : on le rend à l'élève pour qu'il puisse le renvoyer
@@ -350,9 +382,21 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
       flashTimer.current = setTimeout(() => setFlash(null), next === 'celebrate' ? 2800 : 2000);
     }
     const answer: TutorMessage = { id: newId(), role: 'konan', text: texte, niveau: lvl, etape, notion: n, choix };
-    setState((s) => ({ ...s, messages: [...s.messages, answer], updatedAt: Date.now() }));
-    // Voix allumée : KONE lit sa réponse tout de suite
-    if (voiceOn) void speak(answer);
+    const show = () => {
+      setSending(false);
+      setState((s) => ({ ...s, messages: [...s.messages, answer], updatedAt: Date.now() }));
+    };
+    // Voix allumée : le message et la voix arrivent ENSEMBLE (choix du fondateur, 2026-11-23). KONE « réfléchit »
+    // encore le temps que le début de sa voix soit prêt (20 s au plus), puis le message s'affiche et il parle.
+    if (voiceOn && (voiceRemaining === null || voiceRemaining > 0)) {
+      const req = voiceRequest.current;
+      const parts = prepareVoice(answer);
+      await Promise.race([parts[0], new Promise((r) => setTimeout(r, 20_000))]);
+      show();
+      if (req === voiceRequest.current && parts.length) void playParts(answer.id, parts, req);
+      return;
+    }
+    show();
   };
 
   const restart = () => {
