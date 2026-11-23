@@ -23,6 +23,15 @@ export function voicePitch(env = process.env) {
  * séparation, la voix lisait parfois la consigne elle-même à voix haute (vu le 2026-11-22).
  */
 export function voicePrompt(text) {
+  // 2026-11-23 : AUCUNE consigne, le texte seul. Mesuré sur la même phrase : avec des « notes » de mise en scène,
+  // la voix répétait la phrase deux fois ou ajoutait de longs silences (18 à 45 s au lieu de 9 s : « KONE parle
+  // mal »), ou lisait la consigne ; texte seul = lu une fois, durée normale, et 2 fois plus vite à fabriquer.
+  // La voix Puck est déjà joyeuse ; le français est imposé par languageCode fr-FR.
+  return String(text || '');
+}
+
+/** Ancienne consigne (gardée pour mémoire, NE PLUS UTILISER : provoque répétitions et silences). */
+export function voicePromptWithNotes(text) {
   return [
     "DIRECTOR'S NOTES (never read these notes aloud)",
     // Choix du fondateur (2026-11-22) : Puck, mais plus enfantin, « comme un petit garçon ivoirien de 9 ans »
@@ -35,7 +44,13 @@ export function voicePrompt(text) {
     text,
   ].join('\n');
 }
-const OUT_RATE = 16000;
+// Qualité du son envoyé : celle d'origine de Gemini (24 kHz). Le fondateur trouvait que KONE « parlait mal »
+// avec l'ancienne réduction à 16 kHz (filtre simple) : la voix n'est plus abîmée (2026-11-23).
+const OUT_RATE = 16000; // utilisé seulement si KONAN_VOICE_RATE le demande
+function outRate(sourceRate) {
+  const n = Number.parseInt(String(process.env.KONAN_VOICE_RATE || ''), 10);
+  return Number.isFinite(n) && n >= 8000 && n < sourceRate ? n : sourceRate;
+}
 const MAX_CHARS = 1500;
 
 const GREEK = {
@@ -297,8 +312,10 @@ export async function synthesizeSpeech(apiKey, text, { voice = VOICE_NAME, total
       if (!part) { lastErr = new Error('NO_AUDIO'); continue; }
       const { pcm, rate } = readPcm(Buffer.from(part.inlineData.data, 'base64'), part.inlineData.mimeType || '');
       if (pcm.length < rate / 4) { lastErr = new Error('AUDIO_TOO_SHORT'); continue; }
-      const small = resample(childVoice(pcm, rate, voicePitch()), rate, OUT_RATE);
-      return { base64: wavFromPcm(small, OUT_RATE).toString('base64'), mimeType: 'audio/wav', seconds: Math.round(small.length / OUT_RATE) };
+      const target = outRate(rate);
+      const voiced = childVoice(pcm, rate, voicePitch());
+      const out = target === rate ? voiced : resample(voiced, rate, target);
+      return { base64: wavFromPcm(out, target).toString('base64'), mimeType: 'audio/wav', seconds: Math.round(out.length / target) };
     } catch (e) {
       lastErr = e;
     }

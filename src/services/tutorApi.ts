@@ -91,10 +91,33 @@ export async function sendTutorMessage(
   }
 }
 
-/** KONAN lit un message à voix haute : renvoie un son (WAV) prêt à jouer. */
-export async function speakTutor(text: string): Promise<{ ok: true; src: string; voiceRemaining: number } | { ok: false; error: TutorError; voiceRemaining?: number }> {
+/**
+ * Découpe un message en 2 morceaux pour la voix : le début (1er paragraphe, ou les premières phrases s'il est
+ * long) puis le reste. Les deux sont préparés EN MÊME TEMPS ; le début, court, est prêt vite : le message
+ * s'affiche et KONE commence à parler aussitôt, la suite enchaîne. Jamais de coupure dans une formule $…$.
+ */
+export function splitForVoice(text: string, firstMax = 170): string[] {
+  const t = String(text || '').trim();
+  if (t.length <= firstMax) return t ? [t] : [];
+  // Fins de phrase ou de paragraphe hors formules
+  const cuts: number[] = [];
+  let inMath = false;
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] === '$') inMath = !inMath;
+    if (inMath) continue;
+    if (t[i] === '\n' && t[i + 1] === '\n') cuts.push(i);
+    else if (/[.!?]/.test(t[i]) && /\s/.test(t[i + 1] || '')) cuts.push(i + 1);
+  }
+  const cut = [...cuts].reverse().find((c) => c >= 40 && c <= firstMax) ?? cuts.find((c) => c >= 40);
+  if (!cut || cut >= t.length - 20) return [t];
+  return [t.slice(0, cut).trim(), t.slice(cut).trim()].filter(Boolean);
+}
+
+/** KONE lit un message à voix haute : renvoie un son (WAV) prêt à jouer. */
+export async function speakTutor(text: string, part = 0): Promise<{ ok: true; src: string; voiceRemaining: number } | { ok: false; error: TutorError; voiceRemaining?: number }> {
   try {
-    const { ok, json } = await call({ action: 'tutor_voice', text: text.slice(0, 4000) });
+    // part > 0 : suite d'une réponse déjà comptée (préparée en même temps que le début)
+    const { ok, json } = await call({ action: 'tutor_voice', text: text.slice(0, 4000), part });
     if (!ok || !json.audio) {
       return { ok: false, error: (json?.error as TutorError) || 'VOICE_UNAVAILABLE', voiceRemaining: typeof json?.voiceRemaining === 'number' ? json.voiceRemaining : undefined };
     }
