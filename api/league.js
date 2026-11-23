@@ -97,7 +97,8 @@ async function buildBoard(db, player, nowMs) {
   const snaps = members.length ? await db.getAll(...members.map((uid) => leagueCol(db, 'league_players').doc(uid))) : [];
   const weekId = base.weekId;
   const players = snaps
-    .filter((s) => s.exists && s.get('weekId') === weekId && isParticipant(s.data()))
+    // Seulement les membres vraiment rattachés à CE groupe (jamais un élève compté dans deux classements)
+    .filter((s) => s.exists && s.get('weekId') === weekId && isParticipant(s.data()) && (!s.get('groupId') || s.get('groupId') === player.groupId))
     .map((s) => {
       const tier = ['pro', 'plus'].includes(s.get('planTier')) ? s.get('planTier') : 'free';
       return {
