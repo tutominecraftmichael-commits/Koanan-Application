@@ -933,7 +933,9 @@ export function App() {
     getTutorStatus().then((s) => { if (alive) setTutorStatus(s); });
     return () => { alive = false; };
   }, [subscriptionAccount, subscriptionTierKey]);
-  const tutorAvailable = Boolean(tutorStatus?.enabled && (tutorStatus.paid || proSellableForClass));
+  // Réservé aux abonnés KONAN Pro (rappel du fondateur, 2026-11-23) : un élève Gratuit ne voit ni la peluche,
+  // ni les boutons « Je ne comprends pas » (le serveur refuse aussi tout élève sans abonnement payé).
+  const tutorAvailable = Boolean(tutorStatus?.enabled && tutorStatus.paid);
 
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
@@ -3106,6 +3108,7 @@ export function App() {
                 setActiveExamSession(null);
                 handleCompleteTutorSession(sessionId, durationSec, mistakes);
               }}
+              onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
             />
           ) : (
             <ExamSujetView
