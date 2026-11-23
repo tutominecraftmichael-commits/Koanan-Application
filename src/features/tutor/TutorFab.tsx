@@ -56,7 +56,7 @@ export const TutorFab: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
         style={{ width: SIZE, height: SIZE }}
       >
         <span className="kp-halo" />
-        <KonanPlush variant="face" size={SIZE} enter boing={boing} className="kp--ringed">
+        <KonanPlush variant="bust" size={SIZE} enter waves preload="idle" boing={boing} className="kp--ringed">
           <span className="kp-ask bg-white dark:bg-slate-900 text-sky-700 dark:text-sky-300 border-2 border-sky-300 dark:border-sky-400/60 shadow-md z-10">?</span>
         </KonanPlush>
       </button>

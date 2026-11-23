@@ -170,8 +170,22 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
   const audioCache = useRef(new Map<string, string>());
   const voiceRequest = useRef(0);
 
+  // Bouche synchronisée avec la voix : volume du son mesuré en direct (0 à 1), transmis à la peluche
+  const [talkLevel, setTalkLevel] = useState<number | undefined>(undefined);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceAttached = useRef(false);
+  const rafRef = useRef(0);
+
   /** Prépare le lecteur pendant un toucher de l'élève (sinon iPhone refuse de jouer le son plus tard). */
   const unlockAudio = () => {
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (Ctx) audioCtxRef.current = new Ctx();
+      }
+      void audioCtxRef.current?.resume();
+    } catch { /* mesure du volume indisponible : la bouche bougera au hasard */ }
     if (audioRef.current) return;
     const a = new Audio();
     a.preload = 'auto';
@@ -182,10 +196,44 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     } catch { /* lecteur indisponible */ }
   };
 
+  /** Branche la mesure du volume sur le lecteur (une seule fois), seulement si le son peut passer par elle. */
+  const startLevelMeter = (a: HTMLAudioElement) => {
+    const ctx = audioCtxRef.current;
+    if (!ctx || ctx.state !== 'running') return;
+    try {
+      if (!sourceAttached.current) {
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 512;
+        ctx.createMediaElementSource(a).connect(analyser);
+        analyser.connect(ctx.destination);
+        analyserRef.current = analyser;
+        sourceAttached.current = true;
+      }
+    } catch { return; }
+    const analyser = analyserRef.current;
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.fftSize);
+    let smooth = 0;
+    let last = 0;
+    const tick = (t: number) => {
+      analyser.getByteTimeDomainData(data);
+      let sum = 0;
+      for (let i = 0; i < data.length; i++) { const v = (data[i] - 128) / 128; sum += v * v; }
+      const rms = Math.min(1, Math.sqrt(sum / data.length) * 4);
+      smooth = smooth * 0.55 + rms * 0.45;
+      if (t - last > 80) { last = t; setTalkLevel(smooth); }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(tick);
+  };
+  const stopLevelMeter = () => { cancelAnimationFrame(rafRef.current); setTalkLevel(undefined); };
+
   const stopVoice = () => {
     voiceRequest.current += 1;
     const a = audioRef.current;
     if (a) { a.pause(); a.onended = null; }
+    stopLevelMeter();
     setSpeakingId(null);
     setVoiceLoadingId(null);
   };
@@ -215,10 +263,12 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
     const a = audioRef.current || new Audio();
     audioRef.current = a;
     a.src = src;
-    a.onended = () => setSpeakingId((cur) => (cur === m.id ? null : cur));
+    a.onended = () => { stopLevelMeter(); setSpeakingId((cur) => (cur === m.id ? null : cur)); };
     setVoiceNote(null);
     setSpeakingId(m.id);
-    a.play().catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONAN.'); });
+    a.play()
+      .then(() => startLevelMeter(a))
+      .catch(() => { setSpeakingId(null); setVoiceNote('Touche 🔊 sur le message pour écouter KONAN.'); });
   };
 
   const toggleVoice = () => {
@@ -315,7 +365,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
         {/* En-tête : KONAN + jauge de compréhension */}
         <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-slate-200 dark:border-slate-800 bg-sky-50 dark:bg-slate-900/80 space-y-2.5">
           <div className="flex items-center gap-3">
-            <KonanPlush variant="face" size={52} mood={mood} />
+            <KonanPlush variant="bust" size={54} mood={mood} talkLevel={talkLevel} />
             <div className="flex-1 min-w-0">
               <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
               <p className="text-xs text-slate-600 dark:text-slate-400">KONAN t’explique jusqu’à ce que tu comprennes</p>
@@ -349,7 +399,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({ uid, classe, prenom, conte
           {/* Accueil : la peluche entière dit bonjour */}
           {state.messages.length === 0 && (
             <div className="flex justify-center pt-2 pb-3">
-              <KonanPlush variant="body" size={136} mood={mood} enter />
+              <KonanPlush variant="body" size={150} mood={mood} talkLevel={talkLevel} enter waves />
             </div>
           )}
           <div className="flex items-end gap-2">
