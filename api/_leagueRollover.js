@@ -71,8 +71,88 @@ export async function rolloverLeague(db, nowMs = Date.now()) {
 
   // 3. Les élèves actifs de la semaine finie entrent tout de suite dans leur (nouvelle) division
   const placement = await placeActivePlayersOnce(db, metaRef, current, nowMs);
-  if (!closingWeeks.length && !placement) return null;
-  return placement ? { ...stats, ...placement } : stats;
+  // 4. Tout le monde ENSEMBLE : les élèves déjà connectés (placés à leur arrivée) et ceux placés par le serveur
+  //    sont réunis dans les mêmes groupes de leur division (sinon chacun voyait un classement sans les autres).
+  const repack = await repackWeekOnce(db, metaRef, current, nowMs);
+  if (!closingWeeks.length && !placement && !repack) return null;
+  return { ...stats, ...(placement || {}), ...(repack ? { repack } : {}) };
+}
+
+/** Regroupement une seule fois par semaine, juste après le placement (verrou repackingWeek / repackingAt). */
+async function repackWeekOnce(db, metaRef, current, nowMs) {
+  const claimed = await db.runTransaction(async (tx) => {
+    const snap = await tx.get(metaRef);
+    const meta = snap.exists ? snap.data() : null;
+    if (!meta || meta.lastRolledWeek !== current || meta.placedWeek !== current) return false;
+    if (meta.repackedWeek === current) return false;
+    const at = Date.parse(meta.repackingAt || '');
+    if (meta.repackingWeek === current && Number.isFinite(at) && nowMs - at < PLACING_STALE_MS) return false;
+    tx.update(metaRef, { repackingWeek: current, repackingAt: new Date(nowMs).toISOString() });
+    return true;
+  });
+  if (!claimed) return null;
+  const result = await repackWeekGroups(db, current, nowMs);
+  await metaRef.update({ repackedWeek: current, repackingWeek: null, repackingAt: null });
+  return result;
+}
+
+/**
+ * Réunit les groupes trop éclatés de la semaine : pour chaque division, tous les élèves des groupes de la
+ * semaine sont répartis dans le plus petit nombre de groupes possible (≤ 30, tailles équilibrées). Les XP de la
+ * semaine ne changent pas (ils sont dans la fiche de l'élève). Une division déjà bien rangée n'est pas touchée.
+ * Les groupes vidés restent fermés (open: false, mergedInto).
+ */
+export async function repackWeekGroups(db, weekId, nowMs = Date.now(), rand = Math.random) {
+  const groups = (await leagueCol(db, 'league_groups').where('weekId', '==', weekId).get()).docs.filter((g) => !g.get('closed'));
+  const byDivision = new Map();
+  for (const g of groups) {
+    const d = clampDivision(g.get('division'));
+    if (!byDivision.has(d)) byDivision.set(d, []);
+    byDivision.get(d).push(g);
+  }
+  let moved = 0;
+  let divisions = 0;
+  for (const [division, list] of byDivision) {
+    // Membres réels : la fiche de l'élève est de cette semaine et pointe bien vers un de ces groupes
+    const ids = new Set(list.map((g) => g.id));
+    const uids = [...new Set(list.flatMap((g) => g.get('members') || []))];
+    const snaps = uids.length ? await db.getAll(...uids.map((uid) => leagueCol(db, 'league_players').doc(uid))) : [];
+    const members = snaps.filter((s) => s.exists && s.get('weekId') === weekId && ids.has(s.get('groupId'))).map((s) => ({ uid: s.id, groupId: s.get('groupId') }));
+    const needed = Math.max(1, Math.ceil(members.length / GROUP_SIZE));
+    const used = list.filter((g) => (g.get('members') || []).length > 0);
+    if (used.length <= needed) continue; // déjà rangé : rien à faire
+    // On garde les groupes les plus remplis (moins d'élèves déplacés), on y répartit tout le monde
+    const keep = [...used].sort((a, b) => (b.get('members') || []).length - (a.get('members') || []).length).slice(0, needed);
+    const order = shuffle(members.map((m) => m.uid), rand);
+    const newMembers = keep.map((_g, i) => order.filter((_uid, k) => k % needed === i));
+    let batch = db.batch();
+    let ops = 0;
+    const flush = async (force = false) => {
+      if (ops && (force || ops >= BATCH_OPS)) { await batch.commit(); batch = db.batch(); ops = 0; }
+    };
+    for (const [i, g] of keep.entries()) {
+      batch.update(g.ref, { members: newMembers[i], size: newMembers[i].length, open: newMembers[i].length < GROUP_SIZE });
+      ops += 1;
+      for (const uid of newMembers[i]) {
+        const before = members.find((m) => m.uid === uid)?.groupId;
+        if (before !== g.id) {
+          batch.update(leagueCol(db, 'league_players').doc(uid), { groupId: g.id });
+          ops += 1;
+          moved += 1;
+        }
+        await flush();
+      }
+    }
+    for (const g of list) {
+      if (keep.includes(g)) continue;
+      batch.update(g.ref, { members: [], size: 0, open: false, mergedInto: keep[0].id, mergedAt: new Date(nowMs).toISOString() });
+      ops += 1;
+      await flush();
+    }
+    await flush(true);
+    divisions += 1;
+  }
+  return { moved, divisions };
 }
 
 /**
