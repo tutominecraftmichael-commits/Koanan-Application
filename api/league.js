@@ -13,7 +13,7 @@
  */
 import { getDb, send, readBody, isAllowedOrigin, str } from './_examCommon.js';
 import { loadLocalEnvIfPresent } from './_env.js';
-import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { isAdminPayload, verifyFirebaseIdToken } from './_firebaseToken.js';
 import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
@@ -203,8 +203,11 @@ export default async function handler(req, res) {
   const authHeader = String(req.headers.authorization || '');
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
   let uid;
+  let admin = false;
   try {
-    uid = (await verifyFirebaseIdToken(token)).sub;
+    const payload = await verifyFirebaseIdToken(token);
+    uid = payload.sub;
+    admin = isAdminPayload(payload); // compte administrateur : Pro (énergie illimitée, avatars Pro…)
   } catch (e) {
     return send(res, 401, { success: false, error: e?.message === 'TOKEN_EXPIRED' ? 'TOKEN_EXPIRED' : 'UNAUTHORIZED' });
   }
@@ -269,9 +272,9 @@ export default async function handler(req, res) {
     try {
       const db = await getDb();
       let out;
-      if (body.action === 'avatar_state') out = await getAvatarState(db, uid);
+      if (body.action === 'avatar_state') out = await getAvatarState(db, uid, { admin });
       else if (body.action === 'avatar_buy') out = await buyAvatarItem(db, uid, str(String(body.itemId || ''), 60));
-      else out = await saveAvatarConfig(db, uid, body.avatarConfig);
+      else out = await saveAvatarConfig(db, uid, body.avatarConfig, { admin });
       if (out?.error) {
         const status = out.error === 'INSUFFICIENT_GOLD' ? 402
           : (out.error === 'ITEM_LOCKED' || out.error === 'PRO_REQUIRED' || out.error === 'PRO_ONLY_ITEM') ? 403
@@ -290,7 +293,7 @@ export default async function handler(req, res) {
     const userSnap = await db.collection('users').doc(uid).get();
     const userData = userSnap.exists ? userSnap.data() : {};
     // Énergie illimitée et nom en couleur : seulement pour un abonnement réellement payé (vérifié par le serveur)
-    const planTier = await serverPlanTier(db, uid, userData);
+    const planTier = admin ? 'pro' : await serverPlanTier(db, uid, userData);
     const out = await syncPlayer(db, uid, body || {}, userData, Date.now(), { planTier });
     return send(res, 200, { success: true, ...out });
   } catch (err) {

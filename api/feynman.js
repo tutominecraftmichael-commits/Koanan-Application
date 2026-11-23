@@ -11,7 +11,7 @@
  * Le compteur du jour est gardé dans Firestore (feynman_usage/<uid>), écrit par le serveur seulement.
  */
 import { loadLocalEnvIfPresent } from './_env.js';
-import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { isAdminPayload, verifyFirebaseIdToken } from './_firebaseToken.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
 import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
 
@@ -170,8 +170,11 @@ export default async function handler(req, res) {
   const authHeader = String(req.headers.authorization || '');
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
   let uid;
+  let admin = false;
   try {
-    uid = (await verifyFirebaseIdToken(token)).sub;
+    const payload = await verifyFirebaseIdToken(token);
+    uid = payload.sub;
+    admin = isAdminPayload(payload); // compte administrateur : tout est ouvert (Pro, KONE, voix)
   } catch (e) {
     return send(res, 401, { success: false, error: e?.message === 'TOKEN_EXPIRED' ? 'TOKEN_EXPIRED' : 'UNAUTHORIZED' });
   }
@@ -186,12 +189,12 @@ export default async function handler(req, res) {
   // Mode « Je ne comprends pas » (professeur particulier) : même fonction serveur, Vercel gratuit = 12 fonctions au plus
   if (body?.action === 'tutor' || body?.action === 'tutor_status' || body?.action === 'tutor_voice') {
     const { handleTutorAction } = await import('./_tutor.js');
-    const { status, data } = await handleTutorAction({ body, uid, getDb });
+    const { status, data } = await handleTutorAction({ body, uid, getDb, admin });
     return send(res, status, data);
   }
 
   // Feynman = KONAN Pro. Quand le paiement est ouvert, seul un abonnement payé (vérifié par le serveur) y donne accès.
-  if (paymentsEnabled()) {
+  if (paymentsEnabled() && !admin) {
     try {
       const { serverPlanTier } = await import('./_subscriptionStore.js');
       const tier = await serverPlanTier(await getDb(), uid, null);
@@ -239,7 +242,8 @@ export default async function handler(req, res) {
     return send(res, 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
   }
   const limit = DAILY_LIMITS[kind];
-  if (used >= limit) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit, remaining: 0, kind });
+  // Compte administrateur : pas de limite du jour (pour tester librement)
+  if (!admin && used >= limit) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit, remaining: 0, kind });
 
   let verdict;
   try {

@@ -305,7 +305,7 @@ export function tutorVoiceBudget(env = process.env) {
  * `ask` et `speak` sont remplaçables pour les tests (pas d'appel réel à l'IA).
  * @returns {Promise<{ status: number, data: object }>}
  */
-export async function handleTutorAction({ body, uid, getDb, env = process.env, nowMs = Date.now(), ask = askTutor, speak = null }) {
+export async function handleTutorAction({ body, uid, getDb, env = process.env, nowMs = Date.now(), ask = askTutor, speak = null, admin = false }) {
   const enabled = tutorEnabled(env);
   const day = todayKey(nowMs);
   if (!enabled) return { status: body.action === 'tutor_status' ? 200 : 503, data: { success: body.action === 'tutor_status', enabled: false, error: 'TUTOR_OFF' } };
@@ -319,7 +319,8 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
 
   let paid;
   try {
-    paid = await hasPaidPro(db, uid, nowMs, env);
+    // Compte administrateur : accès complet sans abonnement (choix du fondateur, 2026-11-23)
+    paid = admin || await hasPaidPro(db, uid, nowMs, env);
   } catch {
     return { status: 503, data: { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' } };
   }
@@ -336,8 +337,10 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   } catch {
     return { status: 503, data: { success: false, error: 'SERVER_UNAVAILABLE' } };
   }
-  const remainingOf = (used) => Math.max(0, TUTOR_DAILY_LIMIT - used);
-  const voiceRemainingOf = (used) => Math.max(0, TUTOR_VOICE_DAILY_LIMIT - used);
+  // Compte administrateur : pas de limite du jour (les compteurs restent tenus, rien n'est bloqué)
+  if (admin) { mine.count = 0; mine.voice = 0; }
+  const remainingOf = (used) => (admin ? TUTOR_DAILY_LIMIT : Math.max(0, TUTOR_DAILY_LIMIT - used));
+  const voiceRemainingOf = (used) => (admin ? TUTOR_VOICE_DAILY_LIMIT : Math.max(0, TUTOR_VOICE_DAILY_LIMIT - used));
 
   if (body.action === 'tutor_status') {
     return {

@@ -276,7 +276,8 @@ export default async function handler(req, res) {
   } catch (e) {
     return send(res, 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
   }
-  if (usage.used >= DAILY_CORRECTIONS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_CORRECTIONS, remaining: 0 });
+  // Compte administrateur : pas de limite du jour (pour tester librement)
+  if (!ctx.admin && usage.used >= DAILY_CORRECTIONS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_CORRECTIONS, remaining: 0 });
 
   // Temps mis (chrono du serveur) : au-delà de 2 h + 15 min, copie « hors temps » (corrigée, mais sans XP)
   let timing = null;

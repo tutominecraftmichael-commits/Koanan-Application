@@ -86,6 +86,16 @@ export async function verifyFirebaseIdToken(idToken) {
 }
 
 /**
+ * Compte administrateur pour les FONCTIONS de l'appli (choix du fondateur, 2026-11-23 : « le compte admin a droit
+ * à tous les modèles ») : autorisation « admin » + connexion Google + e-mail vérifié. Il a alors KONAN Pro (tout
+ * débloqué : devoirs, KONE, voix, Feynman, avatars Pro…) sans payer. La console admin, elle, exige en plus une
+ * connexion récente (verifyAdminIdToken).
+ */
+export function isAdminPayload(payload) {
+  return Boolean(payload && payload.admin === true && payload.firebase?.sign_in_provider === 'google.com' && payload.email_verified === true);
+}
+
+/**
  * Accès administrateur : jeton valide + autorisation « admin » (custom claim posé par
  * scripts/set-admin-claim.mjs) + connexion par Google (dont la validation en deux étapes protège
  * le compte) + connexion récente.

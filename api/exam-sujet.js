@@ -420,7 +420,8 @@ export default async function handler(req, res) {
   } catch (e) {
     return send(res, 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
   }
-  if (usage.used >= DAILY_SUJETS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_SUJETS, remaining: 0 });
+  // Compte administrateur : pas de limite du jour (pour tester librement)
+  if (!ctx.admin && usage.used >= DAILY_SUJETS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_SUJETS, remaining: 0 });
 
   let sujet;
   let prompt;

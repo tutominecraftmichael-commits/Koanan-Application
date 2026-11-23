@@ -17,7 +17,7 @@
  */
 import { getDb, send, readBody, isAllowedOrigin } from './_examCommon.js';
 import { loadLocalEnvIfPresent } from './_env.js';
-import { verifyAdminIdToken, verifyFirebaseIdToken } from './_firebaseToken.js';
+import { isAdminPayload, verifyAdminIdToken, verifyFirebaseIdToken } from './_firebaseToken.js';
 import {
   adminDecide, adminList, checkSaspayForUser, declarePayment, getStatus, paymentConfig, saspayPendingFor, startSaspayCheckout,
 } from './_subscriptionStore.js';
@@ -89,7 +89,12 @@ export default async function handler(req, res) {
     if (action === 'status' || action === 'saspay_check') {
       if (!config.enabled) return send(res, 200, { success: true, config: publicConfig, status: null });
       const db = await getDb();
-      return send(res, 200, { success: true, config: publicConfig, status: await statusWithSaspay(db) });
+      const status = await statusWithSaspay(db);
+      // Compte administrateur : KONAN Pro, tout débloqué, sans paiement ni date de fin (choix du fondateur, 2026-11-23)
+      if (isAdminPayload(payload)) {
+        return send(res, 200, { success: true, config: publicConfig, status: { ...status, tier: 'pro', endsAt: null, provisional: false, grace: false, admin: true } });
+      }
+      return send(res, 200, { success: true, config: publicConfig, status });
     }
     if (action === 'saspay_start') {
       const db = await getDb();

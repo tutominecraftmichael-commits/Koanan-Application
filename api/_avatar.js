@@ -265,7 +265,8 @@ export const DEFAULT_AVATAR_CONFIG = {
 };
 
 /** Détermine si un compte a un abonnement KONAN Pro actif (vérifié côté serveur). */
-export async function isUserKonanPro(db, uid, userDoc) {
+export async function isUserKonanPro(db, uid, userDoc, admin = false) {
+  if (admin) return true; // compte administrateur : tout débloqué (2026-11-23)
   try {
     const tier = await serverPlanTier(db, uid, userDoc);
     if (tier === 'pro' || tier === 'plus') return true;
@@ -337,13 +338,13 @@ export function sanitizeAvatarConfig(raw, opts = {}) {
 }
 
 /** Retourne l'état avatar de l'utilisateur : solde d'or, statut Pro, config enregistrée, items débloqués. */
-export async function getAvatarState(db, uid) {
+export async function getAvatarState(db, uid, { admin = false } = {}) {
   const [gold, userSnap] = await Promise.all([
     ensureUserGold(db, uid),
     db.collection('users').doc(uid).get(),
   ]);
   const data = userSnap.exists ? userSnap.data() : {};
-  const isPro = await isUserKonanPro(db, uid, data);
+  const isPro = await isUserKonanPro(db, uid, data, admin);
   const rawStored = data?.avatarConfig;
   const avatarConfig = sanitizeAvatarConfig(rawStored, { isPro });
   const unlockedItems = normalizeUnlockedItems(data?.unlockedItems);
@@ -423,11 +424,11 @@ export async function buyAvatarItem(db, uid, itemId) {
  * après vérification stricte de propriété des items payants et du statut KONAN Pro.
  * Propage également dans league_players/{uid}.avatarConfig pour mise à jour immédiate en Ligue.
  */
-export async function saveAvatarConfig(db, uid, rawConfig) {
+export async function saveAvatarConfig(db, uid, rawConfig, { admin = false } = {}) {
   const userRef = db.collection('users').doc(uid);
   const snap = await userRef.get();
   const data = snap.exists ? snap.data() : {};
-  const isPro = await isUserKonanPro(db, uid, data);
+  const isPro = await isUserKonanPro(db, uid, data, admin);
 
   if (String(rawConfig?.outfit || '') === PRO_ONLY_OUTFIT_ID && !isPro) {
     return { error: 'PRO_REQUIRED', itemId: PRO_ONLY_OUTFIT_ID };

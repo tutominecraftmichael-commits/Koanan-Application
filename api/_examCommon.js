@@ -3,7 +3,7 @@
  * réponse JSON, lecture du corps, origine autorisée, élève connecté, compteur du jour, appel à Gemini.
  */
 import { loadLocalEnvIfPresent } from './_env.js';
-import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { isAdminPayload, verifyFirebaseIdToken } from './_firebaseToken.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
 
 export const MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite'];
@@ -76,8 +76,11 @@ export async function guard(req, res) {
   const authHeader = String(req.headers.authorization || '');
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
   let uid;
+  let admin = false;
   try {
-    uid = (await verifyFirebaseIdToken(token)).sub;
+    const payload = await verifyFirebaseIdToken(token);
+    uid = payload.sub;
+    admin = isAdminPayload(payload);
   } catch (e) {
     send(res, 401, { success: false, error: e?.message === 'TOKEN_EXPIRED' ? 'TOKEN_EXPIRED' : 'UNAUTHORIZED' });
     return null;
@@ -88,7 +91,8 @@ export async function guard(req, res) {
     return null;
   }
   // Devoirs = KONAN Pro. Quand le paiement est activé, seul un abonnement payé (vérifié par le serveur) y donne accès.
-  if (paymentsEnabled()) {
+  // Le compte administrateur a toujours accès (isAdminPayload).
+  if (paymentsEnabled() && !admin) {
     try {
       const { serverPlanTier } = await import('./_subscriptionStore.js');
       const tier = await serverPlanTier(await getDb(), uid, null);
@@ -101,7 +105,7 @@ export async function guard(req, res) {
       return null;
     }
   }
-  return { uid, apiKey };
+  return { uid, apiKey, admin };
 }
 
 /** Compteur du jour par élève (Firestore exam_usage/<uid>, écrit par le serveur seulement). */
