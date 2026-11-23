@@ -1093,7 +1093,7 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
     [schema.sceneSpec, schema.svgContent, schema.title, schema.caption],
   );
   const svgContent = schema.svgContent || sceneSvg;
-  const isScene = Boolean(schema.scene || schema.sceneSpec);
+  const isScene = Boolean(schema.scene || schema.sceneSpec || schema.imageSrc);
   return (
     <div className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-200/80 dark:border-indigo-500/30 shadow-xs space-y-2.5 my-3 ${className}`}>
       {schema.title && (
@@ -1125,6 +1125,24 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
               : 'Schéma'}
           </span>
         </div>
+      )}
+
+      {/* Image illustrée (préparée à l'avance, sans texte dedans) : chargée seulement quand l'étape s'affiche */}
+      {schema.imageSrc && (
+        <div className="rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 aspect-[4/3]">
+          <img
+            src={schema.imageSrc}
+            alt={schema.imageAlt || schema.caption || schema.title || ''}
+            loading="lazy"
+            decoding="async"
+            width={640}
+            height={480}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+      {schema.imageSrc && schema.caption && (
+        <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-snug">{schema.caption}</p>
       )}
 
       {/* Figures dessinées « au feutre » (courbes exactes calculées par le code) */}
