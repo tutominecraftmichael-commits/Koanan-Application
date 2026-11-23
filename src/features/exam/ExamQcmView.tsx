@@ -450,7 +450,7 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
                     `Question : ${cleanSeriesPrompt(exercise.prompt)}`,
                     options.length ? `Propositions : ${options.map((o, i) => `${String.fromCharCode(65 + i)}) ${o}`).join(' ; ')}` : '',
                     selected !== null && options[selected] ? `Réponse choisie par l'élève : ${options[selected]}` : '',
-                    options[exercise.correctAnswerIndex] ? `Bonne réponse : ${options[exercise.correctAnswerIndex]}` : '',
+                    typeof exercise.correctAnswerIndex === 'number' && options[exercise.correctAnswerIndex] ? `Bonne réponse : ${options[exercise.correctAnswerIndex]}` : '',
                     exercise.explanation ? `Explication du cours : ${exercise.explanation}` : '',
                   ].filter(Boolean).join('\n').slice(0, 1800),
                 });
