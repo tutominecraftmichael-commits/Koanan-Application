@@ -185,7 +185,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
       { title: 'KONE presque sans limite', detail: '100 messages et 40 réponses à voix haute par jour.' },
       { title: 'Photo de ton exercice', detail: 'Prends-le en photo : KONE le lit et t’explique la méthode (20 photos par jour).' },
       { title: 'Pose ta question à l’oral', detail: 'Parle à KONE au lieu d’écrire.' },
-      { title: 'Planning réglé sur ton objectif', detail: '12 de moyenne, une mention ou major de promo.' },
+      { title: 'Corrige n’importe quel devoir en photo', detail: 'L’énoncé de ton professeur + ta copie : note sur 20 et correction détaillée (3 par jour).' },
       { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
     ],
   },
