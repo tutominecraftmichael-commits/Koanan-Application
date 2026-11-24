@@ -130,6 +130,7 @@ const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorM
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const TutorChat = lazyView(() => import('./features/tutor/TutorChat').then((m) => m.TutorChat));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
+const GoalPlanView = lazyView(() => import('./features/plus/GoalPlanView').then((m) => m.GoalPlanView));
 const HomeworkPhotoView = lazyView(() => import('./features/plus/HomeworkPhotoView').then((m) => m.HomeworkPhotoView));
 const StudyGoalSheet = lazyView(() => import('./features/plus/StudyGoalSheet').then((m) => m.StudyGoalSheet));
 const AuthPage = lazyView(loadAuthPage);
@@ -2173,6 +2174,29 @@ export function App() {
     showToast("Emploi du temps mis à jour avec succès !");
   };
 
+  /**
+   * KONAN Plus : planning réglé sur l'objectif. Moyennes actuelles et notes visées enregistrées dans les matières,
+   * temps par jour conseillé (si l'élève l'accepte), puis UN seul recalcul du planning (séances faites gardées).
+   */
+  const handleApplyGoalPlan = (newSubjects: Subject[], dailyMinutes: number | null) => {
+    const prefs: StudyPreferences = dailyMinutes ? { ...state.preferences, targetDailyStudyMinutes: dailyMinutes } : state.preferences;
+    const updatedPlan = generateOptimizedStudyPlan(newSubjects, state.classSlots, prefs, effectivePlanTier);
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        subjects: newSubjects,
+        preferences: prefs,
+        studySessions: mergePreservingCompletedSessions(prev.studySessions, updatedPlan),
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
+    showToast('Planning réglé sur ton objectif : plus de séances là où tu gagnes le plus de points !');
+    setActiveView('dashboard');
+  };
+
   const handleUpdatePreferences = (newPrefs: StudyPreferences) => {
     const updatedPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, newPrefs, effectivePlanTier);
     setState(prev => {
@@ -2913,6 +2937,8 @@ export function App() {
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
               onOpenPhotoCorrection={plusAccess && subscriptionAccount ? () => setActiveView('devoir-photo') : undefined}
+              onOpenGoalPlan={plusAccess ? () => setActiveView('plan-objectif') : undefined}
+              goalPlanLabel={studyGoalInfo(studyGoal)?.short}
               // Tuile de la maquette : ligue (rang + division, élèves admis dans la ligue)
               leagueSummary={gamificationEnabled && gradeIsInLeague
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
@@ -3120,6 +3146,18 @@ export function App() {
               onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
             />
           )
+        )}
+
+        {/* KONAN Plus : planning réglé sur l'objectif */}
+        {activeView === 'plan-objectif' && plusAccess && (
+          <GoalPlanView
+            goal={studyGoal}
+            subjects={state.subjects || []}
+            dailyMinutes={state.preferences?.targetDailyStudyMinutes || 120}
+            onChangeGoal={() => setIsAcademicGoalModalOpen(true)}
+            onApply={handleApplyGoalPlan}
+            onExit={() => setActiveView('dashboard')}
+          />
         )}
 
         {/* KONAN Plus : corriger un devoir du professeur en photo (énoncé + copie) */}
@@ -3531,6 +3569,7 @@ export function App() {
             currentGoal={studyGoal}
             onSave={handleSelectAcademicGoal}
             onClose={() => setIsAcademicGoalModalOpen(false)}
+            onOpenPlan={activeView === 'plan-objectif' ? undefined : () => { setIsAcademicGoalModalOpen(false); setActiveView('plan-objectif'); }}
             studentName={effectiveStudentName}
           />
         </Suspense>

@@ -14,6 +14,8 @@ interface Props {
   onSave: (goal: StudyGoal) => Promise<string | null>;
   onClose: () => void;
   studentName?: string;
+  /** Ouvre « Mon plan pour l'objectif » (planning réglé sur l'objectif) */
+  onOpenPlan?: () => void;
 }
 
 // Couleur d'accent de chaque objectif (pastille de la note visée)
@@ -23,7 +25,7 @@ const ACCENT: Record<StudyGoal, string> = {
   major_promotion: 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-400/10 dark:text-amber-300 dark:ring-amber-400/30',
 };
 
-export const StudyGoalSheet: React.FC<Props> = ({ currentGoal, onSave, onClose, studentName }) => {
+export const StudyGoalSheet: React.FC<Props> = ({ currentGoal, onSave, onClose, studentName, onOpenPlan }) => {
   const [selected, setSelected] = useState<StudyGoal>(currentGoal || 'target_16');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -140,6 +142,12 @@ export const StudyGoalSheet: React.FC<Props> = ({ currentGoal, onSave, onClose, 
           >
             {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Enregistrement…</> : unchanged ? <><Check className="w-4 h-4" /> C’est ton objectif</> : 'Valider mon objectif'}
           </button>
+          {/* Objectif déjà enregistré : régler le planning dessus (moyennes actuelles → notes visées) */}
+          {unchanged && currentGoal && onOpenPlan && (
+            <button type="button" onClick={onOpenPlan} className="w-full py-3 rounded-2xl text-sm font-black border-2 border-slate-900 text-slate-900 hover:bg-slate-50 dark:border-amber-300/60 dark:text-amber-200 dark:hover:bg-amber-400/10 inline-flex items-center justify-center gap-2 cursor-pointer">
+              <Target className="w-4 h-4" /> Régler mon planning sur cet objectif
+            </button>
+          )}
           <p className="text-center text-[11.5px] text-slate-500 dark:text-slate-400 leading-snug">
             Tes notes restent calculées avec le barème officiel. Tu peux changer d’objectif quand tu veux.
           </p>

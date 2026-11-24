@@ -297,6 +297,8 @@ export type ActiveAppView =
   | 'landing'
   /** KONAN Plus : corriger un devoir du professeur en photo (énoncé + copie) */
   | 'devoir-photo'
+  /** KONAN Plus : planning réglé sur l'objectif (moyennes actuelles → notes visées) */
+  | 'plan-objectif'
   | 'auth'
   | 'upload-schedule'
   | 'dashboard' 
