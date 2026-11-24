@@ -186,6 +186,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
       { title: 'Photo de ton exercice', detail: 'Prends-le en photo : KONE le lit et t’explique la méthode (20 photos par jour).' },
       { title: 'Pose ta question à l’oral', detail: 'Parle à KONE au lieu d’écrire.' },
       { title: 'Corrige n’importe quel devoir en photo', detail: 'L’énoncé de ton professeur + ta copie : note sur 20 et correction détaillée (3 par jour).' },
+      { title: 'Planning réglé sur ton objectif', detail: 'Tes moyennes → où gagner tes points, matière par matière, et plus de séances là où ça rapporte.' },
       { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
     ],
   },

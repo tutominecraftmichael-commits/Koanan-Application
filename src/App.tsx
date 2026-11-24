@@ -3462,7 +3462,7 @@ export function App() {
               setWaitlistModalInfo({
                 isOpen: true,
                 featureTitle: 'KONAN Plus',
-                featureDescription: 'KONE adapté à ton objectif, photo de tes exercices, questions à l’oral et correction de tes devoirs en photo. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
+                featureDescription: 'KONE adapté à ton objectif, photo de tes exercices, questions à l’oral, correction de tes devoirs en photo et planning réglé sur ton objectif. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
                 requiredTier: 'plus',
               });
             }}
