@@ -41,6 +41,8 @@ export interface SubscriptionStatus {
   history: PaymentView[];
   /** Paiement SasPay commencé mais pas encore confirmé */
   saspayPending?: SaspayPending | null;
+  /** Compte administrateur : formule choisie avec « Mode Pro » / « Mode Plus », sans paiement */
+  admin?: boolean;
 }
 export interface SubscriptionInfo { config: SubscriptionConfig; status: SubscriptionStatus | null }
 
@@ -56,7 +58,7 @@ export function subscriptionErrorText(code?: string): string {
     case 'TIER_NOT_SOLD': return 'Cette formule n’est pas encore disponible.';
     case 'PRO_NOT_FOR_GRADE': return 'KONAN Pro n’est pas encore disponible pour ta classe : il est ouvert de la Seconde à la Terminale et en Licence 1 ENTD. Aucun paiement n’a été enregistré.';
     case 'PRO_NOT_FOR_COUNTRY': return 'KONAN Pro n’est pas encore disponible dans ton pays. Aucun paiement n’a été enregistré.';
-    case 'OTHER_TIER_ACTIVE': return 'Tu as déjà une autre formule en cours.';
+    case 'OTHER_TIER_ACTIVE': return 'Tu as déjà KONAN Plus en cours : tu pourras choisir une autre formule à sa fin.';
     case 'TOO_MANY': return 'Trop d’essais aujourd’hui. Réessaie demain.';
     case 'BAD_PROVIDER': return 'Choisis Wave ou Orange Money.';
     case 'PAYMENTS_DISABLED': return 'Le paiement n’est pas encore ouvert.';
@@ -107,9 +109,9 @@ export async function declarePayment(input: { tier: PaidTier; period: PaidPeriod
 }
 
 /** Ouvre une page de paiement SasPay (le prix est fixé par le serveur). */
-export async function startSaspayPayment(input: { period: PaidPeriod; gradeLevel: string; country: string }):
+export async function startSaspayPayment(input: { tier: PaidTier; period: PaidPeriod; gradeLevel: string; country: string }):
   Promise<{ success: true; checkoutUrl: string; sessionId: string } | { success: false; error: string }> {
-  const r = await asStudent({ action: 'saspay_start', tier: 'pro', ...input });
+  const r = await asStudent({ action: 'saspay_start', ...input });
   if (!r.ok || !r.json?.checkoutUrl) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
   return { success: true, checkoutUrl: String(r.json.checkoutUrl), sessionId: String(r.json.sessionId || '') };
 }
@@ -139,6 +141,19 @@ export async function saveStudyGoal(goal: StudyGoal): Promise<{ success: true; g
 }
 
 // ---------- Administrateur ----------
+/** « Mode Pro » / « Mode Plus » du compte administrateur (sans paiement). */
+export async function setAdminTier(tier: PaidTier): Promise<{ success: true; tier: PaidTier } | { success: false; error: string }> {
+  const authorization = await getAdminAuthorizationHeader();
+  if (!authorization || authorization.slice(7).split('.').length !== 3) return { success: false, error: 'GOOGLE_REQUIRED' };
+  try {
+    const r = await post({ action: 'admin_tier_set', tier }, authorization);
+    if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+    return { success: true, tier: r.json.tier === 'plus' ? 'plus' : 'pro' };
+  } catch {
+    return { success: false, error: 'NETWORK' };
+  }
+}
+
 export interface AdminPayment extends Omit<PaymentView, 'rejectMessage' | 'checkedAt'> {
   uid: string; payerPhone: string; studentName: string; studentEmail: string; receiverNumber: string;
   refRaw: string; checkedAt?: string; checkedBy?: string; rejectReason?: string; testMode?: boolean;

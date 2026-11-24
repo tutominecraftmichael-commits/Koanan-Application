@@ -23,8 +23,17 @@ export const PRICES = {
 /** Durée de chaque formule en jours. */
 export const PERIOD_DAYS = { mois: 30, semestre: 183 };
 
-/** Formules en vente aujourd'hui : KONAN Plus reste en liste d'attente. */
-export const SELLABLE_TIERS = ['pro'];
+/** Formules en vente aujourd'hui. KONAN Plus est ouvert à la vente depuis le 2026-11-24 (choix du fondateur). */
+export const SELLABLE_TIERS = ['pro', 'plus'];
+
+/**
+ * Changement de formule possible pendant un abonnement ? Seulement Pro → Plus (Plus remplace Pro tout de suite,
+ * les jours de Pro restants sont perdus : choix du fondateur, 2026-11-24, annoncé à l'élève avant de payer).
+ * Plus → Pro : non, il faut attendre la fin de Plus.
+ */
+export function canBuyTierDuring(activeTier, tier) {
+  return activeTier === 'free' || activeTier === tier || (activeTier === 'pro' && tier === 'plus');
+}
 
 /**
  * Classes qui ont les cours guidés et la préparation aux devoirs (même liste que EXAM_PREP_GRADES,
@@ -116,9 +125,9 @@ export function validateDeclaration(body, existing, { nowMs, sellable = SELLABLE
   const list = Array.isArray(existing) ? existing : [];
   // Un seul paiement en attente de vérification à la fois
   if (list.some((p) => p.status === PAYMENT_STATUS.pending)) return { ok: false, error: 'PENDING_EXISTS' };
-  // Pas de changement de formule tant qu'une autre formule est en cours (Pro → Plus : plus tard)
+  // Pas de changement de formule pendant un abonnement, sauf Pro → Plus (Plus remplace Pro tout de suite)
   const ent = computeEntitlement(list, nowMs);
-  if (ent.tier !== 'free' && ent.tier !== tier) return { ok: false, error: 'OTHER_TIER_ACTIVE' };
+  if (!canBuyTierDuring(ent.tier, tier)) return { ok: false, error: 'OTHER_TIER_ACTIVE' };
   // Garde-fou contre le spam : 5 déclarations au plus par 24 h
   const recent = list.filter((p) => nowMs - Date.parse(p.declaredAt) < DAY_MS).length;
   if (recent >= 5) return { ok: false, error: 'TOO_MANY' };
@@ -139,7 +148,7 @@ export function validateSaspayStart(body, existing, { nowMs, sessionsLast24h = 0
   if (!PERIOD_DAYS[period]) return { ok: false, error: 'BAD_PERIOD' };
   const list = Array.isArray(existing) ? existing : [];
   const ent = computeEntitlement(list, nowMs);
-  if (ent.tier !== 'free' && ent.tier !== tier) return { ok: false, error: 'OTHER_TIER_ACTIVE' };
+  if (!canBuyTierDuring(ent.tier, tier)) return { ok: false, error: 'OTHER_TIER_ACTIVE' };
   if (sessionsLast24h >= maxPerDay) return { ok: false, error: 'TOO_MANY' };
   return { ok: true, clean: { tier, period, amount: expectedAmount(tier, period) } };
 }
@@ -182,7 +191,13 @@ export function computeEntitlement(payments, nowMs, { startAfterMs = 0 } = {}) {
   let cursor = startAfterMs > 0 ? startAfterMs : 0;
   const spans = [];
   for (const p of counted) {
-    const start = Math.max(Date.parse(p.declaredAt), cursor);
+    let start = Math.max(Date.parse(p.declaredAt), cursor);
+    const last = spans[spans.length - 1];
+    if (p.tier === 'plus' && last && last.p.tier === 'pro') {
+      // Plus remplace Pro TOUT DE SUITE : il commence au paiement, les jours de Pro restants sont coupés
+      start = Math.max(Date.parse(p.declaredAt), startAfterMs > 0 ? startAfterMs : 0);
+      for (const s of spans) if (s.end > start) s.end = Math.max(s.start, start);
+    }
     const end = start + PERIOD_DAYS[p.period] * DAY_MS;
     spans.push({ p, start, end });
     cursor = end;

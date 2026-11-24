@@ -85,7 +85,7 @@ import {
 import type { AvatarConfig } from './lib/avatar/avatarCatalog';
 import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
-import { fetchStudyGoal, fetchSubscription, saveStudyGoal as saveStudyGoalApi, subscriptionErrorText, type StudyGoal, type SubscriptionInfo } from './services/subscriptionApi';
+import { fetchStudyGoal, fetchSubscription, saveStudyGoal as saveStudyGoalApi, setAdminTier, subscriptionErrorText, type PaidTier, type StudyGoal, type SubscriptionInfo } from './services/subscriptionApi';
 import { studyGoalInfo } from './lib/studyGoals';
 import { getTutorStatus, type TutorContext, type TutorStatus } from './services/tutorApi';
 import { LeaguePage } from './features/gamification/LeagueView';
@@ -112,7 +112,7 @@ import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor
 import { isExamPrepOpenFor } from './lib/featureFlags';
 import { normalizeCountry } from './lib/country';
 import { setCurriculumCountry } from './lib/curriculum/subjectVisibility';
-import { PAYMENTS_OPEN, PRO_NO_COURSES_NOTICE } from './lib/subscriptionPlans';
+import { PAYMENTS_OPEN, PLUS_VISIBLE, PRO_NO_COURSES_NOTICE } from './lib/subscriptionPlans';
 import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
@@ -314,7 +314,9 @@ export function App() {
   // n'est pas activé sur le serveur (KONAN_PAYMENTS), rien ne change : formule enregistrée dans l'application.
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
   const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
-  const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
+  // Compte administrateur : le serveur donne la formule de son mode (Pro ou Plus), même paiement éteint
+  const adminStatusTier = subscriptionInfo?.status?.admin ? (subscriptionInfo.status.tier as PlanTier) : null;
+  const serverTier: PlanTier | null = paidMode || adminStatusTier ? (subscriptionInfo!.status!.tier as PlanTier) : null;
   // Tous les pays ont accès à KONAN, Pro compris (choix du fondateur, 2026-11-22 au soir) : seule différence,
   // pas d'Histoire-Géographie du lycée hors Côte d'Ivoire (voir setCurriculumCountry plus bas).
   const effectivePlanTier = useMemo<PlanTier>(() => {
@@ -451,9 +453,13 @@ export function App() {
     }
   }, [state.studySessions.length, state.currentWeekMonday, cloudReady, cloudGaveUp, needsCloud, workloadReady]);
 
-  // Repli vers Gratuit UNIQUEMENT pour les comptes qui tenteraient d'activer 'plus' (qui reste en liste d'attente)
+  // Repli vers Gratuit : invités de groupe (pas encore construit), et formule « plus » enregistrée dans
+  // l'appli alors que le SERVEUR (une fois sa réponse arrivée) ne confirme pas KONAN Plus. Un vrai abonné
+  // Plus (payé, ou administrateur en « Mode Plus ») n'est jamais touché.
+  const plusNotConfirmed = Boolean(subscriptionInfo) && serverTier !== 'plus';
   useEffect(() => {
-    if (state.planTier === 'plus' || state.userAccount?.planTier === 'plus' || state.isGroupGuest || state.userAccount?.isGroupGuest) {
+    const localPlus = state.planTier === 'plus' || state.userAccount?.planTier === 'plus';
+    if ((localPlus && plusNotConfirmed) || state.isGroupGuest || state.userAccount?.isGroupGuest) {
       const { nextState } = transitionUserState(state, 'free');
       nextState.planTier = 'free';
       if (nextState.userAccount) {
@@ -466,7 +472,7 @@ export function App() {
         saveUserState(nextState.userAccount.googleId, nextState);
       }
     }
-  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest]);
+  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest, plusNotConfirmed]);
 
   const isGroupOwner = (effectivePlanTier as string) === 'plus' && !state.isGroupGuest && !state.userAccount?.isGroupGuest;
   const currentOwnerKonanId = (state.userAccount?.konanId || state.konanId || '').trim().toUpperCase();
@@ -921,6 +927,8 @@ export function App() {
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlansOpen, setIsPlansOpen] = useState(false);
   const [subscriptionPeriod, setSubscriptionPeriod] = useState<'mois' | 'semestre'>('mois');
+  // Formule vendue dans la fiche de paiement : KONAN Pro ou KONAN Plus (bouton séparé dans les Paramètres)
+  const [subscriptionTier, setSubscriptionTier] = useState<PaidTier>('pro');
   const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode
     ? (state.userAccount.googleId || auth?.currentUser?.uid || '')
     : '';
@@ -1124,6 +1132,10 @@ export function App() {
         url.searchParams.delete('paiement');
         window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
       } catch { /* adresse laissée telle quelle */ }
+      // Formule payée sur SasPay (retenue avant de partir sur la page de paiement) : Pro ou Plus
+      let paidTier: PaidTier = 'pro';
+      try { if (localStorage.getItem('konan_saspay_tier') === 'plus') paidTier = 'plus'; } catch { /* Pro par défaut */ }
+      setSubscriptionTier(paidTier);
       setIsSubscriptionOpen(true);
     }
     const first = setTimeout(refreshSubscription, 1500);
@@ -1168,8 +1180,18 @@ export function App() {
     return () => { alive = false; };
   }, [subscriptionAccount]);
   const canOpenAdmin = isLocalAdminEnvironment() || isAdminAccount;
-  // KONAN Plus (ou compte administrateur : tout est ouvert) : objectif de l'élève, gardé par le serveur
-  const plusAccess = effectivePlanTier === 'plus' || isAdminAccount;
+  // KONAN Plus seulement (choix du fondateur, 2026-11-24) : l'administrateur l'a en « Mode Plus », pas en « Mode Pro »
+  const plusAccess = effectivePlanTier === 'plus';
+  // « Mode Pro » / « Mode Plus » du compte administrateur (Paramètres) : le serveur le garde, puis on relit l'abonnement
+  const handleSetAdminTier = async (tier: 'pro' | 'plus') => {
+    const r = await setAdminTier(tier);
+    if (!r.success) {
+      showToast(r.error === 'GOOGLE_REQUIRED' ? 'Reconnecte-toi avec ton compte Google administrateur, puis réessaie.' : 'Le changement de mode n’a pas marché. Réessaie dans un instant.');
+      return;
+    }
+    await refreshSubscription();
+    showToast(r.tier === 'plus' ? 'Mode Plus : tu utilises KONAN comme un élève Plus.' : 'Mode Pro : tu utilises KONAN comme un élève Pro.');
+  };
   const [studyGoal, setStudyGoal] = useState<StudyGoal | ''>('');
   useEffect(() => {
     if (!plusAccess || !subscriptionAccount) { setStudyGoal(''); return; }
@@ -1609,15 +1631,16 @@ export function App() {
         setActiveView('auth');
         return;
       }
-      // Mode payant : Pro s'obtient en payant (Plus reste en liste d'attente) ; déjà payé → guide EDT Pro
-      if (paidMode) {
-        if (planId === 'plus') {
-          showToast('KONAN Plus arrive bientôt. KONAN Pro est déjà disponible.');
+      // Mode payant : Pro et Plus s'obtiennent en payant ; déjà payé → guide EDT Pro (Plus contient tout Pro)
+      if (paidMode || adminStatusTier) {
+        if (planId === 'plus' && serverTier !== 'plus') {
+          setSubscriptionTier('plus');
           setIsSubscriptionOpen(true);
           return;
         }
-        if (serverTier !== 'pro') {
+        if (serverTier !== 'pro' && serverTier !== 'plus') {
           if (!proSellableForClass) { showToast(PRO_NOT_FOR_CLASS_TEXT); return; }
+          setSubscriptionTier('pro');
           setIsSubscriptionOpen(true);
           return;
         }
@@ -1627,7 +1650,8 @@ export function App() {
       // Paiement ouvert dans l'appli mais réponse du serveur pas encore là (ou KONAN_PAYMENTS pas encore
       // allumé) : on n'offre plus Pro gratuitement, on ouvre la fiche de paiement (chargement / « bientôt »)
       if (PAYMENTS_OPEN) {
-        if (!proSellableForClass) { showToast(PRO_NOT_FOR_CLASS_TEXT); return; }
+        if (planId === 'pro' && !proSellableForClass) { showToast(PRO_NOT_FOR_CLASS_TEXT); return; }
+        setSubscriptionTier(planId);
         setIsSubscriptionOpen(true);
         return;
       }
@@ -3404,6 +3428,9 @@ export function App() {
         onSelectPlan={(p) => { setProfileScreen(null); handleSelectPlan(p); }}
         onUpgradeToPro={() => { setProfileScreen(null); handleSelectPlan('pro'); }}
         onOpenPlans={() => setIsPlansOpen(true)}
+        onOpenPlus={PLUS_VISIBLE ? () => { setProfileScreen(null); setSubscriptionTier('plus'); setIsSubscriptionOpen(true); } : undefined}
+        adminTier={adminStatusTier === 'plus' ? 'plus' : 'pro'}
+        onSetAdminTier={isAdminAccount ? (t) => { void handleSetAdminTier(t); } : undefined}
         onOpenAdmin={isAdminAccount ? () => { setProfileScreen(null); setIsSettingsOpen(false); setActiveView('admin'); } : undefined}
         subscriptionEndsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
         invitedEmails={state.userAccount?.invitedEmails || []}
@@ -3454,17 +3481,14 @@ export function App() {
               setIsPlansOpen(false);
               setSubscriptionPeriod(period);
               // Paiement ouvert : formulaire Wave / Orange Money (souscrire ou prolonger) ; sinon ancien parcours
-              if (paidMode) setIsSubscriptionOpen(true);
+              if (paidMode) { setSubscriptionTier('pro'); setIsSubscriptionOpen(true); }
               else handleSelectPlan('pro');
             }}
-            onJoinPlus={() => {
+            onChoosePlus={(period) => {
               setIsPlansOpen(false);
-              setWaitlistModalInfo({
-                isOpen: true,
-                featureTitle: 'KONAN Plus',
-                featureDescription: 'KONE adapté à ton objectif, photo de tes exercices, questions à l’oral, correction de tes devoirs en photo et planning réglé sur ton objectif. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
-                requiredTier: 'plus',
-              });
+              setSubscriptionPeriod(period);
+              setSubscriptionTier('plus');
+              setIsSubscriptionOpen(true);
             }}
           />
         </Suspense>
@@ -3474,6 +3498,8 @@ export function App() {
       {isSubscriptionOpen && (
         <Suspense fallback={null}>
           <SubscriptionView
+            key={subscriptionTier}
+            tier={subscriptionTier}
             initialPeriod={subscriptionPeriod}
             gradeLevel={tryResolveGradeLevel(studentGradeRaw) || ''}
             country={studentCountry || 'CI'}
@@ -3484,8 +3510,16 @@ export function App() {
             onClose={() => setIsSubscriptionOpen(false)}
             onRefresh={refreshSubscription}
             onUpdated={(info) => {
+              const previousTier = subscriptionInfo?.status?.tier;
               setSubscriptionInfo(info);
-              if (info.status?.tier === 'pro') {
+              if (subscriptionTier === 'plus' && info.status?.tier === 'plus' && previousTier !== 'plus') {
+                // Nouvel abonné Plus (ou Pro passé à Plus) : bienvenue
+                setIsSubscriptionOpen(false);
+                try { localStorage.removeItem('konan_saspay_tier'); } catch { /* sans effet */ }
+                showToast(info.status.provisional ? 'Bienvenue dans KONAN Plus ! Ton paiement sera vérifié.' : 'Paiement confirmé : bienvenue dans KONAN Plus !');
+                return;
+              }
+              if (subscriptionTier === 'pro' && info.status?.tier === 'pro') {
                 setState((prev) => {
                   const next: AppState = { ...prev, planTier: 'pro', userAccount: prev.userAccount ? { ...prev.userAccount, planTier: 'pro' } : undefined };
                   if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);

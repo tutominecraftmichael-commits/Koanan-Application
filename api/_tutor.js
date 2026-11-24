@@ -314,7 +314,7 @@ export async function askTutor(apiKey, ctx, contents, { totalMs = 55_000, memory
  * Paiement éteint (ordinateur) : 'plus', pour tout essayer.
  */
 export async function tutorPaidTier(db, uid, nowMs = Date.now(), env = process.env) {
-  if (!paymentsEnabled(env)) return 'plus';
+  if (!paymentsEnabled(env)) return 'pro'; // paiement éteint : Pro ouvert à tous, mais jamais Plus sans l'avoir payé
   const { payCol } = await import('./_subscriptionStore.js');
   const snap = await payCol(db, 'subscriptions', env).doc(uid).get();
   const sub = snap.exists ? snap.data() : null;
@@ -328,9 +328,12 @@ export async function hasPaidPro(db, uid, nowMs = Date.now(), env = process.env)
   return (await tutorPaidTier(db, uid, nowMs, env)) !== 'free';
 }
 
-/** Plafonds du jour selon la formule : Pro 30 messages / 10 voix / pas de photo ; Plus (et admin) bien plus. */
-export function tutorLimits(tier, admin = false) {
-  if (admin || tier === 'plus') return { ...PLUS_TUTOR_LIMITS };
+/**
+ * Plafonds du jour selon la formule : Pro 30 messages / 10 voix / pas de photo ; Plus bien plus.
+ * L'administrateur a les plafonds de la formule qu'il a choisie (Mode Pro ou Mode Plus), comme un élève.
+ */
+export function tutorLimits(tier) {
+  if (tier === 'plus') return { ...PLUS_TUTOR_LIMITS };
   return { count: TUTOR_DAILY_LIMIT, voice: TUTOR_VOICE_DAILY_LIMIT, photo: 0 };
 }
 
@@ -385,14 +388,19 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
 
   let tier;
   try {
-    // Compte administrateur : accès complet sans abonnement (choix du fondateur, 2026-11-23)
-    tier = admin ? 'plus' : await tutorPaidTier(db, uid, nowMs, env);
+    // Compte administrateur : sans abonnement, en Pro ou en Plus selon le mode choisi dans les Paramètres
+    if (admin) {
+      const { readAdminTier } = await import('./_adminMode.js');
+      tier = await readAdminTier(db, uid);
+    } else {
+      tier = await tutorPaidTier(db, uid, nowMs, env);
+    }
   } catch {
     return { status: 503, data: { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' } };
   }
   const paid = tier !== 'free';
   const plus = tier === 'plus';
-  const limits = tutorLimits(tier, admin);
+  const limits = tutorLimits(tier);
 
   const usageRef = db.collection('tutor_usage').doc(uid);
   const globalRef = db.collection('tutor_usage').doc('_global');

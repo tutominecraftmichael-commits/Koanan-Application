@@ -162,7 +162,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     available: true,
     recommended: true,
     features: [
-      { title: 'Préparation aux devoirs (Seconde, Première, Terminale et Licence 1 ENTD)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
+      { title: 'Préparation aux devoirs (Seconde, Première, Terminale, Licence 1 ENTD et SRIT)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
       { title: 'Mode « Je ne comprends pas »', detail: 'KONE, le meilleur ami de KONAN, devient ton professeur particulier : il t’explique, te fait faire des exercices et vérifie que tu as compris. Toutes les matières, 30 messages par jour.' },
       { title: 'Énergie illimitée ∞', detail: 'Autant de séries d’exercices que tu veux.' },
       { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONE te corrige : 3 vocaux par jour.' },
@@ -178,8 +178,8 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     tagline: 'Pour viser l’excellence',
     prices: { monthly: 5000, semester: 25000 },
     includesLabel: 'Tout le Pro, plus :',
-    note: 'Bientôt disponible',
-    available: false,
+    note: 'Wave, Orange Money, MTN, Moov',
+    available: true,
     features: [
       { title: 'KONE s’adapte à ton objectif', detail: '12 de moyenne, une mention ou major : sa façon de te parler, son exigence et tes devoirs changent.' },
       { title: 'KONE presque sans limite', detail: '100 messages et 40 réponses à voix haute par jour.' },
@@ -187,16 +187,17 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
       { title: 'Pose ta question à l’oral', detail: 'Parle à KONE au lieu d’écrire.' },
       { title: 'Corrige n’importe quel devoir en photo', detail: 'L’énoncé de ton professeur + ta copie : note sur 20 et correction détaillée (3 par jour).' },
       { title: 'Planning réglé sur ton objectif', detail: 'Tes moyennes → où gagner tes points, matière par matière, et plus de séances là où ça rapporte.' },
-      { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
+      // « Pack groupe » retiré le 2026-11-24 : pas encore construit, on ne vend pas ce qui ne marche pas
     ],
   },
 ];
 
 /**
- * KONAN Plus n'est pas encore officiel (fonctionnalités pas terminées) : on ne le montre PAS aux élèves.
- * Passer à true pour le réafficher (fiche des tarifs, fiche des formules, Paramètres).
+ * KONAN Plus visible et EN VENTE depuis le 2026-11-24 (choix du fondateur) : fiche des tarifs, fiche des
+ * formules et bouton « KONAN Plus » des Paramètres. Remettre à false (et retirer 'plus' de SELLABLE_TIERS,
+ * api/_subscriptionRules.js) pour le cacher de nouveau.
  */
-export const PLUS_VISIBLE = false;
+export const PLUS_VISIBLE = true;
 
 /**
  * Paiement ouvert aux élèves ? Tant que c'est false, KONAN Pro est OFFERT (activation libre, comme avant) :
