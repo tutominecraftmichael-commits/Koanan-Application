@@ -12,6 +12,7 @@
  */
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, examTiming } from './_examCommon.js';
 import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
+import { activeStudyGoal, goalLines, GOAL_TEXT } from './_studyGoal.js';
 
 export const DAILY_CORRECTIONS = 1;
 const IMAGE_TYPES = /^image\/(jpeg|jpg|png|webp)$/;
@@ -31,7 +32,7 @@ const cleanTableIn = (t) => (t && Array.isArray(t.colonnes) && Array.isArray(t.l
   ? { colonnes: t.colonnes.slice(0, 12).map((c) => str(String(c ?? ''), 200)), lignes: t.lignes.slice(0, 12).map((r) => (Array.isArray(r) ? r.slice(0, 12).map((c) => str(String(c ?? ''), 400)) : [])) }
   : null);
 
-export function buildCorrectionPrompt({ classe, matiere, sujet }) {
+export function buildCorrectionPrompt({ classe, matiere, sujet, objectif = '' }) {
   const lines = [];
   for (const e of sujet.exercices) {
     lines.push(`EXERCICE ${e.numero} (${e.points} points) — ${e.nature || ''}${e.auChoix ? ' — AU CHOIX : l’élève traite UN seul des sujets proposés' : ''}`);
@@ -76,11 +77,19 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     '- pointsForts : 1 à 3 savoir-faire réussis, chacun en quelques mots (« Calcul de la masse molaire »).',
     '- aRevoir : 1 à 3 notions à retravailler : notion (quelques mots) + pourquoi (une phrase : l’erreur commise).',
     '- appreciation : 2 phrases au plus, à la première personne (« Je… »), bienveillantes et concrètes, tutoiement.',
+    '- L’élève peut être une fille ou un garçon : aucun mot accordé qui le désigne dans les commentaires, l’appréciation et les conseils (écris « Bravo ! » plutôt que « tu es douée », « pour finir major » plutôt que « pour être la major »).',
     '- conseils : 1 à 3 actions précises et courtes à faire avant le devoir (verbe à l’impératif en tête).',
     '- Si les photos sont illisibles, floues, ou ne sont pas une copie de ce devoir : lisible = false.',
     'Réponds UNIQUEMENT en JSON :',
     '{"lisible":true,"exercices":[{"numero":1,"commentaire":"J’ai vu que…","questions":[{"numero":"1","obtenu":0.5,"statut":"juste","copie":"…","attendu":"…","erreur":"","elements":[{"element":"…","present":true}]}],"grille":[{"critere":"CM1 : Pertinence","obtenu":0.5}]}],"pointsForts":["…"],"aRevoir":[{"notion":"…","pourquoi":"…"}],"appreciation":"Je …","conseils":["…"]}',
     '« grille » vaut [] pour un exercice sans grille.',
+    // KONAN Plus : conseils selon l'objectif de l'élève (la note, elle, ne change jamais)
+    ...(GOAL_TEXT[objectif]
+      ? [
+        ...goalLines(objectif, 'correction'),
+        `- Ajoute au JSON la clé « versObjectif » : 1 ou 2 phrases à la première personne, tutoiement, qui disent ce que l’élève doit corriger EN PRIORITÉ pour atteindre son objectif (${GOAL_TEXT[objectif]}), en citant les erreurs qui lui ont coûté des points. AUCUN nombre de points ni aucune note dans cette phrase (le total est calculé ensuite).`,
+      ]
+      : []),
   ].join('\n');
 }
 
@@ -225,7 +234,123 @@ export function cleanCorrection(raw, sujet) {
   const aRevoir = Array.isArray(raw.aRevoir)
     ? raw.aRevoir.map((r) => ({ notion: str(r?.notion, 100), pourquoi: str(r?.pourquoi, 240) })).filter((r) => r.notion).slice(0, 3)
     : [];
-  return { lisible: true, note, exercices, appreciation, conseils, pointsForts, aRevoir };
+  // KONAN Plus : ce qu'il faut corriger en priorité pour atteindre l'objectif ('' sans objectif).
+  // Jamais de points ni de note dans cette phrase : l'IA les estime avant le calcul du serveur (vu : « tes 4,75
+  // points » pour une note réelle de 4,5) → toute phrase qui en contient est retirée.
+  const versObjectif = str(raw.versObjectif, 360)
+    .split(/(?<=[.!?])\s+/)
+    .filter((s) => !/\d+(?:[.,]\d+)?\s*(?:points?|pts?\b|\/\s*\d+|sur\s+\d+)/i.test(s))
+    .join(' ');
+  return { lisible: true, note, exercices, appreciation, conseils, pointsForts, aRevoir, ...(versObjectif ? { versObjectif } : {}) };
+}
+
+/** Photos envoyées par l'appli → parties Gemini (null si une photo n'est pas une image acceptée). */
+function imageParts(list, max) {
+  const parts = [];
+  for (const img of (Array.isArray(list) ? list : []).slice(0, max)) {
+    const mimeType = String(img?.mimeType || '').toLowerCase();
+    const data = typeof img?.data === 'string' ? img.data : '';
+    if (!IMAGE_TYPES.test(mimeType) || !data) return null;
+    parts.push({ inlineData: { mimeType, data } });
+  }
+  return parts;
+}
+
+/**
+ * Les deux passages de l'IA (sans Firestore : testable seul).
+ * @returns {{ sujetIllisible: true, raison } | { sujet, correction }}
+ */
+export async function runPhotoCorrection({ apiKey, sujetParts, copyParts, classe = '', matiere = '', country = '', objectif = '', timeLeft = () => 285_000, ask = askGeminiJson }) {
+  const { buildPhotoSujetPrompt, cleanPhotoSujet, noteOn20, PHOTO_CORRECTION_RULES } = await import('./_examPhoto.js');
+  const neutral = (p) => (isOutsideCI(country) ? `${neutralizeForCountry(p, country)}\n${NEUTRAL_COUNTRY_RULE}` : p);
+
+  // 1er passage : lire l'énoncé, recopier le barème, rédiger le corrigé (réflexion poussée : c'est la base de tout)
+  const read = await ask(apiKey, [...sujetParts, { text: neutral(buildPhotoSujetPrompt({ classe, matiere })) }], cleanPhotoSujet, 0.2,
+    { thinkingConfig: { thinkingLevel: 'high' } }, {
+      budgetMs: 115_000, attemptMs: 45_000, maxAttemptMs: 85_000, reserveMs: 28_000,
+      sharedConfig: { mediaResolution: 'MEDIA_RESOLUTION_HIGH' },
+    });
+  if (!read.lisible) return { sujetIllisible: true, raison: read.raison };
+  const nomMatiere = matiere || read.matiere || 'la matière';
+
+  // 2e passage : correction de la copie, mêmes règles que les devoirs de KONAN (+ objectif KONAN Plus)
+  const prompt = neutral([buildCorrectionPrompt({ classe: classe || 'sa classe', matiere: nomMatiere, sujet: read, objectif }), ...PHOTO_CORRECTION_RULES].join('\n'));
+  const correction = await ask(apiKey, [...copyParts, { text: prompt }], (raw) => cleanCorrection(raw, read), 0.2, { thinkingConfig: { thinkingLevel: 'high' } }, {
+    budgetMs: Math.max(30_000, timeLeft() - 5_000), attemptMs: 50_000, maxAttemptMs: 130_000, reserveMs: 40_000,
+    sharedConfig: { mediaResolution: 'MEDIA_RESOLUTION_HIGH' },
+  });
+
+  if (correction.versObjectif && objectif) correction.objectif = objectif;
+  else delete correction.versObjectif;
+  // Devoir noté sur un autre total (sur 10, sur 40…) : note du professeur gardée, et note ramenée sur 20
+  if (correction.lisible && Math.abs(read.total - 20) > 0.01) {
+    correction.noteBrute = correction.note;
+    correction.noteSur = read.total;
+    correction.note = noteOn20(correction.note, read.total);
+  }
+  const sujet = {
+    titre: read.titre, matiere: nomMatiere, duree: '', exercices: read.exercices, corrige: read.corrige,
+    baremeLu: read.baremeLu, illisibles: read.illisibles, total: read.total,
+  };
+  return { sujet, correction };
+}
+
+/**
+ * KONAN Plus — devoir donné par le professeur, en photo : lecture de l'énoncé + corrigé (1er passage),
+ * puis correction de la copie avec les mêmes règles que les devoirs de KONAN (2e passage).
+ * Corps : { mode:'photo', classe, matiere?, country, sujetImages:[…], copyImages:[…] }
+ */
+async function correctPhotoHomework(req, res, ctx, body) {
+  const t0 = Date.now();
+  const timeLeft = () => 285_000 - (Date.now() - t0); // vercel.json : 300 s
+  const { DAILY_PHOTO_CORRECTIONS, MAX_SUJET_PHOTOS, MAX_COPY_PHOTOS } = await import('./_examPhoto.js');
+  const { hasPlusAccess } = await import('./_studyGoal.js');
+
+  let db;
+  try {
+    db = await getDb();
+    if (!(await hasPlusAccess(db, ctx.uid, { admin: ctx.admin }))) return send(res, 403, { success: false, error: 'PLUS_REQUIRED' });
+  } catch {
+    return send(res, 503, { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' });
+  }
+  const sujetParts = imageParts(body.sujetImages, MAX_SUJET_PHOTOS);
+  const copyParts = imageParts(body.copyImages, MAX_COPY_PHOTOS);
+  if (!sujetParts || !copyParts) return send(res, 400, { success: false, error: 'BAD_IMAGE' });
+  if (!sujetParts.length) return send(res, 400, { success: false, error: 'NO_SUJET_IMAGE' });
+  if (!copyParts.length) return send(res, 400, { success: false, error: 'NO_IMAGE' });
+
+  let usage;
+  try {
+    usage = await readUsage(ctx.uid, 'photoCorrection');
+  } catch (e) {
+    return send(res, 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
+  }
+  if (!ctx.admin && usage.used >= DAILY_PHOTO_CORRECTIONS) {
+    return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_PHOTO_CORRECTIONS, remaining: 0 });
+  }
+
+  const objectif = await activeStudyGoal(db, ctx.uid, { admin: ctx.admin }).catch(() => '');
+  let out;
+  try {
+    out = await runPhotoCorrection({
+      apiKey: ctx.apiKey, sujetParts, copyParts, classe: str(body.classe, 40), matiere: str(body.matiere, 80),
+      country: str(body.country, 4), objectif, timeLeft,
+    });
+  } catch (e) {
+    console.error('[exam-correct photo]', String(e?.message || e).slice(0, 200));
+    return send(res, 503, { success: false, error: aiErrorCode(e) });
+  }
+  if (out.sujetIllisible) return send(res, 200, { success: true, sujetIllisible: true, raison: out.raison, remaining: Math.max(0, DAILY_PHOTO_CORRECTIONS - usage.used) });
+  const { sujet, correction } = out;
+  // Une copie illisible ne compte pas dans la limite du jour
+  if (correction.lisible) await addUsage(usage.ref, ctx.uid, 'photoCorrection');
+  return send(res, 200, {
+    success: true,
+    sujet,
+    correction,
+    remaining: Math.max(0, DAILY_PHOTO_CORRECTIONS - usage.used - (correction.lisible ? 1 : 0)),
+    seconds: Math.round((Date.now() - t0) / 1000),
+  });
 }
 
 export default async function handler(req, res) {
@@ -238,6 +363,9 @@ export default async function handler(req, res) {
   } catch (e) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: e?.code === 413 ? 'TOO_LARGE' : 'BAD_BODY' });
   }
+
+  // KONAN Plus : devoir du professeur photographié (énoncé + copie)
+  if (body?.mode === 'photo') return correctPhotoHomework(req, res, ctx, body);
 
   const sujet = body?.sujet;
   if (!sujet || !Array.isArray(sujet.exercices) || !sujet.exercices.length) return send(res, 400, { success: false, error: 'NO_SUJET' });
@@ -287,10 +415,13 @@ export default async function handler(req, res) {
     // chrono illisible : la copie est corrigée sans indication de temps
   }
 
+  // Objectif KONAN Plus (lu par le serveur) : '' = conseils habituels
+  const objectif = await getDb().then((db) => activeStudyGoal(db, ctx.uid, { admin: ctx.admin })).catch(() => '');
+
   let correction;
   try {
     const country = str(body.country, 4);
-    const basePrompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
+    const basePrompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet, objectif });
     // Élève hors Côte d'Ivoire : aucune mention ivoirienne dans la correction
     const prompt = isOutsideCI(country) ? `${neutralizeForCountry(basePrompt, country)}\n${NEUTRAL_COUNTRY_RULE}` : basePrompt;
     // Correction avec réflexion poussée (40 s pour une photo, mesuré le 2026-11-22 ; plus avec 4 photos) :
@@ -305,6 +436,10 @@ export default async function handler(req, res) {
     // Rien n'est décompté : la correction ratée ne compte pas dans les 4 du jour
     return send(res, 503, { success: false, error: aiErrorCode(e) });
   }
+
+  // KONAN Plus : l'objectif accompagne « versObjectif » (l'appli affiche « il te manque X points »)
+  if (correction.versObjectif && objectif) correction.objectif = objectif;
+  else delete correction.versObjectif;
 
   // Une copie illisible ne compte pas dans la limite du jour
   if (correction.lisible) await addUsage(usage.ref, ctx.uid, 'correction');

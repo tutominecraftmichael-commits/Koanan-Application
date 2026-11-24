@@ -12,6 +12,7 @@
  */
 import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
 import { isOutsideCI, neutralizeForCountry, NEUTRAL_COUNTRY_RULE } from './_country.js';
+import { activeStudyGoal, goalLines } from './_studyGoal.js';
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, startExamTimer } from './_examCommon.js';
 
 export const DAILY_SUJETS = 1;
@@ -127,7 +128,7 @@ export function buildSujetPrompt(args) {
   return outside ? `${neutralizeForCountry(prompt, args.country)}\n${NEUTRAL_COUNTRY_RULE}` : prompt;
 }
 
-function buildSujetPromptCI({ template, classe, gradeId, matiere, chapitres }) {
+function buildSujetPromptCI({ template, classe, gradeId, matiere, chapitres, objectif = '' }) {
   const structure = template.exercices
     .map((e) => `- EXERCICE ${e.numero} (${e.points} points) — ${e.nature}. ${e.consignes}`)
     .join('\n');
@@ -158,6 +159,8 @@ function buildSujetPromptCI({ template, classe, gradeId, matiere, chapitres }) {
     'Règles de rédaction :',
     ...styleRules.map((r) => `- ${r}`),
     ...(template.reglesMatiere || []).map((r) => `- ${r} (règle propre à la matière : elle passe avant les règles générales)`),
+    // KONAN Plus : niveau d'exigence selon l'objectif de l'élève (toujours dans le format et le programme)
+    ...goalLines(objectif, 'sujet'),
     exemples,
     '',
     'Réponds UNIQUEMENT en JSON, avec exactement un objet par exercice du format, dans l’ordre :',
@@ -428,8 +431,10 @@ export default async function handler(req, res) {
   const t0 = Date.now();
   // vercel.json : 300 s. Rédaction (≈ 50 s) puis relecture (≈ 20-30 s) puis, si besoin, réécriture (≈ 50 s).
   const timeLeft = () => 285_000 - (Date.now() - t0);
+  // Objectif KONAN Plus (lu par le serveur) : '' = sujet habituel
+  const objectif = await getDb().then((db) => activeStudyGoal(db, ctx.uid, { admin: ctx.admin })).catch(() => '');
   try {
-    prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres, country: str(body.country, 4) });
+    prompt = buildSujetPrompt({ template, classe, gradeId, matiere, chapitres, country: str(body.country, 4), objectif });
     // Un essai du modèle principal plafonné à 120 s, pour garder 45 s au modèle de secours
     sujet = await askGeminiJson(ctx.apiKey, [{ text: prompt }], (raw) => cleanSujet(raw, template), 0.6, {}, {
       budgetMs: 175_000, attemptMs: 60_000, maxAttemptMs: 120_000, reserveMs: 45_000,

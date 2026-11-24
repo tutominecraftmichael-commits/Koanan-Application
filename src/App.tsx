@@ -85,7 +85,8 @@ import {
 import type { AvatarConfig } from './lib/avatar/avatarCatalog';
 import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
-import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
+import { fetchStudyGoal, fetchSubscription, saveStudyGoal as saveStudyGoalApi, subscriptionErrorText, type StudyGoal, type SubscriptionInfo } from './services/subscriptionApi';
+import { studyGoalInfo } from './lib/studyGoals';
 import { getTutorStatus, type TutorContext, type TutorStatus } from './services/tutorApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
@@ -98,7 +99,6 @@ import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
-import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelectorModal';
 
 
 // Views
@@ -130,6 +130,9 @@ const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorM
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const TutorChat = lazyView(() => import('./features/tutor/TutorChat').then((m) => m.TutorChat));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
+const GoalPlanView = lazyView(() => import('./features/plus/GoalPlanView').then((m) => m.GoalPlanView));
+const HomeworkPhotoView = lazyView(() => import('./features/plus/HomeworkPhotoView').then((m) => m.HomeworkPhotoView));
+const StudyGoalSheet = lazyView(() => import('./features/plus/StudyGoalSheet').then((m) => m.StudyGoalSheet));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -1165,6 +1168,15 @@ export function App() {
     return () => { alive = false; };
   }, [subscriptionAccount]);
   const canOpenAdmin = isLocalAdminEnvironment() || isAdminAccount;
+  // KONAN Plus (ou compte administrateur : tout est ouvert) : objectif de l'élève, gardé par le serveur
+  const plusAccess = effectivePlanTier === 'plus' || isAdminAccount;
+  const [studyGoal, setStudyGoal] = useState<StudyGoal | ''>('');
+  useEffect(() => {
+    if (!plusAccess || !subscriptionAccount) { setStudyGoal(''); return; }
+    let alive = true;
+    fetchStudyGoal().then((r) => { if (alive && r.success) setStudyGoal(r.goal); }).catch(() => {});
+    return () => { alive = false; };
+  }, [plusAccess, subscriptionAccount]);
   const paidModeRef = useRef({ paidMode, serverTier });
   paidModeRef.current = { paidMode, serverTier };
   // Quand la formule du SERVEUR change (fin d'abonnement, paiement refusé, paiement accepté), on l'applique
@@ -1742,52 +1754,31 @@ export function App() {
   };
 
   /**
-   * Konan Plus: Change 1 of the 3 Academic Goals
+   * KONAN Plus : objectif de l'élève (12, mention, major). Gardé par le SERVEUR (study_goals) : KONE, les
+   * corrections, les sujets et les notifications adaptent leur ton. L'ancienne copie dans le compte de
+   * l'appli était effacée à chaque sauvegarde : elle n'est plus utilisée.
+   * @returns un message d'erreur, ou null si l'objectif est enregistré
    */
-  const handleSelectAcademicGoal = (goal: AcademicGoal) => {
-    if (effectivePlanTier !== 'plus') {
+  const handleSelectAcademicGoal = async (goal: AcademicGoal): Promise<string | null> => {
+    if (!plusAccess) {
       setWaitlistModalInfo({
         isOpen: true,
-        featureTitle: 'Objectifs Académiques (Major de promotion)',
-        featureDescription: 'Le conditionnement intelligent du planning selon vos objectifs (12, 16 ou Major) est réservé à KONAN PLUS.',
+        featureTitle: 'Ton objectif avec KONAN Plus',
+        featureDescription: 'Choisis ton objectif (12 de moyenne, une mention ou major) : KONE et KONAN adaptent leur façon de te parler, leur exigence et tes devoirs. C’est l’une des forces de KONAN Plus.',
         requiredTier: 'plus',
       });
-      return;
+      return 'KONAN Plus est nécessaire pour choisir un objectif.';
     }
-    setState(prev => {
-      const nextUserAccount: UserAccount = prev.userAccount ? {
-        ...prev.userAccount,
-        academicGoal: goal,
-        lastSyncedAt: new Date().toISOString(),
-      } : {
-        isLoggedIn: false,
-        name: prev.studentName || 'Étudiant',
-        email: '',
-        avatar: '',
-        googleId: '',
-        academicLevel: prev.academicLevel,
-        planTier: 'plus',
-        academicGoal: goal,
-        lastSyncedAt: new Date().toISOString(),
-      };
-
-      const next: AppState = {
-        ...prev,
-        userAccount: nextUserAccount,
-      };
-
-      if (prev.userAccount?.googleId && !prev.isDemoMode) {
-        saveUserState(prev.userAccount.googleId, next);
-      }
-      return next;
-    });
-
-    const goalLabels: Record<AcademicGoal, string> = {
-      target_12: 'Validation Sereine (12/20)',
-      target_16: 'Mention Très Bien (16/20)',
-      major_promotion: 'Major de Promotion (Excellence)',
-    };
-    showToast(`Objectif académique activé : ${goalLabels[goal]} !`);
+    const r = await saveStudyGoalApi(goal);
+    if (r.success === false) {
+      return r.error === 'PLUS_REQUIRED'
+        ? 'Ton abonnement KONAN Plus n’est pas actif.'
+        : subscriptionErrorText(r.error);
+    }
+    setStudyGoal(r.goal);
+    const info = studyGoalInfo(r.goal);
+    showToast(info ? `Objectif enregistré : ${info.title.toLowerCase()}. KONE s’adapte !` : 'Objectif enregistré.');
+    return null;
   };
 
   /**
@@ -2181,6 +2172,29 @@ export function App() {
       return nextState;
     });
     showToast("Emploi du temps mis à jour avec succès !");
+  };
+
+  /**
+   * KONAN Plus : planning réglé sur l'objectif. Moyennes actuelles et notes visées enregistrées dans les matières,
+   * temps par jour conseillé (si l'élève l'accepte), puis UN seul recalcul du planning (séances faites gardées).
+   */
+  const handleApplyGoalPlan = (newSubjects: Subject[], dailyMinutes: number | null) => {
+    const prefs: StudyPreferences = dailyMinutes ? { ...state.preferences, targetDailyStudyMinutes: dailyMinutes } : state.preferences;
+    const updatedPlan = generateOptimizedStudyPlan(newSubjects, state.classSlots, prefs, effectivePlanTier);
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        subjects: newSubjects,
+        preferences: prefs,
+        studySessions: mergePreservingCompletedSessions(prev.studySessions, updatedPlan),
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
+    showToast('Planning réglé sur ton objectif : plus de séances là où tu gagnes le plus de points !');
+    setActiveView('dashboard');
   };
 
   const handleUpdatePreferences = (newPrefs: StudyPreferences) => {
@@ -2922,6 +2936,9 @@ export function App() {
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
+              onOpenPhotoCorrection={plusAccess && subscriptionAccount ? () => setActiveView('devoir-photo') : undefined}
+              onOpenGoalPlan={plusAccess ? () => setActiveView('plan-objectif') : undefined}
+              goalPlanLabel={studyGoalInfo(studyGoal)?.short}
               // Tuile de la maquette : ligue (rang + division, élèves admis dans la ligue)
               leagueSummary={gamificationEnabled && gradeIsInLeague
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
@@ -3131,6 +3148,30 @@ export function App() {
           )
         )}
 
+        {/* KONAN Plus : planning réglé sur l'objectif */}
+        {activeView === 'plan-objectif' && plusAccess && (
+          <GoalPlanView
+            goal={studyGoal}
+            subjects={state.subjects || []}
+            dailyMinutes={state.preferences?.targetDailyStudyMinutes || 120}
+            onChangeGoal={() => setIsAcademicGoalModalOpen(true)}
+            onApply={handleApplyGoalPlan}
+            onExit={() => setActiveView('dashboard')}
+          />
+        )}
+
+        {/* KONAN Plus : corriger un devoir du professeur en photo (énoncé + copie) */}
+        {activeView === 'devoir-photo' && plusAccess && subscriptionAccount && (
+          <HomeworkPhotoView
+            userId={subscriptionAccount}
+            classe={effectiveClassLabel || ''}
+            country={studentCountry || undefined}
+            subjects={(state.subjects || []).map((s) => s.name)}
+            onExit={() => setActiveView('dashboard')}
+            onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
+          />
+        )}
+
         {/* Ligue (onglet trophée) */}
         {activeView === 'league' && gamificationEnabled && (
           <LeaguePage
@@ -3208,8 +3249,12 @@ export function App() {
             remaining={tutorStatus.remaining}
             limit={tutorStatus.limit}
             voiceRemaining={tutorStatus.voiceRemaining}
+            goalLabel={studyGoalInfo(studyGoal)?.short}
             onRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, remaining: n } : s))}
             onVoiceRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, voiceRemaining: n } : s))}
+            plus={tutorStatus.plus}
+            photoRemaining={tutorStatus.plus ? tutorStatus.photoRemaining : null}
+            onPhotoRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, photoRemaining: n } : s))}
             onSubscribe={proSellableForClass ? () => { setTutorOpen(null); setIsSubscriptionOpen(true); } : undefined}
             onClose={() => setTutorOpen(null)}
           />
@@ -3362,7 +3407,8 @@ export function App() {
         onOpenAdmin={isAdminAccount ? () => { setProfileScreen(null); setIsSettingsOpen(false); setActiveView('admin'); } : undefined}
         subscriptionEndsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
         invitedEmails={state.userAccount?.invitedEmails || []}
-        academicGoal={state.userAccount?.academicGoal || 'target_16'}
+        academicGoal={studyGoal || undefined}
+        showGoal={plusAccess}
         onOpenGroupModal={() => {
           if (effectivePlanTier !== 'plus') {
             setWaitlistModalInfo({
@@ -3376,15 +3422,16 @@ export function App() {
           setIsPlusGroupModalOpen(true);
         }}
         onOpenGoalModal={() => {
-          if (effectivePlanTier !== 'plus') {
+          if (!plusAccess) {
             setWaitlistModalInfo({
               isOpen: true,
-              featureTitle: 'Objectifs Académiques (Major de promotion)',
-              featureDescription: 'Le conditionnement intelligent du planning selon vos objectifs (12, 16 ou Major) est réservé à KONAN PLUS.',
+              featureTitle: 'Ton objectif avec KONAN Plus',
+              featureDescription: 'Choisis ton objectif (12 de moyenne, une mention ou major) : KONE et KONAN adaptent leur façon de te parler, leur exigence et tes devoirs. C’est l’une des forces de KONAN Plus.',
               requiredTier: 'plus',
             });
             return;
           }
+          setIsSettingsOpen(false);
           setIsAcademicGoalModalOpen(true);
         }}
         onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
@@ -3415,7 +3462,7 @@ export function App() {
               setWaitlistModalInfo({
                 isOpen: true,
                 featureTitle: 'KONAN Plus',
-                featureDescription: 'Planning réglé sur ton objectif, pack groupe de 5 comptes et musiques de concentration. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
+                featureDescription: 'KONE adapté à ton objectif, photo de tes exercices, questions à l’oral, correction de tes devoirs en photo et planning réglé sur ton objectif. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
                 requiredTier: 'plus',
               });
             }}
@@ -3515,14 +3562,18 @@ export function App() {
         invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
 
-      {/*  KONAN PLUS: 3 OBJECTIFS SCOLAIRES MODAL */}
-      <AcademicGoalSelectorModal
-        isOpen={isAcademicGoalModalOpen}
-        onClose={() => setIsAcademicGoalModalOpen(false)}
-        currentGoal={state.userAccount?.academicGoal || 'target_16'}
-        onSelectGoal={handleSelectAcademicGoal}
-        studentName={effectiveStudentName}
-      />
+      {/* KONAN Plus : « Mon objectif » (12, mention, major) — KONE adapte son ton */}
+      {isAcademicGoalModalOpen && plusAccess && (
+        <Suspense fallback={null}>
+          <StudyGoalSheet
+            currentGoal={studyGoal}
+            onSave={handleSelectAcademicGoal}
+            onClose={() => setIsAcademicGoalModalOpen(false)}
+            onOpenPlan={activeView === 'plan-objectif' ? undefined : () => { setIsAcademicGoalModalOpen(false); setActiveView('plan-objectif'); }}
+            studentName={effectiveStudentName}
+          />
+        </Suspense>
+      )}
 
       {/* Google Calendar Sync Modal (ALL DAYS) */}
       <GoogleCalendarSyncModal

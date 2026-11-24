@@ -17,7 +17,7 @@ export const PRICES = {
   // Semestre passé de 9 950 à 12 500 F le 2026-11-22 (choix du fondateur : les gros utilisateurs de l'IA
   // coûtaient plus cher que 1 660 F par mois). Toujours moins cher que 6 × 2 500 F = 15 000 F.
   pro: { mois: 2500, semestre: 12500 },
-  plus: { mois: 5000, semestre: 19950 },
+  plus: { mois: 5000, semestre: 25000 },
 };
 
 /** Durée de chaque formule en jours. */
@@ -36,7 +36,7 @@ export const GRADES_WITH_COURSES = [
   'seconde_a', 'seconde_c',
   'premiere_a', 'premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d',
   'terminale_a', 'terminale_a1', 'terminale_a2', 'terminale_c', 'terminale_d',
-  'lmd_entd_l1',
+  'lmd_entd_l1', 'lmd_srit_l1',
 ];
 /** Pro est vendu à toutes les classes (le pays, lui, doit être la Côte d'Ivoire). */
 export const proAvailableForGrade = () => true;

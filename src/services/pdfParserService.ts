@@ -56,55 +56,79 @@ const PALETTE = [
 ];
 
 export const KNOWN_ACADEMIC_ECUE_MAP: Record<string, { name: string; professor?: string; coefficient?: number; difficulty?: 1 | 2 | 3 | 4 | 5 }> = {
-  // ESATIC — Licence 1 (ENTD 1 — Semestre 2)
-  '1LAN3250': { name: 'Anglais', professor: 'M. FADIGA LANCINE ABOUBAKAR', coefficient: 3, difficulty: 2 },
-  '1MAN3250': { name: 'Microéconomie 2', professor: 'Dr KOUAKOU INNOCENT', coefficient: 5, difficulty: 4 },
-  '2MAN3250': { name: 'Macroéconomie 2', professor: 'Dr KADJO ASSANDE PIERRE', coefficient: 5, difficulty: 4 },
-  '3MAN3250': { name: 'Modèle de Développement en Économie Numérique', professor: "Dr N'GUESSAN BI ZAMBE SERGE", coefficient: 5, difficulty: 4 },
-  '1MAN3251': { name: 'Comptabilité générale II', professor: 'Dr BOLLE OBLOU ROMAIN', coefficient: 6, difficulty: 4 },
-  '2MAN3251': { name: "Organisation et gestion de l'entreprise", professor: 'M. SILUE YACOUBA', coefficient: 6, difficulty: 3 },
-  '2IRE3250': { name: 'Réseaux', professor: 'M. ANGUE-ANGO PATRICK-ERNEST', coefficient: 5, difficulty: 4 },
-  // ESATIC — Licence 2 (ENTD 2 — Semestre 3)
-  '1MAN3350': { name: 'Fondamentaux de la Finance', professor: 'Dr KADJO ASSANDE PIERRE', coefficient: 6, difficulty: 4 },
-  '1INF3350': { name: "Développement d'Applications 1", professor: 'M. KONE ZANA', coefficient: 6, difficulty: 4 },
-  '2INF3350': { name: 'Conception web et administration des SI', professor: 'M. MEYER JEAN-MARC', coefficient: 6, difficulty: 4 },
-  '1MTH3350': { name: 'Algèbres 2', professor: 'Dr KOIVOGUI MOUSSA', coefficient: 6, difficulty: 5 },
-  '2MTH3350': { name: 'Analyse 2', professor: 'Dr GOLI ETIENNE', coefficient: 6, difficulty: 5 },
-  '1MAN3351': { name: 'Économie du Développement', professor: 'Dr KOUAKOU INNOCENT', coefficient: 5, difficulty: 3 },
-  '1MAN3352': { name: 'Droit de la Protection des données', professor: 'Dr ADINGRA FODJO MARIUS', coefficient: 4, difficulty: 3 },
-  '1LAN3350': { name: 'Anglais', professor: 'M. YEO NICODEME', coefficient: 3, difficulty: 2 },
+  // Licence 1 (ENTD 1 — Semestre 2)
+  '1LAN3250': { name: 'Anglais', coefficient: 3, difficulty: 2 },
+  '1MAN3250': { name: 'Microéconomie 2', coefficient: 5, difficulty: 4 },
+  '2MAN3250': { name: 'Macroéconomie 2', coefficient: 5, difficulty: 4 },
+  '3MAN3250': { name: 'Modèle de Développement en Économie Numérique', coefficient: 5, difficulty: 4 },
+  '1MAN3251': { name: 'Comptabilité générale II', coefficient: 6, difficulty: 4 },
+  '2MAN3251': { name: "Organisation et gestion de l'entreprise", coefficient: 6, difficulty: 3 },
+  '2IRE3250': { name: 'Réseaux', coefficient: 5, difficulty: 4 },
+  // Licence 2 (ENTD 2 — Semestre 3)
+  '1MAN3350': { name: 'Fondamentaux de la Finance', coefficient: 6, difficulty: 4 },
+  '1INF3350': { name: "Développement d'Applications 1", coefficient: 6, difficulty: 4 },
+  '2INF3350': { name: 'Conception web et administration des SI', coefficient: 6, difficulty: 4 },
+  '1MTH3350': { name: 'Algèbres 2', coefficient: 6, difficulty: 5 },
+  '2MTH3350': { name: 'Analyse 2', coefficient: 6, difficulty: 5 },
+  '1MAN3351': { name: 'Économie du Développement', coefficient: 5, difficulty: 3 },
+  '1MAN3352': { name: 'Droit de la Protection des données', coefficient: 4, difficulty: 3 },
+  '1LAN3350': { name: 'Anglais', coefficient: 3, difficulty: 2 },
+  // Licence 1 (SRIT 1 — Semestre 1 & Semestre 2)
+  '1COM3100': { name: 'Anglais', coefficient: 2, difficulty: 2 },
+  '2COM3100': { name: "Technique d'Expression Française", coefficient: 2, difficulty: 2 },
+  '3COM3100': { name: 'Développement Personnel', coefficient: 1, difficulty: 2 },
+  '1MTH3100': { name: 'Logique et Raisonnement Mathématique', coefficient: 2, difficulty: 4 },
+  '2MTH3100': { name: 'Structures Algébriques', coefficient: 3, difficulty: 5 },
+  '1MTH3101': { name: "Fonctions d'une variable réelle", coefficient: 4, difficulty: 5 },
+  '2MTH3101': { name: 'Géométrie Différentielle Élémentaire', coefficient: 2, difficulty: 4 },
+  '1PHY3100': { name: 'Optique Géométrique', coefficient: 3, difficulty: 4 },
+  '2PHY3100': { name: 'Physique des Dispositifs Électroniques', coefficient: 1, difficulty: 4 },
+  '1PHY3101': { name: 'Électrostatique et Magnétostatique', coefficient: 2, difficulty: 4 },
+  '2PHY3101': { name: 'Électrocinétique', coefficient: 3, difficulty: 4 },
+  '1INF3100': { name: 'Architecture des Ordinateurs', coefficient: 1, difficulty: 3 },
+  '2INF3100': { name: 'Initiation en Algorithmique', coefficient: 3, difficulty: 4 },
+  '1DRT3100': { name: 'Introduction au Droit', coefficient: 2, difficulty: 3 },
+  '1MTH3200': { name: 'Algèbre linéaire', coefficient: 4, difficulty: 5 },
+  '1MTH3201': { name: 'Compléments sur les fonctions à variables réelles', coefficient: 4, difficulty: 5 },
+  '1PHY3200': { name: 'Électronique Fondamentale', coefficient: 4, difficulty: 5 },
+  '1PHY3201': { name: 'Électronique Numérique', coefficient: 4, difficulty: 4 },
+  '1PHY3202': { name: 'Mécanique du point', coefficient: 2, difficulty: 4 },
+  '1COM3200': { name: 'Anglais', coefficient: 2, difficulty: 2 },
+  '2COM3200': { name: "Technique d'Expression Française", coefficient: 2, difficulty: 2 },
+  '1INF3200': { name: 'Algorithmique et Python', coefficient: 3, difficulty: 4 },
+  '1ECO3200': { name: 'Analyse Économique', coefficient: 2, difficulty: 3 },
 };
 
 export const DEMO_PDF_TEMPLATES: DemoPdfTemplate[] = [
   {
-    id: 'pdf-esatic-entd2',
-    name: 'ESATIC — Semestre 3 : ENTD 2 (Économie Numérique & Transformation Digitale)',
-    trackName: 'Économie Numérique & Transformation Digitale (ESATIC)',
+    id: 'pdf-lmd-entd2',
+    name: 'Grande école — Semestre 3 : ENTD 2 (Économie Numérique & Transformation Digitale)',
+    trackName: 'Économie Numérique & Transformation Digitale',
     level: 'Licence 2 / Semestre 3',
-    fileName: 'ESATIC_EDT_Semestre_3_ENTD2_Partie1.pdf',
+    fileName: 'EDT_Semestre_3_ENTD2_Partie1.pdf',
     fileSize: 489300,
-    rawText: `ESATIC - ECOLE SUPERIEURE AFRICAINE DES TIC
+    rawText: `GRANDE ÉCOLE D'INGÉNIEURS — EMPLOI DU TEMPS
 EMPLOI DU TEMPS DU SEMESTRE 3 : ENTD 2 - PARTIE 1
 LUNDI :
-07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi ESATIC | Dr KOIVOGUI MOUSSA
-10:15 - 12:45 | Anglais [1LAN3350] | Salle 204 | M. YEO NICODEME
-14:30 - 17:00 | Développement d'Applications 1 [1INF3350] | Lab Info | M. KONE ZANA
+07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi A | Dr ENSEIGNANT A
+10:15 - 12:45 | Anglais [1LAN3350] | Salle 204 | M. ENSEIGNANT B
+14:30 - 17:00 | Développement d'Applications 1 [1INF3350] | Lab Info | M. ENSEIGNANT C
 MARDI :
-07:30 - 10:00 | Fondamentaux de la Finance [1MAN3350] | Amphi ESATIC | Dr KADJO ASSANDE PIERRE
-10:15 - 12:45 | Conception web et administration des SI [2INF3350] | Lab Info | M. MEYER JEAN-MARC
-16:30 - 18:00 | Sport / Activités Physiques | Terrain ESATIC | Coach Sport
+07:30 - 10:00 | Fondamentaux de la Finance [1MAN3350] | Amphi A | Dr ENSEIGNANT D
+10:15 - 12:45 | Conception web et administration des SI [2INF3350] | Lab Info | M. ENSEIGNANT E
+16:30 - 18:00 | Sport / Activités Physiques | Terrain de sport | Coach Sport
 MERCREDI :
-07:30 - 10:00 | Économie du Développement [1MAN3351] | Amphi ESATIC | Dr KOUAKOU INNOCENT
-10:15 - 12:45 | Conception web et administration des SI [2INF3350] | Lab Info | M. MEYER JEAN-MARC
-14:30 - 17:00 | Analyse 2 [2MTH3350] | Amphi ESATIC | Dr GOLI ETIENNE
+07:30 - 10:00 | Économie du Développement [1MAN3351] | Amphi A | Dr ENSEIGNANT F
+10:15 - 12:45 | Conception web et administration des SI [2INF3350] | Lab Info | M. ENSEIGNANT E
+14:30 - 17:00 | Analyse 2 [2MTH3350] | Amphi A | Dr ENSEIGNANT G
 JEUDI :
-07:30 - 10:00 | Fondamentaux de la Finance [1MAN3350] | Amphi ESATIC | Dr KADJO ASSANDE PIERRE
-10:15 - 12:45 | Développement d'Applications 1 [1INF3350] | Lab Info | M. KONE ZANA
-14:30 - 17:00 | Analyse 2 [2MTH3350] | Amphi ESATIC | Dr GOLI ETIENNE
+07:30 - 10:00 | Fondamentaux de la Finance [1MAN3350] | Amphi A | Dr ENSEIGNANT D
+10:15 - 12:45 | Développement d'Applications 1 [1INF3350] | Lab Info | M. ENSEIGNANT C
+14:30 - 17:00 | Analyse 2 [2MTH3350] | Amphi A | Dr ENSEIGNANT G
 VENDREDI :
-07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi ESATIC | Dr KOIVOGUI MOUSSA
-10:15 - 12:45 | Économie du Développement [1MAN3351] | Amphi ESATIC | Dr KOUAKOU INNOCENT
-14:30 - 17:00 | Droit de la Protection des données [1MAN3352] | Amphi ESATIC | Dr ADINGRA FODJO MARIUS
+07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi A | Dr ENSEIGNANT A
+10:15 - 12:45 | Économie du Développement [1MAN3351] | Amphi A | Dr ENSEIGNANT F
+14:30 - 17:00 | Droit de la Protection des données [1MAN3352] | Amphi A | Dr ENSEIGNANT H
 SAMEDI :
 08:00 - 12:00 | Devoirs et Cours de Rattrapage | Salle Polyvalente | Équipe pédagogique`,
     subjects: [
@@ -118,20 +142,20 @@ SAMEDI :
       { name: 'Anglais', code: '1LAN3350', color: '#14B8A6', coefficient: 3, difficulty: 2, targetGrade: 17, topics: ['Business & Technical English vocabulary', 'IT presentations & Communication skills', 'Technical writing & Documentation', 'Listening comprehension & Active practice'] },
     ],
     slots: [
-      { subjectName: 'Algèbres 2', dayOfWeek: 0, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr KOIVOGUI MOUSSA' },
-      { subjectName: 'Anglais', dayOfWeek: 0, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Salle 204', professor: 'M. YEO NICODEME' },
-      { subjectName: 'Développement d\'Applications 1', dayOfWeek: 0, startTime: '14:30', endTime: '17:00', type: 'lab', room: 'Lab Info', professor: 'M. KONE ZANA' },
-      { subjectName: 'Fondamentaux de la Finance', dayOfWeek: 1, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr KADJO ASSANDE PIERRE' },
-      { subjectName: 'Conception web et administration des SI', dayOfWeek: 1, startTime: '10:15', endTime: '12:45', type: 'lab', room: 'Lab Info', professor: 'M. MEYER JEAN-MARC' },
-      { subjectName: 'Économie du Développement', dayOfWeek: 2, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr KOUAKOU INNOCENT' },
-      { subjectName: 'Conception web et administration des SI', dayOfWeek: 2, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Lab Info', professor: 'M. MEYER JEAN-MARC' },
-      { subjectName: 'Analyse 2', dayOfWeek: 2, startTime: '14:30', endTime: '17:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr GOLI ETIENNE' },
-      { subjectName: 'Fondamentaux de la Finance', dayOfWeek: 3, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr KADJO ASSANDE PIERRE' },
-      { subjectName: 'Développement d\'Applications 1', dayOfWeek: 3, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Lab Info', professor: 'M. KONE ZANA' },
-      { subjectName: 'Analyse 2', dayOfWeek: 3, startTime: '14:30', endTime: '17:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr GOLI ETIENNE' },
-      { subjectName: 'Algèbres 2', dayOfWeek: 4, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr KOIVOGUI MOUSSA' },
-      { subjectName: 'Économie du Développement', dayOfWeek: 4, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr KOUAKOU INNOCENT' },
-      { subjectName: 'Droit de la Protection des données', dayOfWeek: 4, startTime: '14:30', endTime: '17:00', type: 'lecture', room: 'Amphi ESATIC', professor: 'Dr ADINGRA FODJO MARIUS' },
+      { subjectName: 'Algèbres 2', dayOfWeek: 0, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT A' },
+      { subjectName: 'Anglais', dayOfWeek: 0, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Salle 204', professor: 'M. ENSEIGNANT B' },
+      { subjectName: 'Développement d\'Applications 1', dayOfWeek: 0, startTime: '14:30', endTime: '17:00', type: 'lab', room: 'Lab Info', professor: 'M. ENSEIGNANT C' },
+      { subjectName: 'Fondamentaux de la Finance', dayOfWeek: 1, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT D' },
+      { subjectName: 'Conception web et administration des SI', dayOfWeek: 1, startTime: '10:15', endTime: '12:45', type: 'lab', room: 'Lab Info', professor: 'M. ENSEIGNANT E' },
+      { subjectName: 'Économie du Développement', dayOfWeek: 2, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT F' },
+      { subjectName: 'Conception web et administration des SI', dayOfWeek: 2, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Lab Info', professor: 'M. ENSEIGNANT E' },
+      { subjectName: 'Analyse 2', dayOfWeek: 2, startTime: '14:30', endTime: '17:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT G' },
+      { subjectName: 'Fondamentaux de la Finance', dayOfWeek: 3, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT D' },
+      { subjectName: 'Développement d\'Applications 1', dayOfWeek: 3, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Lab Info', professor: 'M. ENSEIGNANT C' },
+      { subjectName: 'Analyse 2', dayOfWeek: 3, startTime: '14:30', endTime: '17:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT G' },
+      { subjectName: 'Algèbres 2', dayOfWeek: 4, startTime: '07:30', endTime: '10:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT A' },
+      { subjectName: 'Économie du Développement', dayOfWeek: 4, startTime: '10:15', endTime: '12:45', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT F' },
+      { subjectName: 'Droit de la Protection des données', dayOfWeek: 4, startTime: '14:30', endTime: '17:00', type: 'lecture', room: 'Amphi A', professor: 'Dr ENSEIGNANT H' },
     ],
   },
   {
@@ -186,7 +210,7 @@ VENDREDI :
     fileSize: 428500,
     rawText: `UNIVERSITÉ DES SCIENCES & TECHNOLOGIES
 LUNDI :
-08:30 - 10:30 | CM Algorithmique Avancée & Graphes | Amphi Ada Lovelace | Prof. Dr. Boni
+08:30 - 10:30 | CM Algorithmique Avancée & Graphes | Amphi Ada Lovelace | Prof. Dr. Martin
 10:45 - 12:45 | TD Algorithmique & Complexité | Salle B204 | M. Dupont
 14:00 - 17:00 | TP Architecture des Réseaux & Sockets | Lab Info 4 | Mme. Mercier
 MARDI :
@@ -211,7 +235,7 @@ VENDREDI :
       { name: 'Anglais Professionnel', code: 'LANG-301', color: '#EC4899', coefficient: 2, difficulty: 2, targetGrade: 18, topics: ['Technical Writing', 'Presentations'] },
     ],
     slots: [
-      { subjectName: 'Algorithmique Avancée & Graphes', dayOfWeek: 0, startTime: '08:30', endTime: '10:30', type: 'lecture', room: 'Amphi Ada Lovelace', professor: 'Prof. Dr. Boni' },
+      { subjectName: 'Algorithmique Avancée & Graphes', dayOfWeek: 0, startTime: '08:30', endTime: '10:30', type: 'lecture', room: 'Amphi Ada Lovelace', professor: 'Prof. Dr. Martin' },
       { subjectName: 'Algorithmique Avancée & Graphes', dayOfWeek: 0, startTime: '10:45', endTime: '12:45', type: 'tutorial', room: 'Salle B204', professor: 'M. Dupont' },
       { subjectName: 'Architecture des Réseaux & Sockets', dayOfWeek: 0, startTime: '14:00', endTime: '17:00', type: 'lab', room: 'Lab Info 4', professor: 'Mme. Mercier' },
       { subjectName: 'Systèmes d’Exploitation & Concurrence', dayOfWeek: 1, startTime: '09:00', endTime: '11:00', type: 'lecture', room: 'Amphi Turing', professor: 'Dr. Leclerc' },
@@ -419,7 +443,7 @@ export function isDayHeaderToken(str: string): DayOfWeek | null {
 /**
  * Finds a day of the week mentioned within a line of text.
  * Requires word boundaries or explicit day prefix to avoid false triggers
- * inside professor names (e.g. "M. MEYER JEAN-MARC", "Dr ADINGRA FODJO MARIUS", "Mme. Mercier")
+ * inside professor names (e.g. "M. ENSEIGNANT E", "Dr ENSEIGNANT H", "Mme. Mercier")
  * or course words (e.g. "Commerce", "Marketing").
  */
 export function findDayInLine(text: string): DayOfWeek | null {
@@ -723,7 +747,7 @@ function detectCourseType(text: string): CourseType {
 
 /**
  * Extracts dynamically any Code-to-Subject (ECUE) table at the bottom of the timetable.
- * (e.g. "1MAN3350 | Fondamentaux de la Finance | 18 | 6 | 0 | 24 | Dr KADJO ASSANDE PIERRE")
+ * (e.g. "1MAN3350 | Fondamentaux de la Finance | 18 | 6 | 0 | 24 | Dr ENSEIGNANT D")
  */
 export function extractDynamicEcueDictionary(
   rawText: string,
@@ -886,13 +910,13 @@ export const LYCEE_SUBJECT_ACRONYMS: Record<string, string> = {
 
 /**
  * Extracts professor information from a string with support for:
- * - ALL-CAPS names: "Dr KOIVOGUI MOUSSA", "Dr KADJO ASSANDE PIERRE", "M. KONE ZANA", "Pr. CARON", etc.
- * - Mixed-case names: "Prof. Dr. Boni", "M. Dupont", "Mme. Mercier", "Sarah Jenkins"
+ * - ALL-CAPS names: "Dr ENSEIGNANT A", "Dr ENSEIGNANT D", "M. ENSEIGNANT C", "Pr. CARON", etc.
+ * - Mixed-case names: "Prof. Dr. Martin", "M. Dupont", "Mme. Mercier", "Sarah Jenkins"
  * - Teaching teams: "Équipe SVT", "Équipe PC", "Équipe Maths", "Équipe pédagogique", "Équipe Tutorat"
  */
 export function extractProfessor(text: string): string | undefined {
   if (!text) return undefined;
-  // 0. Check for explicit Prof label e.g. "Prof: Dr KOIVOGUI", "Prof: M. YEO"
+  // 0. Check for explicit Prof label e.g. "Prof: Dr ENSEIGNANT A", "Prof: M. ENSEIGNANT B"
   const explicitProf = text.match(/\b(?:Prof|Professeur|Enseignant|Intervenant)\s*:\s*([^|()\n]+)/i);
   if (explicitProf) return explicitProf[1].trim();
 
@@ -907,14 +931,14 @@ export function extractProfessor(text: string): string | undefined {
   // 3. Known teachers list
   const knownProfessors = [
     'Sarah Jenkins',
-    'Dr KOIVOGUI MOUSSA',
-    'Dr KADJO ASSANDE PIERRE',
-    'M. KONE ZANA',
-    'M. MEYER JEAN-MARC',
-    'Dr GOLI ETIENNE',
-    'Dr KOUAKOU INNOCENT',
-    'Dr ADINGRA FODJO MARIUS',
-    'M. YEO NICODEME'
+    'Dr ENSEIGNANT A',
+    'Dr ENSEIGNANT D',
+    'M. ENSEIGNANT C',
+    'M. ENSEIGNANT E',
+    'Dr ENSEIGNANT G',
+    'Dr ENSEIGNANT F',
+    'Dr ENSEIGNANT H',
+    'M. ENSEIGNANT B'
   ];
   for (const kp of knownProfessors) {
     if (text.toLowerCase().includes(kp.toLowerCase())) return kp;
@@ -928,7 +952,7 @@ export function extractProfessor(text: string): string | undefined {
  */
 export function extractRoom(text: string): string | undefined {
   if (!text) return undefined;
-  // 0. Check for explicit Salle label e.g. "Salle: Amphi ESATIC" or parentheses "(Amphi 1)"
+  // 0. Check for explicit Salle label e.g. "Salle: Amphi A" or parentheses "(Amphi 1)"
   const explicitRoom = text.match(/\b(?:Salle|Amphi|Lieu)\s*:\s*([^|()\n]+)/i);
   if (explicitRoom) return explicitRoom[1].trim();
 
@@ -1878,7 +1902,7 @@ export function parseSequentialSchedule(
   // -------------------------------------------------------------
   // STRATEGY 2: LINEAR, DAY-BLOCK, AND CLAUSE-BASED PARSER
   // Handles: JOUR: LUNDI
-  //          - 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI
+  //          - 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT A
   //          Lundi : 08:00–10:00 Math ; 10:15–12:00 PC
   // -------------------------------------------------------------
   let currentDay: DayOfWeek = 0;
@@ -2068,7 +2092,7 @@ export function parseTimetableText(
     code?: string;
   }[] = [];
 
-  // Extract ECUE code-to-meaning mapping table from the document (e.g., ESATIC bottom table)
+  // Extract ECUE code-to-meaning mapping table from the document (e.g., bottom table of the timetable)
   const dynamicEcueMap = extractDynamicEcueDictionary(rawText, spatialItems);
 
   // 1. Try Spatial Grid Parser first if spatial coordinate items are available
@@ -2351,7 +2375,7 @@ export type ScheduleFormatType = 'lmd' | 'tpcm' | 'scolaire';
 /**
  * Formats extracted schedule data into a clean, canonical text representation
  * strictly formatted according to the selected academic level / format:
- * - 'lmd':      - 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI
+ * - 'lmd':      - 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT A
  * - 'tpcm':     - 08:00 - 10:00 : CM Électronique Analogique (Amphi 1)
  * - 'scolaire': - 08:00 - 10:00 : Mathématiques
  */

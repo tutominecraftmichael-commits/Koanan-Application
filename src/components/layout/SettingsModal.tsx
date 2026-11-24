@@ -13,7 +13,8 @@ import {
   GraduationCap,
   Save
 } from 'lucide-react';
-import { Zap, Sun, Moon, Palette, Crown } from 'lucide-react';
+import { Zap, Sun, Moon, Palette, Crown, Target } from 'lucide-react';
+import { studyGoalInfo } from '../../lib/studyGoals';
 import { AnimatedAvatar } from '../../features/avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import type { UserAccount, AcademicGoal } from '../../types';
@@ -78,6 +79,8 @@ interface SettingsModalProps {
   // PLUS features props:
   invitedEmails?: string[];
   academicGoal?: AcademicGoal;
+  /** KONAN Plus (ou administrateur) : affiche « Mon objectif » */
+  showGoal?: boolean;
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
   onOpenPrivacyModal?: () => void;
@@ -109,9 +112,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onOpenAdmin,
   subscriptionEndsAt,
   invitedEmails: _invitedEmails = [],
-  academicGoal: _academicGoal = 'target_16',
+  academicGoal,
+  showGoal = false,
   onOpenGroupModal: _onOpenGroupModal,
-  onOpenGoalModal: _onOpenGoalModal,
+  onOpenGoalModal,
   onOpenPrivacyModal,
   nameChangedAt,
   totalXp,
@@ -533,6 +537,28 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </button>
               )}
             </div>
+
+            {/* KONAN Plus : mon objectif (KONE adapte son ton et son exigence) */}
+            {showGoal && onOpenGoalModal && (() => {
+              const goal = studyGoalInfo(academicGoal);
+              return (
+                <button
+                  type="button"
+                  onClick={onOpenGoalModal}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 dark:bg-[#0B0F17] dark:border-white/10 dark:hover:border-white/20 transition-colors text-left cursor-pointer active:scale-[0.99]"
+                >
+                  <span className="w-10 h-10 rounded-xl bg-amber-50 ring-1 ring-amber-200 text-amber-700 dark:bg-amber-400/10 dark:ring-amber-400/30 dark:text-amber-300 flex items-center justify-center shrink-0 font-black tabular-nums">
+                    {goal ? goal.target : <Target className="w-5 h-5" />}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300/90">Mon objectif</span>
+                    <span className="block text-sm font-black text-slate-900 dark:text-white truncate">{goal ? goal.title : 'Choisis ton objectif'}</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">KONE adapte sa façon de te parler et son exigence.</span>
+                  </span>
+                  <span className="text-[12px] font-bold text-slate-600 dark:text-slate-300 shrink-0">{goal ? 'Changer' : 'Choisir'}</span>
+                </button>
+              );
+            })()}
           </div>
 
           {/* SECTION 1.8: APPARENCE & COULEUR DE FOND */}

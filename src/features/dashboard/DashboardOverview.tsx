@@ -24,7 +24,8 @@ import {
   Moon,
   Zap,
   Play,
-  Trophy
+  Trophy,
+  Camera
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
@@ -65,6 +66,11 @@ export interface DashboardOverviewProps {
   avatarConfig?: AvatarConfig | null;
   hasCustomizedAvatar?: boolean;
   onOpenAvatarEditor?: () => void;
+  /** KONAN Plus : « Corriger mon devoir » en photo (absent = carte cachée) */
+  onOpenPhotoCorrection?: () => void;
+  /** KONAN Plus : « Mon plan pour l'objectif » (absent = carte cachée) */
+  onOpenGoalPlan?: () => void;
+  goalPlanLabel?: string;
 }
 
 /** Pastille de la méthode, comme la maquette (« Pomodoro · 25 + 5 »). */
@@ -119,6 +125,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   avatarConfig = null,
   hasCustomizedAvatar = false,
   onOpenAvatarEditor,
+  onOpenPhotoCorrection,
+  onOpenGoalPlan,
+  goalPlanLabel,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel, preferences?.country);
@@ -333,6 +342,42 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </span>
               <span className="text-[11px] text-slate-600 dark:text-slate-400">{`Ligue ${leagueSummary.divisionName}`}</span>
             </span>
+          </button>
+        )}
+
+        {/* KONAN Plus : planning réglé sur l'objectif */}
+        {onOpenGoalPlan && (
+          <button
+            type="button"
+            onClick={onOpenGoalPlan}
+            className="w-full text-left p-3.5 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex items-center gap-3 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
+          >
+            <span className="w-11 h-11 rounded-xl bg-amber-50 ring-1 ring-amber-200 text-amber-700 dark:bg-amber-400/10 dark:ring-amber-400/30 dark:text-amber-300 flex items-center justify-center shrink-0">
+              <Target className="w-5 h-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-extrabold text-slate-900 dark:text-white">{goalPlanLabel ? `Mon plan : ${goalPlanLabel}` : 'Mon plan pour l’objectif'}</span>
+              <span className="block text-[12px] text-slate-600 dark:text-slate-400">Où gagner tes points, matière par matière.</span>
+            </span>
+            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-amber-300 text-amber-800 bg-amber-50 dark:border-amber-400/40 dark:text-amber-200 dark:bg-amber-400/10 shrink-0">Plus</span>
+          </button>
+        )}
+
+        {/* KONAN Plus : corriger un devoir du professeur en photo */}
+        {onOpenPhotoCorrection && (
+          <button
+            type="button"
+            onClick={onOpenPhotoCorrection}
+            className="w-full text-left p-3.5 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex items-center gap-3 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
+          >
+            <span className="w-11 h-11 rounded-xl bg-amber-50 ring-1 ring-amber-200 text-amber-700 dark:bg-amber-400/10 dark:ring-amber-400/30 dark:text-amber-300 flex items-center justify-center shrink-0">
+              <Camera className="w-5 h-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-extrabold text-slate-900 dark:text-white">Corriger mon devoir</span>
+              <span className="block text-[12px] text-slate-600 dark:text-slate-400">Photo de l’énoncé + ta copie : KONAN corrige sur 20.</span>
+            </span>
+            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-amber-300 text-amber-800 bg-amber-50 dark:border-amber-400/40 dark:text-amber-200 dark:bg-amber-400/10 shrink-0">Plus</span>
           </button>
         )}
 

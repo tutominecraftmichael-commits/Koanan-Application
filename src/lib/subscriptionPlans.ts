@@ -25,12 +25,11 @@ export const PRO_METHODS: readonly StudyPacing[] = ['feynman', 'time_blocking'] 
 /**
  * Fonctionnalités exclusives à la version PLUS (Tier: 'plus')
  * - Sélection de l'objectif académique (Major, Mention, etc.)
- * - Pistes sonores d'étude et relaxation (ondes alpha, lofi)
  * - Système de parrainage / invitation de camarades (jusqu'à 4 invités)
+ * (Musiques de concentration retirées le 2026-11-23, décision du fondateur.)
  */
 export const PLUS_FEATURES = [
   'academic_goals',
-  'focus_soundtracks',
   'group_invitations',
 ] as const;
 
@@ -92,7 +91,7 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   plus: {
     id: 'plus',
     name: 'KONAN PLUS',
-    tagline: '5 000 F CFA / mois • 19 950 F CFA / semestre • Disponible bientôt',
+    tagline: '5 000 F CFA / mois • 25 000 F CFA / semestre • Disponible bientôt',
     priceLabel: '5 000 F',
     periodLabel: 'CFA / mois (Disponible bientôt)',
     priceAmount: 5000,
@@ -177,14 +176,18 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     id: 'plus',
     name: 'KONAN PLUS',
     tagline: 'Pour viser l’excellence',
-    prices: { monthly: 5000, semester: 19950 },
+    prices: { monthly: 5000, semester: 25000 },
     includesLabel: 'Tout le Pro, plus :',
     note: 'Bientôt disponible',
     available: false,
     features: [
-      { title: 'Planning réglé sur ton objectif', detail: '12 de moyenne, une mention ou major de promo.' },
+      { title: 'KONE s’adapte à ton objectif', detail: '12 de moyenne, une mention ou major : sa façon de te parler, son exigence et tes devoirs changent.' },
+      { title: 'KONE presque sans limite', detail: '100 messages et 40 réponses à voix haute par jour.' },
+      { title: 'Photo de ton exercice', detail: 'Prends-le en photo : KONE le lit et t’explique la méthode (20 photos par jour).' },
+      { title: 'Pose ta question à l’oral', detail: 'Parle à KONE au lieu d’écrire.' },
+      { title: 'Corrige n’importe quel devoir en photo', detail: 'L’énoncé de ton professeur + ta copie : note sur 20 et correction détaillée (3 par jour).' },
+      { title: 'Planning réglé sur ton objectif', detail: 'Tes moyennes → où gagner tes points, matière par matière, et plus de séances là où ça rapporte.' },
       { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
-      { title: 'Musiques de concentration', detail: 'Ondes alpha, lofi, bruit blanc.' },
     ],
   },
 ];

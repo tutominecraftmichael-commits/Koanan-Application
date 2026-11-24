@@ -17,14 +17,17 @@ import { isSubjectHidden } from './subjectVisibility';
 // Toute lecture des cours doit être précédée de `await loadCurriculumFor(classe, [matières])` ;
 // les scripts de contrôle appellent loadAllCurriculum().
 // ============================================================================
-export type CurriculumLevel = 'seconde' | 'premiere' | 'terminale' | 'lmd_entd_l1';
-const LEVELS: CurriculumLevel[] = ['seconde', 'premiere', 'terminale', 'lmd_entd_l1'];
+export type CurriculumLevel = 'seconde' | 'premiere' | 'terminale' | 'lmd_entd_l1' | 'lmd_srit_l1';
+const LEVELS: CurriculumLevel[] = ['seconde', 'premiere', 'terminale', 'lmd_entd_l1', 'lmd_srit_l1'];
 const SUBJECT_ORDER: StemSubjectId[] = [
   'maths', 'physique_chimie', 'svt', 'francais', 'histoire_geo', 'philosophie',
   'lmd_algorithmique', 'lmd_algebre', 'lmd_analyse', 'lmd_logique_math', 'lmd_stat_descriptive', 'lmd_reseaux',
   'lmd_intro_eco_num', 'lmd_modele_dev_eco_num', 'lmd_macroeconomie', 'lmd_microeconomie', 'lmd_banque', 'lmd_assurance',
   'lmd_compta_generale', 'lmd_compta_analytique', 'lmd_oge', 'lmd_intro_management', 'lmd_intro_marketing', 'lmd_intro_droit_num', 'lmd_droit_numerique',
   'lmd_bureautique', 'lmd_init_info', 'lmd_tef', 'lmd_ecriture_creative', 'lmd_dev_perso',
+  'lmd_structures_algebriques', 'lmd_geometrie_diff', 'lmd_analyse_2', 'lmd_archi_ordinateurs', 'lmd_algo_python',
+  'lmd_optique_geometrique', 'lmd_pde', 'lmd_electrostatique', 'lmd_electrocinetique', 'lmd_electronique_fondamentale', 'lmd_electronique_numerique', 'lmd_mecanique_point',
+  'lmd_analyse_economique', 'lmd_intro_droit', 'lmd_anglais',
 ];
 
 type LmdEntdPackKey =
@@ -32,10 +35,15 @@ type LmdEntdPackKey =
   | 'lmd_entd_l1_eco_finance'
   | 'lmd_entd_l1_gestion_droit'
   | 'lmd_entd_l1_comm_bureau';
+type LmdSritPackKey =
+  | 'lmd_srit_l1_maths_info'
+  | 'lmd_srit_l1_physique_elec'
+  | 'lmd_srit_l1_eco_droit_lang';
+type LmdPackKey = LmdEntdPackKey | LmdSritPackKey;
 type LyceePackKey = `${'seconde' | 'premiere' | 'terminale'}_${'maths' | 'physique_chimie' | 'svt' | 'francais' | 'histoire_geo' | 'philosophie'}`;
-type PackKey = LyceePackKey | LmdEntdPackKey;
+type PackKey = LyceePackKey | LmdPackKey;
 
-const LMD_ENTD_L1_SUBJECT_PACK: Partial<Record<StemSubjectId, LmdEntdPackKey>> = {
+const LMD_SUBJECT_PACK: Partial<Record<StemSubjectId, LmdPackKey>> = {
   lmd_algorithmique: 'lmd_entd_l1_maths_info',
   lmd_algebre: 'lmd_entd_l1_maths_info',
   lmd_analyse: 'lmd_entd_l1_maths_info',
@@ -60,6 +68,24 @@ const LMD_ENTD_L1_SUBJECT_PACK: Partial<Record<StemSubjectId, LmdEntdPackKey>> =
   lmd_tef: 'lmd_entd_l1_comm_bureau',
   lmd_ecriture_creative: 'lmd_entd_l1_comm_bureau',
   lmd_dev_perso: 'lmd_entd_l1_comm_bureau',
+  // SRIT L1 — Maths & Info
+  lmd_structures_algebriques: 'lmd_srit_l1_maths_info',
+  lmd_geometrie_diff: 'lmd_srit_l1_maths_info',
+  lmd_analyse_2: 'lmd_srit_l1_maths_info',
+  lmd_archi_ordinateurs: 'lmd_srit_l1_maths_info',
+  lmd_algo_python: 'lmd_srit_l1_maths_info',
+  // SRIT L1 — Physique, Électricité & Électronique
+  lmd_optique_geometrique: 'lmd_srit_l1_physique_elec',
+  lmd_pde: 'lmd_srit_l1_physique_elec',
+  lmd_electrostatique: 'lmd_srit_l1_physique_elec',
+  lmd_electrocinetique: 'lmd_srit_l1_physique_elec',
+  lmd_electronique_fondamentale: 'lmd_srit_l1_physique_elec',
+  lmd_electronique_numerique: 'lmd_srit_l1_physique_elec',
+  lmd_mecanique_point: 'lmd_srit_l1_physique_elec',
+  // SRIT L1 — Économie, Droit & Anglais
+  lmd_analyse_economique: 'lmd_srit_l1_eco_droit_lang',
+  lmd_intro_droit: 'lmd_srit_l1_eco_droit_lang',
+  lmd_anglais: 'lmd_srit_l1_eco_droit_lang',
 };
 
 const ALL_PACK_ORDER: PackKey[] = [
@@ -67,6 +93,7 @@ const ALL_PACK_ORDER: PackKey[] = [
   'premiere_maths', 'premiere_physique_chimie', 'premiere_svt', 'premiere_francais', 'premiere_histoire_geo', 'premiere_philosophie',
   'terminale_maths', 'terminale_physique_chimie', 'terminale_svt', 'terminale_francais', 'terminale_histoire_geo', 'terminale_philosophie',
   'lmd_entd_l1_maths_info', 'lmd_entd_l1_eco_finance', 'lmd_entd_l1_gestion_droit', 'lmd_entd_l1_comm_bureau',
+  'lmd_srit_l1_maths_info', 'lmd_srit_l1_physique_elec', 'lmd_srit_l1_eco_droit_lang',
 ];
 
 /** Paquets existants (src/data/coursePacks/<niveau>_<matière|groupe>.ts). */
@@ -92,6 +119,9 @@ const PACK_LOADERS: Partial<Record<PackKey, () => Promise<{ CHAPTERS: Curriculum
   lmd_entd_l1_eco_finance: () => import('../../data/coursePacks/lmd_entd_l1_eco_finance'),
   lmd_entd_l1_gestion_droit: () => import('../../data/coursePacks/lmd_entd_l1_gestion_droit'),
   lmd_entd_l1_comm_bureau: () => import('../../data/coursePacks/lmd_entd_l1_comm_bureau'),
+  lmd_srit_l1_maths_info: () => import('../../data/coursePacks/lmd_srit_l1_maths_info'),
+  lmd_srit_l1_physique_elec: () => import('../../data/coursePacks/lmd_srit_l1_physique_elec'),
+  lmd_srit_l1_eco_droit_lang: () => import('../../data/coursePacks/lmd_srit_l1_eco_droit_lang'),
 };
 // Pays de l'élève (subjectVisibility) : hors Côte d'Ivoire, pas d'Histoire-Géographie du lycée.
 // Sans cours, la matière n'a ni leçons guidées, ni QCM, ni sujet de 2 h (« Cours en préparation »).
@@ -112,11 +142,20 @@ function packKeysFor(gradeLevel?: string | null, subjects?: readonly StemSubject
   if (!level) return [];
   if (level === 'lmd_entd_l1') {
     if (!subjects?.length) {
-      return ['lmd_entd_l1_maths_info', 'lmd_entd_l1_eco_finance', 'lmd_entd_l1_gestion_droit', 'lmd_entd_l1_comm_bureau'];
+      return ['lmd_entd_l1_maths_info', 'lmd_entd_l1_eco_finance', 'lmd_entd_l1_gestion_droit', 'lmd_entd_l1_comm_bureau', 'lmd_srit_l1_eco_droit_lang'];
     }
     const keys = subjects
-      .map((s) => LMD_ENTD_L1_SUBJECT_PACK[s])
-      .filter((k): k is LmdEntdPackKey => Boolean(k));
+      .map((s) => LMD_SUBJECT_PACK[s])
+      .filter((k): k is LmdPackKey => Boolean(k));
+    return [...new Set(keys)];
+  }
+  if (level === 'lmd_srit_l1') {
+    if (!subjects?.length) {
+      return ['lmd_entd_l1_maths_info', 'lmd_entd_l1_comm_bureau', 'lmd_srit_l1_maths_info', 'lmd_srit_l1_physique_elec', 'lmd_srit_l1_eco_droit_lang'];
+    }
+    const keys = subjects
+      .map((s) => LMD_SUBJECT_PACK[s])
+      .filter((k): k is LmdPackKey => Boolean(k));
     return [...new Set(keys)];
   }
   return (subjects?.length ? subjects : SUBJECT_ORDER)

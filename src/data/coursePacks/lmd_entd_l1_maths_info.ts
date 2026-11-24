@@ -10,11 +10,17 @@ import { LOGIQUE_MATH_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/logique_ma
 import { STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/stat_descriptive';
 import { RESEAUX_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/reseaux';
 
+const withSrit = (chapters: CurriculumChapter[]): CurriculumChapter[] =>
+  chapters.map((c) => ({
+    ...c,
+    alsoForGrades: Array.from(new Set([...(c.alsoForGrades || []), 'lmd_srit_l1'])),
+  }));
+
 export const CHAPTERS: CurriculumChapter[] = [
-  ...ALGORITHMIQUE_ENTD_L1_CHAPTERS,
-  ...ALGEBRE_ENTD_L1_CHAPTERS,
-  ...ANALYSE_ENTD_L1_CHAPTERS,
-  ...LOGIQUE_MATH_ENTD_L1_CHAPTERS,
+  ...withSrit(ALGORITHMIQUE_ENTD_L1_CHAPTERS),
+  ...withSrit(ALGEBRE_ENTD_L1_CHAPTERS),
+  ...withSrit(ANALYSE_ENTD_L1_CHAPTERS),
+  ...withSrit(LOGIQUE_MATH_ENTD_L1_CHAPTERS),
   ...STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS,
   ...RESEAUX_ENTD_L1_CHAPTERS,
 ];

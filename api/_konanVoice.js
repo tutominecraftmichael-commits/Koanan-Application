@@ -1,12 +1,14 @@
 /**
  * KONAN, la voix des notifications (partagé par le serveur ET par l'application).
- * Aucune dépendance : ce fichier tourne aussi bien sur Vercel que dans le navigateur.
+ * Une seule dépendance, elle-même sans dépendance (_goalTone.js) : ce fichier tourne aussi bien sur Vercel que
+ * dans le navigateur.
  *
  * - buildStudentContext() : la « conscience » de KONAN, ce qu'il sait de l'élève au moment d'écrire ;
  * - fallbackMessage()     : la banque de messages locale (ton proche et taquin, façon Duolingo), utilisée quand
  *                           l'IA ne répond pas en 3 secondes, et pour les alertes affichées dans l'appli.
  * Le préfixe « _ » empêche Vercel d'en faire une route.
  */
+import { goalLines } from './_goalTone.js';
 
 export const SITUATIONS = Object.freeze({
   AVANT: '5_MIN_AVANT',
@@ -361,6 +363,9 @@ export function buildKonanPrompt(ctx, { angle = '', recent = [] } = {}) {
     recent.length
       ? `Derniers messages déjà reçus par l’élève (ne reprends ni leurs phrases, ni leurs titres, ni leurs tournures) : ${JSON.stringify(recent.slice(0, 6))}`
       : '',
+    // KONAN Plus : ton selon l'objectif de l'élève (12, 16, major), qui passe avant l'angle ci-dessus
+    ...goalLines(ctx.objectif, 'notification'),
+    ctx.objectif ? 'Si l’angle proposé ne va pas avec ce ton, garde le ton de l’objectif.' : '',
     'Écris une notification NOUVELLE et surprenante, jamais la même formule que d’habitude, à afficher sur son téléphone.',
     'Réponds en JSON : {"titre": "au plus 40 caractères", "message": "1 ou 2 phrases, au plus 160 caractères"}.',
   ].filter(Boolean).join('\n');

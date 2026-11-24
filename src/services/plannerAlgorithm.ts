@@ -11,6 +11,7 @@ import { getPacingStrategy } from '../lib/pacingStrategies';
 import { isExamPrepOpenFor, withoutPausedExamPrep } from '../lib/featureFlags';
 import { EXAM_PREP_DURATIONS, EXAM_PREP_HORIZON_DAYS, examPrepModeFor, examPrepSessionText } from '../lib/exam/examPrepRules';
 import { validateBackendPermissions } from '../lib/subscriptionGuard';
+import { goalPlanningFactor } from '../lib/goalPlanning';
 import type { PlanTier } from '../types';
 
 interface TimeRange {
@@ -323,7 +324,10 @@ export function generateOptimizedStudyPlan(
     const volumeFactor = Math.min(1.35, Math.max(0.85, 0.8 + (weeklyClassHours / 10)));
 
     // Formule combinant difficulté cognitive, coefficient, volume horaire et urgence d'évaluation
-    const rawScore = (Math.pow(sub.difficulty, 1.3) * Math.pow(sub.coefficient, 1.2) * volumeFactor) * examUrgencyFactor;
+    // KONAN Plus (planning réglé sur l'objectif) : plus de séances là où l'écart note actuelle → note visée est grand.
+    // Sans moyenne actuelle renseignée (currentGrade), le facteur vaut 1 : rien ne change.
+    const goalFactor = goalPlanningFactor(sub.currentGrade, sub.targetGrade);
+    const rawScore = (Math.pow(sub.difficulty, 1.3) * Math.pow(sub.coefficient, 1.2) * volumeFactor) * examUrgencyFactor * goalFactor;
     const w = workload[sub.id];
     const mode: 'new' | 'review' | 'free' = w?.hasCourse ? (w.newLessonsLeft > 0 ? 'new' : 'review') : 'free';
     return {
@@ -332,6 +336,7 @@ export function generateOptimizedStudyPlan(
       domain: getCognitiveDomain(sub.name),
       taughtDays: taughtDaysBySubject.get(sub.id) || new Set<DayOfWeek>(),
       score: rawScore,
+      goalFactor,
       targetSessions: 1, // Minimum 1 session garantie par matière pour être prêt sur tout le programme
       scheduledCount: 0,
       lastScheduledDay: -999,
@@ -399,7 +404,10 @@ export function generateOptimizedStudyPlan(
   subjectScores.forEach(item => {
     const ratio = totalScore > 0 ? item.score / totalScore : 1 / revisableSubjects.length;
     const computed = Math.round(ratio * totalSessionsTarget);
-    let target = Math.max(1, Math.min(maxPerSubjectPerWeek, computed));
+    // KONAN Plus : une matière très en retard sur sa note visée (×1,5 et plus) peut avoir UNE séance de plus
+    // par semaine ; une matière déjà au-dessus de sa note visée garde le minimum utile (2 au plus)
+    const cap = item.goalFactor >= 1.5 ? maxPerSubjectPerWeek + 1 : item.goalFactor < 1 ? Math.min(2, maxPerSubjectPerWeek) : maxPerSubjectPerWeek;
+    let target = Math.max(1, Math.min(cap, computed));
     if (item.mode === 'review') target = Math.min(target, review.perWeek);
     else if (item.mode === 'new') target = Math.min(target, Math.ceil(item.newLessonsLeft / perSession) + 1);
     if (onePerDay) target = Math.min(target, daysToSchedule.length);
@@ -744,7 +752,10 @@ export function generateOptimizedStudyPlan(
               item.mode !== 'review' &&
               ahead - item.lastScheduledDay >= 2
             )
-            .sort((a, b) => (a.scheduledCount - b.scheduledCount) || (computeNeuroDayScore(b) - computeNeuroDayScore(a)))[0];
+            // KONAN Plus : les créneaux en plus vont d'abord aux matières en retard sur leur note visée
+            // (facteur d'objectif ; sans plan d'objectif, il vaut 1 partout et l'ordre habituel reste le même)
+            .sort((a, b) => (Math.abs(b.goalFactor - a.goalFactor) > 0.01 ? b.goalFactor - a.goalFactor : 0)
+              || (a.scheduledCount - b.scheduledCount) || (computeNeuroDayScore(b) - computeNeuroDayScore(a)))[0];
         }
 
         // Une ou deux matières seulement au total dans tout le cursus : 2e séance permise si non consécutive

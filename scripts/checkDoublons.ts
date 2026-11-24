@@ -31,9 +31,10 @@ let points = 0;
 let questions = 0;
 
 // Lycée/collège + filière LMD ENTD L1 (24 matières, contrôlée depuis le 2026-11-22)
-const { ENTD_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
-const SUBJECTS_OF = (grade: string): readonly string[] => (grade === 'lmd_entd_l1' ? ENTD_L1_SUBJECT_IDS : SUBJECTS);
-for (const grade of [...GRADES, 'lmd_entd_l1']) {
+// + filière LMD SRIT L1 (contrôlée depuis le 2026-11-24)
+const { ENTD_L1_SUBJECT_IDS, SRIT_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
+const SUBJECTS_OF = (grade: string): readonly string[] => (grade === 'lmd_entd_l1' ? ENTD_L1_SUBJECT_IDS : grade === 'lmd_srit_l1' ? SRIT_L1_SUBJECT_IDS : SUBJECTS);
+for (const grade of [...GRADES, 'lmd_entd_l1', 'lmd_srit_l1']) {
   for (const subject of SUBJECTS_OF(grade)) {
     const chapters = getCurriculumChapters(subject as any, grade as any);
     if (!chapters.length) continue;

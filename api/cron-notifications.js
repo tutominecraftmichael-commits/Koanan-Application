@@ -26,6 +26,7 @@ import {
   ymdIn,
 } from './_konanVoice.js';
 import { generateKonanMessage, mapWithLimit } from './_konanAI.js';
+import { activeGoalOf, savedGoalOf } from './_studyGoal.js';
 import { rolloverLeague } from './_leagueRollover.js';
 
 // Clé PUBLIQUE utilisée par l'application pour abonner les téléphones (src/services/webPushService.ts).
@@ -128,12 +129,23 @@ async function loadUsers(db, userIds) {
   if (!ids.length) return new Map();
   const userRefs = ids.map((id) => db.collection('users').doc(id));
   const deviceRefs = ids.map((id) => db.collection('push_queue').doc(`device_${id}`));
-  const [userSnaps, deviceSnaps] = await Promise.all([db.getAll(...userRefs), db.getAll(...deviceRefs)]);
+  const goalRefs = ids.map((id) => db.collection('study_goals').doc(id));
+  const [userSnaps, deviceSnaps, goalSnaps] = await Promise.all([
+    db.getAll(...userRefs),
+    db.getAll(...deviceRefs),
+    db.getAll(...goalRefs).catch(() => []), // objectifs illisibles : notifications au ton habituel
+  ]);
+  // Objectif KONAN Plus (12, 16, major) : seulement si l'élève a encore Plus (abonnement relu pour eux seuls)
+  const goals = await Promise.all(ids.map((id, i) => {
+    const snap = goalSnaps[i];
+    return activeGoalOf(db, id, savedGoalOf(snap?.exists ? snap.data() : null));
+  }));
   const map = new Map();
   ids.forEach((id, i) => {
     map.set(id, {
       user: userSnaps[i].exists ? userSnaps[i].data() : null,
       device: deviceSnaps[i].exists ? deviceSnaps[i].data() : null,
+      goal: goals[i] || '',
     });
   });
   return map;
@@ -247,9 +259,10 @@ function recentOf(deviceData) {
   return Array.isArray(deviceData?.recentMessages) ? deviceData.recentMessages.map(String).slice(0, 12) : [];
 }
 
-async function writeMessage(alert, userData, deviceData, now, recent = recentOf(deviceData)) {
+async function writeMessage(alert, userData, deviceData, now, recent = recentOf(deviceData), goal = '') {
   const tz = deviceData?.timezone || DEFAULT_TIMEZONE;
   const ctx = buildStudentContext(userData || {}, alert, now, tz);
+  if (goal) ctx.objectif = goal; // KONAN Plus : ton selon l'objectif de l'élève
   const message = await generateKonanMessage(ctx, {
     apiKey: String(process.env.GEMINI_API_KEY || '').trim(),
     seed: `${alert.sessionId}|${alert.date}|${alert.kind}`,
@@ -504,7 +517,7 @@ export default async function handler(req, res) {
 
       const already = sentByUser.get(env.userId) || [];
       const recent = [...already.flatMap((m) => [m.body, m.title]), ...recentOf(person.device)];
-      const { message } = await writeMessage(check.alert, person.user, person.device, now, recent);
+      const { message } = await writeMessage(check.alert, person.user, person.device, now, recent, person.goal);
       if (message.source === 'ia') stats.ai += 1; else stats.fallback += 1;
       const sent = await sendToDevices(subs, pushPayload(message, check.alert));
       if (sent.delivered > 0) sentByUser.set(env.userId, [...already, message]);

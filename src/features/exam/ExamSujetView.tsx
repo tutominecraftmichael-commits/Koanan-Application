@@ -8,7 +8,8 @@
  * Les photos ne sont gardées nulle part : envoyées une fois pour la correction, puis oubliées.
  */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp, Check, X, Minus, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp, Check, X, Minus, AlertTriangle, Target } from 'lucide-react';
+import { studyGoalInfo } from '../../lib/studyGoals';
 import type { StudySession } from '../../types';
 import type { CurriculumGradeLevel, StemSubjectId } from '../../lib/curriculum/types';
 import { GRADE_LEVELS } from '../../lib/curriculum/types';
@@ -59,7 +60,7 @@ interface SujetExercice {
   /** Exercice où l'élève traite un seul des sujets proposés. */
   auChoix?: boolean;
 }
-interface Sujet {
+export interface Sujet {
   titre: string;
   matiere: string;
   duree: string;
@@ -79,7 +80,7 @@ interface CorrectionQuestion {
   attendu: string;
   erreur: string;
 }
-interface Correction {
+export interface Correction {
   lisible: boolean;
   note: number | null;
   exercices: {
@@ -94,6 +95,9 @@ interface Correction {
   conseils: string[];
   pointsForts?: string[];
   aRevoir?: { notion: string; pourquoi: string }[];
+  /** KONAN Plus : ce qu'il faut corriger en priorité pour atteindre l'objectif, et l'objectif lui-même */
+  versObjectif?: string;
+  objectif?: string;
 }
 /** Temps mis, d'après le chrono du serveur (ou du téléphone s'il était hors ligne au départ). */
 interface ExamTiming { startedAt: number; endsAt: number; submittedAt: number; elapsedMinutes: number; lateMinutes: number }
@@ -140,7 +144,7 @@ function noWordFractions(text: string): string {
 }
 
 /** Vrai pour le Français et l'Histoire-Géo : texte simple, sans moteur de formules (qui pourrait abîmer la prose). */
-const PlainTextContext = React.createContext(false);
+export const PlainTextContext = React.createContext(false);
 
 /** Matières littéraires : si l'IA glisse un peu de LaTeX (« $1\text{ cm}$ »), on l'écrit en clair (« 1 cm »). */
 function plainText(text: string): string {
@@ -162,7 +166,8 @@ function plainText(text: string): string {
  * « Document 1a », « Documents 1a et 1b » (avant : « 1a » devenait une formule, affichée « 1𝑇 ») et les unités
  * « mmol/L », « g/L », « km/h », « m/s » (avant : dessinées en fraction empilée).
  */
-const PROTECTED_PLAIN = /(\bDocuments?\s+\d+\s*[a-z]?(?:\s*(?:,|et|à)\s*\d+\s*[a-z]?)*(?![\p{L}\d])|\b[mµkcd]?(?:mol|g|L|m|s|V|A|W|J|N|Pa|h)\s*\/\s*[mµkcd]?(?:L|m|s|h|min|kg|g|mol|m²|m³)(?![\p{L}\d]))/gu;
+// + le verbe « a » après un nombre (« la solution x = -3 a été oubliée » : avant, « -3 a » devenait « -3𝑎 »)
+const PROTECTED_PLAIN = /(\bDocuments?\s+\d+\s*[a-z]?(?:\s*(?:,|et|à)\s*\d+\s*[a-z]?)*(?![\p{L}\d])|\b[mµkcd]?(?:mol|g|L|m|s|V|A|W|J|N|Pa|h)\s*\/\s*[mµkcd]?(?:L|m|s|h|min|kg|g|mol|m²|m³)(?![\p{L}\d])|(?<=\d)\s+a(?=\s+\p{L}{2,}))/gu;
 
 /** Découpe un texte en morceaux « à écrire tels quels » et « à confier à l'afficheur de formules » (les $…$ ne sont jamais coupés). */
 function splitProtected(text: string): { plain: boolean; text: string }[] {
@@ -317,7 +322,7 @@ const ERRORS: Record<string, string> = {
 };
 
 /** Message affiché : connu, sinon une panne du service (avec son code), jamais « pas d'Internet » par défaut. */
-const errorMessage = (code?: string) =>
+export const errorMessage = (code?: string) =>
   ERRORS[code || ''] || `Le service des devoirs a un souci${code ? ` (${String(code).slice(0, 60)})` : ''}. Réessaie dans une minute.`;
 
 function readSaved(sessionId: string): Saved | null {
@@ -337,9 +342,9 @@ function writeSaved(sessionId: string, s: Saved) {
 }
 
 /** Photo de copie réduite (≈ 1600 px, JPEG) : lisible et légère à envoyer. */
-async function compressPhoto(file: File): Promise<{ mimeType: string; data: string; preview: string }> {
+export async function compressPhoto(file: File | Blob, max = 1600, quality = 0.72): Promise<{ mimeType: string; data: string; preview: string }> {
   const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+  const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(bitmap.width * scale);
   canvas.height = Math.round(bitmap.height * scale);
@@ -347,7 +352,7 @@ async function compressPhoto(file: File): Promise<{ mimeType: string; data: stri
   if (!ctx) throw new Error('CANVAS');
   ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   bitmap.close?.();
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+  const dataUrl = canvas.toDataURL('image/jpeg', quality);
   return { mimeType: 'image/jpeg', data: dataUrl.split(',')[1] || '', preview: dataUrl };
 }
 
@@ -375,7 +380,7 @@ async function callApi(path: string, body: unknown): Promise<any> {
  * Appel avec un nouvel essai automatique si l'IA n'a pas répondu (panne passagère, délai dépassé) :
  * l'élève voit « je réessaie » au lieu d'une erreur. Pas de nouvel essai si la limite du jour est atteinte.
  */
-async function callApiWithRetry(path: string, body: unknown, onRetry: (attempt: number) => void): Promise<any> {
+export async function callApiWithRetry(path: string, body: unknown, onRetry: (attempt: number) => void): Promise<any> {
   const RETRY_DELAYS_MS = [6000];
   for (let attempt = 0; ; attempt++) {
     try {
@@ -509,7 +514,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
     setError(null);
     try {
       const room = Math.max(0, 4 - photos.length);
-      const list = await Promise.all([...files].slice(0, room).map(compressPhoto));
+      const list = await Promise.all([...files].slice(0, room).map((f) => compressPhoto(f)));
       setPhotos((p) => [...p, ...list].slice(0, 4));
     } catch {
       setError('Je n’arrive pas à ouvrir cette photo. Réessaie avec l’appareil photo.');
@@ -836,7 +841,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
 const fr = (n: number) => String(n).replace('.', ',');
 
 /** Mention habituelle des bulletins ivoiriens. */
-function mention(note: number): string {
+export function mention(note: number): string {
   if (note >= 18) return 'Excellent';
   if (note >= 16) return 'Très bien';
   if (note >= 14) return 'Bien';
@@ -904,7 +909,7 @@ export const WaitingKonan: React.FC<{ steps: [number, string][]; note?: string }
 };
 
 /** La peluche réagit à la note : applaudit (≥ 14), pouce levé (≥ 10), encourage (sinon), puis revient au repos. */
-const ResultPlush: React.FC<{ note: number }> = ({ note }) => {
+export const ResultPlush: React.FC<{ note: number }> = ({ note }) => {
   const reaction: PlushMood = note >= 14 ? 'celebrate' : note >= 10 ? 'happy' : 'encourage';
   const [mood, setMood] = useState<PlushMood>('idle');
   useEffect(() => {
@@ -920,7 +925,7 @@ const ResultPlush: React.FC<{ note: number }> = ({ note }) => {
  * (même clé lue par TutorChat). 20 dernières au plus.
  */
 export const DEVOIR_ERRORS_KEY = (uid: string) => `konan_devoir_errors_${uid}`;
-function saveDevoirMistakes(uid: string, sujet: Sujet, correction: Correction) {
+export function saveDevoirMistakes(uid: string, sujet: Sujet, correction: Correction) {
   try {
     const found = correction.exercices.flatMap((e) => (e.questions || [])
       .filter((q) => q.statut === 'faux' || q.statut === 'partiel')
@@ -949,7 +954,7 @@ function questionText(sujet: Sujet, exercice: number, numero: string): string {
  * (statut, points, ta réponse, l'attendu, ton erreur) et la grille critère par critère, enfin les conseils numérotés.
  * Une ancienne correction (sans détail) s'affiche avec le commentaire de l'exercice seulement.
  */
-const CorrectionReport: React.FC<{ correction: Correction; sujet: Sujet; onAsk?: (context: TutorContext) => void }> = ({ correction, sujet, onAsk }) => {
+export const CorrectionReport: React.FC<{ correction: Correction; sujet: Sujet; onAsk?: (context: TutorContext) => void }> = ({ correction, sujet, onAsk }) => {
   const allQuestions = correction.exercices.flatMap((e) => e.questions || []);
   const count = (s: QuestionStatut) => allQuestions.filter((q) => q.statut === s).length;
   const pointsForts = correction.pointsForts || [];
@@ -1006,6 +1011,29 @@ const CorrectionReport: React.FC<{ correction: Correction; sujet: Sujet; onAsk?:
         <KonanMascot pose="encourage" size={44} className="shrink-0" />
         <p className="min-w-0 text-sm leading-relaxed text-sky-900 dark:text-sky-100">{correction.appreciation}</p>
       </div>
+
+      {/* 3 bis. KONAN Plus : vers ton objectif (la note reste celle du barème officiel) */}
+      {correction.versObjectif && (() => {
+        const goal = studyGoalInfo(correction.objectif);
+        if (!goal) return null;
+        const gap = correction.note != null ? Math.max(0, goal.targetValue - correction.note) : null;
+        const reached = gap === 0;
+        return (
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-slate-900 dark:bg-white/[0.03] dark:border-amber-300/50 space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                <Target className="w-4 h-4" /> Vers ton objectif : {goal.short}
+              </span>
+              {gap !== null && (
+                <span className={`shrink-0 px-2.5 py-0.5 rounded-full text-[12px] font-black tabular-nums ${reached ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200' : 'bg-amber-100 text-amber-900 dark:bg-amber-400/15 dark:text-amber-200'}`}>
+                  {reached ? 'Objectif atteint' : `Encore ${fr(gap)} pt${gap > 1 ? 's' : ''}`}
+                </span>
+              )}
+            </div>
+            <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">{correction.versObjectif}</p>
+          </div>
+        );
+      })()}
 
       {/* 4. Détail exercice par exercice */}
       <div className="space-y-3">
@@ -1112,7 +1140,7 @@ const CorrectionReport: React.FC<{ correction: Correction; sujet: Sujet; onAsk?:
 };
 
 /** Corrigé type, exercice par exercice et question par question : étapes numérotées, puis la réponse finale encadrée. */
-const Corrige: React.FC<{ sujet: Sujet }> = ({ sujet }) => (
+export const Corrige: React.FC<{ sujet: Sujet }> = ({ sujet }) => (
   <div className="space-y-3">
     {sujet.exercices.map((e) => (
       <section key={e.numero} className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 overflow-hidden">

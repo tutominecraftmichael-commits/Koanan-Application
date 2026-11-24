@@ -7,6 +7,7 @@
  *   { action: 'declare', tier, period, provider, ref, payerPhone } → « J'ai payé » : activé tout de suite
  *   { action: 'saspay_start', period, gradeLevel, country }       → page de paiement SasPay (checkoutUrl)
  *   { action: 'saspay_check' }                                    → revérifie auprès de SasPay (Pro si SUCCESS)
+ *   { action: 'goal_get' } / { action: 'goal_set', goal }         → objectif KONAN Plus (12, 16, major)
  * Administrateur (compte Google avec l'autorisation « admin », connexion de moins de 12 h) :
  *   { action: 'admin_list' }                                     → paiements à vérifier + derniers traités
  *   { action: 'admin_confirm', paymentId }                       → l'argent est bien arrivé
@@ -95,6 +96,19 @@ export default async function handler(req, res) {
         return send(res, 200, { success: true, config: publicConfig, status: { ...status, tier: 'pro', endsAt: null, provisional: false, grace: false, admin: true } });
       }
       return send(res, 200, { success: true, config: publicConfig, status });
+    }
+    // --- KONAN Plus : objectif de l'élève (12, 16 / mention, major) — le ton de KONE s'y adapte partout
+    if (action === 'goal_get' || action === 'goal_set') {
+      const db = await getDb();
+      const admin = isAdminPayload(payload);
+      const { hasPlusAccess, readStudyGoal, saveStudyGoal } = await import('./_studyGoal.js');
+      if (action === 'goal_set') {
+        const out = await saveStudyGoal(db, uid, body.goal, { admin });
+        if (!out.ok) return send(res, out.error === 'PLUS_REQUIRED' ? 403 : 400, { success: false, error: out.error });
+        return send(res, 200, { success: true, goal: out.goal, plus: true });
+      }
+      const [plus, saved] = await Promise.all([hasPlusAccess(db, uid, { admin }), readStudyGoal(db, uid)]);
+      return send(res, 200, { success: true, plus, goal: plus || saved.byAdmin ? saved.goal : '' });
     }
     if (action === 'saspay_start') {
       const db = await getDb();

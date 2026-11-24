@@ -153,8 +153,9 @@ for (const piege of ['4 − 35/11', '2 000 × (1 − 30/100)', '0,038 / (2 × 0,
 const seen = new Map<string, any>();
 for (const g of GRADES) for (const s of SUBJECTS) for (const c of getCurriculumChapters(s, g)) seen.set(c.id, c);
 // Filière LMD ENTD L1 (24 matières) : contrôlée aussi depuis le 2026-11-22 (elle ne l'était pas)
-const { ENTD_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
+const { ENTD_L1_SUBJECT_IDS, SRIT_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
 for (const s of ENTD_L1_SUBJECT_IDS) for (const c of getCurriculumChapters(s, 'lmd_entd_l1')) seen.set(c.id, c);
+for (const s of SRIT_L1_SUBJECT_IDS) for (const c of getCurriculumChapters(s, 'lmd_srit_l1')) seen.set(c.id, c);
 let nEx = 0;
 const norm = (o: string) => String(o).toLowerCase().replace(/\s+/g, ' ').trim();
 for (const c of seen.values()) {

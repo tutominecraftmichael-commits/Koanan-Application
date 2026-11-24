@@ -293,8 +293,12 @@ export interface UserStreak {
   lastFreezeUsedAt?: string; // ISO timestamp when a freeze was last consumed
 }
 
-export type ActiveAppView = 
-  | 'landing' 
+export type ActiveAppView =
+  | 'landing'
+  /** KONAN Plus : corriger un devoir du professeur en photo (énoncé + copie) */
+  | 'devoir-photo'
+  /** KONAN Plus : planning réglé sur l'objectif (moyennes actuelles → notes visées) */
+  | 'plan-objectif'
   | 'auth'
   | 'upload-schedule'
   | 'dashboard' 
