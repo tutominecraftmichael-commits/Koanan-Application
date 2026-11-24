@@ -130,6 +130,7 @@ const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorM
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const TutorChat = lazyView(() => import('./features/tutor/TutorChat').then((m) => m.TutorChat));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
+const HomeworkPhotoView = lazyView(() => import('./features/plus/HomeworkPhotoView').then((m) => m.HomeworkPhotoView));
 const StudyGoalSheet = lazyView(() => import('./features/plus/StudyGoalSheet').then((m) => m.StudyGoalSheet));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
@@ -2911,6 +2912,7 @@ export function App() {
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
+              onOpenPhotoCorrection={plusAccess && subscriptionAccount ? () => setActiveView('devoir-photo') : undefined}
               // Tuile de la maquette : ligue (rang + division, élèves admis dans la ligue)
               leagueSummary={gamificationEnabled && gradeIsInLeague
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
@@ -3118,6 +3120,18 @@ export function App() {
               onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
             />
           )
+        )}
+
+        {/* KONAN Plus : corriger un devoir du professeur en photo (énoncé + copie) */}
+        {activeView === 'devoir-photo' && plusAccess && subscriptionAccount && (
+          <HomeworkPhotoView
+            userId={subscriptionAccount}
+            classe={effectiveClassLabel || ''}
+            country={studentCountry || undefined}
+            subjects={(state.subjects || []).map((s) => s.name)}
+            onExit={() => setActiveView('dashboard')}
+            onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
+          />
         )}
 
         {/* Ligue (onglet trophée) */}

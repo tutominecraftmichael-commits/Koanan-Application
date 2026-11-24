@@ -100,8 +100,8 @@ export function goalLines(goal, where) {
     ? ' Ces règles passent AVANT la personnalité décrite plus haut quand elles diffèrent ; les règles de forme (messages courts, format, aucune formule genrée) restent obligatoires.'
     : '';
   // Le ton exigeant fait écrire « sois rigoureuse / concentré » : l'élève peut être une fille ou un garçon
-  const neutral = where === 'tutor' || where === 'feynman' || where === 'notification'
-    ? ['Aucun adjectif ni participe accordé qui désigne l’élève (jamais « sois rigoureuse », « prêt », « concentrée ») : tourne la phrase autrement (« De la rigueur ! », « Attention à l’unité », « Montre-moi ta rigueur »).']
+  const neutral = where !== 'sujet'
+    ? ['Aucun mot accordé qui désigne l’élève (jamais « sois rigoureuse », « prêt », « concentrée », « la major », « le premier ») : tourne la phrase autrement (« De la rigueur ! », « Attention à l’unité », « Pour finir major de ta classe… », « Pour décrocher la première place… »).']
     : [];
   const extra = where === 'correction'
     ? ['La NOTE reste celle du barème officiel, la même pour tous les élèves : l’objectif ne change JAMAIS les points, seulement les conseils.']
