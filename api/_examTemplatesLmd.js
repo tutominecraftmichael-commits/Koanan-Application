@@ -876,6 +876,528 @@ export const LMD_ENTD_L1_TEMPLATES = {
     ],
     notesClasse: {
       lmd_entd_l1: 'ENTD L1 : connaissance de soi, penseurs (Socrate, James, Jung, Maslow, Goleman), SMART, Eisenhower, Pareto, Pomodoro, stress, Growth Mindset, écoute active, CNV OSBD, assertivité et personal branding.',
+      lmd_srit_l1: 'SRIT L1 : connaissance de soi, penseurs (Socrate, James, Jung, Maslow, Goleman), SMART, Eisenhower, Pareto, Pomodoro, stress, Growth Mindset, écoute active, CNV OSBD, assertivité et personal branding.',
+    },
+    exemples: [],
+  },
+
+  // ==========================================================================
+  // SRIT L1 — MATHÉMATIQUES & INFORMATIQUE SPÉCIALISÉES
+  // ==========================================================================
+  lmd_structures_algebriques: {
+    matiere: 'Structures Algébriques (2MTH3100)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve de Structures Algébriques (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Toutes les démonstrations algébriques (sous-groupes, morphismes, noyau, image, idéaux, PGCD de polynômes, décomposition en éléments simples) doivent être exigées avec rigueur.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 7,
+        nature: 'Groupes, sous-groupes, morphismes et groupe symétrique',
+        consignes: 'Étude d’une loi de composition interne ou d’un sous-groupe $H$ d’un groupe $G$, théorème de Lagrange, détermination du noyau $\\ker f$ et de l’image $\\text{Im} f$ d’un morphisme, ou décomposition d’une permutation de $\\mathfrak{S}_n$ en produit de cycles disjoints, ordre et signature.',
+      },
+      {
+        numero: 2,
+        points: 6,
+        nature: 'Anneaux, idéaux et arithmétique dans $\\mathbb{Z}/n\\mathbb{Z}$',
+        consignes: 'Vérification d’une structure d’anneau commutatif ou de sous-anneau, étude des éléments inversibles et des diviseurs de zéro dans $\\mathbb{Z}/n\\mathbb{Z}$, caractérisation d’un idéal principal et résolution d’équations modulaires.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Polynômes $K[X]$ et Fractions rationnelles $K(X)$',
+        consignes: 'Division euclidienne dans $\\mathbb{R}[X]$ ou $\\mathbb{C}[X]$, ordre de multiplicité d’une racine par les dérivées successives, factorisation irréductible et décomposition complète d’une fraction rationnelle en éléments simples.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (2MTH3100) : lois de composition interne, groupes, sous-groupes, Lagrange, morphismes, groupe symétrique S_n, anneaux, idéaux, corps, polynômes K[X] et fractions rationnelles K(X).',
+    },
+    exemples: [],
+  },
+
+  lmd_geometrie_diff: {
+    matiere: 'Géométrie Différentielle Élémentaire & Fonctions à plusieurs variables (2MTH3101)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve de Géométrie Différentielle & Fonctions à plusieurs variables (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Préciser le repère orthonormé direct et exiger l’étude locale rigoureuse par développement limité pour tout point singulier.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 7,
+        nature: 'Étude complète d’une courbe paramétrée plane',
+        consignes: 'Réduction du domaine d’étude par périodicité et symétries, tableau de variations conjointes de $x(t)$ et $y(t)$, étude des branches infinies et classification d’un point stationnaire $(p,q)$ par développement limité (point d’inflexion, rebroussement de 1re ou 2e espèce).',
+      },
+      {
+        numero: 2,
+        points: 6,
+        nature: 'Abscisse curviligne, repère de Frenet, courbure et rayon de courbure',
+        consignes: 'Calcul de la longueur d’un arc d’une courbe plane ou gauche (cycloïde, cardioïde, hélice circulaire), détermination du repère de Frenet $(\\vec{T}, \\vec{N})$, du rayon de courbure $R = 1/|\\gamma|$ et du centre de courbure.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Fonctions de plusieurs variables réelles et optimisation',
+        consignes: 'Domaine de définition, continuité, calcul des dérivées partielles premières et secondes d’une fonction $f(x,y)$, vecteur gradient, théorème de Schwarz, recherche des points critiques ($\\nabla f = \\vec{0}$) et nature des extremums via la matrice Hessienne ($rt - s^2$).',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (2MTH3101) : courbes paramétrées, points singuliers (p,q), branches infinies, abscisse curviligne, repère de Frenet, courbure, fonctions de plusieurs variables, gradient et Hessienne.',
+    },
+    exemples: [],
+  },
+
+  lmd_analyse_2: {
+    matiere: 'Compléments sur les Fonctions à Variables Réelles — Analyse 2 (1MTH3201)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve de Compléments d’Analyse / Analyse 2 (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Toutes les constantes d’intégration et les conditions de convergence doivent être explicitement justifiées.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Développements limités (Taylor-Young) et applications',
+        consignes: 'Calcul de développements limités à l’ordre $n$ par composition, produit ou quotient, levée de formes indéterminées, détermination d’équivalents et équation d’une asymptote oblique avec position relative de la courbe.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Calcul de primitives et Intégrale de Riemann',
+        consignes: 'Calcul d’intégrales par intégration par parties, changement de variable, décomposition en éléments simples d’une fraction rationnelle et règles de Bioche pour une fraction trigonométrique ; limite d’une somme de Riemann $\\frac{1}{n}\\sum_{k=1}^n f(k/n)$.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Intégrales généralisées et Équations différentielles linéaires',
+        consignes: 'Étude de la nature (convergence ou divergence) d’une intégrale impropre par critères d’équivalence ou de Riemann, puis résolution complète d’une équation différentielle linéaire du 1er ordre (variation de la constante) ou du 2nd ordre à coefficients constants avec second membre.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1MTH3201) : développements limités Taylor-Young, sommes et intégrale de Riemann, primitives (IPP, fractions rationnelles, Bioche), intégrales impropres et équations différentielles 1er/2nd ordre.',
+    },
+    exemples: [],
+  },
+
+  lmd_archi_ordinateurs: {
+    matiere: 'Architecture des Ordinateurs (1INF3100)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Architecture des Ordinateurs (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Exiger les étapes détaillées des calculs de capacité mémoire, de décodage d’adresses et du cycle d’instruction.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Architecture de Von Neumann vs Harvard et Cycle d’exécution CPU',
+        consignes: 'Rôle des unités du processeur (UAL, Unité de Contrôle, registres PC/CO, IR/RI, ACC, PSW/Flags, MAR, MDR), rôle des 3 bus (adresses, données, commande) et déroulement détaillé du cycle Fetch-Decode-Execute d’une instruction machine.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Hiérarchie des mémoires, Adressage et Dimensionnement de boîtiers RAM/ROM',
+        consignes: 'Calcul de capacité mémoire $C = 2^n \\times m$, nombre de lignes du bus d’adresses et du bus de données, nombre de boîtiers élémentaires nécessaires pour réaliser une mémoire cible, décodage d’adresse (plages hexadécimales) et temps d’accès moyen avec mémoire cache (Hit rate / Miss penalty).',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Jeu d’instructions (ISA), Modes d’adressage et Entrées/Sorties',
+        consignes: 'Comparaison RISC vs CISC, exécution pas à pas d’une séquence d’instructions assembleur selon les modes d’adressage (immédiat, direct, indirect, indexé) avec état final des registres, et comparaison des modes de transfert E/S (scrutation/polling, interruption matérielle, DMA).',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1INF3100) : Von Neumann vs Harvard, CPU (UAL, UC, registres PC/IR/ACC/PSW), bus, cycle Fetch-Decode-Execute, hiérarchie mémoire/cache, dimensionnement RAM/ROM, modes d’adressage et E/S (interruptions, DMA).',
+    },
+    exemples: [],
+  },
+
+  lmd_algo_python: {
+    matiere: 'Algorithmique Avancée et Programmation Python (1INF3200)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Algorithmique et Python (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Le code demandé doit être écrit en syntaxe Python 3 propre, indentée et idiomatique, avec analyse de complexité.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Structures de données Python (listes, tuples, dictionnaires, ensembles) et Slicing',
+        consignes: 'Trace d’exécution d’un script Python utilisant slicing, compréhensions de listes et dictionnaires, puis écriture d’une fonction Python manipulant un dictionnaire de données (filtrage, agrégation, tri par clé personnalisée).',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Complexité algorithmique, Recherche dichotomique et Algorithmes de tri en Python',
+        consignes: 'Évaluation de la complexité temporelle et spatiale $\\mathcal{O}(\\cdot)$ au pire et au meilleur des cas, écriture et trace de la recherche dichotomique (`binary_search`) et d’un algorithme de tri classique (tri par insertion, sélection ou tri fusion `merge_sort`) en Python.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Problème complet — Récursivité, Fichiers et Gestion des exceptions en Python',
+        consignes: 'Écriture d’une fonction récursive avec cas de base et appel récursif, puis développement d’un module Python complet qui lit/écrit des données structurées avec `with open(...)` et sécurise les traitements par `try / except / finally`.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1INF3200) : Python 3 (types, slicing, compréhensions, listes, tuples, dict, set), complexité O(n), recherche dichotomique, tris (insertion, sélection, fusion, rapide), fonctions, récursivité, fichiers et exceptions.',
+    },
+    exemples: [],
+  },
+
+  // ==========================================================================
+  // SRIT L1 — PHYSIQUE, ÉLECTRICITÉ & ÉLECTRONIQUE
+  // ==========================================================================
+  lmd_optique_geometrique: {
+    matiere: 'Optique Géométrique (1PHY3100)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Optique Géométrique (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Toujours préciser les conventions algébriques de signes (sens de propagation de la lumière de gauche à droite) et les conditions de Gauss.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Lois de Snell-Descartes, Réflexion totale, Prisme ou Fibre optique',
+        consignes: 'Calcul d’angles de réfraction, d’angle limite de réflexion totale $\\sin i_L = n_2/n_1$, étude d’un prisme d’angle au sommet $A$ et d’indice $n$ (formules du prisme, minimum de déviation $D_m$) ou ouverture numérique $\\text{ON} = \\sqrt{n_1^2 - n_2^2}$ d’une fibre optique à saut d’indice.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Miroirs sphériques et Dioptres sphériques dans l’approximation de Gauss',
+        consignes: 'Application des relations de conjugaison (origine au sommet ou au centre) et de grandissement transversal $\\gamma = \\overline{A\'B\'}/\\overline{AB}$, détermination des foyers $F$ et $F\'$, nature réelle ou virtuelle de l’image.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Lentilles minces et Association de systèmes centrés (Doublet / Instrument d’optique)',
+        consignes: 'Étude d’un système composé de deux lentilles minces $L_1$ et $L_2$ (relations de Descartes $\\frac{1}{\\overline{OA\'}} - \\frac{1}{\\overline{OA}} = \\frac{1}{f\'} = V$ et de Newton $\\overline{FA}\\cdot\\overline{F\'A\'} = -f\'^2$), position, taille et nature de l’image intermédiaire $A_1B_1$ puis de l’image finale $A\'B\'$, vergence équivalente (formule de Gullstrand).',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1PHY3100) : Snell-Descartes, réflexion totale, fibre optique, prisme, stigmatisme, conditions de Gauss, miroirs plans/sphériques, dioptres, lentilles minces et systèmes centrés.',
+    },
+    exemples: [],
+  },
+
+  lmd_pde: {
+    matiere: 'Physique des Dispositifs Électroniques (2PHY3100)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve de Physique des Dispositifs Électroniques (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Toujours fournir les constantes physiques nécessaires : charge élémentaire $q = 1{,}6\\times 10^{-19}\\text{ C}$, constante de Boltzmann $k_B = 1{,}38\\times 10^{-23}\\text{ J/K}$, potentiel thermique $U_T = k_B T / q \\approx 26\\text{ mV}$ à $300\\text{ K}$, concentration intrinsèque du silicium $n_i = 1{,}45\\times 10^{10}\\text{ cm}^{-3}$.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Semi-conducteurs intrinsèques et extrinsèques (Dopage N et P)',
+        consignes: 'Calcul des concentrations de porteurs majoritaires et minoritaires par la loi d’action de masse $n\\cdot p = n_i^2$ et l’équation de neutralité électrique, déplacement du niveau de Fermi $E_F$ par rapport à $E_i$, compensation d’un semi-conducteur dopé à la fois par donneurs $N_D$ et accepteurs $N_A$.',
+      },
+      {
+        numero: 2,
+        points: 6,
+        nature: 'Transport de charges : Conduction, Mobilité, Diffusion et Relation d’Einstein',
+        consignes: 'Calcul de la conductivité $\\sigma = q(n\\mu_n + p\\mu_p)$ et de la résistivité $\\rho = 1/\\sigma$, vitesse de dérive sous champ électrique $\\vec{E}$, coefficients de diffusion $D_n, D_p$ par la relation d’Einstein $D/\\mu = k_B T / q$, et densités de courant de conduction et de diffusion.',
+      },
+      {
+        numero: 3,
+        points: 8,
+        nature: 'Étude complète de la Jonction PN à l’équilibre et polarisée',
+        consignes: 'Calcul de la barrière de potentiel interne $V_0 = U_T \\ln\\left(\\frac{N_A N_D}{n_i^2}\\right)$, des extensions $x_p, x_n$ et de la largeur totale $W$ de la zone de charge d’espace (ZCE), du champ électrique maximal $E_{\\max}$, puis du courant direct/inverse par la loi de Shockley $I = I_s\\left(e^{V/U_T} - 1\\right)$ et de la capacité de transition $C_j$.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (2PHY3100) : bandes d’énergie, semi-conducteurs intrinsèques/extrinsèques (N et P), loi d’action de masse np=ni², conduction/mobilité, diffusion/Einstein, jonction PN (ZCE, V0, Shockley, capacités).',
+    },
+    exemples: [],
+  },
+
+  lmd_electrostatique: {
+    matiere: 'Électrostatique et Magnétostatique (1PHY3101)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Électrostatique et Magnétostatique (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Exiger systématiquement l’analyse des symétries et des invariances de la distribution avant tout calcul de champ $\\vec{E}$ ou $\\vec{B}$.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 7,
+        nature: 'Champ et Potentiel électrostatiques d’une distribution ponctuelle ou continue',
+        consignes: 'Déplacements élémentaires et opérateurs en coordonnées cylindriques ou sphériques, calcul du champ $\\vec{E}(M)$ et du potentiel $V(M)$ créés par un ensemble de charges ponctuelles, un segment chargé, un disque ou un anneau circulaire de densité $\\lambda$ ou $\\sigma$, et vérification de $\\vec{E} = -\\overrightarrow{\\text{grad}}\\,V$.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Théorème de Gauss, Dipôle électrostatique ou Conducteurs / Condensateurs',
+        consignes: 'Application du théorème de Gauss $\\oiint \\vec{E}\\cdot d\\vec{S} = Q_{\\text{int}}/\\varepsilon_0$ (cylindre infini, sphère chargée en volume ou en surface, plan infini) OU étude du dipôle électrostatique en coordonnées polaires ($V(r,\\theta)$, composantes $E_r, E_\\theta$, lignes de champ et équipotentielles, action d’un champ extérieur : couple $\\vec{\\Gamma} = \\vec{p}\\wedge\\vec{E}$ et énergie $E_p = -\\vec{p}\\cdot\\vec{E}$).',
+      },
+      {
+        numero: 3,
+        points: 6,
+        nature: 'Magnétostatique : Loi de Biot et Savart, Théorème d’Ampère et Force de Laplace',
+        consignes: 'Calcul du champ magnétique $\\vec{B}$ créé par un fil rectiligne, une spire circulaire sur son axe ou un solénoïde par Biot-Savart ou le théorème d’Ampère $\\oint \\vec{B}\\cdot d\\vec{\\ell} = \\mu_0 I_{\\text{enlacé}}$, et action de $\\vec{B}$ sur une particule ou un conducteur (Lorentz / Laplace).',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1PHY3101) : coordonnées cartésiennes/cylindriques/sphériques, Coulomb, champ E et potentiel V, théorème de Gauss, dipôle électrostatique, conducteurs/condensateurs, Biot-Savart, théorème d’Ampère et Lorentz/Laplace.',
+    },
+    exemples: [],
+  },
+
+  lmd_electrocinetique: {
+    matiere: 'Électrocinétique (2PHY3101)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Électrocinétique (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Toutes les valeurs numériques de résistances, capacités, inductances et sources doivent être fournies pour permettre le calcul exact.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Lois de Kirchhoff et Théorèmes généraux en régime continu (Thévenin, Norton, Millman, Superposition)',
+        consignes: 'Résolution d’un réseau linéaire à plusieurs mailles par deux méthodes complémentaires : théorème de Millman ou de superposition, détermination du générateur équivalent de Thévenin $(E_{Th}, R_{Th})$ et de Norton $(I_N, R_N)$ vu entre deux bornes $A$ et $B$, et condition d’adaptation de puissance maximale.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Régime transitoire d’un circuit du 1er ou du 2nd ordre (RC, RL, RLC)',
+        consignes: 'Établissement de l’équation différentielle régissant $u_C(t)$ ou $i_L(t)$ lors de la fermeture/ouverture d’un interrupteur, constante de temps $\\tau = RC$ ou $L/R$ (ou pulsation propre $\\omega_0 = 1/\\sqrt{LC}$ et facteur de qualité $Q$), résolution complète avec conditions initiales et bilan énergétique.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Régime sinusoïdal forcé, Impédances complexes, Résonance et Puissances',
+        consignes: 'Calcul de l’impédance complexe équivalente $\\underline{Z} = R + jX$ d’un circuit RLC série ou parallèle, amplitude et déphasage $\\varphi$ du courant, étude de la résonance (pulsation $\\omega_0$, bande passante à $-3\\text{ dB}$, facteur de qualité $Q$) et calcul des puissances active $P$, réactive $Q$, apparente $S$ et relèvement du facteur de puissance $\\cos\\varphi$.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (2PHY3101) : lois d’Ohm et Kirchhoff, diviseurs, Thévenin, Norton, Millman, superposition, Kennelly, régimes transitoires RC/RL/RLC et régime sinusoïdal forcé (impédances complexes, résonance, puissances P/Q/S).',
+    },
+    exemples: [],
+  },
+
+  lmd_electronique_fondamentale: {
+    matiere: 'Électronique Fondamentale (1PHY3200)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Électronique Fondamentale (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Fournir toutes les valeurs des composants et paramètres hybrides ($h_{11}, h_{21}=\\beta, V_{BE0}, V_Z, R_d$) dans l’énoncé.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Quadripôles linéaires : Matrices caractéristiques $[Z], [Y], [H], [T]$ et Gains',
+        consignes: 'Détermination des 4 paramètres de la matrice d’impédance $[Z]$, d’admittance $[Y]$ ou hybride $[H]$ d’un quadripôle passif ou actif (en T ou en $\\Pi$), passage d’une matrice à une autre, et calcul de l’impédance d’entrée $Z_e$, de l’impédance de sortie $Z_s$, du gain en tension $A_v$ et du gain en courant $A_i$ sur une charge $Z_L$.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Diodes à jonction et Diodes Zener : Redressement, Filtrage et Stabilisation',
+        consignes: 'Point de fonctionnement statique d’un circuit à diodes (modèle à seuil $V_0 = 0{,}7\\text{ V}$ et résistance dynamique $R_d$), étude d’un redresseur double-alternance (pont de Graetz) avec filtrage capacitif (taux d’ondulation $\\Delta V$) ou d’un stabilisateur de tension à diode Zener (plage de courant de charge $I_{L\\min}$ à $I_{L\\max}$ garantissant la régulation).',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Transistor Bipolaire (BJT) : Polarisation statique et Amplification petits signaux',
+        consignes: 'Étude d’un étage amplificateur à transistor bipolaire NPN polarisé par pont de base et résistance d’émetteur : équation de la droite de charge statique, calcul du point de repos $Q(I_{C0}, V_{CE0})$, puis schéma équivalent dynamique petits signaux aux fréquences moyennes (paramètres hybrides $h_{11}, \\beta$) et calcul de $R_e, R_s, A_v$ et $A_i$.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1PHY3200) : quadripôles linéaires (matrices Z, Y, H, T, gains Av/Ai, Ze/Zs), diodes à jonction (modèles, redressement mono/double alternance, filtrage, Zener, écrêtage) et transistor bipolaire BJT (polarisation, droite de charge, schéma petits signaux EC/CC/BC).',
+    },
+    exemples: [],
+  },
+
+  lmd_electronique_numerique: {
+    matiere: 'Électronique Numérique (1PHY3201)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Électronique Numérique (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Exiger les tables de vérité complètes, les regroupements de Karnaugh explicites et les équations logiques simplifiées.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Systèmes de numération, Codage (BCD, Gray) et Arithmétique binaire signée',
+        consignes: 'Conversions entre bases 2, 8, 10 et 16 (nombres entiers et fractionnaires), transcodage Binaire $\\leftrightarrow$ Gray et BCD, opérations arithmétiques en complément à 2 sur $n$ bits avec détection de retenue (Carry) et de dépassement de capacité (Overflow), ou codage virgule flottante IEEE 754 simple précision (32 bits).',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Algèbre de Boole, Tableaux de Karnaugh et Logique combinatoire',
+        consignes: 'À partir d’un cahier des charges concret à 4 variables d’entrée, dresser la table de vérité, écrire la première et la deuxième forme canonique, simplifier la fonction par algèbre de Boole (De Morgan) et par tableau de Karnaugh (avec éventuels états indifférents $X$), puis réaliser la fonction uniquement avec des portes NAND (ou un multiplexeur $8\\to 1$).',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Circuits arithmétiques et Logique séquentielle (Bascules et Compteurs)',
+        consignes: 'Conception d’un additionneur complet 1 bit / 4 bits ou d’un comparateur, étude des bascules (RS, D, JK, T : table de transition et chronogramme), et synthèse complète d’un compteur synchrone modulo $N$ à base de bascules JK ou D (diagramme d’états, table d’excitation, équations de $J_i, K_i$ par Karnaugh).',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1PHY3201) : numération (bases 2/8/10/16), BCD, Gray, complément à 2, IEEE 754, algèbre de Boole, De Morgan, tableaux de Karnaugh, circuits combinatoires (additionneur, MUX, décodeur) et séquentiels (bascules RS/D/JK/T, registres, compteurs).',
+    },
+    exemples: [],
+  },
+
+  lmd_mecanique_point: {
+    matiere: 'Mécanique du Point (1PHY3202)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve de Mécanique du Point (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Exiger systématiquement la définition du système, du référentiel, du repère (cartésien, polaire, cylindrique, sphérique ou Frenet) et le bilan des forces.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Cinématique du point et Changement de référentiel (Vitesses et Accélérations)',
+        consignes: 'Expression des vecteurs position $\\vec{OM}$, vitesse $\\vec{v}$ et accélération $\\vec{a}$ en coordonnées polaires $(\\vec{e}_r, \\vec{e}_\\theta)$ ou cylindriques, rayon de courbure dans la base de Frenet, et application des lois de composition des vitesses ($\\vec{v}_a = \\vec{v}_r + \\vec{v}_e$) et des accélérations ($\\vec{a}_a = \\vec{a}_r + \\vec{a}_e + \\vec{a}_c$ avec $\\vec{a}_c = 2\\vec{\\Omega}\\wedge\\vec{v}_r$) pour un point mobile sur un plateau ou un anneau en rotation.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Dynamique du point matériel en référentiel galiléen ou non galiléen et Oscillateurs',
+        consignes: 'Application du Principe Fondamental de la Dynamique (PFD), réaction du support et condition de décollement ou glissement (lois de Coulomb), forces d’inertie d’entraînement et de Coriolis en référentiel tournant, et mise en équation d’un oscillateur harmonique libre ou amorti autour d’une position d’équilibre.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Théorèmes énergétiques, Moment cinétique et Mouvement à force centrale (Formules de Binet)',
+        consignes: 'Théorème de l’énergie cinétique et conservation de l’énergie mécanique $E_m = E_c + E_p$, théorème du moment cinétique $\\frac{d\\vec{L}_O}{dt} = \\vec{\\mathcal{M}}_O(\\vec{F})$, démonstration de la constance de la constante des aires $C = r^2\\dot{\\theta}$, application des formules de Binet (vitesse et accélération en $u = 1/r$) et lois de Kepler.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1PHY3202) : cinématique (cartésiennes, polaires, cylindriques, sphériques, Frenet), changement de référentiel (entraînement, Coriolis), dynamique de Newton, frottements, oscillateurs, énergie, moment cinétique, forces centrales et formules de Binet.',
+    },
+    exemples: [],
+  },
+
+  // ==========================================================================
+  // SRIT L1 — ÉCONOMIE, DROIT & ANGLAIS
+  // ==========================================================================
+  lmd_analyse_economique: {
+    matiere: 'Analyse Économique (1ECO3200)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Analyse Économique (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Exiger les formules littérales, les calculs numériques détaillés et l’interprétation économique de chaque résultat.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Fondements de l’analyse économique et Circuit économique',
+        consignes: 'Distinction biens économiques vs biens libres, classification des besoins et des biens, courants de pensée (classique, néoclassique, keynésien), rôle des 5 secteurs institutionnels (ménages, SNF, SF, APU, Reste du monde), flux réels et monétaires et vérification de l’équilibre emplois-ressources $Y + M = C + I + G + X$.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Consommation, Épargne, Lois d’Engel et Multiplicateur d’investissement',
+        consignes: 'À partir d’une fonction de consommation keynésienne $C = C_0 + cY_d$ et de données budgétaires, calculer la fonction d’épargne $S$, le revenu de rupture, les propensions moyennes et marginales ($PMC, PmC, PMS, PmS$), les coefficients budgétaires (lois d’Engel), l’élasticité-revenu et la hausse du revenu national générée par un investissement $\\Delta I$ via le multiplicateur $k = \\frac{1}{1-c}$.',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Monnaie, Création monétaire et Agrégats de la comptabilité nationale (PIB)',
+        consignes: 'Fonctions et formes de la monnaie, agrégats monétaires ($M_1, M_2, M_3$), mécanisme de création monétaire par les banques commerciales et multiplicateur de crédit $k_m = \\frac{1}{b + r(1-b)}$ sous contrôle de la BCEAO, puis calcul du PIB selon les 3 optiques (Production $\\sum VA + \\text{Impôts} - \\text{Subventions}$, Demande, Revenus), taux de croissance et déflateur du PIB.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1ECO3200) : circuit économique, secteurs institutionnels, consommation/épargne (PMC, PmC, Engel, multiplicateur keynésien), monnaie, création monétaire, BCEAO et agrégats macroéconomiques (PIB 3 optiques, croissance, inflation).',
+    },
+    exemples: [],
+  },
+
+  lmd_intro_droit: {
+    matiere: 'Introduction au Droit (1DRT3100)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — SRIT 1 — Épreuve d’Introduction Générale au Droit (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Exiger la méthode du syllogisme juridique (Majeure : règle de droit applicable ; Mineure : qualification juridique des faits ; Conclusion : solution) pour les cas pratiques.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'La Règle de droit, les Branches du droit et la Hiérarchie des normes',
+        consignes: 'Caractères de la règle de droit (générale, abstraite, obligatoire, coercitive étatique) comparée à la règle morale, distinction Droit public / Droit privé et leurs sous-branches, pyramide de Kelsen en droit ivoirien (Constitution, Traités internationaux et Actes uniformes OHADA, Loi ordinaire/organique, Ordonnance, Décret, Arrêté) et principe de non-rétroactivité de la loi.',
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: 'Organisation juridictionnelle ivoirienne et Preuve des droits subjectifs',
+        consignes: 'Compétence des juridictions ivoiriennes (Tribunaux de première instance, Cours d’appel, Cour de cassation, Conseil d’État, Cour des comptes, CCJA de l’OHADA), distinction acte juridique vs fait juridique, charge de la preuve (art. 1315 du Code civil) et recevabilité des modes de preuve (preuve littérale/écrite ou électronique vs témoignage/présomption).',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Cas pratique — Personnalité juridique, Capacité, Patrimoine et Responsabilité',
+        consignes: 'Scénario concret impliquant une personne physique et une personne morale (société ou association technologique à Abidjan) : qualifier les personnes, analyser les attributs de la personnalité juridique (nom, domicile, nationalité, capacité de jouissance et d’exercice, patrimoine), qualifier les biens (meubles corporels/incorporels, immeubles par nature/destination) et résoudre un litige par syllogisme juridique.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1DRT3100) : caractères de la règle de droit, branches droit public/privé, sources du droit et hiérarchie de Kelsen, non-rétroactivité, juridictions ivoiriennes, personnes physiques/morales, patrimoine, biens, actes/faits juridiques et preuve.',
+    },
+    exemples: [],
+  },
+
+  lmd_anglais: {
+    matiere: 'Anglais Technique et Professionnel (1COM3100 / 1COM3200)',
+    duree: '2 h',
+    source: 'Format universitaire LMD — L1 — Épreuve d’Anglais (2 h, /20)',
+    reglesMatiere: [
+      ...LMD_COMMON_RULES,
+      'Pas de LaTeX ni de signe $ : rédige les consignes et les exercices d’anglais en texte clair.',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 7,
+        nature: 'Grammar in Context — Tenses, Modals, Conditionals & Irregular Verbs',
+        consignes: '8 à 10 phrases techniques contextualisées (IT, réseaux, télécoms, vie d’entreprise) à compléter ou transformer : maîtrise des temps (Present Simple vs Continuous, Past Simple vs Present Perfect, Past Perfect, Future forms `will` / `be going to`), des verbes modaux (`must`, `have to`, `should`, `may`, `might`, `can`, `could`) et des phrases conditionnelles (Zero, 1st, 2nd and 3rd Conditionals).',
+      },
+      {
+        numero: 2,
+        points: 6,
+        nature: 'Sentence Transformation — Passive Voice, Reported Speech & Parts of Speech',
+        consignes: 'Transformation de 4 phrases actives en voix passive (Passive Voice) dans un contexte scientifique/informatique, passage de 4 énoncés du discours direct au discours indirect (Reported Speech avec concordance des temps, pronoms et adverbes de temps/lieu), et identification des classes grammaticales (Parts of Speech : Noun, Verb, Adjective, Adverb, Preposition, Conjunction).',
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Reading Comprehension & Technical Writing (IT, Networking & Telecommunications)',
+        texteNumerote: true,
+        consignes: 'Rédige dans « contexte » un texte technique inédit en anglais de 160 à 220 mots sur les réseaux informatiques, la cybersécurité, le Cloud ou les télécommunications en Afrique (terminé par « Original text written for KONAN »). Pose 3 questions de compréhension et de vocabulaire technique (synonymes/définitions en contexte), puis demande un paragraphe rédigé en anglais (80 à 100 mots) sur un sujet professionnel IT.',
+      },
+    ],
+    notesClasse: {
+      lmd_srit_l1: 'SRIT L1 (1COM3100 / 1COM3200) : English tenses (Present, Past, Present Perfect, Future), irregular verbs, modals, conditionals, Passive Voice, Reported Speech, Parts of Speech and IT/Telecom technical vocabulary.',
+      lmd_entd_l1: 'ENTD L1 (1LAN3250) : English tenses, modals, conditionals, Passive Voice, Reported Speech, Parts of Speech and Business/Digital Economy vocabulary.',
     },
     exemples: [],
   },

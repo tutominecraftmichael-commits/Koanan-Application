@@ -79,10 +79,12 @@ function checkVisual(where: string, v?: { title?: string; caption?: string; svgC
 let lessons = 0;
 const doneChapters = new Set<string>();
 // Lycée/collège + filière LMD ENTD L1 (24 matières, contrôlée depuis le 2026-11-22)
-const { ENTD_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
+// + filière LMD SRIT L1 (contrôlée depuis le 2026-11-24)
+const { ENTD_L1_SUBJECT_IDS, SRIT_L1_SUBJECT_IDS } = await import('../src/lib/curriculum/lmdTracks');
 const PAIRS: [string, string][] = [
   ...GRADES.flatMap((g) => SUBJECTS.map((s) => [g, s] as [string, string])),
   ...ENTD_L1_SUBJECT_IDS.map((s) => ['lmd_entd_l1', s] as [string, string]),
+  ...SRIT_L1_SUBJECT_IDS.map((s) => ['lmd_srit_l1', s] as [string, string]),
 ];
 for (const [g, s] of PAIRS) {
   for (const ch of getCurriculumChapters(s as any, g as any)) {

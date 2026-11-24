@@ -55,6 +55,31 @@ export const ENTD_L1_SUBJECT_IDS: StemSubjectId[] = [
   'lmd_tef',
   'lmd_ecriture_creative',
   'lmd_dev_perso',
+  'lmd_anglais',
+];
+
+export const SRIT_L1_SUBJECT_IDS: StemSubjectId[] = [
+  'lmd_logique_math',
+  'lmd_structures_algebriques',
+  'lmd_analyse',
+  'lmd_geometrie_diff',
+  'lmd_algebre',
+  'lmd_analyse_2',
+  'lmd_optique_geometrique',
+  'lmd_pde',
+  'lmd_electrostatique',
+  'lmd_electrocinetique',
+  'lmd_electronique_fondamentale',
+  'lmd_electronique_numerique',
+  'lmd_mecanique_point',
+  'lmd_archi_ordinateurs',
+  'lmd_algorithmique',
+  'lmd_algo_python',
+  'lmd_analyse_economique',
+  'lmd_intro_droit',
+  'lmd_anglais',
+  'lmd_tef',
+  'lmd_dev_perso',
 ];
 
 export const LMD_TRACKS: LmdTrackDefinition[] = [
@@ -71,6 +96,22 @@ export const LMD_TRACKS: LmdTrackDefinition[] = [
         gradeLevel: 'lmd_entd_l1',
         hasCourses: true,
         subjectIds: ENTD_L1_SUBJECT_IDS,
+      },
+    ],
+  },
+  {
+    id: 'srit',
+    code: 'SRIT',
+    name: 'Systèmes et Réseaux Informatiques et Télécommunications',
+    shortDescription: 'Mathématiques, physique, électronique, algorithmique, Python, réseaux & télécoms',
+    levels: [
+      {
+        level: 'l1',
+        shortLabel: 'L1',
+        fullLabel: 'Licence 1 (L1)',
+        gradeLevel: 'lmd_srit_l1',
+        hasCourses: true,
+        subjectIds: SRIT_L1_SUBJECT_IDS,
       },
     ],
   },

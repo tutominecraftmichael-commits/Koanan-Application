@@ -98,8 +98,8 @@ const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; 
     mobile: 'LMD',
     fileName: 'Emploi_du_Temps_LMD.txt',
     icon: <GraduationCap className="w-4 h-4" />,
-    demoId: 'pdf-esatic-entd2',
-    placeholder: `JOUR: LUNDI\n- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI\n- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. YEO\n- 14:30 - 17:00 : Dév Applications 1 [1INF3350] | Salle: Lab Info 1 | Prof: M. KONE\n\nJOUR: MARDI\n- 07:30 - 10:00 : Finance [1MAN3350] | Salle: Amphi B | Prof: Dr KADJO`
+    demoId: 'pdf-lmd-entd2',
+    placeholder: `JOUR: LUNDI\n- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT A\n- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. ENSEIGNANT B\n- 14:30 - 17:00 : Dév Applications 1 [1INF3350] | Salle: Lab Info 1 | Prof: M. ENSEIGNANT C\n\nJOUR: MARDI\n- 07:30 - 10:00 : Finance [1MAN3350] | Salle: Amphi B | Prof: Dr ENSEIGNANT D`
   },
   tpcm: {
     label: 'BTS / Technique (CM · TD · TP)',
@@ -1256,10 +1256,10 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             <span className="text-[11px] font-medium text-slate-500">Exemples certifiés :</span>
             <button
               type="button"
-              onClick={() => handleLoadDemo('pdf-esatic-entd2', 'lmd')}
+              onClick={() => handleLoadDemo('pdf-lmd-entd2', 'lmd')}
               className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer text-[11px]"
             >
-              ESATIC (LMD)
+              Université (LMD)
             </button>
             <button
               type="button"

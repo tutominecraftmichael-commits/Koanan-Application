@@ -14,10 +14,16 @@ import { TEF_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/tef';
 import { ECRITURE_CREATIVE_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/ecriture_creative';
 import { DEV_PERSO_ENTD_L1_CHAPTERS } from '../courses/lmd/entd_l1/dev_perso';
 
+const withSrit = (chapters: CurriculumChapter[]): CurriculumChapter[] =>
+  chapters.map((c) => ({
+    ...c,
+    alsoForGrades: Array.from(new Set([...(c.alsoForGrades || []), 'lmd_srit_l1'])),
+  }));
+
 export const CHAPTERS: CurriculumChapter[] = [
   ...BUREAUTIQUE_ENTD_L1_CHAPTERS,
   ...INIT_INFO_ENTD_L1_CHAPTERS,
-  ...TEF_ENTD_L1_CHAPTERS,
+  ...withSrit(TEF_ENTD_L1_CHAPTERS),
   ...ECRITURE_CREATIVE_ENTD_L1_CHAPTERS,
-  ...DEV_PERSO_ENTD_L1_CHAPTERS,
+  ...withSrit(DEV_PERSO_ENTD_L1_CHAPTERS),
 ];

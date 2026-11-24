@@ -12,7 +12,7 @@ import { isExamPrepGrade } from './exam/examPrepRules';
 export const EXAM_PREP_PAUSED = false;
 
 export const EXAM_PREP_PAUSED_TITLE = 'Préparation aux devoirs et examens';
-export const EXAM_PREP_PAUSED_MESSAGE = 'Disponible en Seconde, Première, Terminale et Licence 1 ENTD. Les autres filières arrivent bientôt.';
+export const EXAM_PREP_PAUSED_MESSAGE = 'Disponible en Seconde, Première, Terminale et Licence 1 (ENTD & SRIT). Les autres filières arrivent bientôt.';
 
 /**
  * La préparation aux devoirs est-elle ouverte pour cette classe ? Tous les pays depuis le 2026-11-22 au soir

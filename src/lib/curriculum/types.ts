@@ -25,6 +25,7 @@ export type CurriculumGradeLevel =
   | 'terminale_a' // Rétrocompatibilité
   // Supérieur (Filières LMD prédéfinies avec niveau + rétrocompatibilité)
   | 'lmd_entd_l1'
+  | 'lmd_srit_l1'
   | 'superieur_lmd'
   | 'superieur_bts';
 
@@ -124,14 +125,21 @@ export const GRADE_LEVELS: GradeLevelMeta[] = [
     label: 'ENTD — Licence 1 (L1)',
     category: 'superieur',
     badge: 'ENTD L1',
-    description: 'Économie Numérique et Transformation Digitale — Licence 1 (24 matières)',
+    description: 'Économie Numérique et Transformation Digitale — Licence 1 (25 matières)',
+  },
+  {
+    id: 'lmd_srit_l1',
+    label: 'SRIT — Licence 1 (L1)',
+    category: 'superieur',
+    badge: 'SRIT L1',
+    description: 'Systèmes et Réseaux Informatiques et Télécommunications — Licence 1 (21 matières)',
   },
   {
     id: 'superieur_lmd',
     label: 'Licence Universitaire (LMD)',
     category: 'superieur',
     badge: 'LMD',
-    description: 'Universités & Grandes Écoles (ESATIC, INP-HB, UFHB, etc.)',
+    description: 'Universités & Grandes Écoles',
   },
   {
     id: 'superieur_bts',
@@ -145,21 +153,21 @@ export const GRADE_LEVELS: GradeLevelMeta[] = [
 export type LyceeSubjectId = 'maths' | 'physique_chimie' | 'svt' | 'francais' | 'histoire_geo' | 'philosophie';
 
 export type LmdSubjectId =
-  // Lot 1 : Maths, Info & Réseaux
+  // Lot 1 : Maths, Info & Réseaux (ENTD L1 & Tronc commun L1)
   | 'lmd_algorithmique'
   | 'lmd_algebre'
   | 'lmd_analyse'
   | 'lmd_logique_math'
   | 'lmd_stat_descriptive'
   | 'lmd_reseaux'
-  // Lot 2 : Économie, Numérique & Finance
+  // Lot 2 : Économie, Numérique & Finance (ENTD L1)
   | 'lmd_intro_eco_num'
   | 'lmd_modele_dev_eco_num'
   | 'lmd_macroeconomie'
   | 'lmd_microeconomie'
   | 'lmd_banque'
   | 'lmd_assurance'
-  // Lot 3 : Gestion, Comptabilité & Droit
+  // Lot 3 : Gestion, Comptabilité & Droit (ENTD L1)
   | 'lmd_compta_generale'
   | 'lmd_compta_analytique'
   | 'lmd_oge'
@@ -167,12 +175,30 @@ export type LmdSubjectId =
   | 'lmd_intro_marketing'
   | 'lmd_intro_droit_num'
   | 'lmd_droit_numerique'
-  // Lot 4 : Bureautique, Digital & Communication
+  // Lot 4 : Bureautique, Digital & Communication (ENTD L1 & Tronc commun L1)
   | 'lmd_bureautique'
   | 'lmd_init_info'
   | 'lmd_tef'
   | 'lmd_ecriture_creative'
-  | 'lmd_dev_perso';
+  | 'lmd_dev_perso'
+  // Lot 5 : SRIT 1 — Mathématiques & Informatique Spécialisées
+  | 'lmd_structures_algebriques'
+  | 'lmd_geometrie_diff'
+  | 'lmd_analyse_2'
+  | 'lmd_archi_ordinateurs'
+  | 'lmd_algo_python'
+  // Lot 6 : SRIT 1 — Physique, Électricité & Électronique
+  | 'lmd_optique_geometrique'
+  | 'lmd_pde'
+  | 'lmd_electrostatique'
+  | 'lmd_electrocinetique'
+  | 'lmd_electronique_fondamentale'
+  | 'lmd_electronique_numerique'
+  | 'lmd_mecanique_point'
+  // Lot 7 : SRIT 1 — Économie, Droit & Anglais
+  | 'lmd_analyse_economique'
+  | 'lmd_intro_droit'
+  | 'lmd_anglais';
 
 export type StemSubjectId = LyceeSubjectId | LmdSubjectId;
 
@@ -187,19 +213,31 @@ export const LYCEE_SUBJECT_IDS: LyceeSubjectId[] = [
 
 export const LMD_SUBJECT_IDS: LmdSubjectId[] = [
   // Ordre prioritaire pour éviter toute collision entre intitulés proches
-  // (ex: Intro au Droit du Numérique avant Droit du Numérique, Compta Analytique avant Compta Générale,
-  // Modèle de Développement en Éco Numérique avant Intro à l'Éco Numérique)
   'lmd_intro_droit_num',
   'lmd_droit_numerique',
+  'lmd_intro_droit',
   'lmd_modele_dev_eco_num',
   'lmd_intro_eco_num',
+  'lmd_analyse_economique',
   'lmd_compta_analytique',
   'lmd_compta_generale',
+  'lmd_algo_python',
   'lmd_algorithmique',
+  'lmd_archi_ordinateurs',
+  'lmd_structures_algebriques',
+  'lmd_geometrie_diff',
+  'lmd_analyse_2',
   'lmd_algebre',
   'lmd_analyse',
   'lmd_logique_math',
   'lmd_stat_descriptive',
+  'lmd_optique_geometrique',
+  'lmd_pde',
+  'lmd_electrostatique',
+  'lmd_electronique_fondamentale',
+  'lmd_electronique_numerique',
+  'lmd_electrocinetique',
+  'lmd_mecanique_point',
   'lmd_reseaux',
   'lmd_macroeconomie',
   'lmd_microeconomie',
@@ -213,6 +251,7 @@ export const LMD_SUBJECT_IDS: LmdSubjectId[] = [
   'lmd_tef',
   'lmd_ecriture_creative',
   'lmd_dev_perso',
+  'lmd_anglais',
 ];
 
 export interface StemSubjectMeta {
@@ -342,28 +381,28 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
     name: 'Algorithmique',
     color: '#2563EB',
     iconName: 'Calculator',
-    aliases: ['algorithmique', 'algorithme', 'algo', 'programmation', 'algorithmique et programmation'],
+    aliases: ['algorithmique', 'algorithme', 'algo', 'programmation', 'algorithmique et programmation', 'initiation en algorithmique', 'algorithmique 1', 'algo 1', '2inf3100'],
   },
   lmd_algebre: {
     id: 'lmd_algebre',
     name: 'Algèbre',
     color: '#3B82F6',
     iconName: 'Calculator',
-    aliases: ['algebre', 'algèbre', 'algebre 1', 'algebre1', 'algebre lineaire', 'arithmetique'],
+    aliases: ['algebre', 'algèbre', 'algebre 1', 'algebre1', 'algebre lineaire', 'algèbre linéaire', 'arithmetique', '1mth3200'],
   },
   lmd_analyse: {
     id: 'lmd_analyse',
     name: 'Analyse',
     color: '#1D4ED8',
     iconName: 'Calculator',
-    aliases: ['analyse', 'analyse 1', 'analyse1', 'analyse mathematique', 'calcul differentiel'],
+    aliases: ['analyse', 'analyse 1', 'analyse1', 'analyse mathematique', 'calcul differentiel', 'fonction a une variable reelle', 'fonctions d une variable reelle', 'fonctions a une variable reelle', '1mth3101'],
   },
   lmd_logique_math: {
     id: 'lmd_logique_math',
     name: 'Logique et Raisonnement Mathématique',
     color: '#4F46E5',
     iconName: 'Calculator',
-    aliases: ['logique', 'logique et raisonnement mathematique', 'logique mathematique', 'raisonnement mathematique', 'maths 1', 'math 1'],
+    aliases: ['logique', 'logique et raisonnement mathematique', 'logique et raisonnements mathematiques', 'logique mathematique', 'raisonnement mathematique', 'elements de theories des ensembles', 'theorie des ensembles', 'maths 1', 'math 1', '1mth3100'],
   },
   lmd_stat_descriptive: {
     id: 'lmd_stat_descriptive',
@@ -475,7 +514,7 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'oge',
       'organisation et gestion des entreprises',
       'organisation et gestion d entreprise',
-      // intitulé de l'ESATIC (tableau des ECUE, code 2MAN3251)
+      // intitulé officiel (tableau des ECUE, code 2MAN3251)
       'organisation et gestion de l entreprise',
       'organisation et gestion de l\'entreprise',
       'organisation gestion entreprise',
@@ -555,11 +594,17 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'techniques d expression francaise',
       'technique d expression',
       'techniques d expression',
+      'tech d expression fr',
+      'tech d expression',
       'tef',
       'tef s1',
       'tef s2',
       'expression francaise',
       'expression ecrite et orale',
+      'francais',
+      'français',
+      '2com3100',
+      '2com3200',
     ],
   },
   lmd_ecriture_creative: {
@@ -586,6 +631,236 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'dev personnel',
       'developpement perso',
       'soft skills',
+      '3com3100',
+    ],
+  },
+  // ==========================================================================
+  // MATIÈRES LMD — SRIT 1 (Systèmes et Réseaux Informatiques et Télécoms L1)
+  // ==========================================================================
+  lmd_structures_algebriques: {
+    id: 'lmd_structures_algebriques',
+    name: 'Structures Algébriques',
+    color: '#4338CA',
+    iconName: 'Calculator',
+    aliases: [
+      'structures algebriques',
+      'structure algebrique',
+      'structures algébriques',
+      'groupes anneaux corps',
+      'elements d algebre',
+      '2mth3100',
+    ],
+  },
+  lmd_geometrie_diff: {
+    id: 'lmd_geometrie_diff',
+    name: 'Géométrie Différentielle Élémentaire',
+    color: '#6366F1',
+    iconName: 'Calculator',
+    aliases: [
+      'geometrie differentielle elementaire',
+      'geometrie differentielle',
+      'géométrie différentielle élémentaire',
+      'géométrie différentielle',
+      'geo diff',
+      'courbes parametrees',
+      'fonctions a plusieurs variables reelles',
+      'fonctions de plusieurs variables reelles',
+      '2mth3101',
+    ],
+  },
+  lmd_analyse_2: {
+    id: 'lmd_analyse_2',
+    name: 'Compléments sur les Fonctions à Variables Réelles (Analyse 2)',
+    color: '#1E40AF',
+    iconName: 'Calculator',
+    aliases: [
+      'complements sur les fonctions a variables reelles',
+      'complement sur les fonctions a variables reelles',
+      'complements d analyse',
+      'complement d analyse',
+      'comp ana',
+      'analyse 2',
+      'analyse ii',
+      'analyse2',
+      '1mth3201',
+    ],
+  },
+  lmd_optique_geometrique: {
+    id: 'lmd_optique_geometrique',
+    name: 'Optique Géométrique',
+    color: '#0EA5E9',
+    iconName: 'Atom',
+    aliases: [
+      'optique geometrique',
+      'optiques geometrique',
+      'optique géométrique',
+      'optique',
+      'optique geo',
+      '1phy3100',
+    ],
+  },
+  lmd_pde: {
+    id: 'lmd_pde',
+    name: 'Physique des Dispositifs Électroniques',
+    color: '#8B5CF6',
+    iconName: 'Atom',
+    aliases: [
+      'physique des dispositifs electroniques',
+      'physique des dispositifs electoniques',
+      'physique et dispositif experimentale',
+      'physique des semi conducteurs',
+      'dispositifs electroniques',
+      'jonction pn',
+      'pde',
+      '2phy3100',
+    ],
+  },
+  lmd_electrostatique: {
+    id: 'lmd_electrostatique',
+    name: 'Électrostatique et Magnétostatique',
+    color: '#7C3AED',
+    iconName: 'Atom',
+    aliases: [
+      'electrostatique et magnetostatique',
+      'electrostatique magnetostatique',
+      'electrostatique magnetotatique',
+      'electrostatique',
+      'électrostatique',
+      'magnetostatique',
+      '1phy3101',
+    ],
+  },
+  lmd_electrocinetique: {
+    id: 'lmd_electrocinetique',
+    name: 'Électrocinétique',
+    color: '#6D28D9',
+    iconName: 'Atom',
+    aliases: [
+      'electrocinetique',
+      'électrocinétique',
+      'electocinetique',
+      'circuits electriques',
+      'electricite generale',
+      '2phy3101',
+    ],
+  },
+  lmd_electronique_fondamentale: {
+    id: 'lmd_electronique_fondamentale',
+    name: 'Électronique Fondamentale',
+    color: '#9333EA',
+    iconName: 'Atom',
+    aliases: [
+      'electronique fondamentale',
+      'electronique fondamental',
+      'electronique fondemantal',
+      'électronique fondamentale',
+      'eln fondamental',
+      'elnf',
+      'elnf1',
+      'electronique analogique',
+      '1phy3200',
+    ],
+  },
+  lmd_electronique_numerique: {
+    id: 'lmd_electronique_numerique',
+    name: 'Électronique Numérique',
+    color: '#0284C7',
+    iconName: 'Atom',
+    aliases: [
+      'electronique numerique',
+      'électronique numérique',
+      'electronique num',
+      'elec num',
+      'elec nume',
+      'logique combinatoire et sequentielle',
+      'systemes logiques',
+      '1phy3201',
+    ],
+  },
+  lmd_mecanique_point: {
+    id: 'lmd_mecanique_point',
+    name: 'Mécanique du Point',
+    color: '#0D9488',
+    iconName: 'Atom',
+    aliases: [
+      'mecanique du point',
+      'mécanique du point',
+      'mecanique du point materiel',
+      'meca point',
+      'mecanique',
+      '1phy3202',
+    ],
+  },
+  lmd_archi_ordinateurs: {
+    id: 'lmd_archi_ordinateurs',
+    name: 'Architecture des Ordinateurs',
+    color: '#0891B2',
+    iconName: 'Atom',
+    aliases: [
+      'architecture des ordinateurs',
+      'archi des ordinateurs',
+      'architecture ordinateur',
+      'ado',
+      '1inf3100',
+    ],
+  },
+  lmd_algo_python: {
+    id: 'lmd_algo_python',
+    name: 'Algorithmique et Python',
+    color: '#2563EB',
+    iconName: 'Calculator',
+    aliases: [
+      'algorithmique et python',
+      'algo et python',
+      'algorithmique avancee',
+      'algorithmique avancée',
+      'algo avance',
+      'algo avancee',
+      'programmation python',
+      'python',
+      '1inf3200',
+    ],
+  },
+  lmd_analyse_economique: {
+    id: 'lmd_analyse_economique',
+    name: 'Analyse Économique',
+    color: '#D97706',
+    iconName: 'BookOpen',
+    aliases: [
+      'analyse economique',
+      'analyse économique',
+      'economie generale',
+      'economie',
+      '1eco3200',
+    ],
+  },
+  lmd_intro_droit: {
+    id: 'lmd_intro_droit',
+    name: 'Introduction au Droit',
+    color: '#BE185D',
+    iconName: 'BookOpen',
+    aliases: [
+      'introduction au droit',
+      'intro au droit',
+      'intro droit',
+      'droit general',
+      'droit',
+      '1drt3100',
+    ],
+  },
+  lmd_anglais: {
+    id: 'lmd_anglais',
+    name: 'Anglais',
+    color: '#10B981',
+    iconName: 'BookOpen',
+    aliases: [
+      'anglais',
+      'english',
+      'anglais technique',
+      'technical english',
+      '1com3100',
+      '1com3200',
+      '1lan3250',
     ],
   },
 };

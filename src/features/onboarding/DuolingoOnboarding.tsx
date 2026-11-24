@@ -157,9 +157,9 @@ const STUDY_SYSTEM_CONFIG: Record<
     badge: 'Licence · Master · Doctorat',
     subtitle: 'Université & Grandes Écoles — Extrait les matières, codes ECUE, amphis/salles et enseignants.',
     fileName: 'Emploi_du_Temps_LMD.txt',
-    demoId: 'pdf-esatic-entd2',
-    syntaxExample: '- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI',
-    placeholder: `JOUR: LUNDI\n- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI\n- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. YEO\n- 14:30 - 17:00 : Développement d'Applications 1 [1INF3350] | Salle: Lab Info | M. KONE\n\nJOUR: MARDI\n- 07:30 - 10:00 : Fondamentaux de la Finance [1MAN3350] | Salle: Amphi ESATIC | Prof: Dr KADJO`,
+    demoId: 'pdf-lmd-entd2',
+    syntaxExample: '- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT A',
+    placeholder: `JOUR: LUNDI\n- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT A\n- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. ENSEIGNANT B\n- 14:30 - 17:00 : Développement d'Applications 1 [1INF3350] | Salle: Lab Info | M. ENSEIGNANT C\n\nJOUR: MARDI\n- 07:30 - 10:00 : Fondamentaux de la Finance [1MAN3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT D`,
   },
   bts: {
     format: 'tpcm',
@@ -1928,7 +1928,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   onClick={() => handleLoadCertifiedDemo('lmd')}
                   className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors"
                 >
-                  ESATIC (LMD)
+                  Université (LMD)
                 </button>
                 <button
                   type="button"

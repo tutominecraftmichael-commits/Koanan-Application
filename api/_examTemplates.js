@@ -747,7 +747,7 @@ export function canonicalExamGrade(gradeId) {
 
 export function getExamTemplate(subjectKey, gradeId0) {
   const gradeId = canonicalExamGrade(gradeId0);
-  if ((gradeId === 'lmd_entd_l1' || String(subjectKey || '').startsWith('lmd_')) && LMD_ENTD_L1_TEMPLATES[subjectKey]) {
+  if ((gradeId === 'lmd_entd_l1' || gradeId === 'lmd_srit_l1' || String(gradeId || '').startsWith('lmd_') || String(subjectKey || '').startsWith('lmd_')) && LMD_ENTD_L1_TEMPLATES[subjectKey]) {
     return LMD_ENTD_L1_TEMPLATES[subjectKey];
   }
   if (TERMINALE_D_GRADES.includes(gradeId) && TERMINALE_D_TEMPLATES[subjectKey]) {

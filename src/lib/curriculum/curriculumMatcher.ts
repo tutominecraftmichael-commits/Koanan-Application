@@ -53,7 +53,7 @@ export function canonicalGradeLevel<T extends CurriculumGradeLevel | null | unde
 /**
  * Lecture STRICTE : la série doit être le mot qui suit immédiatement la classe
  * (« 2nde C », « Tle D », « TleD », « 1ère A1 »). Le reste du texte (nom du lycée,
- * de la ville…) est ignoré : « 2nde C Lycée Moderne Abobo » donne bien la 2nde C.
+ * de la ville…) est ignoré : « 2nde C, lycée de mon quartier » donne bien la 2nde C.
  * « Tle A » / « 1ère A » sans précision correspondent à la série A1 (alias historique).
  */
 function parseGradeStrict(clean: string): CurriculumGradeLevel | null {
@@ -80,6 +80,12 @@ function parseGradeStrict(clean: string): CurriculumGradeLevel | null {
   ) {
     return 'lmd_entd_l1';
   }
+  if (
+    /\blmd srit l1\b|\bsrit\s*(?:l\s*)?1(?:[ab])?\b/.test(clean)
+    || ((/\bsrit\b/.test(clean) || clean.includes('systemes et reseaux informatiques')) && /\b(?:l\s*1|licence\s*1)\b/.test(clean))
+  ) {
+    return 'lmd_srit_l1';
+  }
   if (/\b(bts|prepa)\b/.test(clean)) return 'superieur_bts';
   if (/\b(lmd|licence|master|doctorat)\b|universit/.test(clean)) return 'superieur_lmd';
   return null;
@@ -91,6 +97,7 @@ const GRADE_LABELS: Partial<Record<CurriculumGradeLevel, string>> = {
   premiere_a: 'Première A', premiere_a1: 'Première A1', premiere_a2: 'Première A2', premiere_c: 'Première C', premiere_d: 'Première D',
   terminale_a: 'Terminale A', terminale_a1: 'Terminale A1', terminale_a2: 'Terminale A2', terminale_c: 'Terminale C', terminale_d: 'Terminale D',
   lmd_entd_l1: 'ENTD — Licence 1 (L1)',
+  lmd_srit_l1: 'SRIT — Licence 1 (L1)',
   superieur_bts: 'BTS', superieur_lmd: 'Université (LMD)',
 };
 
@@ -117,7 +124,7 @@ const EXACT_GRADE_IDS: CurriculumGradeLevel[] = [
   'seconde_c', 'seconde_a',
   'premiere_c', 'premiere_d', 'premiere_a1', 'premiere_a2', 'premiere_a',
   'terminale_c', 'terminale_d', 'terminale_a1', 'terminale_a2', 'terminale_a',
-  'lmd_entd_l1',
+  'lmd_entd_l1', 'lmd_srit_l1',
   'superieur_bts', 'superieur_lmd'
 ];
 
@@ -187,10 +194,16 @@ function resolveGradeLevelInternal(rawLevel: string | undefined, strict: boolean
   ) {
     return 'lmd_entd_l1';
   }
+  if (
+    /\blmd srit l1\b|\bsrit\s*(?:l\s*)?1(?:[ab])?\b/.test(clean)
+    || ((/\bsrit\b/.test(clean) || clean.includes('systemes et reseaux informatiques')) && /\b(?:l\s*1|licence\s*1)\b/.test(clean))
+  ) {
+    return 'lmd_srit_l1';
+  }
   if (clean.includes('bts') || clean.includes('prepa') || clean.includes('technicien')) {
     return 'superieur_bts';
   }
-  if (clean.includes('lmd') || clean.includes('licence') || clean.includes('master') || clean.includes('doctorat') || clean.includes('universit') || clean.includes('esatic') || clean.includes('inphb')) {
+  if (clean.includes('lmd') || clean.includes('licence') || clean.includes('master') || clean.includes('doctorat') || clean.includes('universit') || clean.includes('inphb')) {
     return 'superieur_lmd';
   }
 

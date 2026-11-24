@@ -118,9 +118,9 @@ Le moteur de KONAN AI reconnaît trois formats officiels standardisés :
 ### 1. Format LMD (Université / Grandes Écoles)
 ```text
 LUNDI :
-07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi ESATIC | Dr KOIVOGUI MOUSSA
-10:15 - 12:45 | Anglais [1LAN3350] | Salle 204 | M. YEO NICODEME
-14:30 - 17:00 | Développement d'Applications 1 [1INF3350] | Lab Info | M. KONE ZANA
+07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi A | Dr ENSEIGNANT A
+10:15 - 12:45 | Anglais [1LAN3350] | Salle 204 | M. ENSEIGNANT B
+14:30 - 17:00 | Développement d'Applications 1 [1INF3350] | Lab Info | M. ENSEIGNANT C
 ```
 
 ### 2. Format BTS / Technique

@@ -32,6 +32,7 @@ export const EXAM_PREP_GRADES = [
   'terminale_c',
   'terminale_d',
   'lmd_entd_l1',
+  'lmd_srit_l1',
 ] as const;
 
 /**
@@ -54,6 +55,8 @@ export const LITERARY_EXAM_SUBJECTS = [
   'philosophie',
   'lmd_tef',
   'lmd_ecriture_creative',
+  'lmd_intro_droit',
+  'lmd_anglais',
 ] as const;
 
 /** Fenêtre de préparation : KONAN prépare l'épreuve à partir de J-14. */
@@ -111,8 +114,10 @@ export function examSubjectKeyOf(subject: Pick<Subject, 'examSubjectKey'> & { na
   if (!subject.name) return undefined;
   const direct = matchSubjectToStemCurriculum(subject.name);
   if (direct.isStemSubject && direct.stemSubjectId) return direct.stemSubjectId;
-  const lmd = matchSubjectToStemCurriculum(subject.name, 'lmd_entd_l1');
-  return lmd.isStemSubject ? lmd.stemSubjectId : undefined;
+  const lmdEntd = matchSubjectToStemCurriculum(subject.name, 'lmd_entd_l1');
+  if (lmdEntd.isStemSubject && lmdEntd.stemSubjectId) return lmdEntd.stemSubjectId;
+  const lmdSrit = matchSubjectToStemCurriculum(subject.name, 'lmd_srit_l1');
+  return lmdSrit.isStemSubject ? lmdSrit.stemSubjectId : undefined;
 }
 
 export function examPrepModeFor(

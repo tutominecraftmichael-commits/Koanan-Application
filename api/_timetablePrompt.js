@@ -80,12 +80,12 @@ Syntaxe par ligne : - HEURE_DEBUT - HEURE_FIN : Nom Matière [Code ECUE] | Salle
 
 Exemple de structure :
 JOUR: LUNDI
-- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI
-- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. YEO
-- 14:30 - 17:00 : Dév Applications 1 [1INF3350] | Salle: Lab Info 1 | Prof: M. KONE
+- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi A | Prof: Dr ENSEIGNANT A
+- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. ENSEIGNANT B
+- 14:30 - 17:00 : Dév Applications 1 [1INF3350] | Salle: Lab Info 1 | Prof: M. ENSEIGNANT C
 
 JOUR: MARDI
-- 07:30 - 10:00 : Finance [1MAN3350] | Salle: Amphi B | Prof: Dr KADJO
+- 07:30 - 10:00 : Finance [1MAN3350] | Salle: Amphi B | Prof: Dr ENSEIGNANT D
 
 
 ==============================================================================

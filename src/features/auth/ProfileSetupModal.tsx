@@ -120,7 +120,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
             >
               <option value="Licence Universitaire">Licence Universitaire</option>
               <option value="Master Universitaire">Master Universitaire</option>
-              <option value="Cycle Ingénieur">Cycle Ingénieur (ESATIC, Polytech...)</option>
+              <option value="Cycle Ingénieur">Cycle Ingénieur (grandes écoles)</option>
               <option value="Classes Préparatoires (CPGE)">Classes Préparatoires (CPGE)</option>
               <option value="Faculté de Médecine / Pharmacie">Faculté de Médecine / Santé</option>
               <option value="Lycée / Baccalauréat">Lycée / Baccalauréat</option>

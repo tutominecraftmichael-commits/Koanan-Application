@@ -36,7 +36,7 @@ export const GRADES_WITH_COURSES = [
   'seconde_a', 'seconde_c',
   'premiere_a', 'premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d',
   'terminale_a', 'terminale_a1', 'terminale_a2', 'terminale_c', 'terminale_d',
-  'lmd_entd_l1',
+  'lmd_entd_l1', 'lmd_srit_l1',
 ];
 /** Pro est vendu à toutes les classes (le pays, lui, doit être la Côte d'Ivoire). */
 export const proAvailableForGrade = () => true;

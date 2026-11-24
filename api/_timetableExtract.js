@@ -21,7 +21,7 @@ export const STRUCTURED_MODELS = ['gemini-3.5-flash', 'gemini-flash-latest', 'ge
 export const FALLBACK_TEXT_MODELS = ['gemini-flash-lite-latest'];
 /**
  * LMD : grilles denses par semaines avec codes d'ECUE presque identiques (1MAN3250 / 2MAN3250 / 3MAN3250).
- * Tests du 2026-11-22 (EDT ESATIC ENTD 1, 14 créneaux) :
+ * Tests du 2026-11-22 (EDT ENTD 1, 14 créneaux) :
  *  - gemini-2.5-flash (réflexion 4096) : ~30 s mais confond les codes (jeudi et vendredi faux à chaque essai) ;
  *  - gemini-3.5-flash / flash-latest avec l'ancien réglage « thinkingBudget » : 14/14 mais 110 à 165 s
  *    (les modèles Gemini 3 ignorent ce budget et réfléchissent au maximum) ;
@@ -97,11 +97,33 @@ const SUBJECT_ALIASES = new Map(
     'Analyse 2': ['2mth3350'],
     'Économie du Développement': ['1man3351'],
     'Droit de la Protection des données': ['1man3352'],
+    // Licence 1 (SRIT 1 — Semestre 1 & Semestre 2)
+    'Logique et Raisonnement Mathématique': ['1mth3100', 'elements de theories des ensembles', 'logique et raisonnements mathematiques'],
+    'Structures Algébriques': ['2mth3100', 'structures algebriques', 'structure algebrique'],
+    "Fonctions d'une variable réelle": ['1mth3101', 'fonction a une variable reelle', 'fonctions d une variable reelle'],
+    'Géométrie Différentielle Élémentaire': ['2mth3101', 'geometrie differentielle elementaire', 'fonctions a plusieurs variables reelles'],
+    'Optique Géométrique': ['1phy3100', 'optique geometrique'],
+    'Physique des Dispositifs Électroniques': ['2phy3100', 'physique des dispositifs electroniques', 'physique des dispositifs electoniques'],
+    'Électrostatique et Magnétostatique': ['1phy3101', 'electrostatique et magnetostatique', 'electrostatique magnetotatique'],
+    'Électrocinétique': ['2phy3101', 'electrocinetique'],
+    'Architecture des Ordinateurs': ['1inf3100', 'architecture des ordinateurs'],
+    'Initiation en Algorithmique': ['2inf3100', 'initiation en algorithmique'],
+    "Technique d'Expression Française": ['2com3100', '2com3200', 'technique d expression francaise', 'tech d expression fr'],
+    'Développement Personnel': ['3com3100', 'developpement personnel'],
+    'Introduction au Droit': ['1drt3100', 'introduction au droit'],
+    'Algèbre linéaire': ['1mth3200', 'algebre lineaire'],
+    'Compléments sur les fonctions à variables réelles': ['1mth3201', 'complements sur les fonctions a variables reelles'],
+    'Électronique Fondamentale': ['1phy3200', 'electronique fondamentale'],
+    'Électronique Numérique': ['1phy3201', 'electronique numerique'],
+    'Mécanique du point': ['1phy3202', 'mecanique du point'],
+    'Algorithmique et Python': ['1inf3200', 'algorithmique et python'],
+    'Analyse Économique': ['1eco3200', 'analyse economique'],
+    'Projet-APP1': ['1app3200', 'projet app1', 'app 1'],
   }).flatMap(([name, keys]) => keys.map((k) => [k, name])),
 );
 
 /** Mots qui ne sont pas des cours : pauses, sport/coaching, administration, jours fériés, évaluations sans matière. */
-const NON_COURSE = /^(recre(ation)?|pause( dejeuner| midi)?|dejeuner|repas|midi|interclasse|etude( surveillee)?|permanence|vie de classe|heure de vie de classe|conseil de classe|conseil|reunion|libre|temps libre|ferie|jour ferie|conges?( de paques)?|paques|pentecote|lundi de pentecote|ascension|fete du travail|vacances?|devoirs?( surveilles?)?|devoirs? et cours de rattrapages?|cours de rattrapages?|ds|dst|examens?( deuxieme partie( semestres? (pairs?|impairs?))?)?|evaluation|interrogation|composition|bac blanc|bepc blanc|rattrapages?|partiels?|surveillance|tutorat|autonomie|coaching|sport|eps|e p s|education physique( et sportive)?|semaines? pedagogiques?|plages?|horaires?|jours?)$/;
+const NON_COURSE = /^(recre(ation)?|pause( dejeuner| midi)?|dejeuner|repas|midi|interclasse|etude( surveillee)?|permanence|vie de classe|heure de vie de classe|conseil de classe|conseil|reunion|libre|temps libre|ferie|jour ferie|conges?( de paques| de noel)?|paques|noel|toussaint|fete de ramadan|lendemain de la nuit du destin|pentecote|lundi de pentecote|ascension|fete du travail|vacances?|devoirs?( surveilles?)?|devoirs? et cours de rattrapages?|cours de rattrapages?|ds|dst|examens?( (premiere|deuxieme) (partie|session)( semestres? (pairs?|impairs?))?)?|evaluation|interrogation|composition|bac blanc|bepc blanc|rattrapages?|partiels?|surveillance|tutorat|autonomie|coaching|sport|sport mandarin|mandarin sport|3com3200|eps|e p s|education physique( et sportive)?|jetic|journee culturelle|journee de la paix|journee de( la)? salubrite( 1)?|semaines? pedagogiques?|plages?|horaires?|jours?)$/;
 
 const stripWeeks = (s) =>
   String(s || '')
@@ -250,7 +272,7 @@ MÉTHODE DE LECTURE (suis-la dans l'ordre) :
    - Case qui s'étend sur plusieurs jours (ex. bande « RÉCRÉATION ») : une entrée par jour.
    - Case vide ou barrée : rien.
    - Si une ligne est découpée en semaines (« Semaines 1 à 8 », colonnes 1…16), indique les semaines dans « weeks ».
-   GRILLE PAR SEMAINES (très fréquente à l'université et en grande école : ESATIC, INP-HB, UFHB…) : les COLONNES sont des semaines ou des dates (« 1, 2, 3… », « 23/03/2026 »…) et les LIGNES sont les jours, chaque jour découpé en plages horaires (ex. LUNDI : 7h30-10h00, 10h15-12h45, 16h30-18h00 ; MARDI : 7h30-10h00, 10h15-12h45, 14h30-17h00).
+   GRILLE PAR SEMAINES (très fréquente à l'université et dans les grandes écoles) : les COLONNES sont des semaines ou des dates (« 1, 2, 3… », « 23/03/2026 »…) et les LIGNES sont les jours, chaque jour découpé en plages horaires (ex. LUNDI : 7h30-10h00, 10h15-12h45, 16h30-18h00 ; MARDI : 7h30-10h00, 10h15-12h45, 14h30-17h00).
    - Le jour d'une case = le bloc de lignes du jour, à gauche. Ses heures = l'en-tête de SA ligne, lu jour par jour (les plages ne sont pas forcément les mêmes d'un jour à l'autre : ne recopie pas celles du lundi pour les autres jours).
    - Lis la grille LIGNE PAR LIGNE : une même matière répétée sur plusieurs semaines dans la même ligne = UNE seule entrée, avec ses semaines dans « weeks » (ex. « 1, 4-9 »). Ne fais pas une entrée par semaine.
    - Une bande verticale ou un bloc qui couvre toute une semaine ou toute une journée n'est JAMAIS un cours : Congés de Pâques, Fête du travail, Ascension, Lundi de Pentecôte, Examens (… semestres pairs/impairs), Devoirs et cours de rattrapage → kind « administratif » ou « evaluation ». Sport et Coaching → kind « administratif ».
@@ -355,7 +377,7 @@ function cleanClassCells(cells, legend) {
   }
 
   // 2. Consolidation multi-semaines : lorsqu'un emploi du temps est une grille à colonnes de semaines
-  //    (ex. Semaines 1 à 10 à l'ESATIC), un même créneau hebdomadaire (même jour, même matière, mêmes heures)
+  //    (ex. Semaines 1 à 10), un même créneau hebdomadaire (même jour, même matière, mêmes heures)
   //    est fusionné en UN SEUL créneau hebdomadaire canonique pour éviter de créer 7 matières ou 7 cours doublons.
   const merged = [];
   for (const s of mergedByWeek) {
