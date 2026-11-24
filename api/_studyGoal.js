@@ -20,10 +20,16 @@ export { GOALS, GOAL_TARGET, GOAL_TEXT, cleanGoal, goalLines } from './_goalTone
 // ---------------------------------------------------------------------------
 const goalRef = (db, uid) => db.collection('study_goals').doc(uid);
 
-/** KONAN Plus actif (vérifié par le serveur). Administrateur et ordinateur sans paiement : oui. */
+/**
+ * KONAN Plus actif (vérifié par le serveur). Administrateur : seulement en « Mode Plus » (Paramètres).
+ * Paiement éteint : non (Plus n'est jamais donné sans abonnement Plus ; choix du fondateur, 2026-11-24).
+ */
 export async function hasPlusAccess(db, uid, { admin = false, env = process.env, nowMs = Date.now() } = {}) {
-  if (admin) return true;
-  if (!paymentsEnabled(env)) return true;
+  if (admin) {
+    const { readAdminTier } = await import('./_adminMode.js');
+    return (await readAdminTier(db, uid)) === 'plus';
+  }
+  if (!paymentsEnabled(env)) return false;
   const { serverPlanTier } = await import('./_subscriptionStore.js');
   return (await serverPlanTier(db, uid, null, nowMs, env)) === 'plus';
 }
@@ -43,7 +49,7 @@ export async function readStudyGoal(db, uid) {
 export async function activeGoalOf(db, uid, saved, { admin = false, env = process.env, nowMs = Date.now() } = {}) {
   try {
     if (!saved?.goal) return '';
-    if (saved.byAdmin || await hasPlusAccess(db, uid, { admin, env, nowMs })) return saved.goal;
+    if (await hasPlusAccess(db, uid, { admin, env, nowMs })) return saved.goal;
     return '';
   } catch {
     return '';

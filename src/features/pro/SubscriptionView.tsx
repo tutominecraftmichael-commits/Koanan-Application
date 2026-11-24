@@ -1,16 +1,18 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, CheckCircle2, Clock, Copy, Crown, Loader2, RefreshCw, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Clock, Copy, Crown, Gem, Loader2, RefreshCw, X } from 'lucide-react';
 import {
   PERIOD_LABEL, checkSaspayPayment, declarePayment, startSaspayPayment, subscriptionErrorText,
-  type PaidPeriod, type PaymentProvider, type SubscriptionInfo,
+  type PaidPeriod, type PaidTier, type PaymentProvider, type SubscriptionInfo,
 } from '../../services/subscriptionApi';
 
 /**
- * Passer à KONAN Pro sans API de paiement :
- *  1. l'élève choisit sa formule ;
- *  2. il envoie l'argent par Wave ou Orange Money au numéro de KONAN ;
- *  3. il recopie le numéro de transaction → Pro TOUT DE SUITE (« en vérification ») ;
- *  4. l'administrateur vérifie plus tard ; un faux numéro retire Pro.
+ * Passer à KONAN Pro ou à KONAN Plus :
+ *  1. l'élève choisit sa durée ;
+ *  2. il paie (SasPay, ou Wave / Orange Money au numéro de KONAN) ;
+ *  3. la formule est active TOUT DE SUITE (« en vérification » pour un paiement manuel) ;
+ *  4. l'administrateur vérifie plus tard ; un faux numéro retire la formule.
+ * Élève Pro qui passe à Plus : Plus remplace Pro tout de suite, les jours de Pro restants sont perdus
+ * (choix du fondateur, 2026-11-24). Il doit cocher qu'il l'a compris avant de payer.
  */
 
 const fcfa = (n: number) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`;
@@ -31,13 +33,17 @@ interface Props {
   country?: string;
   /** Classe sans cours guidés ni devoirs : avertissement + case « J'ai compris » obligatoire avant de payer */
   noCoursesNotice?: string;
+  /** Formule achetée dans cette fiche : KONAN Pro ou KONAN Plus */
+  tier?: PaidTier;
 }
 
-export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '', country = 'CI', noCoursesNotice }) => {
+export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois', gradeLevel = '', country = 'CI', noCoursesNotice, tier = 'pro' }) => {
   const [understood, setUnderstood] = useState(false);
+  const [lossUnderstood, setLossUnderstood] = useState(false);
   const config = info?.config;
   const status = info?.status || null;
-  const offers = useMemo(() => (config?.offers || []).filter((o) => o.tier === 'pro'), [config]);
+  const name = tier === 'plus' ? 'Plus' : 'Pro';
+  const offers = useMemo(() => (config?.offers || []).filter((o) => o.tier === tier), [config, tier]);
   const providers = useMemo(() => Object.keys(config?.receivers || {}) as PaymentProvider[], [config]);
   const [period, setPeriod] = useState<PaidPeriod>(initialPeriod);
   const [provider, setProvider] = useState<PaymentProvider | ''>('');
@@ -51,7 +57,19 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
   const offer = offers.find((o) => o.period === period) || offers[0];
   const chosenProvider: PaymentProvider | '' = provider || providers[0] || '';
   const receiver = chosenProvider ? config?.receivers[chosenProvider] : undefined;
-  const isActive = status?.tier === 'pro' || status?.tier === 'plus';
+  // Formule en cours (n'importe laquelle) et formule de CETTE fiche en cours (→ « Prolonger »)
+  const activeTier = status?.tier === 'pro' || status?.tier === 'plus' ? status.tier : null;
+  const hasActive = Boolean(activeTier);
+  const isActive = activeTier === tier;
+  // Élève Pro qui achète Plus : Plus remplace Pro tout de suite (jours de Pro restants perdus)
+  const upgrading = tier === 'plus' && activeTier === 'pro' && !status?.admin;
+  const proDaysLeft = upgrading && status?.endsAt ? Math.max(0, Math.ceil((Date.parse(status.endsAt) - Date.now()) / 86_400_000)) : 0;
+  // Élève Plus sur la fiche Pro : Plus contient déjà tout Pro, rien à acheter ici
+  const coveredByPlus = tier === 'pro' && activeTier === 'plus';
+  // Compte administrateur : il ne paie pas (il change de formule avec « Mode Pro » / « Mode Plus »)
+  const adminAccount = Boolean(status?.admin);
+  const canBuy = !coveredByPlus && !adminAccount;
+  const mustAccept = (noCoursesNotice && !hasActive && !understood) || (upgrading && !lossUnderstood);
   const pending = status?.pending || null;
   // Dernier paiement refusé, seulement s'il est le plus récent (sinon c'est de l'histoire ancienne)
   const rejectedNotice = status?.lastRejected && status.history[0]?.id === status.lastRejected.id ? status.lastRejected : null;
@@ -73,12 +91,13 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
   const [checkNote, setCheckNote] = useState('');
 
   const paySaspay = async () => {
-    if (!offer || redirecting) return;
-    if (noCoursesNotice && !isActive && !understood) return;
+    if (!offer || redirecting || mustAccept) return;
     setRedirecting(true);
     setError('');
-    const r = await startSaspayPayment({ period: offer.period, gradeLevel, country });
+    const r = await startSaspayPayment({ tier, period: offer.period, gradeLevel, country });
     if (!r.success) { setRedirecting(false); setError(subscriptionErrorText(r.error)); return; }
+    // Au retour de SasPay, l'appli rouvre la fiche de la bonne formule (Pro ou Plus)
+    try { localStorage.setItem('konan_saspay_tier', tier); } catch { /* fiche Pro par défaut au retour */ }
     // Même onglet : à la fin du paiement, SasPay ramène l'élève dans KONAN, qui vérifie aussitôt
     window.location.assign(r.checkoutUrl);
   };
@@ -107,10 +126,11 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!offer || !chosenProvider || sending) return;
+    if (upgrading && !lossUnderstood) { setError('Coche la case pour confirmer que tu as compris que tes jours de Pro restants sont perdus.'); return; }
     if (!sentConfirmed) { setError('Coche la case pour confirmer que tu as bien envoyé l’argent.'); return; }
     setSending(true);
     setError('');
-    const r = await declarePayment({ tier: 'pro', period: offer.period, provider: chosenProvider, ref, payerPhone: phone, gradeLevel, country });
+    const r = await declarePayment({ tier, period: offer.period, provider: chosenProvider, ref, payerPhone: phone, gradeLevel, country });
     setSending(false);
     if (!r.success) { setError(subscriptionErrorText(r.error)); return; }
     setRef('');
@@ -120,14 +140,16 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
   };
 
   return (
-    <div className="fixed inset-0 z-[90] bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label="KONAN Pro">
+    <div className="fixed inset-0 z-[90] bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label={`KONAN ${name}`}>
       <div className="w-full sm:max-w-lg max-h-[95vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl">
         {/* En-tête */}
         <div className="sticky top-0 z-10 flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl bg-yellow-400 flex items-center justify-center shadow"><Crown className="w-5 h-5 text-yellow-900" /></span>
+            {tier === 'plus'
+              ? <span className="w-9 h-9 rounded-xl bg-[#0F172A] ring-1 ring-amber-400/50 flex items-center justify-center shadow"><Gem className="w-5 h-5 text-amber-300" /></span>
+              : <span className="w-9 h-9 rounded-xl bg-yellow-400 flex items-center justify-center shadow"><Crown className="w-5 h-5 text-yellow-900" /></span>}
             <div>
-              <h2 className="text-base font-black text-slate-900 dark:text-white leading-tight">KONAN Pro</h2>
+              <h2 className="text-base font-black text-slate-900 dark:text-white leading-tight">KONAN {name}</h2>
               <p className="text-[11px] text-slate-600 dark:text-slate-400">{useSaspay ? 'Wave, Orange Money, MTN, Moov ou Djamo' : 'Paiement par Wave ou Orange Money'}</p>
             </div>
           </div>
@@ -146,44 +168,75 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
             </div>
           )}
 
-          {/* Abonnement en cours */}
-          {isActive && status && (
+          {/* Abonnement en cours (Pro ou Plus) */}
+          {hasActive && status && (
             <div className="rounded-2xl p-4 border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-500/10">
-              <p className="text-sm font-black text-slate-900 dark:text-white">Tu es KONAN Pro jusqu’au {dateFr(status.endsAt)}</p>
-              {status.grace && !status.history.some((p) => p.status !== 'rejected') ? (
-                <p className="mt-1 text-xs text-amber-800 dark:text-amber-200">KONAN Pro t’est offert pendant le lancement. Tu peux déjà t’abonner : ton abonnement commencera à la fin de l’offre, sans perdre un seul jour.</p>
-              ) : status.provisional ? (
-                <p className="mt-1 text-xs text-amber-800 dark:text-amber-200 inline-flex items-start gap-1.5"><Clock className="w-4 h-4 shrink-0" /> Paiement en cours de vérification. Si l’argent n’est pas trouvé, Pro sera retiré.</p>
+              {adminAccount ? (
+                <>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">Compte administrateur : KONAN {activeTier === 'plus' ? 'Plus' : 'Pro'}</p>
+                  <p className="mt-1 text-xs text-slate-700 dark:text-slate-300">Tu ne paies pas. Pour passer de Pro à Plus (ou revenir), utilise « Mode Pro » / « Mode Plus » dans les Paramètres.</p>
+                </>
               ) : (
-                <p className="mt-1 text-xs text-emerald-800 dark:text-emerald-300 inline-flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Paiement vérifié.</p>
+                <>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">Tu es KONAN {activeTier === 'plus' ? 'Plus' : 'Pro'} jusqu’au {dateFr(status.endsAt)}</p>
+                  {status.grace && !status.history.some((p) => p.status !== 'rejected') ? (
+                    <p className="mt-1 text-xs text-amber-800 dark:text-amber-200">KONAN Pro t’est offert pendant le lancement. Tu peux déjà t’abonner : ton abonnement commencera à la fin de l’offre, sans perdre un seul jour.</p>
+                  ) : status.provisional ? (
+                    <p className="mt-1 text-xs text-amber-800 dark:text-amber-200 inline-flex items-start gap-1.5"><Clock className="w-4 h-4 shrink-0" /> Paiement en cours de vérification. Si l’argent n’est pas trouvé, ta formule sera retirée.</p>
+                  ) : (
+                    <p className="mt-1 text-xs text-emerald-800 dark:text-emerald-300 inline-flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Paiement vérifié.</p>
+                  )}
+                </>
               )}
             </div>
           )}
 
-          {/* Paiement en attente sans Pro (élève qui avait eu un paiement refusé) */}
-          {pending && !isActive && (
+          {/* Élève Plus sur la fiche Pro : rien à acheter (Plus contient tout Pro) */}
+          {coveredByPlus && !adminAccount && (
+            <p className="text-sm text-slate-700 dark:text-slate-300">KONAN Plus contient déjà tout KONAN Pro. Pour prolonger, ouvre « KONAN Plus » dans les Paramètres.</p>
+          )}
+
+          {/* Paiement en attente sans formule active (élève qui avait eu un paiement refusé) */}
+          {pending && !hasActive && (
             <div className="rounded-2xl p-4 border-2 border-amber-400 bg-amber-50 dark:bg-amber-500/10">
               <p className="text-sm font-black text-slate-900 dark:text-white inline-flex items-center gap-1.5"><Clock className="w-4 h-4" /> Paiement en cours de vérification</p>
-              <p className="mt-1 text-xs text-slate-700 dark:text-slate-300">Tu deviendras Pro dès que ton paiement de {fcfa(pending.amount)} (n° {pending.ref}) sera vérifié.</p>
+              <p className="mt-1 text-xs text-slate-700 dark:text-slate-300">Tu deviendras KONAN {pending.tier === 'plus' ? 'Plus' : 'Pro'} dès que ton paiement de {fcfa(pending.amount)} (n° {pending.ref}) sera vérifié.</p>
             </div>
           )}
 
-          {rejectedNotice && !isActive && (
+          {/* Élève Pro qui passe à Plus : prévenu AVANT de payer que ses jours de Pro restants sont perdus */}
+          {upgrading && canBuy && info && config?.enabled && offer && (
+            <div className="rounded-2xl p-3.5 bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-300 dark:border-amber-500/40 space-y-2.5">
+              <p className="text-[13px] font-bold leading-snug text-amber-900 dark:text-amber-100">
+                ⚠️ KONAN Plus remplace ton KONAN Pro dès ton paiement.
+                {proDaysLeft > 0 ? ` Il te reste ${proDaysLeft} jour${proDaysLeft > 1 ? 's' : ''} de Pro : ils seront perdus (ni remboursés, ni reportés).` : ' Les jours de Pro qu’il te reste seront perdus (ni remboursés, ni reportés).'}
+              </p>
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input type="checkbox" checked={lossUnderstood} onChange={(e) => setLossUnderstood(e.target.checked)} className="mt-0.5 w-5 h-5 accent-sky-600 shrink-0" />
+                <span className="text-[13px] font-extrabold text-slate-900 dark:text-white">J’ai compris : je passe à Plus maintenant et je perds mes jours de Pro restants.</span>
+              </label>
+            </div>
+          )}
+
+          {rejectedNotice && !hasActive && (
             <div className="rounded-2xl p-4 border-2 border-rose-400 bg-rose-50 dark:bg-rose-500/10">
               <p className="text-sm font-black text-rose-900 dark:text-rose-200 inline-flex items-center gap-1.5"><AlertTriangle className="w-4 h-4" /> Paiement n° {rejectedNotice.ref} refusé</p>
               <p className="mt-1 text-xs text-rose-900 dark:text-rose-200">{rejectedNotice.rejectMessage}</p>
             </div>
           )}
 
-          {info && !config?.enabled && (
-            <p className="text-sm text-slate-700 dark:text-slate-300">Le paiement de KONAN Pro n’est pas encore ouvert. Reviens bientôt.</p>
+          {info && !config?.enabled && !adminAccount && (
+            <p className="text-sm text-slate-700 dark:text-slate-300">Le paiement de KONAN {name} n’est pas encore ouvert. Reviens bientôt.</p>
           )}
-          {info && config?.enabled && !useSaspay && providers.length === 0 && (
+          {info && config?.enabled && canBuy && !useSaspay && providers.length === 0 && (
             <p className="text-sm text-slate-700 dark:text-slate-300">Le numéro de paiement n’est pas encore configuré. Reviens bientôt.</p>
           )}
+          {info && config?.enabled && canBuy && offers.length === 0 && (
+            <p className="text-sm text-slate-700 dark:text-slate-300">KONAN {name} n’est pas encore en vente. Reviens bientôt.</p>
+          )}
 
-          {/* Paiement SasPay : choisir la formule, payer sur la page sécurisée, Pro activé dès la confirmation */}
-          {info && useSaspay && offer && (
+          {/* Paiement SasPay : choisir la durée, payer sur la page sécurisée, formule activée dès la confirmation */}
+          {info && useSaspay && canBuy && offer && (
             <div className="space-y-4">
               {config?.saspaySandbox && (
                 <p className="text-[11px] font-bold text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-2">Mode test SasPay : aucun argent réel n’est débité.</p>
@@ -192,7 +245,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
               {saspayPending && !isActive && (
                 <div className="rounded-2xl p-4 border-2 border-amber-400 bg-amber-50 dark:bg-amber-500/10 space-y-2.5">
                   <p className="text-sm font-black text-slate-900 dark:text-white inline-flex items-center gap-1.5"><Clock className="w-4 h-4" /> Paiement commencé ({fcfa(saspayPending.amount)})</p>
-                  <p className="text-xs text-slate-700 dark:text-slate-300">Tu deviens Pro dès que SasPay confirme ton paiement. Si tu as déjà payé, touche « Vérifier mon paiement ».</p>
+                  <p className="text-xs text-slate-700 dark:text-slate-300">Ta formule est activée dès que SasPay confirme ton paiement. Si tu as déjà payé, touche « Vérifier mon paiement ».</p>
                   <div className="flex flex-wrap gap-2">
                     <button type="button" onClick={verifySaspay} disabled={checking}
                       className="flex-1 min-w-[150px] rounded-xl py-2.5 text-sm font-black bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-60 inline-flex items-center justify-center gap-1.5">
@@ -209,18 +262,18 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
                 </div>
               )}
 
-              <p className="text-sm font-bold text-slate-900 dark:text-white">{isActive ? 'Prolonger mon abonnement' : 'Choisis ta formule'}</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">{isActive ? 'Prolonger mon abonnement' : upgrading ? 'Passer à KONAN Plus' : 'Choisis ta formule'}</p>
               <div className="grid grid-cols-2 gap-2">
                 {offers.map((o) => (
                   <button type="button" key={o.period} onClick={() => setPeriod(o.period)}
                     className={`rounded-2xl p-3 text-left border-2 transition ${o.period === offer.period ? 'border-sky-500 bg-sky-50 dark:bg-sky-500/10' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60'}`}>
-                    <span className="block text-xs font-bold text-slate-600 dark:text-slate-300">Pro · {PERIOD_LABEL[o.period]}</span>
+                    <span className="block text-xs font-bold text-slate-600 dark:text-slate-300">{name} · {PERIOD_LABEL[o.period]}</span>
                     <span className="block text-lg font-black text-slate-900 dark:text-white">{fcfa(o.amount)}</span>
                   </button>
                 ))}
               </div>
 
-              {noCoursesNotice && !isActive && (
+              {noCoursesNotice && !hasActive && (
                 <div className="rounded-2xl p-3.5 bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-300 dark:border-amber-500/40 space-y-2.5">
                   <p className="text-[13px] font-bold leading-snug text-amber-900 dark:text-amber-100">⚠️ {noCoursesNotice}</p>
                   <label className="flex items-start gap-2.5 cursor-pointer">
@@ -232,25 +285,25 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
 
               {error && <p className="text-sm font-bold text-rose-700 dark:text-rose-300">{error}</p>}
 
-              <button type="button" onClick={paySaspay} disabled={redirecting || Boolean(noCoursesNotice && !isActive && !understood)}
+              <button type="button" onClick={paySaspay} disabled={redirecting || Boolean(mustAccept)}
                 className="w-full rounded-2xl py-3.5 text-base font-black bg-sky-600 hover:bg-sky-500 text-white shadow-lg disabled:opacity-60 inline-flex items-center justify-center gap-2">
-                {redirecting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Crown className="w-5 h-5" />} Payer {fcfa(offer.amount)}
+                {redirecting ? <Loader2 className="w-5 h-5 animate-spin" /> : tier === 'plus' ? <Gem className="w-5 h-5" /> : <Crown className="w-5 h-5" />} Payer {fcfa(offer.amount)}
               </button>
-              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu paies sur la page sécurisée de SasPay avec Wave, Orange Money, MTN MoMo, Moov Money ou Djamo. KONAN Pro s’active dès que le paiement est confirmé.</p>
+              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu paies sur la page sécurisée de SasPay avec Wave, Orange Money, MTN MoMo, Moov Money ou Djamo. KONAN {name} s’active dès que le paiement est confirmé.</p>
             </div>
           )}
 
           {/* Formulaire : seulement s'il n'y a pas déjà un paiement en attente */}
-          {info && config?.enabled && !useSaspay && providers.length > 0 && offer && !pending && (
+          {info && config?.enabled && canBuy && !useSaspay && providers.length > 0 && offer && !pending && (
             <form onSubmit={submit} className="space-y-4">
-              <p className="text-sm font-bold text-slate-900 dark:text-white">{isActive ? 'Prolonger mon abonnement' : 'Choisis ta formule'}</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">{isActive ? 'Prolonger mon abonnement' : upgrading ? 'Passer à KONAN Plus' : 'Choisis ta formule'}</p>
 
               {/* 1. Formule */}
               <div className="grid grid-cols-2 gap-2">
                 {offers.map((o) => (
                   <button type="button" key={o.period} onClick={() => setPeriod(o.period)}
                     className={`rounded-2xl p-3 text-left border-2 transition ${o.period === offer.period ? 'border-sky-500 bg-sky-50 dark:bg-sky-500/10' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60'}`}>
-                    <span className="block text-xs font-bold text-slate-600 dark:text-slate-300">Pro · {PERIOD_LABEL[o.period]}</span>
+                    <span className="block text-xs font-bold text-slate-600 dark:text-slate-300">{name} · {PERIOD_LABEL[o.period]}</span>
                     <span className="block text-lg font-black text-slate-900 dark:text-white">{fcfa(o.amount)}</span>
                     {o.amount !== o.normalAmount && <span className="block text-[10px] text-slate-500 dark:text-slate-400">vrai prix : {fcfa(o.normalAmount)}</span>}
                   </button>
@@ -304,7 +357,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
                 </label>
                 <label className="flex items-start gap-2 text-xs text-slate-700 dark:text-slate-300">
                   <input type="checkbox" checked={sentConfirmed} onChange={(e) => setSentConfirmed(e.target.checked)} className="mt-0.5 w-4 h-4 accent-sky-600" />
-                  <span>J’ai bien envoyé {fcfa(offer.amount)}. Je sais que chaque paiement est vérifié : un faux numéro retire Pro.</span>
+                  <span>J’ai bien envoyé {fcfa(offer.amount)}. Je sais que chaque paiement est vérifié : un faux numéro retire ma formule.</span>
                 </label>
               </div>
 
@@ -314,7 +367,7 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
                 className="w-full rounded-2xl py-3.5 text-base font-black bg-sky-600 hover:bg-sky-500 text-white shadow-lg disabled:opacity-60 inline-flex items-center justify-center gap-2">
                 {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />} J’ai payé
               </button>
-              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu deviens Pro tout de suite. Ton paiement est vérifié ensuite.</p>
+              <p className="text-[11px] text-center text-slate-600 dark:text-slate-400">Tu deviens KONAN {name} tout de suite. Ton paiement est vérifié ensuite.</p>
             </form>
           )}
 

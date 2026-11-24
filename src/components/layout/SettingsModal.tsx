@@ -13,7 +13,7 @@ import {
   GraduationCap,
   Save
 } from 'lucide-react';
-import { Zap, Sun, Moon, Palette, Crown, Target } from 'lucide-react';
+import { Zap, Sun, Moon, Palette, Crown, Target, Gem } from 'lucide-react';
 import { studyGoalInfo } from '../../lib/studyGoals';
 import { AnimatedAvatar } from '../../features/avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
@@ -71,6 +71,11 @@ interface SettingsModalProps {
   onUpgradeToPro?: () => void;
   /** Ouvre la fiche des formules KONAN Pro et KONAN Plus */
   onOpenPlans?: () => void;
+  /** Bouton « KONAN Plus » : payer ou prolonger KONAN Plus (absent = bouton caché) */
+  onOpenPlus?: () => void;
+  /** Compte administrateur : formule essayée sans payer (« Mode Pro » / « Mode Plus ») */
+  adminTier?: 'pro' | 'plus';
+  onSetAdminTier?: (tier: 'pro' | 'plus') => void;
   /** Compte administrateur : ouvre la console (paiements à vérifier) */
   onOpenAdmin?: () => void;
   /** Fin de l'abonnement payé (affichée sous la formule) */
@@ -109,6 +114,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onSelectPlan,
   onUpgradeToPro,
   onOpenPlans,
+  onOpenPlus,
+  adminTier,
+  onSetAdminTier,
   onOpenAdmin,
   subscriptionEndsAt,
   invitedEmails: _invitedEmails = [],
@@ -506,10 +514,34 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
               <p className="text-[12px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                {currentPlan === 'free'
+                {onSetAdminTier
+                  ? 'Tu ne paies pas : passe de Pro à Plus pour voir l’application exactement comme un élève de chaque formule.'
+                  : currentPlan === 'free'
                   ? 'Devoirs au format officiel, énergie illimitée, méthodes Feynman et Time Blocking : découvre KONAN Pro.'
                   : 'Retrouve ton abonnement et prolonge-le quand tu veux : les jours restants sont conservés.'}
               </p>
+              {/* Compte administrateur : il ne paie pas, il choisit la formule à essayer */}
+              {onSetAdminTier && (
+                <div className="rounded-xl p-2.5 bg-slate-50 border border-slate-200 dark:bg-white/[0.03] dark:border-white/10 space-y-2">
+                  <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Compte administrateur : choisis la formule à utiliser</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['pro', 'plus'] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => { if (adminTier !== t) onSetAdminTier(t); }}
+                        aria-pressed={adminTier === t}
+                        className={`py-2 rounded-lg text-[12px] font-black border-2 transition-colors cursor-pointer ${adminTier === t
+                          ? 'bg-[#0F172A] text-white border-[#0F172A] dark:bg-amber-300 dark:text-slate-950 dark:border-amber-300'
+                          : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400 dark:bg-transparent dark:text-slate-300 dark:border-white/15'}`}
+                      >
+                        Mode {t === 'plus' ? 'Plus' : 'Pro'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {currentPlan !== 'plus' && !onSetAdminTier && (
               <button
                 type="button"
                 onClick={() => {
@@ -522,6 +554,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <Sparkles className="w-4 h-4" />
                 <span>{currentPlan === 'free' ? 'Découvrir KONAN Pro' : 'Mon abonnement KONAN Pro'}</span>
               </button>
+              )}
               {currentPlan !== 'free' && (
                 <button
                   type="button"
@@ -537,6 +570,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </button>
               )}
             </div>
+
+            {/* Bouton « KONAN Plus » : séparé de Pro, l'élève passe à Plus en appuyant ici (choix du fondateur) */}
+            {onOpenPlus && !onSetAdminTier && (
+              <button
+                type="button"
+                onClick={() => { onClose(); onOpenPlus(); }}
+                className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 dark:bg-[#0B0F17] dark:border-white/10 dark:hover:border-white/20 transition-colors text-left cursor-pointer active:scale-[0.99]"
+              >
+                <span className="w-10 h-10 rounded-xl bg-[#0F172A] ring-1 ring-amber-400/40 flex items-center justify-center shrink-0">
+                  <Gem className="w-5 h-5 text-amber-300" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300/90">KONAN Plus</span>
+                  <span className="block text-sm font-black text-slate-900 dark:text-white truncate">{currentPlan === 'plus' ? 'Mon abonnement KONAN Plus' : 'Passer à KONAN Plus'}</span>
+                  <span className="block text-[11px] text-slate-600 dark:text-slate-400">
+                    {currentPlan === 'plus' ? 'Prolonge-le quand tu veux.' : 'KONE suit ton objectif, photo de tes exercices, devoirs corrigés en photo.'}
+                  </span>
+                </span>
+                <span className="text-[12px] font-bold text-slate-600 dark:text-slate-300 shrink-0">{currentPlan === 'plus' ? 'Voir' : '5 000 F/mois'}</span>
+              </button>
+            )}
 
             {/* KONAN Plus : mon objectif (KONE adapte son ton et son exigence) */}
             {showGoal && onOpenGoalModal && (() => {

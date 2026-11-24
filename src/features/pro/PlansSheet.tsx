@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Check, Clock, Crown, Gem, Lock, ShieldCheck, Smartphone, X, Zap } from 'lucide-react';
+import { ArrowUpRight, Check, Clock, Crown, Gem, ShieldCheck, Smartphone, X, Zap } from 'lucide-react';
 import { DISPLAY_PLANS, PAYMENTS_OPEN, PLUS_VISIBLE, SEMESTER_MONTHS, formatFcfa, type BillingPeriod } from '../../lib/subscriptionPlans';
 
 /**
@@ -26,7 +26,8 @@ interface Props {
   noticeText?: string;
   onClose: () => void;
   onChoosePro: (period: 'mois' | 'semestre') => void;
-  onJoinPlus: () => void;
+  /** Payer (ou prolonger) KONAN Plus pour la durée choisie */
+  onChoosePlus: (period: 'mois' | 'semestre') => void;
 }
 
 const dateFr = (iso?: string | null) => (iso ? new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '');
@@ -46,7 +47,7 @@ const Feature: React.FC<{ title: string; detail?: string; muted?: boolean }> = (
   </li>
 );
 
-export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, proAvailable = true, unavailableText, noticeText, onClose, onChoosePro, onJoinPlus }) => {
+export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, proAvailable = true, unavailableText, noticeText, onClose, onChoosePro, onChoosePlus }) => {
   const [billing, setBilling] = useState<BillingPeriod>('semester');
   const isPro = currentTier === 'pro';
   const isPlus = currentTier === 'plus';
@@ -156,7 +157,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 text-[13px] font-black tracking-wide text-slate-900 dark:text-white"><Gem className="w-4 h-4 text-slate-700 dark:text-slate-200" /> KONAN Plus</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-200">
-                  {isPro ? 'Niveau supérieur' : 'Bientôt'}
+                  {isPlus ? 'Ta formule' : isPro ? 'Niveau supérieur' : 'Le plus complet'}
                 </span>
               </div>
               <div className="mt-4 flex items-baseline gap-1.5">
@@ -170,15 +171,17 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
               <ul className="mt-3 space-y-3 flex-1">
                 {PLUS.features.map((f) => <Feature key={f.title} title={f.title} detail={f.detail} />)}
               </ul>
-              {isPlus ? (
+              {isPlus && !canRenew ? (
                 <p className="mt-6 text-center text-xs font-bold text-slate-600 dark:text-slate-300">Ta formule actuelle</p>
               ) : (
                 <>
-                  <button type="button" onClick={onJoinPlus}
-                    className="mt-6 w-full py-3.5 rounded-2xl text-sm font-black tracking-wide border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white dark:border-white/40 dark:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-colors inline-flex items-center justify-center gap-2">
-                    {isPro ? 'Passer à KONAN Plus' : 'Être prévenu en premier'} <Lock className="w-3.5 h-3.5" />
+                  <button type="button" onClick={() => onChoosePlus(period)}
+                    className="mt-6 w-full py-3.5 rounded-2xl text-sm font-black tracking-wide border border-slate-900 text-slate-900 hover:bg-[#0F172A] hover:text-white dark:border-white/40 dark:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-colors inline-flex items-center justify-center gap-2">
+                    {isPlus ? 'Prolonger mon abonnement' : isPro ? 'Passer à KONAN Plus' : 'Devenir KONAN Plus'} <ArrowUpRight className="w-4 h-4" />
                   </button>
-                  <p className="mt-2 text-center text-[11px] text-slate-500 dark:text-slate-400 inline-flex items-center justify-center gap-1"><Clock className="w-3 h-3" /> Ouverture prochaine : les premiers inscrits seront prévenus.</p>
+                  {isPro && (
+                    <p className="mt-2 text-center text-[11px] text-slate-500 dark:text-slate-400">Plus remplace ton Pro tout de suite : tes jours de Pro restants sont perdus.</p>
+                  )}
                 </>
               )}
             </div>
@@ -190,7 +193,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             {[
               { icon: Smartphone, title: 'Mobile money', text: 'Wave, Orange Money, MTN, Moov ou Djamo.' },
-              { icon: Zap, title: 'Activé tout de suite', text: 'Tu deviens Pro dès que ton paiement est confirmé.' },
+              { icon: Zap, title: 'Activé tout de suite', text: 'Ta formule s’active dès que ton paiement est confirmé.' },
               { icon: ShieldCheck, title: 'Sans engagement', text: 'Tu paies seulement la période choisie.' },
             ].map(({ icon: Icon, title, text }) => (
               <div key={title} className="flex items-start gap-2.5 rounded-2xl px-3.5 py-3 bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/5">

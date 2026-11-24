@@ -12,6 +12,7 @@
  *   { action: 'admin_list' }                                     → paiements à vérifier + derniers traités
  *   { action: 'admin_confirm', paymentId }                       → l'argent est bien arrivé
  *   { action: 'admin_reject', paymentId, reason }                → rien reçu : Pro retiré tout de suite
+ *   { action: 'admin_tier_set', tier: 'pro' | 'plus' }           → « Mode Pro » / « Mode Plus » du compte admin
  *
  * Interrupteur : rien n'est vendu tant que KONAN_PAYMENTS=on n'est pas défini sur le serveur.
  * Sur l'ordinateur, tout est écrit dans une zone de test séparée (collections « zz_test_… »).
@@ -31,7 +32,15 @@ function requestAppUrl(req) {
   return /^[a-z0-9.-]+(:\d+)?$/i.test(host) ? `https://${host}` : '';
 }
 
-const ADMIN_ACTIONS = new Set(['admin_list', 'admin_confirm', 'admin_reject']);
+const ADMIN_ACTIONS = new Set(['admin_list', 'admin_confirm', 'admin_reject', 'admin_tier_set']);
+
+/** Abonnement affiché au compte administrateur : la formule de son mode (Pro ou Plus), sans paiement ni date de fin. */
+function adminStatus(base, tier) {
+  return {
+    ...(base || { graceUntil: null, trustBlocked: false, pending: null, lastRejected: null, history: [] }),
+    tier, endsAt: null, provisional: false, grace: false, admin: true,
+  };
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -58,6 +67,12 @@ export default async function handler(req, res) {
       if (!check.ok) return send(res, check.status, { success: false, error: check.error, message: check.message });
       const db = await getDb();
       const config = paymentConfig();
+      if (action === 'admin_tier_set') {
+        // « Mode Pro » / « Mode Plus » des Paramètres : le compte administrateur essaie une formule sans payer
+        const { saveAdminTier } = await import('./_adminMode.js');
+        const tier = await saveAdminTier(db, check.payload.sub, body.tier);
+        return send(res, 200, { success: true, tier });
+      }
       if (action === 'admin_list') {
         return send(res, 200, { success: true, config: { enabled: config.enabled, testMode: config.testMode }, ...(await adminList(db)) });
       }
@@ -88,13 +103,17 @@ export default async function handler(req, res) {
     };
 
     if (action === 'status' || action === 'saspay_check') {
+      // Compte administrateur : sans paiement, KONAN Pro par défaut ou KONAN Plus s'il a choisi « Mode Plus »
+      // (choix du fondateur, 2026-11-24 : avant, il avait toujours les avantages de Plus, même affiché Pro)
+      if (isAdminPayload(payload)) {
+        const db = await getDb();
+        const { readAdminTier } = await import('./_adminMode.js');
+        const [tier, base] = await Promise.all([readAdminTier(db, uid), config.enabled ? statusWithSaspay(db) : null]);
+        return send(res, 200, { success: true, config: publicConfig, status: adminStatus(base, tier) });
+      }
       if (!config.enabled) return send(res, 200, { success: true, config: publicConfig, status: null });
       const db = await getDb();
       const status = await statusWithSaspay(db);
-      // Compte administrateur : KONAN Pro, tout débloqué, sans paiement ni date de fin (choix du fondateur, 2026-11-23)
-      if (isAdminPayload(payload)) {
-        return send(res, 200, { success: true, config: publicConfig, status: { ...status, tier: 'pro', endsAt: null, provisional: false, grace: false, admin: true } });
-      }
       return send(res, 200, { success: true, config: publicConfig, status });
     }
     // --- KONAN Plus : objectif de l'élève (12, 16 / mention, major) — le ton de KONE s'y adapte partout
@@ -108,7 +127,7 @@ export default async function handler(req, res) {
         return send(res, 200, { success: true, goal: out.goal, plus: true });
       }
       const [plus, saved] = await Promise.all([hasPlusAccess(db, uid, { admin }), readStudyGoal(db, uid)]);
-      return send(res, 200, { success: true, plus, goal: plus || saved.byAdmin ? saved.goal : '' });
+      return send(res, 200, { success: true, plus, goal: plus ? saved.goal : '' });
     }
     if (action === 'saspay_start') {
       const db = await getDb();
