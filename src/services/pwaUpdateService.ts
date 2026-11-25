@@ -84,8 +84,11 @@ export async function forcePwaCacheClearAndReload(): Promise<void> {
 
   try {
     if ('caches' in window) {
+      // On vide l'interface (pour charger la nouvelle version), mais on GARDE les morceaux de l'application
+      // et les cours déjà enregistrés (konan-assets-…) : leur nom change dès que leur contenu change, ils ne
+      // sont donc jamais périmés, et l'élève garde ses cours hors ligne après une mise à jour.
       const cacheKeys = await caches.keys();
-      await Promise.all(cacheKeys.map((key) => caches.delete(key)));
+      await Promise.all(cacheKeys.filter((key) => !key.startsWith('konan-assets-')).map((key) => caches.delete(key)));
     }
   } catch (err) {
     console.warn('[KONAN PWA] Erreur purge caches :', err);

@@ -60,9 +60,12 @@ export function isFirebaseConfigured(): boolean {
   return Boolean(config.apiKey && config.projectId && config.authDomain);
 }
 
-import { 
-  getFirestore, 
-  doc, 
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  doc,
   getDoc, 
   setDoc, 
   updateDoc, 
@@ -107,7 +110,23 @@ function getFirebaseApp() {
 const safeApp = getFirebaseApp();
 export const app = safeApp;
 export const auth = safeApp ? getAuth(safeApp) : null;
-export const db = safeApp ? getFirestore(safeApp) : null;
+/**
+ * Firestore avec cache PERSISTANT (IndexedDB) : emploi du temps, progression et réglages déjà chargés
+ * restent lisibles sans Internet, et les écritures faites hors ligne partent toutes seules au retour du
+ * réseau. Plusieurs onglets ouverts partagent le même cache. Navigateur sans IndexedDB (navigation
+ * privée…) : Firestore garde un cache en mémoire, l'application marche comme avant.
+ */
+function createFirestore(firebaseApp: NonNullable<typeof safeApp>) {
+  try {
+    return initializeFirestore(firebaseApp, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    });
+  } catch (err) {
+    console.warn('[Firebase] Cache hors ligne indisponible, Firestore sans persistance :', err);
+    return getFirestore(firebaseApp);
+  }
+}
+export const db = safeApp ? createFirestore(safeApp) : null;
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account'
