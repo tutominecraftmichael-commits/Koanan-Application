@@ -13,6 +13,10 @@ import { prepareExercisePhoto, sendTutorMessage, speakTutor, splitForVoice, type
 import { getReviewMap } from '../../lib/curriculum/reviewMemory';
 import { STEM_SUBJECTS } from '../../lib/curriculum/types';
 import { getStudentCountry } from '../../lib/curriculum/subjectVisibility';
+import { isOnline, useOnlineStatus } from '../../lib/useOnlineStatus';
+
+/** KONE réfléchit sur le serveur : sans Internet, il ne peut pas répondre (les cours, eux, restent disponibles). */
+const OFFLINE_TEXT = 'Pas d’Internet : KONE a besoin d’une connexion pour te répondre. Ton message n’a pas été envoyé. Tes cours déjà ouverts restent disponibles hors ligne.';
 
 /** Son muet très court : joué pendant un toucher pour que le téléphone accepte ensuite la voix de KONE. */
 const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
@@ -30,7 +34,7 @@ const ERRORS: Record<TutorError, string> = {
   UNAUTHORIZED: 'Connecte-toi à ton compte pour discuter avec KONE.',
   TOKEN_EXPIRED: 'Ta connexion a expiré, réessaie.',
   EMPTY_MESSAGE: 'Écris ton message d’abord.',
-  NETWORK: 'Pas de connexion Internet. Réessaie quand tu es connecté.',
+  NETWORK: 'La connexion Internet a coupé : KONE n’a pas reçu ton message. Réessaie quand tu es connecté.',
   UNKNOWN: 'Une erreur est survenue. Réessaie.',
   VOICE_DAILY_LIMIT: 'La voix de KONE revient demain.',
   VOICE_UNAVAILABLE: 'KONE n’a pas pu parler cette fois.',
@@ -193,6 +197,9 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const online = useOnlineStatus();
+  // Connexion revenue : l'avertissement « pas d'Internet » disparaît tout seul
+  useEffect(() => { if (online) setError((e) => (e === OFFLINE_TEXT ? null : e)); }, [online]);
   // Humeur passagère de la peluche après une réponse (saut de joie, hochement, fête)
   const [flash, setFlash] = useState<PlushMood | null>(null);
   const [typing, setTyping] = useState(false);
@@ -394,6 +401,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   const send = async (raw: string, piece: TutorPiece | null = null, thumb?: string) => {
     const typed = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
     if ((!typed && !piece) || !canWrite) return;
+    // Hors ligne : on ne fait pas semblant d'envoyer, le message reste dans la zone de saisie
+    if (!isOnline()) { setError(OFFLINE_TEXT); return; }
     unlockAudio();
     stopVoice();
     const isAudio = piece?.kind === 'audio';
@@ -502,6 +511,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   /** Question à l'oral : le micro s'ouvre, KONE écoute (1 minute au plus). */
   const startRecording = async () => {
     if (!canWrite) return;
+    if (!isOnline()) { setError(OFFLINE_TEXT); return; }
     setError(null);
     unlockAudio();
     stopVoice();
@@ -689,6 +699,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({
             </div>
           )}
 
+          {!online && error !== OFFLINE_TEXT && (
+            <p className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm font-semibold" role="status">
+              Tu es hors ligne : KONE a besoin d’Internet pour te répondre. Tes cours déjà ouverts restent disponibles.
+            </p>
+          )}
           {error && <p className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 text-amber-900 dark:text-amber-200 text-sm font-semibold" role="alert">{error}</p>}
           {voiceNote && <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 text-center" aria-live="polite">{voiceNote}</p>}
           <div ref={endRef} />

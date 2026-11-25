@@ -84,12 +84,14 @@ class RootErrorBoundary extends Component<Props, State> {
 }
 
 import { ThemeProvider } from './context/ThemeContext'
+import { OfflineBanner } from './components/common/OfflineBanner'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RootErrorBoundary>
       <ThemeProvider>
         <App />
+        <OfflineBanner />
       </ThemeProvider>
     </RootErrorBoundary>
   </StrictMode>,
