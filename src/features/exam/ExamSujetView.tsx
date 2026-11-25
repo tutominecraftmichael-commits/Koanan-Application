@@ -664,7 +664,9 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
       <article ref={sheetRef} className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
         <header className="p-4 sm:p-5 border-b-2 border-slate-100 dark:border-slate-800 space-y-3">
           <div className="flex items-center gap-3">
-            <img src="/icons/konan-icon-192.png" alt="KONAN" className="w-12 h-12 rounded-2xl shrink-0" />
+            {/* Logo du devoir (cube KONAN dans son rond) : il apparaît aussi en haut du PDF du sujet */}
+            <img src="/icons/konan-logo-devoir.png" alt="KONAN" className="w-12 h-12 rounded-full shrink-0" />
+
             <div className="min-w-0">
               <p className="text-lg font-black tracking-wide text-sky-600 dark:text-sky-400 leading-none">KONAN</p>
               <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-1">Devoir d’entraînement</p>
