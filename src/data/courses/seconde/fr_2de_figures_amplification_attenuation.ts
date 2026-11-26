@@ -9,7 +9,7 @@ export const FR_2DE_PL_L05B_FIGURES_AMPLIFICATION_ATTENUATION: CurriculumChapter
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 13,
+  "order": 15,
   "title": "Perfectionnement de la langue, leçon 5 (suite) : Les figures d'amplification et d'atténuation",
   "summary": "Hyperbole, gradation, accumulation, anaphore, litote et euphémisme : les reconnaître et analyser leur effet.",
   "officialVolumeHours": 2,

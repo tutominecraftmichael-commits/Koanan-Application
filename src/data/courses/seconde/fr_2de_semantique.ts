@@ -9,7 +9,7 @@ export const FR_2DE_PL_L03_SEMANTIQUE: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 10,
+  "order": 12,
   "title": "Perfectionnement de la langue, leçon 3 : La sémantique, les mots et leurs sens",
   "summary": "Monosémie et polysémie, homonymes, sens lexical et contextuel, sens propre et figuré, dénotation et connotation.",
   "officialVolumeHours": 2,

@@ -2,7 +2,7 @@
  * 2nde A et 2nde C — Français, Expression écrite, leçon 2 : le commentaire composé (séances 1 à 4).
  * Rédigé à partir des PDF officiels « 2nde_EE_Com_Composé_S1/S2/S3/S5 » (format v2 : mini-leçons de 6 étapes,
  * chaque question redonne le texte dont elle parle). Remplace les anciens chapitres 2 à 5 (mêmes identifiants),
- * placés aux numéros 3 à 6 (1 et 2 = production écrite, séances 7 et 8).
+ * placés aux numéros 5 à 8 (1 à 4 = production écrite, séances 7 à 10).
  *
  * Erreurs des PDF corrigées : « norme » → « morne » (et c'est un adjectif, pas un nom) ; « d'or » n'est pas dans
  * « Le dormeur du Val » ; « il fait un somme » (et non « une somme ») ; « la lumière pleut » est une métaphore
@@ -38,7 +38,7 @@ const S1 = 'seconde_a_francais_ch2_cc_s1';
 const SEANCE_1: CurriculumChapter = {
   ...COMMON,
   id: 'seconde_a_francais_ch2_commentaire_compose_analyse_libelle',
-  order: 3,
+  order: 5,
   title: 'Le commentaire composé, séance 1 : analyser le libellé et construire le sens',
   summary: 'Le libellé (consigne et centres d’intérêt), la démarche pour construire le sens du texte, puis l’étude de « Veni, vidi, vixi » de Victor Hugo et de « Femme noire » de Senghor.',
   source: '2nde_EE_Com_Composé_S1_Analyser_libellé_construire_sens.pdf',
@@ -329,7 +329,7 @@ const S2 = 'seconde_a_francais_ch3_cc_s2';
 const SEANCE_2: CurriculumChapter = {
   ...COMMON,
   id: 'seconde_a_francais_ch3_commentaire_compose_organisation_plan',
-  order: 4,
+  order: 6,
   title: 'Le commentaire composé, séance 2 : organiser les centres d’intérêt',
   summary: 'Classer les idées en sous-centres et construire le plan détaillé, sur « Veni, vidi, vixi » de Hugo et « Femme noire » de Senghor.',
   source: '2nde_EE_Com_Composé_S2_Organiser_CI.pdf',
@@ -570,7 +570,7 @@ const S3 = 'seconde_a_francais_ch4_cc_s3';
 const SEANCE_3: CurriculumChapter = {
   ...COMMON,
   id: 'seconde_a_francais_ch4_commentaire_compose_redaction_centre_interet',
-  order: 5,
+  order: 7,
   title: 'Le commentaire composé, séance 3 : rédiger un centre d’intérêt',
   summary: 'Les règles de rédaction du développement, le paragraphe argumentatif en quatre temps, puis l’organisation et la rédaction du premier centre d’intérêt du « Dormeur du Val » de Rimbaud.',
   source: '2nde_EE_Com_Composé_S3_Rédiger_CI.pdf',
@@ -798,7 +798,7 @@ const S4 = 'seconde_a_francais_ch5_cc_s4';
 const SEANCE_4: CurriculumChapter = {
   ...COMMON,
   id: 'seconde_a_francais_ch5_commentaire_compose_redaction_introduction',
-  order: 6,
+  order: 8,
   title: 'Le commentaire composé, séance 4 : rédiger l’introduction',
   summary: 'Les trois étapes de l’introduction (perspective générale, présentation du texte, annonce du plan), l’introduction modèle sur « Veni, vidi, vixi » de Hugo, puis celle du « Dormeur du Val » de Rimbaud.',
   source: '2nde_EE_Com_Composé_S5_Rédiger_Introduction.pdf',

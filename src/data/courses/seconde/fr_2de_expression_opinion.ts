@@ -9,7 +9,7 @@ export const FR_2DE_PL_L02B_EXPRESSION_OPINION: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 9,
+  "order": 11,
   "title": "Perfectionnement de la langue, leçon 2 (suite) : Les moyens d'expression d'une opinion",
   "summary": "Thèse et arguments, modalisateurs, mots mélioratifs et péjoratifs, procédés rhétoriques et mise en relief.",
   "officialVolumeHours": 2,

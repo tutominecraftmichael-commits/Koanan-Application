@@ -9,7 +9,7 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 16,
+  "order": 18,
   "title": "Perfectionnement de la langue, leçon 6 (suite) : La versification, les rimes, les sonorités et le rythme",
   "summary": "Genre, qualité et disposition des rimes, assonances et allitérations, accents, coupes, enjambement, rejet et contre-rejet.",
   "officialVolumeHours": 2,
