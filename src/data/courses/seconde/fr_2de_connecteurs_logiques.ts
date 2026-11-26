@@ -9,7 +9,7 @@ export const FR_2DE_PL_L02_CONNECTEURS_LOGIQUES: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 7,
+  "order": 8,
   "title": "Perfectionnement de la langue, leçon 2 : Les connecteurs logiques",
   "summary": "Relier les idées d'une argumentation : cause, conséquence, opposition, concession, addition, ordre, conclusion, but, condition et liens implicites.",
   "officialVolumeHours": 2,

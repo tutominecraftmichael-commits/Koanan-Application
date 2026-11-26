@@ -9,7 +9,7 @@ export const FR_2DE_PL_L05C_FIGURES_OPPOSITION_CONSTRUCTION: CurriculumChapter =
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 13,
+  "order": 14,
   "title": "Perfectionnement de la langue, leçon 5 (fin) : Les figures d'opposition et de construction",
   "summary": "Oxymore, antithèse, ironie, ellipse et inversion : les reconnaître, les distinguer et analyser leur effet.",
   "officialVolumeHours": 2,

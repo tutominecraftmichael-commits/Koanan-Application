@@ -9,7 +9,7 @@ export const FR_2DE_PL_L06_VERSIFICATION_VERS_STROPHES: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 14,
+  "order": 15,
   "title": "Perfectionnement de la langue, leçon 6 : La versification, les vers et les strophes",
   "summary": "La mesure du vers, le décompte des syllabes, la valeur des vers, le vers libre et le verset, les strophes et les poèmes à forme fixe.",
   "officialVolumeHours": 2,

@@ -9,7 +9,7 @@ export const FR_2DE_SF_L02_EXPOSE_ORAL: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 17,
+  "order": 18,
   "title": "Savoir-faire, leçon 2 : Préparer et présenter un exposé oral",
   "summary": "Comprendre le sujet, chercher et trier l'information, organiser l'exposé, préparer ses supports, présenter devant un public et évaluer.",
   "officialVolumeHours": 4,
