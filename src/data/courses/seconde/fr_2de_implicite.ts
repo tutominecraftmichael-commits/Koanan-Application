@@ -9,7 +9,7 @@ export const FR_2DE_PL_L07_IMPLICITE: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 16,
+  "order": 19,
   "title": "Perfectionnement de la langue : L'implicite, le présupposé et le sous-entendu",
   "summary": "Explicite et implicite, le présupposé, le sous-entendu, les distinguer et les utiliser.",
   "officialVolumeHours": 2,

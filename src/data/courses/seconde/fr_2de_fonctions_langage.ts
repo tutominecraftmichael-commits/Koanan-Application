@@ -9,7 +9,7 @@ export const FR_2DE_PL_L01_FONCTIONS_LANGAGE: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 6,
+  "order": 9,
   "title": "Perfectionnement de la langue, leçon 1 : Les fonctions du langage",
   "summary": "Les six facteurs de la communication et les six fonctions du langage : les reconnaître et les justifier.",
   "officialVolumeHours": 2,

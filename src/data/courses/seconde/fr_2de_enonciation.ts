@@ -9,7 +9,7 @@ export const FR_2DE_PL_L04_ENONCIATION: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 10,
+  "order": 13,
   "title": "Perfectionnement de la langue : L'énonciation, les indices et le vocabulaire affectif et évaluatif",
   "summary": "La situation d'énonciation, les indices de personne, de temps et de lieu, le vocabulaire affectif et évaluatif, la subjectivité.",
   "officialVolumeHours": 2,

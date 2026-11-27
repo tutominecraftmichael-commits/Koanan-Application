@@ -16,8 +16,8 @@ import { FR_2DE_PL_L06_VERSIFICATION_VERS_STROPHES } from '../courses/seconde/fr
 import { FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME } from '../courses/seconde/fr_2de_versification_sonorites_rythme';
 import { FR_2DE_PL_L07_IMPLICITE } from '../courses/seconde/fr_2de_implicite';
 import { FR_2DE_SF_L02_EXPOSE_ORAL } from '../courses/seconde/fr_2de_expose_oral';
+import { FR_2DE_EE_PRODUCTION_ECRITE } from '../courses/seconde/fr_2de_ee_production_ecrite';
 import { FR_2DE_EE_COMMENTAIRE_COMPOSE } from '../courses/seconde/fr_2de_ee_commentaire_compose';
-import { francais2deAChapters } from '../courses/francais_2de_a';
 
 export const CHAPTERS: CurriculumChapter[] = [
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
@@ -32,6 +32,6 @@ export const CHAPTERS: CurriculumChapter[] = [
   FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME,
   FR_2DE_PL_L07_IMPLICITE,
   FR_2DE_SF_L02_EXPOSE_ORAL,
-  ...FR_2DE_EE_COMMENTAIRE_COMPOSE, // commentaire composé, séances 1 à 3 (chapitres 2, 3, 4)
-  ...francais2deAChapters,
+  ...FR_2DE_EE_PRODUCTION_ECRITE, // production écrite, séances 7 et 8 (chapitres 1 et 2)
+  ...FR_2DE_EE_COMMENTAIRE_COMPOSE, // commentaire composé, séances 1 à 4 (chapitres 3 à 6)
 ];

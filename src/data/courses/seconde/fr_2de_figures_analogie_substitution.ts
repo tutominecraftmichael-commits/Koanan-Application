@@ -9,7 +9,7 @@ export const FR_2DE_PL_L05_FIGURES_ANALOGIE_SUBSTITUTION: CurriculumChapter = {
   "alsoForGrades": [
     "seconde_c"
   ],
-  "order": 11,
+  "order": 14,
   "title": "Perfectionnement de la langue, leçon 5 : Les figures d'analogie et de substitution",
   "summary": "Comparaison, métaphore, personnification, allégorie, métonymie, synecdoque et périphrase : les reconnaître et analyser leur effet.",
   "officialVolumeHours": 2,
