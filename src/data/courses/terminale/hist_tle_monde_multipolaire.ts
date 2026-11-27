@@ -1,835 +1,1388 @@
-import type { CurriculumChapter, StructuredLessonStep } from '../../../lib/curriculum/types';
+import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « Tle_H3-De_la_fin_de_la_guerre_froide_vers_un_monde_multipolaire.pdf » (format v2 : mini-leçons de 6 étapes).
-
-const p01Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Concept central',
-    stepTheme: 'blue',
-    stepTitle: 'Qu’est-ce qu’un monde unipolaire et une hyperpuissance ?',
-    paragraphText:
-      '• Monde unipolaire (1991-2001) : système international dominé par un seul pôle majeur sans rival équivalent après la disparition de l’URSS en décembre 1991.\n• Hyperpuissance : terme forgé par l’ancien ministre français Hubert Védrine pour qualifier les États-Unis dans les années 1990, car leur supériorité s’exerce simultanément dans les domaines militaire, économique, technologique, diplomatique et culturel.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q1',
-      type: 'mcq',
-      prompt: 'Pourquoi parle-t-on de « monde unipolaire » au lendemain de la disparition de l’URSS en 1991 ?',
-      options: [
-        'Parce que tous les États ont fusionné en un gouvernement mondial unique',
-        'Parce que les États-Unis restent la seule superpuissance globale sans rival stratégique équivalent',
-        'Parce que la Chine dirigeait seule le Conseil de sécurité de l’ONU',
-        'Parce que l’Union européenne avait remplacé l’OTAN dès 1991',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La fin de l’URSS en 1991 laisse les États-Unis en position d’hyperpuissance dominante durant une décennie.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Hard Power',
-    stepTheme: 'violet',
-    stepTitle: 'Les fondements militaires et diplomatiques de l’hyperpuissance',
-    paragraphText:
-      '• Puissance militaire sans égale : premier budget de défense mondial (atteignant environ 740 milliards de dollars à l’époque contemporaine, soit près de 40 % des dépenses militaires mondiales), réseau planétaire de bases militaires, de flottes aéronavales et d’alliances (OTAN élargie à l’Est).\n• Poids politique : influence décisive au sein du Conseil de sécurité de l’ONU, du G7 et des grandes enceintes diplomatiques.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q2',
-      type: 'mcq',
-      prompt: 'Quel outil illustre la puissance militaire et sécuritaire globale des États-Unis après 1991 ?',
-      options: [
-        'La dissolution complète de l’OTAN en 1992',
-        'Un budget militaire sans équivalent, des flottes sur tous les océans et le leadership sur l’OTAN',
-        'L’adhésion des États-Unis au Pacte de Varsovie',
-        'La suppression de toutes les bases américaines à l’étranger',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les États-Unis disposent d’une capacité de projection militaire planétaire inégalée dans les années 1990.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Économie & Tech',
-    stepTheme: 'violet',
-    stepTitle: 'Dollar, Wall Street, GAFAM et avance technologique',
-    paragraphText:
-      '• Économie et finance : première économie mondiale dans les années 1990, statut du dollar comme monnaie de réserve et d’échange internationale, puissance de Wall Street et poids déterminant au FMI et à la Banque mondiale.\n• Technologie : maîtrise de l’espace et du renseignement (NASA, NSA, GPS) et domination de la révolution numérique portée par les firmes de la Silicon Valley (Microsoft, Apple, Google, Amazon, Meta).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q3',
-      type: 'mcq',
-      prompt: 'Quel pilier financier assure aux États-Unis un levier majeur sur l’économie mondiale ?',
-      options: [
-        'L’utilisation du rouble dans le commerce atlantique',
-        'Le statut du dollar comme principale monnaie de réserve internationale et le poids de Wall Street',
-        'Le contrôle exclusif des réserves d’or africaines',
-        'La nationalisation de toutes les banques européennes',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le dollar, les bourses américaines et l’influence au FMI/Banque mondiale donnent aux États-Unis une hégémonie financière majeure.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'definition',
-    stepBadge: 'Soft Power',
-    stepTheme: 'blue',
-    stepTitle: 'Le Soft Power américain : séduction culturelle et modèle de vie',
-    paragraphText:
-      '• Soft Power (concept théorisé par Joseph Nye) : capacité d’un État à influencer les autres pays sans contrainte armée, par l’attractivité de sa culture, de ses valeurs et de son mode de vie.\n• Aux États-Unis, il s’appuie sur la langue anglaise, Hollywood, les séries, la musique, les grandes universités (Harvard, MIT), la restauration rapide et la diffusion planétaire de l’« American way of life ».',
-    keyRule: 'Hyperpuissance = Hard Power (armée, économie) + Soft Power (culture, universités, numérique, valeurs).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q4',
-      type: 'mcq',
-      prompt: 'Comment définit-on le « Soft Power » dans les relations internationales ?',
-      options: [
-        'Le recours systématique aux bombardements préventifs',
-        'La capacité d’influencer les autres États par la séduction culturelle, idéologique, universitaire et technologique',
-        'L’imposition d’un blocus naval autour d’un pays rival',
-        'La signature d’un pacte militaire secret',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Contrairement au Hard Power (force militaire et sanctions économiques), le Soft Power agit par l’attractivité culturelle et les idées.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Piège de copie',
-    stepTheme: 'orange',
-    stepTitle: 'Ne pas réduire l’hyperpuissance au seul aspect militaire',
-    paragraphText:
-      'Une erreur fréquente au BAC est de n’évoquer que l’armée américaine pour expliquer la suprématie des années 1990.\nOr, la force des États-Unis vient de la combinaison unique entre puissance matérielle (Hard Power) et rayonnement culturel/numérique (Soft Power), qui rend leur modèle attrayant jusque dans les anciens pays du bloc de l’Est.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q5',
-      type: 'mcq',
-      prompt: 'Lequel de ces exemples illustre directement le Soft Power américain plutôt que le Hard Power ?',
-      options: [
-        'Le déploiement de porte-avions dans le golfe Persique',
-        'Le rayonnement mondial d’Hollywood, des universités américaines et des plateformes numériques',
-        'Les sanctions économiques votées contre un État rival',
-        'La modernisation de l’arsenal nucléaire stratégique',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Cinéma, enseignement supérieur et culture numérique diffusent les normes et l’image des États-Unis sans recours à la force.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'Idéologie',
-    stepTheme: 'slate',
-    stepTitle: 'Le « nouvel ordre mondial » proclamé par George H. W. Bush',
-    paragraphText:
-      'En 1990-1991, le président George H. W. Bush annonce l’avènement d’un « nouvel ordre mondial » fondé sur la démocratie libérale, l’économie de marché et le respect du droit international garanti par le leadership américain et l’ONU.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q6',
-      type: 'mcq',
-      prompt: 'Quel président américain formule l’idée d’un « nouvel ordre mondial » au moment de la fin de la guerre froide ?',
-      options: [
-        'George H. W. Bush',
-        'Lyndon B. Johnson',
-        'Harry Truman',
-        'Dwight Eisenhower',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'George H. W. Bush proclame un « nouvel ordre mondial » lors de la crise du Golfe en 1990-1991.',
-    },
-  },
-];
-
-const p02Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Rôle mondial',
-    stepTheme: 'blue',
-    stepTitle: 'Qu’entend-on par « gendarme du monde » et « nation-building » ?',
-    paragraphText:
-      '• « Gendarme du monde » : rôle assumé par les États-Unis dans les années 1990 pour maintenir l’ordre international, sanctionner les États agresseurs et arbitrer les conflits régionaux.\n• « Nation-building » (reconstruction nationale) : doctrine promue notamment sous Bill Clinton (1993-2001) visant à intervenir dans des États en crise pour y restaurer la sécurité et des institutions démocratiques.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q1',
-      type: 'mcq',
-      prompt: 'Que recouvre l’expression « les États-Unis, gendarme du monde » durant la décennie 1991-2001 ?',
-      options: [
-        'Leur intervention directe dans de nombreuses crises régionales pour y imposer le droit et l’ordre international',
-        'Leur refus de participer à toute opération internationale hors d’Amérique',
-        'La suppression de leur armée de terre après 1991',
-        'Le transfert de leurs bases militaires sous commandement russe',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Seule superpuissance après 1991, Washington joue le rôle d’arbitre et de force d’intervention dans les conflits majeurs.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Interventions clés',
-    stepTheme: 'violet',
-    stepTitle: 'Panorama des interventions américaines de 1991 à 1999',
-    paragraphText:
-      'Entre 1991 et 1999, les États-Unis multiplient les opérations militaires et diplomatiques sur plusieurs continents, tantôt avec mandat explicite de l’ONU, tantôt via l’OTAN.',
-    visualSchema: {
-      type: 'custom_svg',
-      title: 'Principales interventions américaines de la décennie unipolaire (1991-1999)',
-      caption: 'Des succès rapides en guerre conventionnelle ou diplomatie aux limites rencontrées en Somalie.',
-      tableData: {
-        headers: ['Année', 'Théâtre / Opération', 'Cadre et bilan'],
-        rows: [
-          ['1991', 'Guerre du Golfe (Tempête du désert)', 'Mandat ONU : coalition de 34 pays menée par les USA pour libérer le Koweït envahi par l’Irak de Saddam Hussein'],
-          ['1992-1994', 'Somalie (Restore Hope)', 'Mandat ONU humanitaire ; embuscade à Mogadiscio et retrait américain en 1994'],
-          ['1994', 'Haïti (Uphold Democracy)', 'Intervention sous mandat ONU rétablissant le président élu Jean-Bertrand Aristide'],
-          ['1995', 'Bosnie-Herzégovine (Accords de Dayton)', 'Frappes OTAN puis médiation US : signature de la paix à Dayton le 21 novembre 1995'],
-          ['1999', 'Kosovo (Allied Force)', 'Campagne aérienne de l’OTAN contre la Serbie sans mandat explicite du Conseil de sécurité'],
-        ],
-      },
-    },
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q2',
-      type: 'mcq',
-      prompt: 'Quel événement déclenche la guerre du Golfe (opération Tempête du désert) conduite par les États-Unis sous mandat de l’ONU en 1991 ?',
-      options: [
-        'L’annexion du Koweït par l’Irak de Saddam Hussein en août 1990',
-        'La chute du Mur de Berlin',
-        'L’élection de Nelson Mandela en Afrique du Sud',
-        'Les attentats du 11 septembre 2001',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’Irak envahit le Koweït en août 1990 ; l’ONU autorise le recours à la force et une coalition menée par les États-Unis libère le Koweït en février 1991.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'exemple',
-    stepBadge: 'Balkans (1995)',
-    stepTheme: 'slate',
-    stepTitle: 'Les accords de Dayton (1995) : réussite diplomatique américaine',
-    paragraphText:
-      'Face à l’impuissance européenne durant la guerre de Bosnie-Herzégovine (1992-1995, marquée par la purification ethnique et le massacre de Srebrenica), les frappes de l’OTAN puis la médiation ferme de Washington imposent les accords de Dayton (21 novembre 1995), qui mettent fin à trois ans de guerre.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q3',
-      type: 'mcq',
-      prompt: 'À quel conflit les accords de Dayton (21 novembre 1995), négociés sous l’égide des États-Unis, ont-ils mis fin ?',
-      options: [
-        'La guerre civile au Libéria',
-        'La guerre de Bosnie-Herzégovine (ex-Yougoslavie)',
-        'La guerre du Viêtnam',
-        'La crise des fusées de Cuba',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les accords de Dayton (novembre 1995) rétablissent la paix en Bosnie-Herzégovine grâce à l’engagement militaire et diplomatique américain.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Limites précoces',
-    stepTheme: 'orange',
-    stepTitle: 'Somalie (1993) et Kosovo (1999) : les limites du gendarme',
-    paragraphText:
-      'Même à l’apogée de l’unipolarité, deux signaux annoncent des limites :\n• En Somalie (1992-1994, opération Restore Hope), les pertes américaines à Mogadiscio (octobre 1993) provoquent un retrait rapide et expliquent en partie la passivité de Washington lors du génocide au Rwanda en 1994.\n• Au Kosovo (1999), l’OTAN intervient contre la Serbie sans résolution préalable du Conseil de sécurité (contournement de l’ONU face au veto russe/chinois).',
-    konanTip: 'Ne présente pas les années 1990 comme un succès total : cite l’échec de Somalie (1993-1994) et le contournement de l’ONU au Kosovo (1999).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q4',
-      type: 'mcq',
-      prompt: 'Quelle conséquence directe l’échec sanglant de l’opération Restore Hope en Somalie (1993) a-t-il eue sur la politique étrangère américaine ?',
-      options: [
-        'Le retrait américain de Somalie et une grande frilosité à intervenir en Afrique (notamment au Rwanda en 1994)',
-        'L’occupation durable de toute la Corne de l’Afrique par les États-Unis',
-        'L’entrée de la Somalie dans l’Union européenne',
-        'La rupture de l’alliance entre les États-Unis et le Royaume-Uni',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Traumatisés par les images de Mogadiscio en octobre 1993, les États-Unis retirent leurs troupes et refusent d’intervenir au Rwanda en 1994.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'methode',
-    stepBadge: 'Multilatéral vs Unilatéral',
-    stepTheme: 'green',
-    stepTitle: 'Comparer 1991 (Irak/Koweït) et 1999 (Kosovo)',
-    paragraphText:
-      '• En 1991 (Guerre du Golfe), les États-Unis agissent dans un cadre multilatéral strict, appuyé par des résolutions du Conseil de sécurité de l’ONU.\n• En 1999 (Kosovo), face au blocage du Conseil de sécurité, Washington privilégie l’OTAN sans mandat onusien : c’est une étape vers l’unilatéralisme qui s’accentuera en 2003 en Irak.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q5',
-      type: 'mcq',
-      prompt: 'En quoi l’intervention au Kosovo en 1999 marque-t-elle une évolution par rapport à la guerre du Golfe de 1991 ?',
-      options: [
-        'En 1999, l’OTAN frappe sans autorisation explicite du Conseil de sécurité de l’ONU',
-        'En 1999, les États-Unis combattent aux côtés de la Russie contre le Royaume-Uni',
-        'En 1991, l’ONU avait interdit toute coalition internationale',
-        'En 1999, aucune force aérienne n’est employée',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le Kosovo en 1999 inaugure le recours à la force par une alliance occidentale hors mandat explicite du Conseil de sécurité.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'Haïti 1994',
-    stepTheme: 'slate',
-    stepTitle: 'L’opération Uphold Democracy en Haïti (1994)',
-    paragraphText:
-      'En 1994, sous mandat du Conseil de sécurité, les États-Unis conduisent l’opération « Uphold Democracy » pour obtenir le départ de la junte militaire haïtienne et rétablir le président démocratiquement élu Jean-Bertrand Aristide, illustrant la logique du « nation-building ».',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q6',
-      type: 'mcq',
-      prompt: 'Quel était l’objectif de l’opération américaine « Uphold Democracy » menée en Haïti en 1994 ?',
-      options: [
-        'Annexer l’île comme 51e État américain',
-        'Rétablir le président démocratiquement élu Jean-Bertrand Aristide renversé par un coup d’État',
-        'Installer des bases de missiles soviétiques dans les Caraïbes',
-        'Mettre fin à la guerre du Golfe',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’intervention de 1994 vise à restaurer l’ordre constitutionnel et le président Aristide en Haïti.',
-    },
-  },
-];
-
-const p03Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Tournant historique',
-    stepTheme: 'blue',
-    stepTitle: 'Les attentats du 11 septembre 2001 : un séisme planétaire',
-    paragraphText:
-      '• Le 11 septembre 2001, quatre avions de ligne américains sont détournés par des terroristes d’Al-Qaïda (réseau islamiste dirigé par Oussama Ben Laden) : deux s’écrasent sur les tours jumelles du World Trade Center à New York, un troisième frappe le Pentagone à Washington et le quatrième (vol United 93) s’écrase en Pennsylvanie.\n• Bilan : près de 3 000 morts. Pour la première fois depuis Pearl Harbor (1941), le territoire américain est directement frappé au cœur de ses symboles économiques et militaires.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q1',
-      type: 'mcq',
-      prompt: 'Quelle organisation terroriste dirigée par Oussama Ben Laden a perpétré les attentats du 11 septembre 2001 aux États-Unis ?',
-      options: [
-        'Al-Qaïda',
-        'Le Viêt-Cong',
-        'Le Kominform',
-        'L’OTASE',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Les attentats du 11 septembre 2001 sont orchestrés par le réseau Al-Qaïda d’Oussama Ben Laden.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Doctrine Bush',
-    stepTheme: 'violet',
-    stepTitle: 'Guerre contre le terrorisme, « Axe du Mal » et Afghanistan (2001)',
-    paragraphText:
-      '• Le président George W. Bush proclame la « guerre globale contre le terrorisme » et adopte la doctrine de la guerre préventive : frapper les menaces avant qu’elles ne se matérialisent.\n• Il dénonce un « Axe du Mal » et des « États voyous » (Irak, Iran, Corée du Nord, Syrie).\n• En octobre 2001, appuyés par une large coalition et un mandat onusien, les États-Unis interviennent en Afghanistan pour renverser le régime des talibans qui abritait Al-Qaïda.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q2',
-      type: 'mcq',
-      prompt: 'Pourquoi les États-Unis et une coalition internationale interviennent-ils militairement en Afghanistan dès octobre 2001 ?',
-      options: [
-        'Pour récupérer le canal de Suez',
-        'Parce que le régime des talibans refusait de livrer Oussama Ben Laden et abritait les bases d’Al-Qaïda',
-        'Pour soutenir l’armée soviétique sur place',
-        'Pour imposer les accords de Dayton',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’intervention en Afghanistan (octobre 2001) vise à démanteler les sanctuaires d’Al-Qaïda et à renverser les talibans.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Rupture de 2003',
-    stepTheme: 'violet',
-    stepTitle: 'La guerre unilatérale en Irak (2003) et ses conséquences',
-    paragraphText:
-      '• En mars 2003, invoquant la présence supposée d’armes de destruction massive (jamais retrouvées) et des liens fictifs avec Al-Qaïda, George W. Bush envahit l’Irak de Saddam Hussein sans l’autorisation du Conseil de sécurité de l’ONU (opposition nette de la France, de l’Allemagne, de la Russie et de la Chine).\n• L’enlisement dans une guerre civile sanglante, les scandales des prisons (Guantánamo, Abou Ghraib) et le coût budgétaire immense brisent la légitimité morale et diplomatique de l’unipolarité américaine.',
-    keyRule: '2003 (Irak sans aval de l’ONU) fissure le camp occidental et accélère le recul du leadership américain.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q3',
-      type: 'mcq',
-      prompt: 'Qu’est-ce qui distingue profondément l’intervention en Irak (2003) de la guerre du Golfe (1991) et de l’Afghanistan (2001) ?',
-      options: [
-        'La guerre d’Irak de 2003 est lancée sans mandat du Conseil de sécurité de l’ONU et divise les alliés occidentaux',
-        'La guerre de 2003 a été financée par l’URSS',
-        'En 2003, la France et la Russie ont mené l’invasion aux côtés de George W. Bush',
-        'En 2003, aucune troupe terrestre américaine n’est entrée en Irak',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’invasion unilatérale de l’Irak en 2003, sans aval de l’ONU et fondée sur des preuves contestées, isole diplomatiquement Washington.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Piège de date',
-    stepTheme: 'orange',
-    stepTitle: 'Attention : 11 septembre 2001 (et jamais 2011 !)',
-    paragraphText:
-      'Une faute d’inattention fréquente consiste à écrire 2011 au lieu de 2001 pour les attentats de New York et Washington.\nRepère sûr : 11 septembre 2001 -> Afghanistan (octobre 2001) -> Irak (mars 2003). En 2011, au contraire, les États-Unis achèvent leur retrait militaire d’Irak et éliminent Ben Laden au Pakistan.',
-    konanTip: '11 septembre 2001 = attentats ; 2003 = Irak ; 2008 = crise financière des subprimes ; 2021 = retrait chaotique d’Afghanistan.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q4',
-      type: 'mcq',
-      prompt: 'Quelle suite chronologique est rigoureusement exacte ?',
-      options: [
-        'Irak (2001) -> Attentats de New York (2003) -> Afghanistan (2011)',
-        'Attentats du 11 septembre (2001) -> Intervention en Afghanistan (oct. 2001) -> Invasion de l’Irak (mars 2003)',
-        'Crise financière de 2008 -> Attentats du 11 septembre (2011) -> Guerre du Golfe (2015)',
-        'Accords de Dayton (2001) -> Chute du Mur (2003) -> Guerre d’Irak (2008)',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les attentats du 11 septembre 2001 précèdent immédiatement l’Afghanistan (octobre 2001) puis l’invasion de l’Irak (mars 2003).',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Essoufflement',
-    stepTheme: 'slate',
-    stepTitle: '2008-2021 : crise économique et repli stratégique américain',
-    paragraphText:
-      'À l’usure militaire s’ajoute la crise financière mondiale partie de l’immobilier américain en 2008 (crise des subprimes), qui fragilise le modèle économique américain.\nSous Barack Obama, Donald Trump puis Joe Biden, les États-Unis réduisent leurs engagements extérieurs coûteux (retrait d’Irak en 2011, retrait d’Afghanistan en août 2021) pour recentrer leur attention sur la rivalité avec la Chine.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q5',
-      type: 'mcq',
-      prompt: 'Quel événement économique parti des États-Unis en 2008 accélère le basculement vers un monde multipolaire ?',
-      options: [
-        'Le lancement du plan Marshall',
-        'La crise financière des subprimes',
-        'La création du rouble transférable',
-        'La dissolution de l’OMC',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La crise des subprimes (2008) révèle les failles du modèle financier américain tandis que les économies émergentes (notamment la Chine) prennent le relais de la croissance mondiale.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Transition',
-    stepTheme: 'green',
-    stepTitle: 'Comment passe-t-on de l’unipolarité à la multipolarité ?',
-    paragraphText:
-      'La transition résulte de deux mouvements simultanés :\n1. Un affaiblissement relatif des États-Unis (enlisement en Irak/Afghanistan, crise morale, crise de 2008).\n2. Une montée en puissance rapide de nouveaux pôles économiques, politiques et militaires en Europe, en Asie, en Amérique latine et au Moyen-Orient.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q6',
-      type: 'mcq',
-      prompt: 'Quel double phénomène explique le déclin du monde unipolaire au XXIe siècle ?',
-      options: [
-        'La disparition des nations européennes et la victoire de l’URSS',
-        'L’essoufflement stratégique et financier des États-Unis combiné à l’émergence de nouveaux pôles de puissance',
-        'L’interdiction du commerce maritime mondial',
-        'Le retrait des États-Unis de l’ONU',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le monde devient multipolaire à la fois par l’usure du leadership américain et par l’ascension de la Chine, de l’UE, de la Russie et des autres émergents.',
-    },
-  },
-];
-
-const p04Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Multipolarité',
-    stepTheme: 'blue',
-    stepTitle: 'Qu’est-ce qu’un monde multipolaire ?',
-    paragraphText:
-      '• Monde multipolaire : système international dans lequel le pouvoir économique, diplomatique, technologique et militaire est réparti entre plusieurs centres d’influence majeurs (États-Unis, Chine, Union européenne, Russie, Inde, Brésil, puissances régionales), et non plus monopolisé par un seul ou deux Grands.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q1',
-      type: 'mcq',
-      prompt: 'Comment caractérise-t-on un « monde multipolaire » au XXIe siècle ?',
-      options: [
-        'Un monde dominé sans partage par un seul État',
-        'Un monde structuré autour de plusieurs centres de puissance économiques, politiques et stratégiques concurrents ou partenaires',
-        'Un monde divisé uniquement en deux alliances militaires comme en 1955',
-        'Un monde sans organisations internationales',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La multipolarité signifie la coexistence de plusieurs pôles influents (États-Unis, Chine, UE, Russie, Inde, Brésil, etc.).',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Les nouveaux pôles',
-    stepTheme: 'violet',
-    stepTitle: 'Union européenne, BRICS et puissances émergentes',
-    paragraphText:
-      'Autour ou face aux États-Unis s’affirment des pôles divers aux atouts et limites contrastés : l’Union européenne, les BRICS (Brésil, Russie, Inde, Chine, Afrique du Sud — récemment élargis) et des puissances régionales au Moyen-Orient.',
-    visualSchema: {
-      type: 'custom_svg',
-      title: 'Principaux pôles du monde multipolaire contemporain',
-      caption: 'Atouts et fragilités des grandes puissances et ensembles régionaux.',
-      tableData: {
-        headers: ['Pôle / Acteur', 'Atouts majeurs', 'Limites ou tensions'],
-        rows: [
-          ['Union européenne (UE)', 'Traité de Maastricht (1992), 27 États après le Brexit (2020), marché unique, euro, fort Soft Power', 'Divisions diplomatiques internes et dépendance militaire envers l’OTAN'],
-          ['Chine', '2e économie mondiale (OMC 2001), ASEAN+3 (1997), forte présence en Afrique, siège permanent ONU', 'Tensions avec les USA, revendications en mer de Chine, vieillissement démographique'],
-          ['Russie', 'Vaste territoire, hydrocarbures, arsenal nucléaire, membre des BRICS et de l’OCS (2001)', 'Économie peu diversifiée, conflits voisins (Géorgie 2008, Ukraine 2014 et 2022)'],
-          ['Inde, Brésil, Afrique du Sud', 'Inde : géant démographique et informatique ; Brésil : MERCOSUR/MINUSTAH ; Afrique du Sud : pôle africain', 'Inégalités sociales internes et poids militaire global encore limité'],
-          ['Moyen-Orient (Turquie, Iran, Israël, Arabie saoudite)', 'Rôle énergétique, technologique, diplomatique ou militaire régional décisif', 'Rivalités régionales chroniques et instabilité sécuritaire'],
-        ],
-      },
-    },
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q2',
-      type: 'mcq',
-      prompt: 'Que désigne l’acronyme historique « BRICS » parmi les pôles émergents du XXIe siècle ?',
-      options: [
-        'Belgique, Roumanie, Italie, Canada, Suisse',
-        'Brésil, Russie, Inde, Chine et Afrique du Sud',
-        'Birmanie, Rwanda, Irak, Chili, Sénégal',
-        'Bretagne, Royaume-Uni, Irlande, Chypre, Suède',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les BRICS réunissent initialement le Brésil, la Russie, l’Inde, la Chine et l’Afrique du Sud pour peser face aux institutions occidentales.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Chine & UE',
-    stepTheme: 'violet',
-    stepTitle: 'L’Union européenne et la Chine : deux géants aux profils opposés',
-    paragraphText:
-      '• Union européenne : créée par le traité de Maastricht (1992) et passée à 27 membres après la sortie du Royaume-Uni (Brexit effectif en 2020), l’UE est une puissance commerciale, financière (euro) et normative majeure, mais reste politiquement divisée et dépendante de l’OTAN pour sa défense.\n• Chine : entrée à l’OMC en 2001 et intégrée à l’ASEAN+3 (1997), elle devient la 2e économie mondiale, premier partenaire commercial de l’Afrique et principal rival stratégique des États-Unis (Nouvelles Routes de la soie, modernisation militaire).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q3',
-      type: 'mcq',
-      prompt: 'Quelle est la principale faiblesse géopolitique de l’Union européenne malgré son statut de géant commercial ?',
-      options: [
-        'L’absence totale d’industrie automobile et aéronautique',
-        'Son manque d’unité politique et militaire, restant largement dépendante de l’OTAN pour sa sécurité',
-        'Le fait qu’elle ne compte que 3 États membres depuis 1992',
-        'Le refus d’utiliser le commerce international',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’UE est une grande puissance économique et normative (« Soft Power »), mais ses 27 membres peinent à parler d’une seule voix en politique étrangère et de défense.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'propriete',
-    stepBadge: 'Russie & Émergents',
-    stepTheme: 'violet',
-    stepTitle: 'Le retour de la Russie et le rôle du Brésil, de l’Inde et du Moyen-Orient',
-    paragraphText:
-      '• Russie : redressée économiquement dans les années 2000 grâce au gaz et au pétrole, elle s’appuie sur son armement, l’Organisation de coopération de Shanghai (OCS, 2001) et une diplomatie offensive (Géorgie 2008, Crimée/Ukraine depuis 2014, Syrie) pour contester l’unipolarité.\n• Inde (géant démographique, informatique et spatial) et Brésil (leader du MERCOSUR, engagement à l’ONU comme la MINUSTAH en Haïti) portent la voix du Sud global aux côtés des puissances régionales du Moyen-Orient (Turquie, Iran, Israël, Arabie saoudite).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q4',
-      type: 'mcq',
-      prompt: 'Quelle organisation eurasiatique fondée en 2001 associe notamment la Russie et la Chine dans les domaines sécuritaire et économique ?',
-      options: [
-        'L’Organisation de coopération de Shanghai (OCS)',
-        'Le MERCOSUR',
-        'La CEDEAO',
-        'Le Pacte atlantique (OTAN)',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’OCS (2001) rassemble la Chine, la Russie et plusieurs États d’Asie centrale (puis l’Inde, le Pakistan et l’Iran).',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Précision géographique',
-    stepTheme: 'orange',
-    stepTitle: 'Royaume-Uni (Brexit 2020) et place des États-Unis aujourd’hui',
-    paragraphText:
-      '• C’est le Royaume-Uni (et non la seule « Angleterre ») qui a quitté l’Union européenne en 2020 (Brexit), ramenant l’UE de 28 à 27 États.\n• Attention : monde multipolaire ne signifie pas disparition de la puissance américaine ! Les États-Unis restent la première puissance militaire, financière (dollar) et numérique (GAFAM), mais doivent désormais composer avec d’autres pôles.',
-    konanTip: 'Ne dis jamais que les États-Unis sont devenus faibles ; dis qu’ils ont perdu le monopole absolu des années 1990 au profit d’un équilibre multipolaire.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q5',
-      type: 'mcq',
-      prompt: 'Combien d’États membres compte l’Union européenne depuis le retrait effectif du Royaume-Uni (Brexit) en 2020 ?',
-      options: [
-        '15 États membres',
-        '27 États membres',
-        '35 États membres',
-        '54 États membres',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Après le Brexit devenu effectif en 2020, l’Union européenne compte 27 États membres.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'L’Afrique enjeu mondial',
-    stepTheme: 'slate',
-    stepTitle: 'L’Afrique, terrain révélateur du monde multipolaire',
-    paragraphText:
-      'En Afrique (et particulièrement en Côte d’Ivoire et en Afrique de l’Ouest), la multipolarité est visible concrètement : aux partenaires traditionnels européens et américains s’ajoutent désormais massivement la Chine (infrastructures, prêts, commerce), la Russie (sécurité, énergie), la Turquie, l’Inde et les pays du Golfe.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q6',
-      type: 'mcq',
-      prompt: 'Comment la multipolarité se manifeste-t-elle concrètement dans les partenariats économiques de l’Afrique au XXIe siècle ?',
-      options: [
-        'Par la diversification des partenaires (Chine, UE, États-Unis, Turquie, Inde, Russie, pays du Golfe)',
-        'Par l’interdiction faite à l’Afrique de commercer hors d’Europe',
-        'Par la suppression de tous les ports africains',
-        'Par le monopole commercial exclusif de l’URSS',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Les États africains traitent désormais avec une pluralité de pôles économiques et diplomatiques concurrents.',
-    },
-  },
-];
-
-const p05Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'methode',
-    stepBadge: 'Chronologie globale',
-    stepTheme: 'green',
-    stepTitle: 'Distinguer les trois âges des relations internationales depuis 1945',
-    paragraphText:
-      'Pour situer instantanément n’importe quel sujet de BAC du Thème 1 :\n1. 1947-1991 : monde bipolaire (États-Unis contre URSS).\n2. 1991-2001 : monde unipolaire (hyperpuissance américaine, gendarme du monde).\n3. Depuis 2001 : glissement vers un monde multipolaire (11 septembre 2001, Irak 2003, crise de 2008, montée de la Chine, de l’UE et des BRICS).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q1',
-      type: 'mcq',
-      prompt: 'Quelle périodisation correspond exactement aux trois grandes configurations mondiales depuis 1947 ?',
-      options: [
-        '1947-1991 : unipolaire ; 1991-2001 : bipolaire ; depuis 2001 : colonial',
-        '1947-1991 : bipolaire ; 1991-2001 : unipolaire ; depuis 2001 : vers un monde multipolaire',
-        '1947-1962 : multipolaire ; 1962-1991 : unipolaire ; depuis 1991 : bipolaire',
-        '1945-2025 : unipolaire continu sans aucun changement',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le monde passe de la bipolarité (1947-1991) à une parenthèse unipolaire (1991-2001) puis à la multipolarité contemporaine.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'exemple',
-    stepBadge: 'Situation d’évaluation',
-    stepTheme: 'slate',
-    stepTitle: 'Nuancer l’idée d’un « déclin total des États-Unis »',
-    paragraphText:
-      'Situation : Lors d’un exposé en Terminale, un camarade affirme que « les États-Unis ont perdu toute puissance depuis 2001 face à la Chine et aux BRICS ».\nRéponse argumentée : cette affirmation est excessive. Certes, les guerres en Irak/Afghanistan et la crise de 2008 ont réduit leur hégémonie absolue et favorisé un monde multipolaire, mais les États-Unis conservent la 1re armée mondiale, le dollar, les GAFAM et un Soft Power majeur.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q2',
-      type: 'mcq',
-      prompt: 'Pourquoi doit-on nuancer l’affirmation selon laquelle « les États-Unis ne sont plus une grande puissance aujourd’hui » ?',
-      options: [
-        'Parce qu’ils dirigent encore l’URSS',
-        'Parce qu’ils conservent de solides atouts (1er budget militaire, dollar, GAFAM, recherche, Soft Power) même dans un monde multipolaire',
-        'Parce que la Chine n’a aucune économie industrielle',
-        'Parce que l’Union européenne a dissous toutes ses institutions en 2020',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'On parle de recul relatif de l’hyperpuissance monopolistique, non d’effondrement de la puissance américaine.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'methode',
-    stepBadge: 'Vocabulaire BAC',
-    stepTheme: 'green',
-    stepTitle: 'Maîtriser unilatéralisme, multilatéralisme, Hard Power et Soft Power',
-    paragraphText:
-      '• Multilatéralisme : agir en concertation avec d’autres États et sous mandat d’organisations internationales comme l’ONU (ex. Guerre du Golfe 1991).\n• Unilatéralisme : agir seul ou avec une coalition restreinte en contournant l’ONU (ex. guerre d’Irak 2003).\n• Hard Power vs Soft Power : force coercitive (armée, sanctions) contre influence attractive (culture, innovation, diplomatie).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q3',
-      type: 'mcq',
-      prompt: 'Quelle attitude désigne le choix d’un État puissant d’intervenir militairement sans obtenir l’accord du Conseil de sécurité de l’ONU ?',
-      options: [
-        'Le multilatéralisme strict',
-        'L’unilatéralisme',
-        'Le non-alignement',
-        'La coexistence pacifique',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’unilatéralisme consiste à privilégier son intérêt national et son action propre sans se plier aux décisions collectives internationales.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Piège conceptuel',
-    stepTheme: 'orange',
-    stepTitle: 'Ne pas confondre G7, G20 et BRICS',
-    paragraphText:
-      '• G7 : club historique des grandes puissances industrialisées occidentales et alliées (États-Unis, Canada, Royaume-Uni, France, Allemagne, Italie, Japon).\n• G20 : forum élargi depuis la crise de 2008 incluant puissances occidentales, émergents (Chine, Inde, Brésil, Afrique du Sud...) et Union européenne — symbole économique de la multipolarité.\n• BRICS : groupement des grandes économies émergentes promouvant une gouvernance mondiale moins centrée sur l’Occident.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q4',
-      type: 'mcq',
-      prompt: 'Quel forum économique élargi après la crise de 2008 illustre la prise en compte des puissances émergentes aux côtés du G7 ?',
-      options: [
-        'Le Kominform',
-        'Le G20',
-        'Le Pacte de Varsovie',
-        'Le Conseil de tutelle',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le G20 associe les pays du G7 et les principales puissances émergentes (Chine, Inde, Brésil, Russie, Afrique du Sud, etc.).',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Commentaire de texte',
-    stepTheme: 'slate',
-    stepTitle: 'Expliquer un texte sur les défis du monde multipolaire',
-    paragraphText:
-      'Si un sujet du BAC présente un texte soulignant à la fois la coopération (G20, accords climatiques) et les tensions (guerre commerciale États-Unis-Chine, guerre en Ukraine, crises au Moyen-Orient), montre que la multipolarité offre plus d’équilibre que l’unipolarité, mais accroît aussi le risque d’instabilité faute de gendarme unique.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q5',
-      type: 'mcq',
-      prompt: 'Quel paradoxe caractérise le monde multipolaire contemporain ?',
-      options: [
-        'Il supprime définitivement toute concurrence économique entre États',
-        'Il réduit le monopole d’une seule puissance mais multiplie les foyers de rivalités régionales et stratégiques',
-        'Il garantit que tous les États ont exactement la même puissance militaire',
-        'Il interdit aux pays d’Asie de participer au commerce mondial',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Plus représentatif des équilibres réels du globe, le monde multipolaire exige un multilatéralisme solide pour éviter la multiplication des conflits.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Récapitulatif',
-    stepTheme: 'green',
-    stepTitle: 'Les repères clés de la leçon 3 avant le BAC',
-    paragraphText:
-      '• 1991-2001 : unipolarité et hyperpuissance américaine (Guerre du Golfe 1991, Somalie 1993, Haïti 1994, Dayton 1995, Kosovo 1999).\n• 11 septembre 2001 : rupture majeure (Afghanistan 2001, Irak 2003, crise financière 2008).\n• Monde multipolaire : affirmation de l’UE (Maastricht 1992, 27 membres en 2020), de la Chine (OMC 2001), de la Russie, des BRICS et des puissances régionales du Moyen-Orient.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q6',
-      type: 'mcq',
-      prompt: 'Quel traité signé en 1992 transforme la Communauté européenne en Union européenne (UE) et prépare la monnaie unique ?',
-      options: [
-        'Le traité de Maastricht',
-        'Le traité de Versailles',
-        'Les accords de Genève',
-        'Le traité INF de Washington',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le traité de Maastricht (signé le 7 février 1992) fonde l’Union européenne et lance le projet de l’euro.',
-    },
-  },
-];
-
+// Leçon reprise de ecole-ci.org — « De la fin de la guerre froide vers un monde multipolaire » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=2138
 export const HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE: CurriculumChapter = {
-  id: 'terminale_hg_histoire_t1_l03_monde_multipolaire',
-  subjectId: 'histoire_geo',
-  gradeLevel: 'terminale_c',
-  alsoForGrades: ['terminale_d', 'terminale_a1', 'terminale_a2'],
-  order: 3,
-  title: 'Thème 1, leçon 3 : De la fin de la guerre froide vers un monde multipolaire',
-  summary:
-    "L'hyperpuissance américaine (1991-2001) et son rôle de gendarme du monde, la rupture du 11 septembre 2001 et l'affirmation d'un monde multipolaire (UE, BRICS, puissances régionales).",
-  officialVolumeHours: 4,
-  contentVersion: 2,
-  source: 'Tle_H3-De_la_fin_de_la_guerre_froide_vers_un_monde_multipolaire.pdf',
-  points: [
-    {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p01',
-      order: 1,
-      title: 'Un monde unipolaire dominé par l’hyperpuissance américaine (1991-2001)',
-      summary: 'Analyser les fondements militaires, économiques, technologiques et culturels (Soft Power) de la suprématie des États-Unis après 1991.',
-      conceptExplanation:
-        'Après l’implosion de l’URSS en décembre 1991, les États-Unis deviennent l’unique superpuissance globale (« hyperpuissance »). Leur prépondérance combine le Hard Power (premier budget militaire mondial, réseau d’alliances et de bases, poids du dollar et de Wall Street, avance spatiale et numérique) et le Soft Power (Hollywood, universités, modèle de consommation).',
-      keyRule: 'Hyperpuissance = combinaison unique de Hard Power (militaire, économique) et de Soft Power (culturel, technologique).',
-      formulas: [],
-      workedExample: {
-        title: 'Distinguer Hard Power et Soft Power dans une copie',
-        statement: 'Comment classer le dollar, l’OTAN, Hollywood et les universités américaines ?',
-        methodSteps: [
-          'L’OTAN, les flottes militaires et le poids financier du dollar relèvent du Hard Power.',
-          'Hollywood, la langue anglaise et les universités relèvent du Soft Power (influence par attraction).',
-        ],
-        conclusion: 'L’unipolarité des années 1990 repose simultanément sur la force matérielle et le rayonnement culturel.',
-      },
-      structuredSteps: p01Steps,
-      exercises: p01Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p02',
-      order: 2,
-      title: 'Les États-Unis, « gendarme du monde » (1991-1999)',
-      summary: 'Étudier les interventions américaines des années 1990 : Golfe (1991), Somalie (1993), Haïti (1994), Bosnie (Dayton 1995) et Kosovo (1999).',
-      conceptExplanation:
-        'Au nom du « nouvel ordre mondial » et du nation-building, Washington intervient dans de nombreuses crises : libération du Koweït sous mandat ONU (Tempête du désert, 1991), rétablissement d’Aristide en Haïti (1994), paix en Bosnie (accords de Dayton, 21 novembre 1995). Mais l’échec de Somalie (Restore Hope, 1993-1994) et les frappes au Kosovo sans aval du Conseil de sécurité (1999) révèlent déjà les limites de ce rôle.',
-      keyRule: 'Retenir les interventions clés de 1991 à 1999 et la bascule de l’ONU (Golfe 1991) vers l’OTAN hors mandat ONU (Kosovo 1999).',
-      formulas: [],
-      workedExample: {
-        title: 'Comparer les résultats de la décennie 1990',
-        statement: 'Les interventions américaines des années 1990 ont-elles toutes été des succès ?',
-        methodSteps: [
-          'Succès militaires et diplomatiques rapides : guerre du Golfe (1991) et accords de Dayton en Bosnie (1995).',
-          'Échecs ou limites : retrait humiliant de Somalie (1994), inaction au Rwanda (1994) et contournement de l’ONU au Kosovo (1999).',
-        ],
-        conclusion: 'Le gendarme du monde agit efficacement dans les conflits classiques, mais peine dans les crises asymétriques.',
-      },
-      structuredSteps: p02Steps,
-      exercises: p02Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p03',
-      order: 3,
-      title: 'Le choc du 11 septembre 2001 et l’affaiblissement du leadership américain',
-      summary: 'Comprendre la rupture de 2001, les guerres d’Afghanistan et d’Irak (2003) et l’essoufflement de l’unipolarité.',
-      conceptExplanation:
-        'Les attentats du 11 septembre 2001 perpétrés par Al-Qaïda frappent le cœur du territoire américain. George W. Bush lance la guerre contre le terrorisme contre « l’Axe du Mal » : intervention en Afghanistan (octobre 2001), puis invasion préventive et unilatérale de l’Irak sans mandat de l’ONU (mars 2003). L’enlisement sur le terrain et la crise financière des subprimes (2008) fragilisent durablement la prééminence américaine.',
-      keyRule: '11 septembre 2001 = rupture stratégique ; mars 2003 = guerre unilatérale en Irak ; 2008 = crise financière.',
-      formulas: [],
-      workedExample: {
-        title: 'Expliquer pourquoi la guerre d’Irak (2003) affaiblit les États-Unis',
-        statement: 'Pourquoi 2003 marque-t-il un tournant négatif pour le leadership américain ?',
-        methodSteps: [
-          'Absence de mandat de l’ONU et division ouverte avec des alliés comme la France et l’Allemagne.',
-          'Absence d’armes de destruction massive, enlisement sanglant, scandales (Abou Ghraib, Guantánamo) et coût financier massif.',
-        ],
-        conclusion: 'L’Irak entame à la fois la crédibilité morale (Soft Power) et la capacité stratégique (Hard Power) de Washington.',
-      },
-      structuredSteps: p03Steps,
-      exercises: p03Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p04',
-      order: 4,
-      title: 'L’affirmation d’un monde multipolaire : UE, BRICS et puissances régionales',
-      summary: 'Identifier les nouveaux pôles de puissance (Union européenne, Chine, Russie, Inde, Brésil, Afrique du Sud, Moyen-Orient).',
-      conceptExplanation:
-        'Au XXIe siècle, le pouvoir mondial se partage entre plusieurs pôles : l’Union européenne (Maastricht 1992, 27 membres après le Brexit de 2020, géant commercial mais dépendant militairement), la Chine (2e économie mondiale, OMC 2001, ASEAN+3, présence forte en Afrique), la Russie (hydrocarbures, OCS 2001, interventions en Géorgie et Ukraine), ainsi que l’Inde, le Brésil, l’Afrique du Sud (BRICS) et des puissances régionales du Moyen-Orient.',
-      keyRule: 'Multipolarité = partage du pouvoir entre plusieurs pôles, sans effacement total des États-Unis.',
-      formulas: [],
-      workedExample: {
-        title: 'Présenter les atouts et limites de la Chine et de l’UE',
-        statement: 'Pourquoi ni l’UE ni la Chine ne remplacent-elles seules l’hyperpuissance américaine ?',
-        methodSteps: [
-          'L’UE possède un énorme marché et un fort Soft Power, mais manque de politique étrangère et de défense unifiée.',
-          'La Chine est un géant industriel et commercial, mais reste confrontée au vieillissement démographique et à des tensions régionales.',
-        ],
-        conclusion: 'C’est précisément la coexistence de plusieurs pôles aux forces complémentaires ou concurrentes qui définit la multipolarité.',
-      },
-      structuredSteps: p04Steps,
-      exercises: p04Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l03_monde_multipolaire_p05',
-      order: 5,
-      title: 'Méthodologie BAC et situations d’évaluation sur le monde post-1991',
-      summary: 'Articuler périodisation, notions géopolitiques (Hard/Soft Power, unilatéralisme) et argumentation nuancée.',
-      conceptExplanation:
-        'Pour réussir les exercices du Baccalauréat sur la période post-1991, il faut maîtriser la succession entre bipolarité (1947-1991), unipolarité (1991-2001) et multipolarité (depuis 2001), distinguer G7, G20 et BRICS, et toujours nuancer le recul relatif des États-Unis face aux nouveaux pôles.',
-      keyRule: 'Toujours distinguer unilatéralisme (Irak 2003) et multilatéralisme (Golfe 1991, G20).',
-      formulas: [],
-      workedExample: {
-        title: 'Répondre à une situation d’évaluation sur les relations internationales actuelles',
-        statement: 'Le monde multipolaire est-il automatiquement plus pacifique que le monde bipolaire ?',
-        methodSteps: [
-          'Montrer qu’il évite le face-à-face nucléaire permanent de deux blocs uniques et donne plus de voix aux puissances émergentes.',
-          'Montrer qu’il accroît aussi la compétition stratégique (États-Unis-Chine, guerres régionales) si le multilatéralisme s’affaiblit.',
-        ],
-        conclusion: 'La paix dans un monde multipolaire dépend de la solidité du dialogue multilatéral (ONU, G20).',
-      },
-      structuredSteps: p05Steps,
-      exercises: p05Steps.map((s) => s.exercise),
-    },
+  "id": "terminale_hg_histoire_t1_l03_monde_multipolaire",
+  "subjectId": "histoire_geo",
+  "gradeLevel": "terminale_c",
+  "alsoForGrades": [
+    "terminale_d",
+    "terminale_a1",
+    "terminale_a2"
   ],
+  "order": 3,
+  "title": "Thème 1, leçon 3 : De la fin de la guerre froide vers un monde multipolaire",
+  "summary": "Comprendre l'hyperpuissance américaine de 1991 à 2001, son affaiblissement après le 11 septembre 2001, et l'avènement d'un monde multipolaire dominé par plusieurs pôles d'influence.",
+  "contentVersion": 2,
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=2138",
+  "points": [
+    {
+      "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01",
+      "order": 1,
+      "title": "L'hyperpuissance américaine",
+      "summary": "La seule superpuissance après 1991 : une puissance militaire, économique, technologique, culturelle et politique.",
+      "conceptExplanation": "La dissolution de l'URSS et du bloc de l'Est met fin à la guerre froide et à la bipolarisation. L'espoir d'un « nouvel ordre international » s'estompe avec l'expansion hégémonique américaine : les États-Unis restent la seule superpuissance et se donnent pour objectif de « façonner et de déterminer les structures de la politique économique globale ».\nL'hyperpuissance américaine s'exprime en cinq domaines. Sur le plan militaire, les États-Unis sont la première puissance nucléaire, disposent de l'armée la mieux équipée, d'un budget du Pentagone de 740 milliards de dollars en 2021, d'une présence militaire mondiale et du commandement de l'OTAN. Sur le plan économique, ils sont la première puissance économique et financière, avec la suprématie du dollar, Wall Street, les sièges du FMI et de la Banque mondiale et la domination des multinationales du numérique. Sur le plan technologique, ils sont à la pointe dans l'informatique, les télécommunications, l'aérospatiale, la biochimie et la robotique, et pratiquent le cyber-espionnage via la NSA. Sur le plan culturel, Hollywood, l'American way of life, Coca-Cola, McDonald's et Pepsi Cola diffusent le modèle américain. Sur le plan politique, ils sont membres permanents du Conseil de sécurité de l'ONU, dominent la diplomatie internationale et exercent de fortes pressions politiques.",
+      "keyRule": "L'hyperpuissance américaine s'exprime dans cinq domaines : militaire, économique, technologique, culturel et politique.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer les caractéristiques de l'hyperpuissance américaine",
+        "statement": "Classe chaque caractéristique dans le bon domaine : armée la mieux équipée au monde ; suprématie du dollar ; budget du Pentagone de 740 milliards de dollars en 2021 ; membre permanent du Conseil de sécurité de l'ONU.",
+        "methodSteps": [
+          "Puissance militaire : l'armée la mieux équipée au monde et le budget du Pentagone (740 milliards de dollars en 2021).",
+          "Puissance économique : la suprématie du dollar dans l'économie mondiale.",
+          "Puissance politique : membre permanent du Conseil de sécurité de l'ONU."
+        ],
+        "conclusion": "Militaire : armée et budget du Pentagone ; économique : dollar ; politique : siège permanent au Conseil de sécurité."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "L'hyperpuissance américaine",
+          "stepTheme": "L'hyperpuissance américaine",
+          "stepBadge": "L'hyperpuissance américaine",
+          "paragraphText": "• Après la disparition de l'URSS en 1991, les États-Unis restent la seule superpuissance.\n• Ils se donnent pour objectif de « façonner et de déterminer les structures de la politique économique globale ».\n• Leur influence s'exerce aussi par le « Soft Power », la puissance douce de la culture et des valeurs américaines.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q1",
+            "type": "mcq",
+            "prompt": "Que signifie l'hyperpuissance américaine ?",
+            "options": [
+              "Les États-Unis, seule superpuissance après la disparition de l'URSS en 1991",
+              "Les États-Unis et l'URSS, deux superpuissances rivales",
+              "L'Union européenne, première puissance mondiale",
+              "La Chine, deuxième puissance économique mondiale"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Après la disparition de l'URSS en 1991, les États-Unis restent la seule superpuissance : c'est l'hyperpuissance américaine."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "La puissance militaire",
+          "stepTheme": "La puissance militaire",
+          "stepBadge": "La puissance militaire",
+          "paragraphText": "• Les États-Unis sont la première puissance nucléaire et disposent de l'armée la mieux équipée.\n• Le budget du Pentagone est de 740 milliards de dollars en 2021.\n• Ils ont une présence militaire mondiale, assurent la surveillance militaire mondiale et le commandement de l'OTAN, et interviennent dans la plupart des grands conflits.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q2",
+            "type": "mcq",
+            "prompt": "Quel est le budget du Pentagone en 2021, selon le cours ?",
+            "options": [
+              "740 milliards de dollars",
+              "740 millions de dollars",
+              "74 milliards de dollars",
+              "7 400 milliards de dollars"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne un budget du Pentagone de 740 milliards de dollars en 2021."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "La puissance économique",
+          "stepTheme": "La puissance économique",
+          "stepBadge": "La puissance économique",
+          "paragraphText": "• Les États-Unis sont la première puissance économique et financière, avec la suprématie du dollar.\n• Wall Street est la place boursière de la planète et les sièges du FMI et de la Banque mondiale sont américains.\n• Les multinationales américaines du numérique dominent le monde : sur les 500 premières multinationales dans le monde, 239 sont américaines.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q3",
+            "type": "mcq",
+            "prompt": "Quelle monnaie domine l'économie mondiale ?",
+            "options": [
+              "Le dollar",
+              "L'euro",
+              "Le yuan",
+              "Le yen"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne la suprématie du dollar dans l'économie mondiale."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepTitle": "La puissance technologique et culturelle",
+          "stepTheme": "La puissance technologique et culturelle",
+          "stepBadge": "La puissance technologique et culturelle",
+          "paragraphText": "• Sur le plan technologique, les États-Unis sont à la pointe dans l'informatique, les télécommunications, l'aérospatiale, la biochimie et la robotique, et pratiquent le cyber-espionnage via la NSA.\n• Sur le plan culturel, Hollywood, l'American way of life, Coca-Cola, McDonald's et Pepsi Cola diffusent le modèle américain dans le monde entier.\n• Cette puissance culturelle est une forme de « Soft Power ».",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q4",
+            "type": "mcq",
+            "prompt": "Que propage la culture américaine, selon le cours ?",
+            "options": [
+              "L'American way of life (Hollywood, Coca-Cola, McDonald's)",
+              "Le modèle soviétique",
+              "La négritude",
+              "Le panafricanisme"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite Hollywood, l'American way of life, Coca-Cola, McDonald's et Pepsi Cola comme vecteurs de la puissance culturelle américaine."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "La puissance politique",
+          "stepTheme": "La puissance politique",
+          "stepBadge": "La puissance politique",
+          "paragraphText": "• Les États-Unis sont membres permanents du Conseil de sécurité de l'ONU.\n• Ils exercent une suprématie dans la diplomatie internationale, de fortes pressions politiques, et mènent ou orientent la politique internationale.\n• Piège d'examen : la puissance américaine n'est pas seulement militaire — elle est aussi économique, technologique, culturelle et politique.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q5",
+            "type": "mcq",
+            "prompt": "Dans combien de domaines s'exprime l'hyperpuissance américaine ?",
+            "options": [
+              "Cinq : militaire, économique, technologique, culturel et politique",
+              "Un seul : le domaine militaire",
+              "Deux : militaire et économique",
+              "Trois : militaire, économique et culturel"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours exprime l'hyperpuissance américaine en cinq domaines : militaire, économique, technologique, culturel et politique."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Classer les caractéristiques de l'hyperpuissance",
+          "stepTheme": "Classer les caractéristiques de l'hyperpuissance",
+          "stepBadge": "Classer les caractéristiques de l'hyperpuissance",
+          "paragraphText": "• Puissance économique : la suprématie du dollar dans l'économie mondiale, la puissance des places boursières (Wall Street), la domination des firmes multinationales du monde numérique.\n• Puissance militaire : l'armée la mieux équipée au monde, le budget du Pentagone (740 milliards de dollars en 2021), la présence militaire, maritime et terrestre mondiale.\n• Puissance politique : la suprématie dans la diplomatie internationale, la conduite et l'orientation de la politique internationale selon leurs intérêts, le siège de membre permanent du Conseil de sécurité de l'ONU.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q6",
+            "type": "mcq",
+            "prompt": "Laquelle de ces caractéristiques relève de la puissance économique ?",
+            "options": [
+              "La suprématie du dollar dans l'économie mondiale",
+              "L'armée la mieux équipée au monde",
+              "Le siège permanent au Conseil de sécurité de l'ONU",
+              "Le budget du Pentagone de 740 milliards de dollars"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La suprématie du dollar relève de la puissance économique ; l'armée et le budget du Pentagone relèvent de la puissance militaire, le siège au Conseil de sécurité de la puissance politique."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q1",
+          "type": "mcq",
+          "prompt": "Que signifie l'hyperpuissance américaine ?",
+          "options": [
+            "Les États-Unis, seule superpuissance après la disparition de l'URSS en 1991",
+            "Les États-Unis et l'URSS, deux superpuissances rivales",
+            "L'Union européenne, première puissance mondiale",
+            "La Chine, deuxième puissance économique mondiale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Après la disparition de l'URSS en 1991, les États-Unis restent la seule superpuissance : c'est l'hyperpuissance américaine."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q2",
+          "type": "mcq",
+          "prompt": "Quel est le budget du Pentagone en 2021, selon le cours ?",
+          "options": [
+            "740 milliards de dollars",
+            "740 millions de dollars",
+            "74 milliards de dollars",
+            "7 400 milliards de dollars"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne un budget du Pentagone de 740 milliards de dollars en 2021."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q3",
+          "type": "mcq",
+          "prompt": "Quelle monnaie domine l'économie mondiale ?",
+          "options": [
+            "Le dollar",
+            "L'euro",
+            "Le yuan",
+            "Le yen"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne la suprématie du dollar dans l'économie mondiale."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q4",
+          "type": "mcq",
+          "prompt": "Que propage la culture américaine, selon le cours ?",
+          "options": [
+            "L'American way of life (Hollywood, Coca-Cola, McDonald's)",
+            "Le modèle soviétique",
+            "La négritude",
+            "Le panafricanisme"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite Hollywood, l'American way of life, Coca-Cola, McDonald's et Pepsi Cola comme vecteurs de la puissance culturelle américaine."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q5",
+          "type": "mcq",
+          "prompt": "Dans combien de domaines s'exprime l'hyperpuissance américaine ?",
+          "options": [
+            "Cinq : militaire, économique, technologique, culturel et politique",
+            "Un seul : le domaine militaire",
+            "Deux : militaire et économique",
+            "Trois : militaire, économique et culturel"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours exprime l'hyperpuissance américaine en cinq domaines : militaire, économique, technologique, culturel et politique."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q6",
+          "type": "mcq",
+          "prompt": "Laquelle de ces caractéristiques relève de la puissance économique ?",
+          "options": [
+            "La suprématie du dollar dans l'économie mondiale",
+            "L'armée la mieux équipée au monde",
+            "Le siège permanent au Conseil de sécurité de l'ONU",
+            "Le budget du Pentagone de 740 milliards de dollars"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La suprématie du dollar relève de la puissance économique ; l'armée et le budget du Pentagone relèvent de la puissance militaire, le siège au Conseil de sécurité de la puissance politique."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02",
+      "order": 2,
+      "title": "Les États-Unis, gendarme du monde",
+      "summary": "De 1991 à 1999, les États-Unis interviennent dans la plupart des grands conflits : Golfe, Somalie, Haïti, Bosnie, Kosovo.",
+      "conceptExplanation": "Dès 1991, les États-Unis renforcent leur présence militaire sous couvert humanitaire : ils se donnent le rôle de « gendarme du monde », c'est-à-dire qu'ils ont décidé de régler les problèmes du monde en s'appuyant sur leur hyperpuissance.\nLa guerre du Golfe en 1991 (opération Tempête du désert) suit l'occupation du Koweït par l'Irak, à la demande de l'ONU. En 1993-1994, l'opération Restore Hope en Somalie vise à éliminer le général Mohamed Aidid. En 1994, l'opération Uphold Democracy en Haïti vise à installer le président Jean-Bertrand Aristide. En 1995, l'intervention en Bosnie-Herzégovine (ex-Yougoslavie), sous l'OTAN, aboutit aux accords de Dayton du 21 novembre 1995. En 1999, les États-Unis interviennent au Kosovo contre la Serbie.\nLe sentiment anti-américain grandit, surtout dans les États arabes du Proche et du Moyen-Orient.",
+      "keyRule": "1991 Golfe, 1993-1994 Somalie, 1994 Haïti, 1995 Bosnie, 1999 Kosovo : les États-Unis, gendarmes du monde.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Associer les années aux opérations",
+        "statement": "Associe chaque année à son opération : 1991, 1993, 1994, 1995, 1999.",
+        "methodSteps": [
+          "1991 : l'opération Tempête du désert (guerre du Golfe, Koweït).",
+          "1993 : l'opération Restore Hope (Somalie).",
+          "1994 : l'opération Uphold Democracy (Haïti).",
+          "1995 : l'intervention militaire dans le conflit de la Bosnie-Herzégovine (accords de Dayton).",
+          "1999 : l'intervention militaire dans la guerre du Kosovo (contre la Serbie)."
+        ],
+        "conclusion": "1991 Tempête du désert, 1993 Restore Hope, 1994 Uphold Democracy, 1995 Bosnie, 1999 Kosovo."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Gendarme du monde",
+          "stepTheme": "Gendarme du monde",
+          "stepBadge": "Gendarme du monde",
+          "paragraphText": "• Dès 1991, les États-Unis renforcent leur présence militaire sous couvert humanitaire.\n• Le rôle de gendarme du monde signifie que les États-Unis ont décidé de régler les problèmes du monde en s'appuyant sur leur hyperpuissance.\n• Ils interviennent ainsi dans la plupart des grands conflits de la décennie 1990.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q1",
+            "type": "mcq",
+            "prompt": "Que signifie le rôle de gendarme du monde ?",
+            "options": [
+              "Les États-Unis ont décidé de régler les problèmes du monde en s'appuyant sur leur hyperpuissance",
+              "Les États-Unis ont décidé de ne plus intervenir dans le monde",
+              "Les États-Unis ont confié la sécurité mondiale à l'ONU",
+              "Les États-Unis ont renoncé à leur puissance militaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours définit le rôle de gendarme du monde : les États-Unis règlent les problèmes du monde en s'appuyant sur leur hyperpuissance."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "La guerre du Golfe (1991)",
+          "stepTheme": "La guerre du Golfe (1991)",
+          "stepBadge": "La guerre du Golfe (1991)",
+          "paragraphText": "• La guerre du Golfe en 1991 suit l'occupation du Koweït par l'Irak.\n• L'opération Tempête du désert est menée à la demande de l'ONU.\n• C'est la première grande intervention américaine de l'après-guerre froide.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q2",
+            "type": "mcq",
+            "prompt": "Quelle opération les États-Unis mènent-ils en 1991 au Koweït ?",
+            "options": [
+              "L'opération Tempête du désert",
+              "L'opération Restore Hope",
+              "L'opération Uphold Democracy",
+              "L'opération Joint Guardian"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "En 1991, après l'occupation du Koweït par l'Irak, les États-Unis mènent l'opération Tempête du désert, à la demande de l'ONU."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Somalie (1993-1994) et Haïti (1994)",
+          "stepTheme": "Somalie (1993-1994) et Haïti (1994)",
+          "stepBadge": "Somalie (1993-1994) et Haïti (1994)",
+          "paragraphText": "• En 1993-1994, l'opération Restore Hope en Somalie vise à éliminer le général Mohamed Aidid.\n• En 1994, l'opération Uphold Democracy en Haïti vise à installer le président Jean-Bertrand Aristide.\n• Ces deux interventions sont menées sous couvert humanitaire.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q3",
+            "type": "mcq",
+            "prompt": "Quelle opération les États-Unis mènent-ils en Somalie en 1993-1994 ?",
+            "options": [
+              "L'opération Restore Hope",
+              "L'opération Tempête du désert",
+              "L'opération Uphold Democracy",
+              "L'opération Desert Fox"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'opération Restore Hope est menée en Somalie en 1993-1994, pour éliminer le général Mohamed Aidid."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepTitle": "Bosnie-Herzégovine (1995) et Kosovo (1999)",
+          "stepTheme": "Bosnie-Herzégovine (1995) et Kosovo (1999)",
+          "stepBadge": "Bosnie-Herzégovine (1995) et Kosovo (1999)",
+          "paragraphText": "• En 1995, l'intervention en Bosnie-Herzégovine (ex-Yougoslavie), sous l'OTAN, aboutit aux accords de Dayton du 21 novembre 1995.\n• En 1999, les États-Unis interviennent au Kosovo contre la Serbie.\n• Ces interventions montrent que les États-Unis commandent l'OTAN et interviennent dans la plupart des grands conflits.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q4",
+            "type": "mcq",
+            "prompt": "Quand les accords de Dayton sont-ils signés ?",
+            "options": [
+              "Le 21 novembre 1995",
+              "Le 21 novembre 1999",
+              "Le 11 septembre 2001",
+              "Le 4 avril 1949"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les accords de Dayton, qui suivent l'intervention en Bosnie-Herzégovine, sont signés le 21 novembre 1995."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Ne pas confondre Bosnie et Kosovo",
+          "stepTheme": "Ne pas confondre Bosnie et Kosovo",
+          "stepBadge": "Ne pas confondre Bosnie et Kosovo",
+          "paragraphText": "• L'intervention de 1995 concerne la Bosnie-Herzégovine (ex-Yougoslavie) et aboutit aux accords de Dayton.\n• L'intervention de 1999 concerne le Kosovo et vise la Serbie.\n• Piège d'examen : le cours signale qu'une option de l'exercice étiquette l'opération de 1999 comme une intervention en Bosnie-Herzégovine, alors que c'était le Kosovo.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q5",
+            "type": "mcq",
+            "prompt": "En 1999, contre quel pays les États-Unis interviennent-ils ?",
+            "options": [
+              "La Serbie (Kosovo)",
+              "La Bosnie-Herzégovine",
+              "L'Irak",
+              "La Somalie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "En 1999, les États-Unis interviennent au Kosovo contre la Serbie (l'intervention en Bosnie-Herzégovine date de 1995)."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le sentiment anti-américain",
+          "stepTheme": "Le sentiment anti-américain",
+          "stepBadge": "Le sentiment anti-américain",
+          "paragraphText": "• Le sentiment anti-américain grandit, surtout dans les États arabes du Proche et du Moyen-Orient.\n• Il prépare le terrain de la contestation du leadership américain après 2001.\n• Les interventions unilatérales des États-Unis alimentent ce sentiment.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q6",
+            "type": "mcq",
+            "prompt": "Où le sentiment anti-américain grandit-il surtout ?",
+            "options": [
+              "Dans les États arabes du Proche et du Moyen-Orient",
+              "En Europe occidentale",
+              "En Amérique latine",
+              "En Asie du Sud-Est"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours indique que le sentiment anti-américain grandit surtout dans les États arabes du Proche et du Moyen-Orient."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q1",
+          "type": "mcq",
+          "prompt": "Que signifie le rôle de gendarme du monde ?",
+          "options": [
+            "Les États-Unis ont décidé de régler les problèmes du monde en s'appuyant sur leur hyperpuissance",
+            "Les États-Unis ont décidé de ne plus intervenir dans le monde",
+            "Les États-Unis ont confié la sécurité mondiale à l'ONU",
+            "Les États-Unis ont renoncé à leur puissance militaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours définit le rôle de gendarme du monde : les États-Unis règlent les problèmes du monde en s'appuyant sur leur hyperpuissance."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q2",
+          "type": "mcq",
+          "prompt": "Quelle opération les États-Unis mènent-ils en 1991 au Koweït ?",
+          "options": [
+            "L'opération Tempête du désert",
+            "L'opération Restore Hope",
+            "L'opération Uphold Democracy",
+            "L'opération Joint Guardian"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En 1991, après l'occupation du Koweït par l'Irak, les États-Unis mènent l'opération Tempête du désert, à la demande de l'ONU."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q3",
+          "type": "mcq",
+          "prompt": "Quelle opération les États-Unis mènent-ils en Somalie en 1993-1994 ?",
+          "options": [
+            "L'opération Restore Hope",
+            "L'opération Tempête du désert",
+            "L'opération Uphold Democracy",
+            "L'opération Desert Fox"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'opération Restore Hope est menée en Somalie en 1993-1994, pour éliminer le général Mohamed Aidid."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q4",
+          "type": "mcq",
+          "prompt": "Quand les accords de Dayton sont-ils signés ?",
+          "options": [
+            "Le 21 novembre 1995",
+            "Le 21 novembre 1999",
+            "Le 11 septembre 2001",
+            "Le 4 avril 1949"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les accords de Dayton, qui suivent l'intervention en Bosnie-Herzégovine, sont signés le 21 novembre 1995."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q5",
+          "type": "mcq",
+          "prompt": "En 1999, contre quel pays les États-Unis interviennent-ils ?",
+          "options": [
+            "La Serbie (Kosovo)",
+            "La Bosnie-Herzégovine",
+            "L'Irak",
+            "La Somalie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En 1999, les États-Unis interviennent au Kosovo contre la Serbie (l'intervention en Bosnie-Herzégovine date de 1995)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p02_q6",
+          "type": "mcq",
+          "prompt": "Où le sentiment anti-américain grandit-il surtout ?",
+          "options": [
+            "Dans les États arabes du Proche et du Moyen-Orient",
+            "En Europe occidentale",
+            "En Amérique latine",
+            "En Asie du Sud-Est"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours indique que le sentiment anti-américain grandit surtout dans les États arabes du Proche et du Moyen-Orient."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03",
+      "order": 3,
+      "title": "L'affaiblissement du leadership après le 11 septembre 2001",
+      "summary": "Les attentats du 11 septembre 2001, la riposte américaine et les signes de l'affaiblissement du leadership des États-Unis.",
+      "conceptExplanation": "Le 11 septembre 2001, des attentats menés par Oussama Ben Laden et Al-Qaïda frappent les États-Unis : deux avions détournés frappent le World Trade Center (plus de 3 000 morts), un avion frappe le Pentagone et un quatrième avion s'écrase dans une forêt de Pennsylvanie.\nEn représailles, les États-Unis redéfinissent leur politique internationale : nation-building, lutte contre « l'Axe du Mal » et guerre contre le terrorisme international. Ils interviennent massivement en 2001 contre le régime taliban en Afghanistan (sans approbation de l'ONU) et mènent une guerre préventive contre le régime de Saddam Hussein en Irak en 2003, soupçonné de fabriquer des armes de destruction massive.\nLe leadership américain s'affaiblit : contrôle des libertés civiles sous menace terroriste permanente, enlisement des guerres en Afghanistan et en Irak, mensonges ayant justifié la guerre d'Irak, crises financières récurrentes et refus de l'unilatéralité. Le monde unipolaire, commencé en 1991, prend fin en 2001 et laisse place à un monde multipolaire, dominé par plusieurs centres de domination et non plus un seul ou deux.",
+      "keyRule": "1991-2001 : le monde unipolaire dominé par les États-Unis ; après le 11 septembre 2001 : le leadership américain s'affaiblit et le monde devient multipolaire.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Expliquer la phrase : « l'hégémonie étatsunienne s'est déroulée de 1991 à 2001 »",
+        "statement": "Explique pourquoi l'hégémonie des États-Unis s'est déroulée de 1991 à 2001.",
+        "methodSteps": [
+          "De 1991 à 2001, les États-Unis sont la seule hyperpuissance mondiale, après la disparition de l'URSS.",
+          "Ils dominent les relations internationales dans les cinq domaines : militaire, économique, technologique, culturel et politique.",
+          "Après les attentats du 11 septembre 2001, leur hégémonie est contestée et concurrencée : le monde devient multipolaire."
+        ],
+        "conclusion": "L'hégémonie américaine dure de 1991 à 2001 parce que les États-Unis sont alors seuls maîtres du monde ; après 2001, de nouveaux pôles la contestent."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Les attentats du 11 septembre 2001",
+          "stepTheme": "Les attentats du 11 septembre 2001",
+          "stepBadge": "Les attentats du 11 septembre 2001",
+          "paragraphText": "• Les attentats du 11 septembre 2001 sont menés par Oussama Ben Laden et Al-Qaïda.\n• Deux avions détournés frappent le World Trade Center, faisant plus de 3 000 morts ; un avion frappe le Pentagone ; un quatrième avion s'écrase dans une forêt de Pennsylvanie.\n• Ces attentats marquent le début de l'affaiblissement du leadership américain.",
+          "konanTip": "Le cours écrit « le 11 septembre 2011 » dans un exercice : coquille, la date retenue ici est le 11 septembre 2001.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q1",
+            "type": "mcq",
+            "prompt": "Qui mène les attentats du 11 septembre 2001, selon le cours ?",
+            "options": [
+              "Oussama Ben Laden et Al-Qaïda",
+              "Saddam Hussein et l'Irak",
+              "Le régime taliban d'Afghanistan",
+              "Le général Mohamed Aidid"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours attribue les attentats du 11 septembre 2001 à Oussama Ben Laden et à Al-Qaïda."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "La riposte américaine",
+          "stepTheme": "La riposte américaine",
+          "stepBadge": "La riposte américaine",
+          "paragraphText": "• En représailles, les États-Unis redéfinissent leur politique internationale : nation-building, lutte contre « l'Axe du Mal » et guerre contre le terrorisme international.\n• Ils interviennent militairement et massivement en 2001 contre le régime taliban en Afghanistan, sans approbation de l'ONU.\n• Ils lancent une « croisade » pour répandre la démocratie contre les « États voyous » (Rogue States) formant « l'axe du mal » : l'Iran, l'Irak, la Syrie et la Corée du Nord, soupçonnés de soutenir le terrorisme international.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q2",
+            "type": "mcq",
+            "prompt": "Quels pays forment « l'axe du mal », selon le cours ?",
+            "options": [
+              "L'Iran, l'Irak, la Syrie et la Corée du Nord",
+              "La Russie, la Chine et l'Inde",
+              "Le Brésil, l'Afrique du Sud et l'Égypte",
+              "La France, l'Allemagne et le Royaume-Uni"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite l'Iran, l'Irak, la Syrie et la Corée du Nord comme les « États voyous » formant « l'axe du mal »."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "La guerre d'Irak (2003)",
+          "stepTheme": "La guerre d'Irak (2003)",
+          "stepBadge": "La guerre d'Irak (2003)",
+          "paragraphText": "• Les États-Unis mènent une guerre préventive contre le régime de Saddam Hussein en Irak en 2003.\n• Le régime est soupçonné de fabriquer des armes de destruction massive.\n• Les mensonges ayant justifié la guerre d'Irak comptent parmi les signes de l'affaiblissement du leadership américain.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q3",
+            "type": "mcq",
+            "prompt": "Pourquoi les États-Unis mènent-ils une guerre préventive en Irak en 2003 ?",
+            "options": [
+              "Le régime de Saddam Hussein est soupçonné de fabriquer des armes de destruction massive",
+              "L'Irak a envahi le Koweït",
+              "L'Irak a mené les attentats du 11 septembre 2001",
+              "L'Irak a quitté l'ONU"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La guerre préventive de 2003 vise le régime de Saddam Hussein, soupçonné de fabriquer des armes de destruction massive."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Les signes de l'affaiblissement",
+          "stepTheme": "Les signes de l'affaiblissement",
+          "stepBadge": "Les signes de l'affaiblissement",
+          "paragraphText": "• Le contrôle des libertés civiles, fondement de la démocratie américaine, est mis sous menace terroriste permanente.\n• Les guerres en Afghanistan et en Irak s'enlisent.\n• Les mensonges ayant justifié la guerre d'Irak, les crises financières récurrentes et le refus de l'unilatéralité affaiblissent encore le leadership américain.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q4",
+            "type": "mcq",
+            "prompt": "Lequel de ces éléments affaiblit le leadership américain après 2001 ?",
+            "options": [
+              "L'enlisement des guerres en Afghanistan et en Irak",
+              "La création de l'Union européenne",
+              "La signature des accords de Dayton",
+              "L'admission de la Chine à l'ONU"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite l'enlisement des guerres en Afghanistan et en Irak parmi les signes de l'affaiblissement du leadership américain après 2001."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le monde unipolaire (1991-2001) et le monde multipolaire (après 2001)",
+          "stepTheme": "Le monde unipolaire (1991-2001) et le monde multipolaire (après 2001)",
+          "stepBadge": "Le monde unipolaire (1991-2001) et le monde multipolaire (après 2001)",
+          "paragraphText": "• Le monde unipolaire commence en 1991 et prend fin en 2001, avec les attentats du 11 septembre.\n• Le monde multipolaire commence après 2001 : plusieurs pôles d'influence émergent et contestent le leadership américain.\n• Piège d'examen : le livre propose l'affirmation « Le monde unipolaire commence en 1991 et prend fin en 1999 » — elle est fausse, il prend fin en 2001.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q5",
+            "type": "mcq",
+            "prompt": "Quand le monde unipolaire prend-il fin ?",
+            "options": [
+              "En 2001, avec les attentats du 11 septembre",
+              "En 1999, avec la guerre du Kosovo",
+              "En 1991, avec la disparition de l'URSS",
+              "En 1989, avec la chute du mur de Berlin"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le monde unipolaire commence en 1991 et prend fin en 2001, avec les attentats du 11 septembre."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le monde multipolaire : définition",
+          "stepTheme": "Le monde multipolaire : définition",
+          "stepBadge": "Le monde multipolaire : définition",
+          "paragraphText": "• Un monde multipolaire est un monde qui connaît plusieurs pôles d'influence.\n• Il est dominé par plusieurs centres de domination et non plus un seul ou deux.\n• Un monde multipolaire est un concept qui décrit une situation dans laquelle plusieurs centres de pouvoirs influent et se concurrencent dans les relations internationales.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q6",
+            "type": "mcq",
+            "prompt": "Qu'est-ce qu'un monde multipolaire ?",
+            "options": [
+              "Un concept qui décrit une situation dans laquelle plusieurs centres de pouvoirs influent et se concurrencent dans les relations internationales",
+              "Un concept qui décrit une situation dans laquelle deux superpuissances influent et se concurrencent",
+              "Un concept qui décrit une situation dans laquelle les États-Unis d'Amérique dominent le monde",
+              "Un concept qui décrit la division de Berlin en quatre zones d'occupation"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le livre définit le monde multipolaire comme une situation où plusieurs centres de pouvoirs influent et se concurrencent dans les relations internationales."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q1",
+          "type": "mcq",
+          "prompt": "Qui mène les attentats du 11 septembre 2001, selon le cours ?",
+          "options": [
+            "Oussama Ben Laden et Al-Qaïda",
+            "Saddam Hussein et l'Irak",
+            "Le régime taliban d'Afghanistan",
+            "Le général Mohamed Aidid"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours attribue les attentats du 11 septembre 2001 à Oussama Ben Laden et à Al-Qaïda."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q2",
+          "type": "mcq",
+          "prompt": "Quels pays forment « l'axe du mal », selon le cours ?",
+          "options": [
+            "L'Iran, l'Irak, la Syrie et la Corée du Nord",
+            "La Russie, la Chine et l'Inde",
+            "Le Brésil, l'Afrique du Sud et l'Égypte",
+            "La France, l'Allemagne et le Royaume-Uni"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite l'Iran, l'Irak, la Syrie et la Corée du Nord comme les « États voyous » formant « l'axe du mal »."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q3",
+          "type": "mcq",
+          "prompt": "Pourquoi les États-Unis mènent-ils une guerre préventive en Irak en 2003 ?",
+          "options": [
+            "Le régime de Saddam Hussein est soupçonné de fabriquer des armes de destruction massive",
+            "L'Irak a envahi le Koweït",
+            "L'Irak a mené les attentats du 11 septembre 2001",
+            "L'Irak a quitté l'ONU"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La guerre préventive de 2003 vise le régime de Saddam Hussein, soupçonné de fabriquer des armes de destruction massive."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q4",
+          "type": "mcq",
+          "prompt": "Lequel de ces éléments affaiblit le leadership américain après 2001 ?",
+          "options": [
+            "L'enlisement des guerres en Afghanistan et en Irak",
+            "La création de l'Union européenne",
+            "La signature des accords de Dayton",
+            "L'admission de la Chine à l'ONU"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite l'enlisement des guerres en Afghanistan et en Irak parmi les signes de l'affaiblissement du leadership américain après 2001."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q5",
+          "type": "mcq",
+          "prompt": "Quand le monde unipolaire prend-il fin ?",
+          "options": [
+            "En 2001, avec les attentats du 11 septembre",
+            "En 1999, avec la guerre du Kosovo",
+            "En 1991, avec la disparition de l'URSS",
+            "En 1989, avec la chute du mur de Berlin"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le monde unipolaire commence en 1991 et prend fin en 2001, avec les attentats du 11 septembre."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p03_q6",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qu'un monde multipolaire ?",
+          "options": [
+            "Un concept qui décrit une situation dans laquelle plusieurs centres de pouvoirs influent et se concurrencent dans les relations internationales",
+            "Un concept qui décrit une situation dans laquelle deux superpuissances influent et se concurrencent",
+            "Un concept qui décrit une situation dans laquelle les États-Unis d'Amérique dominent le monde",
+            "Un concept qui décrit la division de Berlin en quatre zones d'occupation"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le livre définit le monde multipolaire comme une situation où plusieurs centres de pouvoirs influent et se concurrencent dans les relations internationales."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04",
+      "order": 4,
+      "title": "L'Union européenne et les BRICS",
+      "summary": "Deux pôles majeurs du monde multipolaire : l'Union européenne (Maastricht 1992) et les BRICS (créés en 2006).",
+      "conceptExplanation": "Parmi les nouveaux pôles d'influence depuis 2001, l'Union européenne est née du traité de Maastricht en 1992. Elle compte 27 États (le Royaume-Uni en est sorti en 2020) et constitue le premier espace économique mondial. Elle exerce un soft power, mais sa défense extérieure (PESD, Politique européenne de sécurité et de défense) dépend toujours de l'OTAN.\nLes BRICS regroupent le Brésil, la Russie, la Chine, l'Inde et l'Afrique du Sud : ce sont de nouveaux pays émergents. Le groupe est créé en 2006.\nLe document 1 du cours donne le PIB des BRICS, des États-Unis et de l'Union européenne : en 2000, BRICS 2 736, États-Unis 10 285, Union européenne 9 305 ; en 2010, BRICS 11 800, États-Unis 14 964, Union européenne 16 947 ; en 2017, BRICS 18 640, États-Unis 19 360, Union européenne 17 110 ; prévision 2020, BRICS 23 600, États-Unis 21 850, Union européenne 16 950.\nLes autres pôles depuis 2001 sont la Triade (États-Unis, Union européenne, Japon), les dragons d'Asie (Corée du Sud, Taïwan, Singapour, Hong Kong), les tigres d'Asie (Thaïlande, Malaisie, Indonésie, Vietnam, Philippines) et les puissances du Moyen-Orient (Turquie, Iran, Arabie Saoudite, Israël).",
+      "keyRule": "UE (Maastricht 1992, 27 États) et BRICS (Brésil, Russie, Inde, Chine, Afrique du Sud, créés en 2006) : deux pôles majeurs du monde multipolaire.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Associer les organisations aux années de création",
+        "statement": "Associe chaque organisation à son année de création : l'Organisation de coopération de Shanghai, l'Union européenne, l'ASEAN Plus Trois, les BRICS, le Mercosur.",
+        "methodSteps": [
+          "L'Organisation de coopération de Shanghai : 2001.",
+          "L'Union européenne : 1992 (traité de Maastricht).",
+          "L'ASEAN Plus Trois : 1997.",
+          "Les BRICS : 2006.",
+          "Le Mercosur : 1991."
+        ],
+        "conclusion": "OCS 2001, Union européenne 1992, ASEAN Plus Trois 1997, BRICS 2006, Mercosur 1991."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "L'Union européenne",
+          "stepTheme": "L'Union européenne",
+          "stepBadge": "L'Union européenne",
+          "paragraphText": "• L'Union européenne est née du traité de Maastricht en 1992.\n• Elle compte 27 États, le Royaume-Uni en étant sorti en 2020.\n• Elle constitue le premier espace économique mondial et exerce un soft power.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q1",
+            "type": "mcq",
+            "prompt": "Combien d'États compte l'Union européenne, selon le cours ?",
+            "options": [
+              "27 États (le Royaume-Uni en est sorti en 2020)",
+              "28 États, Royaume-Uni compris",
+              "15 États",
+              "6 États fondateurs"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne 27 États pour l'Union européenne, le Royaume-Uni en étant sorti en 2020."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les BRICS",
+          "stepTheme": "Les BRICS",
+          "stepBadge": "Les BRICS",
+          "paragraphText": "• Les BRICS regroupent le Brésil, la Russie, la Chine, l'Inde et l'Afrique du Sud.\n• Ce sont de nouveaux pays émergents.\n• Le groupe est créé en 2006.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q2",
+            "type": "mcq",
+            "prompt": "Quels pays composent les BRICS ?",
+            "options": [
+              "Le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud",
+              "La Belgique, la Russie, l'Inde, le Canada et la Suède",
+              "Le Brésil, la Russie, l'Indonésie, le Canada et la Slovénie",
+              "Les États-Unis, l'Union européenne et le Japon"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les BRICS regroupent le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Le PIB des BRICS",
+          "stepTheme": "Le PIB des BRICS",
+          "stepBadge": "Le PIB des BRICS",
+          "paragraphText": "• Le document 1 du cours donne le PIB des BRICS, des États-Unis et de l'Union européenne à 27.\n• En 2000, les BRICS sont à 2 736, les États-Unis à 10 285 et l'Union européenne à 9 305.\n• En 2017, les BRICS sont à 18 640, les États-Unis à 19 360 et l'Union européenne à 17 110 : les BRICS ont presque rattrapé les États-Unis.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q3",
+            "type": "mcq",
+            "prompt": "Selon le document 1, quel est le PIB des BRICS en 2017 ?",
+            "options": [
+              "18 640",
+              "19 360",
+              "17 110",
+              "11 800"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le document 1 donne 18 640 pour les BRICS en 2017, contre 19 360 pour les États-Unis et 17 110 pour l'Union européenne."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Associer les organisations aux années de création",
+          "stepTheme": "Associer les organisations aux années de création",
+          "stepBadge": "Associer les organisations aux années de création",
+          "paragraphText": "• L'Organisation de coopération de Shanghai (OCS) : 2001.\n• L'Union européenne : 1992 (traité de Maastricht).\n• L'ASEAN Plus Trois : 1997.\n• Les BRICS : 2006.\n• Le Mercosur : 1991.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q4",
+            "type": "mcq",
+            "prompt": "En quelle année le Mercosur est-il créé, selon le cours ?",
+            "options": [
+              "1991",
+              "1992",
+              "1997",
+              "2006"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne le Mercosur créé en 1991 (l'Union européenne est de 1992, l'ASEAN Plus Trois de 1997, les BRICS de 2006)."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "La défense de l'Union européenne",
+          "stepTheme": "La défense de l'Union européenne",
+          "stepBadge": "La défense de l'Union européenne",
+          "paragraphText": "• L'Union européenne dispose d'une Politique européenne de sécurité et de défense (PESD).\n• Mais sa défense extérieure dépend toujours de l'OTAN.\n• Piège d'examen : l'Union européenne n'est pas une puissance complète — le livre propose l'affirmation « L'UE est une puissance complète car sa souveraineté se manifeste dans tous les domaines » et elle est fausse, justement parce que sa défense dépend des États-Unis.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q5",
+            "type": "mcq",
+            "prompt": "De quoi la défense extérieure de l'Union européenne dépend-elle toujours ?",
+            "options": [
+              "De l'OTAN",
+              "De la Russie",
+              "De la Chine",
+              "Des BRICS"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La défense extérieure de l'Union européenne dépend toujours de l'OTAN."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Les pôles d'influence depuis 2001",
+          "stepTheme": "Les pôles d'influence depuis 2001",
+          "stepBadge": "Les pôles d'influence depuis 2001",
+          "paragraphText": "• L'Union européenne, un regroupement de 27 pays.\n• La Triade : les États-Unis, l'Union européenne et le Japon.\n• Les dragons d'Asie : la Corée du Sud, Taïwan, Singapour et Hong Kong.\n• Les tigres d'Asie : la Thaïlande, la Malaisie, l'Indonésie, le Vietnam et les Philippines.\n• Les puissances du Moyen-Orient : la Turquie, l'Iran, l'Arabie Saoudite et Israël.\n• Les BRICS, créés en 2006, regroupent le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q6",
+            "type": "mcq",
+            "prompt": "Quels pays sont appelés les « dragons d'Asie » ?",
+            "options": [
+              "La Corée du Sud, Taïwan, Singapour et Hong Kong",
+              "La Thaïlande, la Malaisie, l'Indonésie, le Vietnam et les Philippines",
+              "La Chine, le Japon et l'Inde",
+              "La Turquie, l'Iran et l'Arabie Saoudite"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les dragons d'Asie sont la Corée du Sud, Taïwan, Singapour et Hong Kong (les tigres d'Asie sont la Thaïlande, la Malaisie, l'Indonésie, le Vietnam et les Philippines)."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q1",
+          "type": "mcq",
+          "prompt": "Combien d'États compte l'Union européenne, selon le cours ?",
+          "options": [
+            "27 États (le Royaume-Uni en est sorti en 2020)",
+            "28 États, Royaume-Uni compris",
+            "15 États",
+            "6 États fondateurs"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne 27 États pour l'Union européenne, le Royaume-Uni en étant sorti en 2020."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q2",
+          "type": "mcq",
+          "prompt": "Quels pays composent les BRICS ?",
+          "options": [
+            "Le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud",
+            "La Belgique, la Russie, l'Inde, le Canada et la Suède",
+            "Le Brésil, la Russie, l'Indonésie, le Canada et la Slovénie",
+            "Les États-Unis, l'Union européenne et le Japon"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les BRICS regroupent le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q3",
+          "type": "mcq",
+          "prompt": "Selon le document 1, quel est le PIB des BRICS en 2017 ?",
+          "options": [
+            "18 640",
+            "19 360",
+            "17 110",
+            "11 800"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le document 1 donne 18 640 pour les BRICS en 2017, contre 19 360 pour les États-Unis et 17 110 pour l'Union européenne."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q4",
+          "type": "mcq",
+          "prompt": "En quelle année le Mercosur est-il créé, selon le cours ?",
+          "options": [
+            "1991",
+            "1992",
+            "1997",
+            "2006"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne le Mercosur créé en 1991 (l'Union européenne est de 1992, l'ASEAN Plus Trois de 1997, les BRICS de 2006)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q5",
+          "type": "mcq",
+          "prompt": "De quoi la défense extérieure de l'Union européenne dépend-elle toujours ?",
+          "options": [
+            "De l'OTAN",
+            "De la Russie",
+            "De la Chine",
+            "Des BRICS"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La défense extérieure de l'Union européenne dépend toujours de l'OTAN."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p04_q6",
+          "type": "mcq",
+          "prompt": "Quels pays sont appelés les « dragons d'Asie » ?",
+          "options": [
+            "La Corée du Sud, Taïwan, Singapour et Hong Kong",
+            "La Thaïlande, la Malaisie, l'Indonésie, le Vietnam et les Philippines",
+            "La Chine, le Japon et l'Inde",
+            "La Turquie, l'Iran et l'Arabie Saoudite"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les dragons d'Asie sont la Corée du Sud, Taïwan, Singapour et Hong Kong (les tigres d'Asie sont la Thaïlande, la Malaisie, l'Indonésie, le Vietnam et les Philippines)."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05",
+      "order": 5,
+      "title": "La Russie et la Chine",
+      "summary": "Deux rivaux des États-Unis : la Russie par ses armes et son énergie, la Chine par son économie et ses marchés.",
+      "conceptExplanation": "La Russie est l'héritière de la superpuissance soviétique. Sa politique étrangère est dictée par deux priorités : la défense de ses intérêts et l'utilisation de ses exportations de défense et d'énergie pour son influence. Elle est le deuxième exportateur mondial d'armes (23 %) et le premier exportateur d'énergie (environ 30 % des réserves de gaz). Elle est impliquée dans les Balkans, s'oppose au Kosovo et intervient dans les conflits du Proche et du Moyen-Orient. Avec la Chine, elle coopère depuis 2001 au sein de l'Organisation de coopération de Shanghai (OCS), avec le Kazakhstan, le Kirghizistan, le Tadjikistan et l'Ouzbékistan. La Russie a rompu avec le système totalitaire soviétique, mais il n'existe pas de vrais contrepoids face à l'autorité présidentielle.\nLa Chine est la deuxième puissance économique mondiale. Sa puissance tient à sa taille, à sa démographie, à son poids militaire, économique, commercial et financier. Elle la montre non par des interventions militaires à l'étranger, mais par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique (Soft Power). Elle a contribué en 1997 à la création de l'ASEAN Plus Trois (ASEAN + Chine, Japon, Corée du Sud), imposant les pays asiatiques dans les négociations internationales, notamment à l'OMC, pour contrebalancer l'influence de l'Union européenne et de l'ALENA.",
+      "keyRule": "Russie : 2e exportateur mondial d'armes (23 %) et 1er exportateur d'énergie ; Chine : 2e puissance économique mondiale, puissance par les marchés et le Soft Power.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Comparer la Russie et la Chine",
+        "statement": "Compare les deux puissances : par quoi la Russie exerce-t-elle son influence, et par quoi la Chine exerce-t-elle la sienne ?",
+        "methodSteps": [
+          "La Russie exerce son influence par ses exportations de défense et d'énergie : 2e exportateur mondial d'armes (23 %), 1er exportateur d'énergie (environ 30 % des réserves de gaz).",
+          "La Chine exerce son influence par son poids économique, commercial et financier : 2e puissance économique mondiale.",
+          "La Chine montre sa puissance non par des interventions militaires à l'étranger, mais par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique."
+        ],
+        "conclusion": "Russie : armes et énergie ; Chine : économie, marchés et Soft Power."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La Russie, héritière de la superpuissance soviétique",
+          "stepTheme": "La Russie, héritière de la superpuissance soviétique",
+          "stepBadge": "La Russie, héritière de la superpuissance soviétique",
+          "paragraphText": "• La Russie est l'héritière de la superpuissance soviétique.\n• Elle est le deuxième exportateur mondial d'armes (23 %) et le premier exportateur d'énergie (environ 30 % des réserves de gaz).\n• Elle utilise les exportations de défense et d'énergie pour son influence.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q1",
+            "type": "mcq",
+            "prompt": "Quelle part des exportations mondiales d'armes la Russie détient-elle, selon le cours ?",
+            "options": [
+              "23 % (2e exportateur mondial)",
+              "30 % (1er exportateur mondial)",
+              "16 % (3e exportateur mondial)",
+              "40 % (1er exportateur mondial)"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La Russie est le deuxième exportateur mondial d'armes avec 23 % (30 % est la part des réserves de gaz qu'elle détient comme premier exportateur d'énergie)."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "L'Organisation de coopération de Shanghai (OCS)",
+          "stepTheme": "L'Organisation de coopération de Shanghai (OCS)",
+          "stepBadge": "L'Organisation de coopération de Shanghai (OCS)",
+          "paragraphText": "• Avec la Chine, la Russie coopère depuis 2001 au sein de l'Organisation de coopération de Shanghai (OCS).\n• L'OCS regroupe aussi le Kazakhstan, le Kirghizistan, le Tadjikistan et l'Ouzbékistan.\n• La Russie est impliquée dans les Balkans, s'oppose au Kosovo et intervient dans les conflits du Proche et du Moyen-Orient.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q2",
+            "type": "mcq",
+            "prompt": "Depuis quand la Russie coopère-t-elle avec la Chine au sein de l'OCS ?",
+            "options": [
+              "Depuis 2001",
+              "Depuis 1991",
+              "Depuis 1997",
+              "Depuis 2006"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La Russie coopère avec la Chine au sein de l'Organisation de coopération de Shanghai depuis 2001."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "La Chine, 2e puissance économique mondiale",
+          "stepTheme": "La Chine, 2e puissance économique mondiale",
+          "stepBadge": "La Chine, 2e puissance économique mondiale",
+          "paragraphText": "• La Chine est la deuxième puissance économique mondiale.\n• Sa puissance tient à sa taille, à sa démographie, à son poids militaire, économique, commercial et financier.\n• Elle montre sa puissance non par des interventions militaires à l'étranger, mais par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique (Soft Power).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q3",
+            "type": "mcq",
+            "prompt": "Comment la Chine montre-t-elle sa puissance, selon le cours ?",
+            "options": [
+              "Par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique",
+              "Par des interventions militaires à l'étranger",
+              "Par le contrôle de l'OTAN",
+              "Par la conquête de nouveaux territoires"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La Chine montre sa puissance par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique : c'est son Soft Power."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "L'ASEAN Plus Trois (1997)",
+          "stepTheme": "L'ASEAN Plus Trois (1997)",
+          "stepBadge": "L'ASEAN Plus Trois (1997)",
+          "paragraphText": "• La Chine a contribué en 1997 à la création de l'ASEAN Plus Trois.\n• L'ASEAN Plus Trois regroupe l'ASEAN, la Chine, le Japon et la Corée du Sud.\n• Il impose les pays asiatiques dans les négociations internationales, notamment à l'OMC, pour contrebalancer l'influence de l'Union européenne et de l'ALENA.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q4",
+            "type": "mcq",
+            "prompt": "Quels pays composent l'ASEAN Plus Trois ?",
+            "options": [
+              "L'ASEAN, la Chine, le Japon et la Corée du Sud",
+              "L'ASEAN, la Russie et l'Inde",
+              "La Chine, les États-Unis et le Canada",
+              "L'ASEAN, le Brésil et l'Afrique du Sud"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'ASEAN Plus Trois regroupe l'ASEAN, la Chine, le Japon et la Corée du Sud."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "La Russie a rompu avec le système totalitaire soviétique",
+          "stepTheme": "La Russie a rompu avec le système totalitaire soviétique",
+          "stepBadge": "La Russie a rompu avec le système totalitaire soviétique",
+          "paragraphText": "• La Russie a rompu avec le système totalitaire soviétique.\n• Mais il n'existe pas de vrais contrepoids face à l'autorité présidentielle.\n• Piège d'examen : la rupture avec le totalitarisme soviétique ne signifie pas une démocratie aboutie.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q5",
+            "type": "mcq",
+            "prompt": "Que dit le cours de l'autorité présidentielle en Russie ?",
+            "options": [
+              "Il n'existe pas de vrais contrepoids face à l'autorité présidentielle",
+              "Elle est limitée par un Parlement très puissant",
+              "Elle est partagée avec les républiques de la CEI",
+              "Elle est contrôlée par l'OTAN"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours précise que la Russie a rompu avec le système totalitaire soviétique, mais qu'il n'existe pas de vrais contrepoids face à l'autorité présidentielle."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La Chine et la Russie : deux rivaux des États-Unis",
+          "stepTheme": "La Chine et la Russie : deux rivaux des États-Unis",
+          "stepBadge": "La Chine et la Russie : deux rivaux des États-Unis",
+          "paragraphText": "• Dans la mise en place de l'ordre mondial multipolaire, les deux principaux rivaux des États-Unis sont la Chine et la Russie.\n• La Russie rivalise par ses armes et son énergie, la Chine par son économie et ses marchés.\n• Les deux pays coopèrent depuis 2001 au sein de l'Organisation de coopération de Shanghai.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q6",
+            "type": "mcq",
+            "prompt": "Quels sont les deux principaux rivaux des États-Unis dans le monde multipolaire, selon le cours ?",
+            "options": [
+              "La Chine et la Russie",
+              "L'Union européenne et la Russie",
+              "L'Inde et l'Union européenne",
+              "Le Brésil et l'Afrique du Sud"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne la Chine et la Russie comme les deux principaux rivaux des États-Unis dans le monde multipolaire."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q1",
+          "type": "mcq",
+          "prompt": "Quelle part des exportations mondiales d'armes la Russie détient-elle, selon le cours ?",
+          "options": [
+            "23 % (2e exportateur mondial)",
+            "30 % (1er exportateur mondial)",
+            "16 % (3e exportateur mondial)",
+            "40 % (1er exportateur mondial)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Russie est le deuxième exportateur mondial d'armes avec 23 % (30 % est la part des réserves de gaz qu'elle détient comme premier exportateur d'énergie)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q2",
+          "type": "mcq",
+          "prompt": "Depuis quand la Russie coopère-t-elle avec la Chine au sein de l'OCS ?",
+          "options": [
+            "Depuis 2001",
+            "Depuis 1991",
+            "Depuis 1997",
+            "Depuis 2006"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Russie coopère avec la Chine au sein de l'Organisation de coopération de Shanghai depuis 2001."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q3",
+          "type": "mcq",
+          "prompt": "Comment la Chine montre-t-elle sa puissance, selon le cours ?",
+          "options": [
+            "Par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique",
+            "Par des interventions militaires à l'étranger",
+            "Par le contrôle de l'OTAN",
+            "Par la conquête de nouveaux territoires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Chine montre sa puissance par le contrôle stratégique des mers proches et des nouveaux marchés, notamment en Afrique : c'est son Soft Power."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q4",
+          "type": "mcq",
+          "prompt": "Quels pays composent l'ASEAN Plus Trois ?",
+          "options": [
+            "L'ASEAN, la Chine, le Japon et la Corée du Sud",
+            "L'ASEAN, la Russie et l'Inde",
+            "La Chine, les États-Unis et le Canada",
+            "L'ASEAN, le Brésil et l'Afrique du Sud"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ASEAN Plus Trois regroupe l'ASEAN, la Chine, le Japon et la Corée du Sud."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q5",
+          "type": "mcq",
+          "prompt": "Que dit le cours de l'autorité présidentielle en Russie ?",
+          "options": [
+            "Il n'existe pas de vrais contrepoids face à l'autorité présidentielle",
+            "Elle est limitée par un Parlement très puissant",
+            "Elle est partagée avec les républiques de la CEI",
+            "Elle est contrôlée par l'OTAN"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours précise que la Russie a rompu avec le système totalitaire soviétique, mais qu'il n'existe pas de vrais contrepoids face à l'autorité présidentielle."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q6",
+          "type": "mcq",
+          "prompt": "Quels sont les deux principaux rivaux des États-Unis dans le monde multipolaire, selon le cours ?",
+          "options": [
+            "La Chine et la Russie",
+            "L'Union européenne et la Russie",
+            "L'Inde et l'Union européenne",
+            "Le Brésil et l'Afrique du Sud"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne la Chine et la Russie comme les deux principaux rivaux des États-Unis dans le monde multipolaire."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06",
+      "order": 6,
+      "title": "L'Inde, le Brésil et les puissances du Moyen-Orient",
+      "summary": "De nouveaux pôles aux forces et aux faiblesses différentes : l'Inde, le Brésil et les puissances du Moyen-Orient.",
+      "conceptExplanation": "La République de l'Inde est une puissance émergente par sa taille démographique, son dynamisme économique et technologique et ses investissements militaires et spatiaux croissants.\nLe Brésil exerce son influence par la mission MINUSTAH en Haïti (2004) et par sa prédominance dans le MERCOSUR, créé en 1991.\nLes puissances émergentes du Moyen-Orient sont Israël, l'Iran, la Turquie et l'Arabie Saoudite. Leurs oppositions religieuses structurent la région : Israël (judaïsme et christianisme), la Palestine (islamisme), l'Iran (islam chiite), l'Arabie Saoudite (islam sunnite). La montée du fondamentalisme religieux et les enjeux territoriaux, sécuritaires et pétroliers font du Moyen-Orient la région la plus instable et la « poudrière de la planète ».\nLes pôles d'influence ont des forces et des faiblesses : l'Union européenne est la première puissance commerciale du monde, les États-Unis sont la première puissance militaire du monde, les hydrocarbures constituent une force géopolitique et économique pour les pétrodollars. En revanche, les BRICS n'ont pas les mêmes niveaux de développement, l'immensité des ressources naturelles n'est pas un handicap pour eux mais une force, et l'Union européenne n'est pas une puissance complète puisque sa défense dépend des États-Unis.",
+      "keyRule": "Inde, Brésil, Moyen-Orient : de nouveaux pôles aux forces et aux faiblesses différentes — aucun n'est complet.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Associer les pôles à leurs forces",
+        "statement": "Associe chaque pôle à sa force : les BRICS, l'Union européenne, les États-Unis.",
+        "methodSteps": [
+          "Les BRICS : l'immensité des territoires avec des potentialités économiques énormes.",
+          "L'Union européenne : une puissance commerciale, mais dont la défense dépend des États-Unis.",
+          "Les États-Unis : la première puissance économique du monde."
+        ],
+        "conclusion": "BRICS : territoires immenses ; Union européenne : puissance commerciale à la défense dépendante ; États-Unis : première puissance économique."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La République de l'Inde",
+          "stepTheme": "La République de l'Inde",
+          "stepBadge": "La République de l'Inde",
+          "paragraphText": "• La République de l'Inde est une puissance émergente.\n• Elle le doit à sa taille démographique, à son dynamisme économique et technologique et à ses investissements militaires et spatiaux croissants.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q1",
+            "type": "mcq",
+            "prompt": "Qu'est-ce qui fait de l'Inde une puissance émergente, selon le cours ?",
+            "options": [
+              "Sa taille démographique, son dynamisme économique et technologique et ses investissements militaires et spatiaux",
+              "Ses réserves de pétrole",
+              "Son appartenance à l'OTAN",
+              "Sa monnaie, la roupie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite la taille démographique, le dynamisme économique et technologique et les investissements militaires et spatiaux croissants de l'Inde."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Le Brésil",
+          "stepTheme": "Le Brésil",
+          "stepBadge": "Le Brésil",
+          "paragraphText": "• Le Brésil exerce son influence par la mission MINUSTAH en Haïti, en 2004.\n• Il prédomine dans le MERCOSUR, créé en 1991.\n• Il fait partie des BRICS, avec la Russie, l'Inde, la Chine et l'Afrique du Sud.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q2",
+            "type": "mcq",
+            "prompt": "Quelle mission le Brésil mène-t-il en Haïti en 2004 ?",
+            "options": [
+              "La mission MINUSTAH",
+              "L'opération Tempête du désert",
+              "L'opération Restore Hope",
+              "L'opération Uphold Democracy"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Brésil mène la mission MINUSTAH en Haïti en 2004."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Les puissances du Moyen-Orient",
+          "stepTheme": "Les puissances du Moyen-Orient",
+          "stepBadge": "Les puissances du Moyen-Orient",
+          "paragraphText": "• Les puissances émergentes du Moyen-Orient sont Israël, l'Iran, la Turquie et l'Arabie Saoudite.\n• Leurs oppositions religieuses structurent la région : Israël (judaïsme et christianisme), la Palestine (islamisme), l'Iran (islam chiite), l'Arabie Saoudite (islam sunnite).\n• La montée du fondamentalisme religieux et les enjeux territoriaux, sécuritaires et pétroliers font du Moyen-Orient la région la plus instable et la « poudrière de la planète ».",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q3",
+            "type": "mcq",
+            "prompt": "Quelles puissances émergentes du Moyen-Orient le cours cite-t-il ?",
+            "options": [
+              "Israël, l'Iran, la Turquie et l'Arabie Saoudite",
+              "L'Irak, la Syrie et le Liban",
+              "L'Égypte, la Libye et le Soudan",
+              "Israël, l'Iran et l'Irak"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite Israël, l'Iran, la Turquie et l'Arabie Saoudite comme puissances émergentes du Moyen-Orient."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Pourquoi le Moyen-Orient est-il instable ?",
+          "stepTheme": "Pourquoi le Moyen-Orient est-il instable ?",
+          "stepBadge": "Pourquoi le Moyen-Orient est-il instable ?",
+          "paragraphText": "• Les oppositions religieuses : judaïsme et christianisme en Israël, islamisme en Palestine, islam chiite en Iran, islam sunnite en Arabie Saoudite.\n• La montée du fondamentalisme religieux.\n• Les enjeux territoriaux, sécuritaires et pétroliers.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q4",
+            "type": "mcq",
+            "prompt": "Pourquoi le Moyen-Orient est-il la région la plus instable de la planète, selon le cours ?",
+            "options": [
+              "À cause des oppositions religieuses, du fondamentalisme et des enjeux territoriaux, sécuritaires et pétroliers",
+              "À cause de l'absence de pétrole",
+              "À cause de l'absence de religions",
+              "À cause de sa faible population"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite les oppositions religieuses, la montée du fondamentalisme religieux et les enjeux territoriaux, sécuritaires et pétroliers."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Les forces et les faiblesses des pôles",
+          "stepTheme": "Les forces et les faiblesses des pôles",
+          "stepBadge": "Les forces et les faiblesses des pôles",
+          "paragraphText": "• L'Union européenne est la première puissance commerciale du monde et les États-Unis sont la première puissance militaire du monde : ces deux affirmations sont justes.\n• Les hydrocarbures constituent une force géopolitique et économique pour les pétrodollars : cette affirmation est juste.\n• En revanche, « Les BRICS ont les mêmes niveaux de développement » est faux : les BRICS ont des niveaux de développement différents.\n• De même, « L'immensité des ressources naturelles constitue un handicap pour les BRICS » est faux : c'est une force, pas un handicap.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q5",
+            "type": "mcq",
+            "prompt": "Laquelle de ces affirmations est fausse ?",
+            "options": [
+              "« L'Union européenne est la première puissance commerciale du monde »",
+              "« Les États-Unis sont la première puissance militaire du monde »",
+              "« Les BRICS ont les mêmes niveaux de développement »",
+              "« Les hydrocarbures constituent une force géopolitique et économique pour les pétrodollars »"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Les BRICS n'ont pas les mêmes niveaux de développement : le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud sont des pays émergents aux niveaux très différents."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Associer les pôles à leurs forces",
+          "stepTheme": "Associer les pôles à leurs forces",
+          "stepBadge": "Associer les pôles à leurs forces",
+          "paragraphText": "• Les BRICS : l'immensité des territoires avec des potentialités économiques énormes.\n• L'Union européenne : une puissance commerciale, mais dont la défense dépend des États-Unis.\n• Les États-Unis : la première puissance économique du monde.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q6",
+            "type": "mcq",
+            "prompt": "Quelle force le livre associe-t-il aux BRICS ?",
+            "options": [
+              "L'immensité des territoires avec des potentialités économiques énormes",
+              "Une puissance commerciale dont la défense dépend des États-Unis",
+              "La première puissance économique du monde",
+              "Le premier espace économique mondial"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le livre associe aux BRICS l'immensité des territoires avec des potentialités économiques énormes."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q1",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qui fait de l'Inde une puissance émergente, selon le cours ?",
+          "options": [
+            "Sa taille démographique, son dynamisme économique et technologique et ses investissements militaires et spatiaux",
+            "Ses réserves de pétrole",
+            "Son appartenance à l'OTAN",
+            "Sa monnaie, la roupie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite la taille démographique, le dynamisme économique et technologique et les investissements militaires et spatiaux croissants de l'Inde."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q2",
+          "type": "mcq",
+          "prompt": "Quelle mission le Brésil mène-t-il en Haïti en 2004 ?",
+          "options": [
+            "La mission MINUSTAH",
+            "L'opération Tempête du désert",
+            "L'opération Restore Hope",
+            "L'opération Uphold Democracy"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Brésil mène la mission MINUSTAH en Haïti en 2004."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q3",
+          "type": "mcq",
+          "prompt": "Quelles puissances émergentes du Moyen-Orient le cours cite-t-il ?",
+          "options": [
+            "Israël, l'Iran, la Turquie et l'Arabie Saoudite",
+            "L'Irak, la Syrie et le Liban",
+            "L'Égypte, la Libye et le Soudan",
+            "Israël, l'Iran et l'Irak"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite Israël, l'Iran, la Turquie et l'Arabie Saoudite comme puissances émergentes du Moyen-Orient."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q4",
+          "type": "mcq",
+          "prompt": "Pourquoi le Moyen-Orient est-il la région la plus instable de la planète, selon le cours ?",
+          "options": [
+            "À cause des oppositions religieuses, du fondamentalisme et des enjeux territoriaux, sécuritaires et pétroliers",
+            "À cause de l'absence de pétrole",
+            "À cause de l'absence de religions",
+            "À cause de sa faible population"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite les oppositions religieuses, la montée du fondamentalisme religieux et les enjeux territoriaux, sécuritaires et pétroliers."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q5",
+          "type": "mcq",
+          "prompt": "Laquelle de ces affirmations est fausse ?",
+          "options": [
+            "« L'Union européenne est la première puissance commerciale du monde »",
+            "« Les États-Unis sont la première puissance militaire du monde »",
+            "« Les BRICS ont les mêmes niveaux de développement »",
+            "« Les hydrocarbures constituent une force géopolitique et économique pour les pétrodollars »"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Les BRICS n'ont pas les mêmes niveaux de développement : le Brésil, la Russie, l'Inde, la Chine et l'Afrique du Sud sont des pays émergents aux niveaux très différents."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l03_monde_multipolaire_p06_q6",
+          "type": "mcq",
+          "prompt": "Quelle force le livre associe-t-il aux BRICS ?",
+          "options": [
+            "L'immensité des territoires avec des potentialités économiques énormes",
+            "Une puissance commerciale dont la défense dépend des États-Unis",
+            "La première puissance économique du monde",
+            "Le premier espace économique mondial"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le livre associe aux BRICS l'immensité des territoires avec des potentialités économiques énormes."
+        }
+      ]
+    }
+  ]
 };
-

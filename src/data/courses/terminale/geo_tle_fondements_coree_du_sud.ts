@@ -23,7 +23,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
       "order": 1,
       "title": "Un territoire restreint et montagneux",
       "summary": "La situation de la Corée du Sud et un relief dominé par les montagnes.",
-      "conceptExplanation": "La Corée du Sud occupe la moitié sud de la péninsule coréenne ; la Corée du Nord en occupe la moitié nord.\nElle est bordée à l'ouest par la mer Jaune et à l'est par la mer du Japon (mer Orientale).\nSuperficie : environ 98 480 km² ; plus de 51 millions d'habitants en 2017 ; capitale : Séoul.\nLe relief est montagneux à 70 % ; les plaines couvrent moins d'un cinquième du territoire, à l'ouest et au sud.",
+      "conceptExplanation": "La Corée du Sud occupe la moitié sud de la péninsule coréenne ; la Corée du Nord en occupe la moitié nord.\nElle est bordée à l'ouest par la mer Jaune et à l'est par la mer du Japon (mer Orientale).\nSuperficie : environ 98 480 km² selon le PDF ; plus de 51 millions d'habitants en 2017 ; capitale : Séoul.\nLe relief est montagneux à 70 % ; les plaines couvrent moins d'un cinquième du territoire, à l'ouest et au sud.",
       "keyRule": "Un petit territoire très montagneux : peu de plaines, donc des hommes concentrés sur les côtes ouest et sud.",
       "formulas": [],
       "workedExample": {
@@ -84,7 +84,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
           "stepTitle": "Un pays petit et peuplé",
           "stepTheme": "Un pays petit et peuplé",
           "stepBadge": "Un pays petit et peuplé",
-          "paragraphText": "Superficie : environ 98 480 km² (environ 100 000 km² selon les mesures récentes).\nPopulation : plus de 51 millions d'habitants en 2017.\nC'est moins du tiers de la superficie de la Côte d'Ivoire, pour près du double de sa population.",
+          "paragraphText": "Superficie : environ 98 480 km² (chiffre du PDF ; les sources récentes donnent environ 100 000 km²).\nPopulation : plus de 51 millions d'habitants en 2017.\nC'est moins du tiers de la superficie de la Côte d'Ivoire, pour près du double de sa population.",
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p01_q3",
             "type": "mcq",
@@ -570,7 +570,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
           "stepTitle": "Les grands fleuves",
           "stepTheme": "Les grands fleuves",
           "stepBadge": "Les grands fleuves",
-          "paragraphText": "Les fleuves naissent dans les hautes montagnes.\n• Le Nakdong, le plus long (521 km), coule du nord au sud.\n• Le Han (environ 500 km) traverse Séoul.\n• Puis le Geum, à l'ouest, et le Yeongsan, au sud-ouest.",
+          "paragraphText": "Les fleuves naissent dans les hautes montagnes.\n• Le Nakdong, le plus long (521 km selon le PDF), coule du nord au sud.\n• Le Han (environ 500 km) traverse Séoul.\n• Puis le Geum, à l'ouest, et le Yeongsan, au sud-ouest.",
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p03_q3",
             "type": "mcq",
@@ -743,7 +743,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
         "statement": "« Ses indicateurs sociaux témoignent d'une qualité de vie très élevée ; cependant sa croissance démographique connaît un recul inexorable. »",
         "methodSteps": [
           "Qualité de vie élevée : espérance de vie de 82 ans, alphabétisation de 100 %, chômage de 4,9 %.",
-          "Recul démographique : natalité (0,59 %) à peine supérieure à la mortalité (0,57 %), croissance démographique négative (−0,24 % par an)."
+          "Recul démographique : natalité (0,59 %) à peine supérieure à la mortalité (0,57 %), croissance négative selon le document 5 (−0,24 % par an)."
         ],
         "conclusion": "Le pays vit bien, mais sa population vieillit et ne se renouvelle presque plus."
       },
@@ -856,10 +856,10 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
         {
           "stepNumber": 6,
           "stepKind": "piege",
-          "stepTitle": "Point de vigilance : Park Chung-hee",
-          "stepTheme": "Point de vigilance : Park Chung-hee",
-          "stepBadge": "Point de vigilance : Park Chung-hee",
-          "paragraphText": "Attention à ne pas confondre avec la formulation erronée « Park Chung-hee (1963-1679) ».\nC'est une coquille : il a dirigé le pays de 1963 à 1979, année de son assassinat.\nAttention aussi à l'orthographe : Syngman Rhee (et non « Syngnam »).",
+          "stepTitle": "Erreur dans le PDF : Park Chung-hee",
+          "stepTheme": "Erreur dans le PDF : Park Chung-hee",
+          "stepBadge": "Erreur dans le PDF : Park Chung-hee",
+          "paragraphText": "Le PDF écrit « Park Chung-hee (1963-1679) ».\nC'est une coquille : il a dirigé le pays de 1963 à 1979, année de son assassinat.\nAttention aussi à l'orthographe : Syngman Rhee (et non « Syngnam »).",
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p04_q6",
             "type": "mcq",
@@ -1316,7 +1316,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
           "stepTitle": "Phase 2 : l'exportation audacieuse",
           "stepTheme": "Phase 2 : l'exportation audacieuse",
           "stepBadge": "Phase 2 : l'exportation audacieuse",
-          "paragraphText": "De 1961 à 1973, la croissance repose sur la promotion des exportations.\nLes produits des industries légères (textiles, vêtements, chaussures) sont exportés massivement.\n, les exportations passent de 3,3 % du PNB en 1960 à 48 % en 1977.",
+          "paragraphText": "De 1961 à 1973, la croissance repose sur la promotion des exportations.\nLes produits des industries légères (textiles, vêtements, chaussures) sont exportés massivement.\nSelon le PDF, les exportations passent de 3,3 % du PNB en 1960 à 48 % en 1977.",
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p06_q3",
             "type": "mcq",
@@ -1358,7 +1358,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
           "stepTitle": "Samsung et POSCO",
           "stepTheme": "Samsung et POSCO",
           "stepBadge": "Samsung et POSCO",
-          "paragraphText": "On cite souvent Samsung (électronique) et POSCO (sidérurgie) ensemble comme des chaebols.\nPrécision : Samsung est bien un chaebol privé, mais POSCO a été créée en 1968 comme entreprise publique, puis privatisée en 2000.\nLes deux illustrent l'étroite coopération entre l'État et les grandes entreprises.",
+          "paragraphText": "Le PDF cite Samsung (électronique) et POSCO (sidérurgie) comme des chaebols.\nPrécision : Samsung est bien un chaebol privé, mais POSCO a été créée en 1968 comme entreprise publique, puis privatisée en 2000.\nLes deux illustrent l'étroite coopération entre l'État et les grandes entreprises.",
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p06_q5",
             "type": "mcq",
@@ -1515,7 +1515,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
       "order": 7,
       "title": "Entraînement type BAC",
       "summary": "S'entraîner aux consignes des situations d'évaluation sur la Corée du Sud.",
-      "conceptExplanation": "Une situation d'évaluation se traite en trois consignes.\n« Dégage l'idée générale » ou « Dis de quoi il s'agit » : une phrase qui nomme le sujet.\n« Explique » : des faits géographiques précis.\n« Que penses-tu… ? » ou « Partages-tu l'avis… ? » : une position nuancée, justifiée par des arguments.",
+      "conceptExplanation": "Une situation d'évaluation se traite en trois consignes.\n« Dégage l'idée générale » ou « Dis de quoi il s'agit » : une phrase qui nomme le sujet.\n« Explique » : des faits précis tirés du cours.\n« Que penses-tu… ? » ou « Partages-tu l'avis… ? » : une position nuancée, justifiée par des arguments.",
       "keyRule": "Nommer le sujet, expliquer avec des faits, puis prendre position de façon nuancée.",
       "formulas": [],
       "workedExample": {
@@ -1580,7 +1580,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p07_q3",
             "type": "mcq",
-            "prompt": "Sur la population sud-coréenne, un document donne +0,2 % de croissance en 2019 et un autre, plus récent, −0,24 % par an. Que montrent ensemble ces deux documents ?",
+            "prompt": "Que montrent ensemble les documents 4 et 5 sur la population sud-coréenne ?",
             "options": [
               "Une croissance très faible, devenue négative",
               "Une croissance très rapide",
@@ -1706,7 +1706,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p07_q3",
           "type": "mcq",
-          "prompt": "Sur la population sud-coréenne, un document donne +0,2 % de croissance en 2019 et un autre, plus récent, −0,24 % par an. Que montrent ensemble ces deux documents ?",
+          "prompt": "Que montrent ensemble les documents 4 et 5 sur la population sud-coréenne ?",
           "options": [
             "Une croissance très faible, devenue négative",
             "Une croissance très rapide",

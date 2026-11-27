@@ -1033,7 +1033,7 @@ export const PHILO_TLE_L04_VIE_EN_SOCIETE: CurriculumChapter = {
           "stepTitle": "Weber : la violence légitime",
           "stepTheme": "Weber : la violence légitime",
           "stepBadge": "Weber : la violence légitime",
-          "paragraphText": "Max Weber : l'État moderne détient le monopole de la violence physique légitime.\nSeul l'État peut légalement utiliser la force (police, armée, justice).\nPrécision : la séparation des trois pouvoirs (législatif, exécutif, judiciaire) est une idée de Montesquieu, que une erreur fréquente mêle à Weber.",
+          "paragraphText": "Max Weber : l'État moderne détient le monopole de la violence physique légitime.\nSeul l'État peut légalement utiliser la force (police, armée, justice).\nPrécision : la séparation des trois pouvoirs (législatif, exécutif, judiciaire) est une idée de Montesquieu, que le PDF mêle à Weber.",
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l02_vie_en_societe_p05_q5",
             "type": "mcq",
@@ -1196,7 +1196,7 @@ export const PHILO_TLE_L04_VIE_EN_SOCIETE: CurriculumChapter = {
           "stepTitle": "Autrui, indispensable",
           "stepTheme": "Autrui, indispensable",
           "stepBadge": "Autrui, indispensable",
-          "paragraphText": "Arguments pour « autrui est indispensable » :\n• Aristote : l'homme est un animal politique ;\n• Badian : « L'homme n'est rien sans les autres » ;\n• Saint-Exupéry : « Si tu diffères de moi, mon frère, loin de me léser, tu m'enrichis ».",
+          "paragraphText": "Arguments pour « autrui est indispensable » :\n• Aristote : l'homme est un animal politique ;\n• Badian : « L'homme n'est rien sans les autres » ;\n• Saint-Exupéry : « Si tu diffères de moi, mon frère, loin de me léser, tu m'enrichis » (Lettre à un otage ; le PDF écrit Terre des hommes).",
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l02_vie_en_societe_p06_q2",
             "type": "mcq",
@@ -1263,7 +1263,7 @@ export const PHILO_TLE_L04_VIE_EN_SOCIETE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l02_vie_en_societe_p06_q5",
             "type": "mcq",
-            "prompt": "Dans la Propédeutique philosophique, Hegel décrit l'état de nature comme un état « de rudesse, de violence et d'injustice ». Quelle est sa thèse ?",
+            "prompt": "Quelle est la thèse du texte de Hegel sur l'état de nature ?",
             "options": [
               "L'état de nature est l'âge d'or de l'humanité",
               "Il faut sortir de l'état de nature pour instituer l'État",
@@ -1352,7 +1352,7 @@ export const PHILO_TLE_L04_VIE_EN_SOCIETE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l02_vie_en_societe_p06_q5",
           "type": "mcq",
-          "prompt": "Dans la Propédeutique philosophique, Hegel décrit l'état de nature comme un état « de rudesse, de violence et d'injustice ». Quelle est sa thèse ?",
+          "prompt": "Quelle est la thèse du texte de Hegel sur l'état de nature ?",
           "options": [
             "L'état de nature est l'âge d'or de l'humanité",
             "Il faut sortir de l'état de nature pour instituer l'État",

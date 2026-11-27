@@ -725,7 +725,7 @@ export const HIST_TLE_T2_L04_UNION_AFRICAINE: CurriculumChapter = {
           "stepTitle": "Le Conseil de paix et de sécurité",
           "stepTheme": "Le Conseil de paix et de sécurité",
           "stepBadge": "Le Conseil de paix et de sécurité",
-          "paragraphText": "• CPS (Conseil de paix et de sécurité) : organe permanent de 15 membres, chargé de prévenir, gérer et régler les conflits en Afrique.\nIl s'appuie sur un Groupe des sages.",
+          "paragraphText": "• CPS (Conseil de paix et de sécurité) : organe permanent de 15 membres, chargé de prévenir, gérer et régler les conflits en Afrique.\nIl s'appuie sur un Groupe des sages (le PDF parle de 9 membres ; le Groupe des sages en compte 5).",
           "exercise": {
             "id": "terminale_hg_histoire_t2_l04_union_africaine_p04_q1",
             "type": "mcq",
@@ -1220,7 +1220,7 @@ export const HIST_TLE_T2_L04_UNION_AFRICAINE: CurriculumChapter = {
           "stepTitle": "Une dépendance financière",
           "stepTheme": "Une dépendance financière",
           "stepBadge": "Une dépendance financière",
-          "paragraphText": "Une grande partie du budget de l'UA vient de l'extérieur du continent.\nLe PDF donne deux chiffres différents (95 %, 80 % dans un exercice) : retiens que la dépendance est très forte.\nExemple : le siège de l'UA à Addis-Abeba a été construit et offert par la Chine.",
+          "paragraphText": "Une grande partie du budget de l'UA vient de l'extérieur du continent.\nLe PDF donne deux chiffres différents (95 % dans le cours, 80 % dans un exercice) : retiens que la dépendance est très forte.\nExemple : le siège de l'UA à Addis-Abeba a été construit et offert par la Chine.",
           "exercise": {
             "id": "terminale_hg_histoire_t2_l04_union_africaine_p06_q3",
             "type": "mcq",
@@ -1266,7 +1266,7 @@ export const HIST_TLE_T2_L04_UNION_AFRICAINE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_histoire_t2_l04_union_africaine_p06_q5",
             "type": "mcq",
-            "prompt": "Quelle part du commerce des pays africains se fait entre eux ?",
+            "prompt": "Quelle part du commerce des pays africains se fait entre eux selon le cours ?",
             "options": [
               "Environ 90 %",
               "Environ 12 %",
@@ -1355,7 +1355,7 @@ export const HIST_TLE_T2_L04_UNION_AFRICAINE: CurriculumChapter = {
         {
           "id": "terminale_hg_histoire_t2_l04_union_africaine_p06_q5",
           "type": "mcq",
-          "prompt": "Quelle part du commerce des pays africains se fait entre eux ?",
+          "prompt": "Quelle part du commerce des pays africains se fait entre eux selon le cours ?",
           "options": [
             "Environ 90 %",
             "Environ 12 %",

@@ -1,9 +1,9 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT TA_L1_Les réactions émotionnelles chez lHomme.pdf » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Leçon 1 : Les réactions émotionnelles chez l'Homme » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1765
 export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
-  "id": "terminale_a_svt_l01_reactions_emotionnelles",
+  "id": "terminale_a1_svt_l01_reactions_emotionnelles",
   "subjectId": "svt",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
@@ -11,286 +11,252 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
   ],
   "order": 1,
   "title": "Leçon 1 : Les réactions émotionnelles chez l'Homme",
-  "summary": "Manifestations visibles et invisibles, causes du stress, régulation nerveuse (système limbique), régulation hormonale (adrénaline, axe CRH-ACTH-cortisol), intégration neuro-hormonale et prise de décision.",
-  "officialVolumeHours": 8,
+  "summary": "Face à certaines situations de stress, l'Homme réagit par des émotions aux manifestations visibles et invisibles, dont les causes sont variées et que l'organisme régule par le système nerveux et le système hormonal.",
   "contentVersion": 2,
-  "source": "SVT TA_L1_Les réactions émotionnelles chez lHomme.pdf",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1765",
   "points": [
     {
-      "id": "terminale_a_svt_l01_reactions_emotionnelles_p01",
+      "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01",
       "order": 1,
       "title": "Les manifestations des réactions émotionnelles",
-      "summary": "Des manifestations visibles et invisibles, dues au stress.",
-      "conceptExplanation": "Situation : à la finale de « miss district », une candidate attend les résultats : elle est pâle, silencieuse, transpire à grosses gouttes. À l'appel de son nom, elle court, crie et pleure de joie. C'est une réaction émotionnelle.\n\nTexte (Tavernier, Biologie Tle D) : « Dans une situation de stress, l'organisme présente des manifestations de nature variée : accélération du rythme cardiaque, pâleur du visage, modification du rythme respiratoire, ralentissement du rythme cardiaque, transpiration abondante, flot de paroles ou mutisme, rire ou larmes, sauts. (…) Des dosages hormonaux révèlent une augmentation sensible du taux de certaines hormones dans le sang. C'est le cas de l'adrénaline et des glucocorticoïdes. »\n\nDeux sortes de manifestations :\n- visibles (perceptibles) : pâleur, transpiration, rire, larmes, cris, sauts, mutisme ou flot de paroles, frissons, raidissement musculaire, modification du rythme cardiaque et respiratoire ;\n- invisibles (imperceptibles) : augmentation du taux de certaines hormones dans le sang (adrénaline, cortisol).\n\nExplications :\n- le cœur et la respiration s'accélèrent et la transpiration augmente à cause des hormones libérées dans le sang, qui agissent sur des organes cibles ;\n- la pâleur du visage est due à la diminution du diamètre des vaisseaux sanguins sous la peau (vasoconstriction) ;\n- le rire, le mutisme ou le flot de paroles viennent de centres nerveux du cerveau stimulés ou inhibés.\n\nCes manifestations résultent du STRESS ; l'émotion est une manifestation du stress.",
-      "keyRule": "Réaction émotionnelle = manifestations visibles (pâleur, sueur, rire, larmes…) + invisibles (hausse de l'adrénaline et du cortisol dans le sang).",
+      "summary": "Reconnaître les manifestations visibles et invisibles d'une réaction émotionnelle.",
+      "conceptExplanation": "Dans une situation de stress, l'organisme présente des manifestations de nature variée, nettement visibles pour certaines : accélération du rythme cardiaque, pâleur du visage, modification du rythme respiratoire, ralentissement du rythme cardiaque, transpiration abondante, flot de paroles ou mutisme, rire ou larmes, sauts. Ces réponses sont des expressions involontaires de la réaction émotionnelle.\nDans un grand nombre de situations de stress, des dosages hormonaux révèlent une augmentation sensible du taux de certaines hormones dans le sang : c'est le cas de l'adrénaline et des glucocorticoïdes. Ces manifestations hormonales sont invisibles.\nLa modification du rythme cardiaque et de la respiration et la transpiration abondante sont dues à la libération de certaines hormones dans le sang, agissant sur les organes cibles. La pâleur du visage est due à la diminution du diamètre des vaisseaux sanguins sous-cutanés. Certains centres nerveux cérébraux sont inhibés ou stimulés, ce qui provoque le flot de rire, le mutisme ou les paroles.",
+      "keyRule": "Une réaction émotionnelle se reconnaît à des manifestations visibles (comportement, visage, rythme cardiaque) et invisibles (hausse d'hormones dans le sang).",
       "formulas": [],
       "workedExample": {
-        "title": "Classer des manifestations",
-        "statement": "Avant un examen, un élève a les mains moites, le cœur qui bat vite et un taux d'adrénaline élevé dans le sang. Classe ces manifestations.",
+        "title": "La candidate de la finale de miss district (situation d'apprentissage)",
+        "statement": "Pendant l'attente des résultats, une candidate est toute pâle, silencieuse et transpire à grosses gouttes. À l'appel de son nom, elle court, pousse des cris et pleure de joie. Identifie ses manifestations.",
         "methodSteps": [
-          "Les mains moites (transpiration) et le cœur rapide se voient ou se sentent : manifestations visibles (perceptibles).",
-          "Le taux d'adrénaline ne se voit qu'avec une analyse de sang : manifestation invisible."
+          "Avant les résultats : pâleur, silence et transpiration abondante sont des manifestations visibles de son émotion.",
+          "Après l'appel de son nom : course, cris et pleurs de joie sont d'autres manifestations visibles.",
+          "En parallèle, des manifestations invisibles accompagnent ces états, comme l'augmentation du taux d'adrénaline et de glucocorticoïdes dans le sang."
         ],
-        "conclusion": "Transpiration et cœur rapide : visibles ; hausse de l'adrénaline : invisible."
+        "conclusion": "La même personne présente, selon le moment, des manifestations visibles différentes, doublées de manifestations hormonales invisibles."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Une réaction émotionnelle",
-          "stepTheme": "Une réaction émotionnelle",
-          "stepBadge": "Une réaction émotionnelle",
-          "paragraphText": "Pâleur, silence, transpiration, puis cris et pleurs de joie à l'annonce d'un résultat : ce sont des réactions émotionnelles.",
+          "stepTitle": "Une manifestation visible",
+          "stepTheme": "Une manifestation visible",
+          "stepBadge": "Une manifestation visible",
+          "paragraphText": "• Manifestation visible : manifestation perceptible d'une réaction émotionnelle, comme la pâleur du visage, la transpiration abondante, les frissons ou les sauts.\nLe texte cite aussi le raidissement musculaire, le fait de battre la semelle, de sautiller et de claquer des mains.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q1",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q1",
             "type": "mcq",
-            "prompt": "Pendant l'attente des résultats d'un concours, une candidate est pâle, silencieuse et transpire à grosses gouttes ; à l'appel de son nom, elle crie et pleure de joie. Comment appelle-t-on ces réactions ?",
+            "prompt": "Parmi les manifestations suivantes, laquelle est visible ?",
             "options": [
-              "Des réflexes médullaires",
-              "Des réactions émotionnelles",
-              "Des mouvements volontaires",
-              "Des maladies"
+              "L'augmentation du taux d'adrénaline dans le sang",
+              "La pâleur du visage",
+              "L'augmentation du taux de cortisol dans le sang",
+              "La libération de glucocorticoïdes"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Ce sont des réponses de l'organisme à une situation de stress."
+            "explanation": "La pâleur du visage se voit directement. Les variations hormonales, elles, ne se révèlent que par des dosages : ce sont des manifestations invisibles."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "propriete",
-          "stepTitle": "Visibles ou invisibles",
-          "stepTheme": "Visibles ou invisibles",
-          "stepBadge": "Visibles ou invisibles",
-          "paragraphText": "Les manifestations sont visibles (pâleur, sueur, rire, larmes, sauts) ou invisibles (hausse de certaines hormones dans le sang).",
+          "stepKind": "definition",
+          "stepTitle": "Une manifestation invisible",
+          "stepTheme": "Une manifestation invisible",
+          "stepBadge": "Une manifestation invisible",
+          "paragraphText": "• Manifestation invisible : manifestation imperceptible d'une réaction émotionnelle, comme l'augmentation du taux de certaines hormones dans le sang.\nLe texte cite l'adrénaline et les glucocorticoïdes, dosés dans le sang en situation de stress.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q2",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q2",
             "type": "mcq",
-            "prompt": "Parmi ces manifestations d'une réaction émotionnelle (pâleur du visage, transpiration abondante, augmentation du taux d'adrénaline dans le sang, larmes), laquelle est INVISIBLE ?",
+            "prompt": "Quelle manifestation est invisible ?",
             "options": [
-              "La pâleur du visage",
-              "La transpiration abondante",
+              "Les larmes",
+              "Le rire",
               "L'augmentation du taux d'adrénaline dans le sang",
-              "Les larmes"
+              "Les sauts"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "On ne la découvre que par un dosage hormonal."
+            "explanation": "L'augmentation du taux d'adrénaline ne se perçoit pas à l'œil nu : elle se révèle par un dosage hormonal. Le rire, les larmes et les sauts sont visibles."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Les hormones du stress",
-          "stepTheme": "Les hormones du stress",
-          "stepBadge": "Les hormones du stress",
-          "paragraphText": "« Dans un grand nombre de situations de stress, des dosages hormonaux révèlent une augmentation sensible du taux de certaines hormones dans le sang. C'est le cas de l'adrénaline et des glucocorticoïdes. »",
+          "stepKind": "propriete",
+          "stepTitle": "Des réponses involontaires",
+          "stepTheme": "Des réponses involontaires",
+          "stepBadge": "Des réponses involontaires",
+          "paragraphText": "Les manifestations citées dans le texte sont des réponses nettement visibles et des expressions involontaires de la réaction émotionnelle.\nElles ne dépendent donc pas d'une décision réfléchie de la personne émue.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q3",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q3",
             "type": "mcq",
-            "prompt": "D'après le texte de Tavernier, quelles hormones voient leur taux augmenter dans le sang lors d'une situation de stress ?",
+            "prompt": "Selon le texte, les manifestations visibles de l'émotion sont :",
             "options": [
-              "L'insuline et le glucagon",
-              "L'adrénaline et les glucocorticoïdes (cortisol)",
-              "La testostérone et les œstrogènes",
-              "La thyroxine seulement"
+              "Des réponses volontaires et réfléchies",
+              "Des expressions involontaires de la réaction émotionnelle",
+              "Des réponses uniquement musculaires",
+              "Des réponses toujours identiques chez tous"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Ce sont les deux grandes familles d'hormones du stress."
+            "explanation": "Le texte précise que ces réponses sont des expressions involontaires de la réaction émotionnelle."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "propriete",
-          "stepTitle": "La pâleur",
-          "stepTheme": "La pâleur",
-          "stepBadge": "La pâleur",
-          "paragraphText": "La pâleur du visage est due à la diminution du diamètre des vaisseaux sanguins sous la peau.",
+          "stepTitle": "L'origine de la pâleur du visage",
+          "stepTheme": "L'origine de la pâleur du visage",
+          "stepBadge": "L'origine de la pâleur du visage",
+          "paragraphText": "La pâleur du visage est due à la diminution du diamètre des vaisseaux sanguins sous-cutanés.\nMoins de sang sous la peau donne au visage son aspect pâle pendant l'émotion.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q4",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q4",
             "type": "mcq",
-            "prompt": "Lors d'une forte émotion, le visage d'une personne devient pâle. Quelle est la cause de cette pâleur ?",
+            "prompt": "La pâleur du visage pendant une émotion est due à :",
             "options": [
+              "L'augmentation du diamètre des vaisseaux sous-cutanés",
+              "La transpiration abondante",
               "La diminution du diamètre des vaisseaux sanguins sous-cutanés",
-              "L'augmentation du nombre de globules rouges",
-              "La transpiration",
-              "Le froid"
+              "La libération de larmes"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Moins de sang passe sous la peau : le visage blanchit."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est l'interprétation donnée par la leçon : les vaisseaux sanguins sous-cutanés voient leur diamètre diminuer, d'où la pâleur."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Le rôle des hormones",
-          "stepTheme": "Le rôle des hormones",
-          "stepBadge": "Le rôle des hormones",
-          "paragraphText": "La modification du rythme cardiaque et respiratoire et la transpiration sont dues à des hormones libérées dans le sang, qui agissent sur des organes cibles.",
+          "stepKind": "piege",
+          "stepTitle": "Le rire n'est pas invisible",
+          "stepTheme": "Le rire n'est pas invisible",
+          "stepBadge": "Le rire n'est pas invisible",
+          "paragraphText": "Piège de l'exercice 1 de consolidation : affirmer que le rire est une manifestation imperceptible est faux.\nLe rire, comme les pleurs, se voit et s'entend : ce sont des manifestations perceptibles, au même titre que l'accélération du rythme cardiaque provoquée par la production d'hormones.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q5",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q5",
             "type": "mcq",
-            "prompt": "Lors d'une réaction émotionnelle, le cœur accélère, la respiration change et la transpiration augmente. À quoi ces modifications sont-elles dues ?",
+            "prompt": "Dans l'exercice 1 de la leçon, l'affirmation « le rire est une manifestation imperceptible » est :",
             "options": [
-              "À des hormones libérées dans le sang qui agissent sur des organes cibles",
-              "À la digestion",
-              "À un effort physique seulement",
-              "À la volonté de la personne"
+              "Vraie, car le rire ne se voit pas",
+              "Vraie, car le rire est une hormone",
+              "Fausse uniquement pour les pleurs",
+              "Fausse, car le rire est une manifestation perceptible"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Ces réponses sont involontaires : elles sont commandées par les hormones et le système nerveux."
+            "correctAnswerIndex": 3,
+            "explanation": "Le rire est perceptible : l'affirmation est fausse. Les manifestations imperceptibles sont les variations hormonales dans le sang."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "propriete",
-          "stepTitle": "Rire, mutisme, paroles",
-          "stepTheme": "Rire, mutisme, paroles",
-          "stepBadge": "Rire, mutisme, paroles",
-          "paragraphText": "Certains centres nerveux du cerveau sont stimulés ou inhibés : cela provoque le rire, le mutisme ou le flot de paroles.",
+          "stepKind": "exemple",
+          "stepTitle": "La candidate pâle et en sueur",
+          "stepTheme": "La candidate pâle et en sueur",
+          "stepBadge": "La candidate pâle et en sueur",
+          "paragraphText": "Dans la situation d'apprentissage, la candidate en attente des résultats est toute pâle, silencieuse et transpire à grosses gouttes.\nÀ l'appel de son nom, elle court, pousse des cris et pleure de joie : autant de manifestations visibles successives.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q6",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q6",
             "type": "mcq",
-            "prompt": "Sous le coup d'une émotion, une personne reste muette tandis qu'une autre parle sans s'arrêter. Qu'est-ce qui explique ces réactions ?",
+            "prompt": "Dans la situation d'apprentissage, avant les résultats, la candidate présente :",
             "options": [
-              "Des centres nerveux cérébraux stimulés ou inhibés",
-              "Une maladie de la langue",
-              "La digestion",
-              "Le manque d'oxygène"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le cerveau commande ces réponses émotionnelles."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Stress et émotion",
-          "stepTheme": "Stress et émotion",
-          "stepBadge": "Stress et émotion",
-          "paragraphText": "Ces manifestations résultent du stress : l'émotion est une manifestation du stress. Elles sont involontaires.",
-          "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q7",
-            "type": "mcq",
-            "prompt": "Le texte de Tavernier dit que ces réponses « sont des expressions involontaires de la réaction émotionnelle ». Laquelle de ces affirmations est donc FAUSSE ?",
-            "options": [
-              "Les manifestations émotionnelles résultent du stress",
-              "On peut décider de ne pas pâlir sous l'effet d'une forte peur",
-              "L'émotion est une manifestation du stress",
-              "Certaines manifestations sont visibles, d'autres invisibles"
+              "Des cris et des pleurs de joie",
+              "Une pâleur, un silence et une transpiration à grosses gouttes",
+              "Un flot de paroles et des sauts uniquement",
+              "Aucune manifestation"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La pâleur est involontaire : on ne la commande pas."
+            "explanation": "C'est la description de la situation d'apprentissage : pâle, silencieuse, transpirant à grosses gouttes pendant l'attente."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q1",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q1",
           "type": "mcq",
-          "prompt": "Pendant l'attente des résultats d'un concours, une candidate est pâle, silencieuse et transpire à grosses gouttes ; à l'appel de son nom, elle crie et pleure de joie. Comment appelle-t-on ces réactions ?",
+          "prompt": "Parmi les manifestations suivantes, laquelle est visible ?",
           "options": [
-            "Des réflexes médullaires",
-            "Des réactions émotionnelles",
-            "Des mouvements volontaires",
-            "Des maladies"
+            "L'augmentation du taux d'adrénaline dans le sang",
+            "La pâleur du visage",
+            "L'augmentation du taux de cortisol dans le sang",
+            "La libération de glucocorticoïdes"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Ce sont des réponses de l'organisme à une situation de stress."
+          "explanation": "La pâleur du visage se voit directement. Les variations hormonales, elles, ne se révèlent que par des dosages : ce sont des manifestations invisibles."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q2",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q2",
           "type": "mcq",
-          "prompt": "Parmi ces manifestations d'une réaction émotionnelle (pâleur du visage, transpiration abondante, augmentation du taux d'adrénaline dans le sang, larmes), laquelle est INVISIBLE ?",
+          "prompt": "Quelle manifestation est invisible ?",
           "options": [
-            "La pâleur du visage",
-            "La transpiration abondante",
+            "Les larmes",
+            "Le rire",
             "L'augmentation du taux d'adrénaline dans le sang",
-            "Les larmes"
+            "Les sauts"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "On ne la découvre que par un dosage hormonal."
+          "explanation": "L'augmentation du taux d'adrénaline ne se perçoit pas à l'œil nu : elle se révèle par un dosage hormonal. Le rire, les larmes et les sauts sont visibles."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q3",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q3",
           "type": "mcq",
-          "prompt": "D'après le texte de Tavernier, quelles hormones voient leur taux augmenter dans le sang lors d'une situation de stress ?",
+          "prompt": "Selon le texte, les manifestations visibles de l'émotion sont :",
           "options": [
-            "L'insuline et le glucagon",
-            "L'adrénaline et les glucocorticoïdes (cortisol)",
-            "La testostérone et les œstrogènes",
-            "La thyroxine seulement"
+            "Des réponses volontaires et réfléchies",
+            "Des expressions involontaires de la réaction émotionnelle",
+            "Des réponses uniquement musculaires",
+            "Des réponses toujours identiques chez tous"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Ce sont les deux grandes familles d'hormones du stress."
+          "explanation": "Le texte précise que ces réponses sont des expressions involontaires de la réaction émotionnelle."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q4",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q4",
           "type": "mcq",
-          "prompt": "Lors d'une forte émotion, le visage d'une personne devient pâle. Quelle est la cause de cette pâleur ?",
+          "prompt": "La pâleur du visage pendant une émotion est due à :",
           "options": [
+            "L'augmentation du diamètre des vaisseaux sous-cutanés",
+            "La transpiration abondante",
             "La diminution du diamètre des vaisseaux sanguins sous-cutanés",
-            "L'augmentation du nombre de globules rouges",
-            "La transpiration",
-            "Le froid"
+            "La libération de larmes"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Moins de sang passe sous la peau : le visage blanchit."
+          "correctAnswerIndex": 2,
+          "explanation": "C'est l'interprétation donnée par la leçon : les vaisseaux sanguins sous-cutanés voient leur diamètre diminuer, d'où la pâleur."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q5",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q5",
           "type": "mcq",
-          "prompt": "Lors d'une réaction émotionnelle, le cœur accélère, la respiration change et la transpiration augmente. À quoi ces modifications sont-elles dues ?",
+          "prompt": "Dans l'exercice 1 de la leçon, l'affirmation « le rire est une manifestation imperceptible » est :",
           "options": [
-            "À des hormones libérées dans le sang qui agissent sur des organes cibles",
-            "À la digestion",
-            "À un effort physique seulement",
-            "À la volonté de la personne"
+            "Vraie, car le rire ne se voit pas",
+            "Vraie, car le rire est une hormone",
+            "Fausse uniquement pour les pleurs",
+            "Fausse, car le rire est une manifestation perceptible"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ces réponses sont involontaires : elles sont commandées par les hormones et le système nerveux."
+          "correctAnswerIndex": 3,
+          "explanation": "Le rire est perceptible : l'affirmation est fausse. Les manifestations imperceptibles sont les variations hormonales dans le sang."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q6",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p01_q6",
           "type": "mcq",
-          "prompt": "Sous le coup d'une émotion, une personne reste muette tandis qu'une autre parle sans s'arrêter. Qu'est-ce qui explique ces réactions ?",
+          "prompt": "Dans la situation d'apprentissage, avant les résultats, la candidate présente :",
           "options": [
-            "Des centres nerveux cérébraux stimulés ou inhibés",
-            "Une maladie de la langue",
-            "La digestion",
-            "Le manque d'oxygène"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le cerveau commande ces réponses émotionnelles."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p01_q7",
-          "type": "mcq",
-          "prompt": "Le texte de Tavernier dit que ces réponses « sont des expressions involontaires de la réaction émotionnelle ». Laquelle de ces affirmations est donc FAUSSE ?",
-          "options": [
-            "Les manifestations émotionnelles résultent du stress",
-            "On peut décider de ne pas pâlir sous l'effet d'une forte peur",
-            "L'émotion est une manifestation du stress",
-            "Certaines manifestations sont visibles, d'autres invisibles"
+            "Des cris et des pleurs de joie",
+            "Une pâleur, un silence et une transpiration à grosses gouttes",
+            "Un flot de paroles et des sauts uniquement",
+            "Aucune manifestation"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La pâleur est involontaire : on ne la commande pas."
+          "explanation": "C'est la description de la situation d'apprentissage : pâle, silencieuse, transpirant à grosses gouttes pendant l'attente."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l01_reactions_emotionnelles_p02",
+      "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02",
       "order": 2,
       "title": "Les causes des réactions émotionnelles",
-      "summary": "Contraintes émotionnelles, agressions physiques, changements brutaux de l'environnement.",
-      "conceptExplanation": "Texte (Tavernier, Biologie Tle D) : de très nombreuses situations de la vie courante peuvent représenter un stress. Elles se rangent en trois catégories.\n\n1. Les contraintes d'ordre émotionnel : une peur violente, l'entassement dans une foule, l'inquiétude due à une situation nouvelle, l'approche d'un examen, une colère, des menaces physiques, l'attente d'une opération chirurgicale, la violence de certains films, la joie, l'attente d'un résultat.\n\n2. Les agressions physiques : accidents, traumatismes, hémorragies, douleurs, exercices physiques intenses et prolongés, maladies infectieuses, intoxications.\n\n3. Les modifications brutales de l'environnement : forte et brusque variation de la température, diminution de l'apport d'oxygène, déshydratation.\n\nConclusion : les réactions émotionnelles se manifestent à la suite de certaines situations : ce sont leurs causes, appelées agents stressants.",
-      "keyRule": "Trois catégories de causes : contraintes d'ordre émotionnel (peur, joie, examen), agressions physiques (accident, douleur), modifications brutales de l'environnement (chaleur, manque d'O₂, déshydratation).",
+      "summary": "Classer les causes des réactions émotionnelles en trois catégories.",
+      "conceptExplanation": "De très nombreuses situations de la vie courante sont susceptibles de représenter un stress.\nLes contraintes d'ordre émotionnel : une peur violente, l'entassement dans une foule, l'inquiétude due à une situation nouvelle, l'approche d'un examen, une colère, des menaces physiques, l'attente d'une intervention chirurgicale, la violence présentée dans certains films, la joie, l'attente d'un résultat.\nLes agressions physiques : accidents, traumatismes, hémorragies, douleurs, exercices physiques intenses et prolongés, maladies infectieuses, intoxications.\nLes modifications brutales de l'environnement : brusque et importante variation de la température, diminution de l'apport d'oxygène, déshydratation.\nLes réactions émotionnelles se manifestent donc suite à certaines situations chez l'Homme.",
+      "keyRule": "Trois familles de causes : contraintes d'ordre émotionnel, agressions physiques et modifications brutales de l'environnement.",
       "formulas": [],
       "workedExample": {
-        "title": "Associer cause et catégorie",
-        "statement": "Associe chaque cause à sa catégorie : déshydratation ; accident ; joie.",
+        "title": "Classer trois causes (exercice 2 de consolidation)",
+        "statement": "Classe les causes suivantes : déshydratation, accident, joie.",
         "methodSteps": [
-          "La déshydratation est un changement brutal du milieu (manque d'eau).",
-          "L'accident est une atteinte du corps.",
-          "La joie est un sentiment."
+          "La déshydratation est un changement brutal subi par l'organisme dans son milieu : c'est une modification brutale de l'environnement.",
+          "L'accident atteint directement le corps : c'est une agression physique.",
+          "La joie est un état affectif : c'est une contrainte d'ordre émotionnel."
         ],
         "conclusion": "Déshydratation : modification brutale de l'environnement ; accident : agression physique ; joie : contrainte d'ordre émotionnel."
       },
@@ -298,261 +264,230 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Trois catégories",
-          "stepTheme": "Trois catégories",
-          "stepBadge": "Trois catégories",
-          "paragraphText": "Les causes des réactions émotionnelles : contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement.",
+          "stepTitle": "Les contraintes d'ordre émotionnel",
+          "stepTheme": "Les contraintes d'ordre émotionnel",
+          "stepBadge": "Les contraintes d'ordre émotionnel",
+          "paragraphText": "• Contraintes d'ordre émotionnel : situations affectives susceptibles de représenter un stress, comme une peur violente, une colère ou l'approche d'un examen.\nLa leçon y range aussi l'entassement dans une foule, l'attente d'une intervention chirurgicale et la joie.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q1",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q1",
             "type": "mcq",
-            "prompt": "En quelles trois catégories range-t-on les causes des réactions émotionnelles chez l'Homme ?",
+            "prompt": "L'approche d'un examen est une cause de type :",
             "options": [
-              "Contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement",
-              "Nourriture, sommeil, sport",
-              "Hormones, nerfs, muscles",
-              "Visibles, invisibles, mixtes"
+              "Agression physique",
+              "Modification brutale de l'environnement",
+              "Contrainte d'ordre émotionnel",
+              "Aucune cause, ce n'est pas un stress"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Ce sont les agents stressants."
+            "correctAnswerIndex": 2,
+            "explanation": "L'approche d'un examen figure dans la liste des contraintes d'ordre émotionnel du texte."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "Contrainte émotionnelle",
-          "stepTheme": "Contrainte émotionnelle",
-          "stepBadge": "Contrainte émotionnelle",
-          "paragraphText": "Une peur violente, l'approche d'un examen, une colère, la joie, l'attente d'un résultat sont des contraintes d'ordre émotionnel.",
+          "stepKind": "definition",
+          "stepTitle": "Les agressions physiques",
+          "stepTheme": "Les agressions physiques",
+          "stepBadge": "Les agressions physiques",
+          "paragraphText": "• Agressions physiques : atteintes directes du corps susceptibles de représenter un stress.\nLa leçon cite les accidents, les traumatismes, les hémorragies, les douleurs, les exercices physiques intenses et prolongés, les maladies infectieuses et les intoxications.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q2",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q2",
             "type": "mcq",
-            "prompt": "L'approche de l'examen du BAC provoque chez un élève des mains moites et un cœur qui bat vite. Dans quelle catégorie de causes se range « l'approche d'un examen » ?",
+            "prompt": "Parmi les causes suivantes, laquelle est une agression physique ?",
             "options": [
-              "Agression physique",
-              "Contrainte d'ordre émotionnel",
-              "Modification brutale de l'environnement",
-              "Maladie infectieuse"
+              "L'inquiétude due à une situation nouvelle",
+              "Une hémorragie",
+              "L'attente d'un résultat",
+              "La violence dans un film"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est une inquiétude, une pression psychologique."
+            "explanation": "Une hémorragie est citée parmi les agressions physiques. Les autres propositions relèvent des contraintes d'ordre émotionnel."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Agression physique",
-          "stepTheme": "Agression physique",
-          "stepBadge": "Agression physique",
-          "paragraphText": "Accidents, traumatismes, hémorragies, douleurs, exercices intenses et prolongés, intoxications sont des agressions physiques.",
+          "stepKind": "definition",
+          "stepTitle": "Les modifications brutales de l'environnement",
+          "stepTheme": "Les modifications brutales de l'environnement",
+          "stepBadge": "Les modifications brutales de l'environnement",
+          "paragraphText": "• Modifications brutales de l'environnement : changements soudains du milieu susceptibles de représenter un stress.\nLa leçon cite une brusque et importante variation de la température, une diminution de l'apport d'oxygène et une déshydratation.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q3",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q3",
             "type": "mcq",
-            "prompt": "Les causes des réactions émotionnelles sont : contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement. Dans quelle catégorie se range un accident de la route ?",
+            "prompt": "La déshydratation est classée par la leçon parmi :",
             "options": [
-              "Contrainte d'ordre émotionnel",
-              "Agression physique",
-              "Modification brutale de l'environnement",
-              "Aucune"
+              "Les contraintes d'ordre émotionnel",
+              "Les agressions physiques",
+              "Les manifestations invisibles",
+              "Les modifications brutales de l'environnement"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "L'accident atteint directement le corps."
+            "correctAnswerIndex": 3,
+            "explanation": "La déshydratation figure, avec la variation brutale de température et la baisse d'apport d'oxygène, parmi les modifications brutales de l'environnement."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Changement du milieu",
-          "stepTheme": "Changement du milieu",
-          "stepBadge": "Changement du milieu",
-          "paragraphText": "Une brusque variation de la température, une diminution de l'apport d'oxygène, une déshydratation sont des modifications brutales de l'environnement.",
+          "stepKind": "propriete",
+          "stepTitle": "La joie aussi peut stresser",
+          "stepTheme": "La joie aussi peut stresser",
+          "stepBadge": "La joie aussi peut stresser",
+          "paragraphText": "La joie et l'attente d'un résultat figurent dans la leçon parmi les contraintes d'ordre émotionnel.\nUne émotion agréable peut donc aussi déclencher des réactions émotionnelles et du stress chez l'Homme.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q4",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q4",
             "type": "mcq",
-            "prompt": "Les causes des réactions émotionnelles sont : contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement. Dans quelle catégorie se range la déshydratation ?",
+            "prompt": "Selon la leçon, la joie est :",
             "options": [
-              "Contrainte d'ordre émotionnel",
-              "Agression physique",
-              "Modification brutale de l'environnement",
-              "Aucune"
+              "Toujours sans effet sur l'organisme",
+              "Une contrainte d'ordre émotionnel pouvant causer des réactions émotionnelles",
+              "Une agression physique",
+              "Une modification brutale de l'environnement"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "C'est un changement brutal des conditions du milieu."
+            "correctAnswerIndex": 1,
+            "explanation": "La joie est listée parmi les contraintes d'ordre émotionnel qui causent des réactions émotionnelles et le stress."
           }
         },
         {
           "stepNumber": 5,
           "stepKind": "piege",
-          "stepTitle": "La joie aussi",
-          "stepTheme": "La joie aussi",
-          "stepBadge": "La joie aussi",
-          "paragraphText": "Une émotion agréable comme la joie est aussi une contrainte d'ordre émotionnel : elle déclenche une réaction de stress.",
+          "stepTitle": "Ne pas confondre cause et manifestation",
+          "stepTheme": "Ne pas confondre cause et manifestation",
+          "stepBadge": "Ne pas confondre cause et manifestation",
+          "paragraphText": "Piège : la transpiration abondante ou la pâleur sont des manifestations, pas des causes.\nLes causes sont les situations de départ : peur violente, accident, déshydratation, approche d'un examen, etc.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q5",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q5",
             "type": "mcq",
-            "prompt": "Une candidate pleure et crie de joie en apprenant sa victoire. La joie peut-elle être une cause de réaction émotionnelle ?",
+            "prompt": "Laquelle de ces propositions est une manifestation et non une cause ?",
             "options": [
-              "Non, seules les mauvaises nouvelles causent une réaction émotionnelle",
-              "Oui, c'est une contrainte d'ordre émotionnel",
-              "Oui, c'est une agression physique",
-              "Oui, c'est une modification de l'environnement"
+              "Une peur violente",
+              "Un accident",
+              "La transpiration abondante",
+              "Une déshydratation"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Une émotion forte, agréable ou non, provoque une réaction."
+            "correctAnswerIndex": 2,
+            "explanation": "La transpiration abondante est une manifestation visible. Peur, accident et déshydratation sont des causes, dans trois catégories différentes."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Un exercice intense",
-          "stepTheme": "Un exercice intense",
-          "stepBadge": "Un exercice intense",
-          "paragraphText": "Les exercices physiques intenses et prolongés sont rangés parmi les agressions physiques.",
+          "stepTitle": "L'attente d'une intervention chirurgicale",
+          "stepTheme": "L'attente d'une intervention chirurgicale",
+          "stepBadge": "L'attente d'une intervention chirurgicale",
+          "paragraphText": "L'attente d'une intervention chirurgicale est citée parmi les contraintes d'ordre émotionnel.\nDe même, la violence présentée dans certains films de cinéma ou de télévision peut représenter un stress sans aucune atteinte physique directe.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q6",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q6",
             "type": "mcq",
-            "prompt": "Un athlète court un marathon de 42 km sous le soleil. Selon le texte de Tavernier, dans quelle catégorie de causes de stress se range un exercice physique intense et prolongé ?",
+            "prompt": "La violence présentée dans un film relève, selon la leçon, des :",
             "options": [
-              "Contrainte d'ordre émotionnel",
-              "Agression physique",
-              "Modification brutale de l'environnement",
-              "Ce n'est pas une cause de stress"
+              "Agressions physiques",
+              "Contraintes d'ordre émotionnel",
+              "Modifications brutales de l'environnement",
+              "Manifestations invisibles"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "L'effort intense agresse l'organisme."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "methode",
-          "stepTitle": "Associer",
-          "stepTheme": "Associer",
-          "stepBadge": "Associer",
-          "paragraphText": "Déshydratation → modification brutale de l'environnement ; accident → agression physique ; joie → contrainte d'ordre émotionnel.",
-          "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q7",
-            "type": "mcq",
-            "prompt": "Associe les causes (déshydratation, accident, joie) aux catégories (agression physique, contrainte d'ordre émotionnel, modification brutale de l'environnement). Quelle est la bonne association ?",
-            "options": [
-              "Déshydratation – agression physique ; accident – contrainte émotionnelle ; joie – environnement",
-              "Déshydratation – environnement ; accident – agression physique ; joie – contrainte émotionnelle",
-              "Déshydratation – contrainte émotionnelle ; accident – environnement ; joie – agression physique",
-              "Les trois sont des agressions physiques"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Chaque cause correspond à une seule catégorie."
+            "explanation": "Le texte range la violence présentée dans certains films parmi les contraintes d'ordre émotionnel."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q1",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q1",
           "type": "mcq",
-          "prompt": "En quelles trois catégories range-t-on les causes des réactions émotionnelles chez l'Homme ?",
-          "options": [
-            "Contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement",
-            "Nourriture, sommeil, sport",
-            "Hormones, nerfs, muscles",
-            "Visibles, invisibles, mixtes"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ce sont les agents stressants."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q2",
-          "type": "mcq",
-          "prompt": "L'approche de l'examen du BAC provoque chez un élève des mains moites et un cœur qui bat vite. Dans quelle catégorie de causes se range « l'approche d'un examen » ?",
+          "prompt": "L'approche d'un examen est une cause de type :",
           "options": [
             "Agression physique",
-            "Contrainte d'ordre émotionnel",
             "Modification brutale de l'environnement",
-            "Maladie infectieuse"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "C'est une inquiétude, une pression psychologique."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q3",
-          "type": "mcq",
-          "prompt": "Les causes des réactions émotionnelles sont : contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement. Dans quelle catégorie se range un accident de la route ?",
-          "options": [
             "Contrainte d'ordre émotionnel",
-            "Agression physique",
-            "Modification brutale de l'environnement",
-            "Aucune"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "L'accident atteint directement le corps."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q4",
-          "type": "mcq",
-          "prompt": "Les causes des réactions émotionnelles sont : contraintes d'ordre émotionnel, agressions physiques, modifications brutales de l'environnement. Dans quelle catégorie se range la déshydratation ?",
-          "options": [
-            "Contrainte d'ordre émotionnel",
-            "Agression physique",
-            "Modification brutale de l'environnement",
-            "Aucune"
+            "Aucune cause, ce n'est pas un stress"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "C'est un changement brutal des conditions du milieu."
+          "explanation": "L'approche d'un examen figure dans la liste des contraintes d'ordre émotionnel du texte."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q5",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q2",
           "type": "mcq",
-          "prompt": "Une candidate pleure et crie de joie en apprenant sa victoire. La joie peut-elle être une cause de réaction émotionnelle ?",
+          "prompt": "Parmi les causes suivantes, laquelle est une agression physique ?",
           "options": [
-            "Non, seules les mauvaises nouvelles causent une réaction émotionnelle",
-            "Oui, c'est une contrainte d'ordre émotionnel",
-            "Oui, c'est une agression physique",
-            "Oui, c'est une modification de l'environnement"
+            "L'inquiétude due à une situation nouvelle",
+            "Une hémorragie",
+            "L'attente d'un résultat",
+            "La violence dans un film"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Une émotion forte, agréable ou non, provoque une réaction."
+          "explanation": "Une hémorragie est citée parmi les agressions physiques. Les autres propositions relèvent des contraintes d'ordre émotionnel."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q6",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q3",
           "type": "mcq",
-          "prompt": "Un athlète court un marathon de 42 km sous le soleil. Selon le texte de Tavernier, dans quelle catégorie de causes de stress se range un exercice physique intense et prolongé ?",
+          "prompt": "La déshydratation est classée par la leçon parmi :",
           "options": [
-            "Contrainte d'ordre émotionnel",
-            "Agression physique",
-            "Modification brutale de l'environnement",
-            "Ce n'est pas une cause de stress"
+            "Les contraintes d'ordre émotionnel",
+            "Les agressions physiques",
+            "Les manifestations invisibles",
+            "Les modifications brutales de l'environnement"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "L'effort intense agresse l'organisme."
+          "correctAnswerIndex": 3,
+          "explanation": "La déshydratation figure, avec la variation brutale de température et la baisse d'apport d'oxygène, parmi les modifications brutales de l'environnement."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p02_q7",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q4",
           "type": "mcq",
-          "prompt": "Associe les causes (déshydratation, accident, joie) aux catégories (agression physique, contrainte d'ordre émotionnel, modification brutale de l'environnement). Quelle est la bonne association ?",
+          "prompt": "Selon la leçon, la joie est :",
           "options": [
-            "Déshydratation – agression physique ; accident – contrainte émotionnelle ; joie – environnement",
-            "Déshydratation – environnement ; accident – agression physique ; joie – contrainte émotionnelle",
-            "Déshydratation – contrainte émotionnelle ; accident – environnement ; joie – agression physique",
-            "Les trois sont des agressions physiques"
+            "Toujours sans effet sur l'organisme",
+            "Une contrainte d'ordre émotionnel pouvant causer des réactions émotionnelles",
+            "Une agression physique",
+            "Une modification brutale de l'environnement"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Chaque cause correspond à une seule catégorie."
+          "explanation": "La joie est listée parmi les contraintes d'ordre émotionnel qui causent des réactions émotionnelles et le stress."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q5",
+          "type": "mcq",
+          "prompt": "Laquelle de ces propositions est une manifestation et non une cause ?",
+          "options": [
+            "Une peur violente",
+            "Un accident",
+            "La transpiration abondante",
+            "Une déshydratation"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La transpiration abondante est une manifestation visible. Peur, accident et déshydratation sont des causes, dans trois catégories différentes."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p02_q6",
+          "type": "mcq",
+          "prompt": "La violence présentée dans un film relève, selon la leçon, des :",
+          "options": [
+            "Agressions physiques",
+            "Contraintes d'ordre émotionnel",
+            "Modifications brutales de l'environnement",
+            "Manifestations invisibles"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le texte range la violence présentée dans certains films parmi les contraintes d'ordre émotionnel."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l01_reactions_emotionnelles_p03",
+      "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03",
       "order": 3,
-      "title": "La régulation nerveuse : le système limbique",
-      "summary": "Le « cerveau émotionnel » est le système limbique ; le cortex atténue les émotions.",
-      "conceptExplanation": "Le système limbique : un ensemble de structures au centre du cerveau. Il comprend une partie du cortex (cingulum, hippocampe) et des noyaux sous-corticaux associés (amygdale, septum). Il est étroitement lié à l'hypothalamus.\n\nCas pathologiques humains (document 1) :\n- la destruction du système limbique entraîne une indifférence émotionnelle chez des sujets très agressifs ;\n- les malades atteints de lésions de l'hippocampe présentent, lors d'une crise de rage, des symptômes et des paroxysmes d'anxiété ;\n- la lésion du cortex, chez des individus dont l'hypothalamus est intact, provoque des crises de peur ou des pleurs exagérés pour des causes insignifiantes.\n\nCe qu'on en déduit :\n- le système limbique joue un rôle capital dans le déclenchement des émotions : c'est le « cerveau émotionnel » ; il apprend la valeur affective des stimulations et intervient dans le choix du comportement (défense, attaque, fuite) ;\n- l'hippocampe atténue l'anxiété ;\n- le cortex atténue (modère) les réactions émotionnelles.\n\nMécanisme de la régulation nerveuse :\n1. le système nerveux reçoit les informations de l'environnement ; elles arrivent dans les aires corticales sensorielles ;\n2. des messages nerveux partent de ces aires vers le système limbique ;\n3. le système limbique met en alerte l'hypothalamus, puis les zones bulbo-médullaires orthosympathiques ;\n4. il s'ensuit une réponse somatique (effecteurs : cœur, muscles, glandes).",
-      "keyRule": "Régulation nerveuse : aires sensorielles → système limbique → hypothalamus → centres orthosympathiques du bulbe et de la moelle → effecteurs. Le cortex et l'hippocampe modèrent les émotions.",
+      "title": "La régulation nerveuse des réactions émotionnelles",
+      "summary": "Expliquer le rôle du système limbique et le trajet du message nerveux dans la régulation des émotions.",
+      "conceptExplanation": "Les observations des pathologies humaines montrent que le système limbique joue un rôle capital dans le déclenchement des émotions chez l'Homme, que l'hippocampe atténue l'anxiété et que le cortex atténue les réactions émotionnelles.\nLe système limbique comprend un cortex (cingulum, hippocampe) et des noyaux sous-corticaux associés (amygdale, septum). Il intervient dans le choix du comportement : défense, attaque, fuite, réaction physique. L'un de ses rôles fondamentaux est d'apprendre quelle est la valeur affective des stimulations sensorielles.\nLe mécanisme de la régulation nerveuse est le suivant : le système nerveux, comme récepteur, reçoit les informations provenant de l'environnement, qui se rassemblent dans les différentes aires corticales sensorielles ; les messages nerveux naissent dans ces aires et sont acheminés dans le système limbique ; le système limbique met en alerte l'hypothalamus, puis les zones bulbo-médullaires orthosympathiques, et il s'en suit une réponse somatique.\nLe cerveau émotionnel se trouve dans le système limbique.",
+      "keyRule": "Trajet nerveux de l'émotion : aires corticales sensorielles, puis système limbique, puis hypothalamus, puis zones bulbo-médullaires orthosympathiques, puis réponse somatique.",
       "formulas": [],
       "workedExample": {
-        "title": "Interpréter une lésion",
-        "statement": "Une personne dont le cortex est lésé (hypothalamus intact) pleure de façon exagérée pour une cause insignifiante. Que déduire sur le rôle du cortex ?",
+        "title": "Expliquer la régulation nerveuse (situation d'évaluation)",
+        "statement": "Explique le mécanisme de la régulation nerveuse des réactions émotionnelles.",
         "methodSteps": [
-          "Sans cortex, les réactions émotionnelles sont plus fortes que la normale.",
-          "Donc, normalement, le cortex les freine."
+          "Le système nerveux reçoit, comme récepteur, les informations provenant de l'environnement.",
+          "Ces informations se rassemblent dans les différentes aires corticales sensorielles, où naissent les messages nerveux.",
+          "Les messages sont acheminés dans le système limbique.",
+          "Le système limbique met en alerte l'hypothalamus, puis les zones bulbo-médullaires orthosympathiques.",
+          "Il s'en suit une réponse somatique."
         ],
-        "conclusion": "Le cortex atténue les réactions émotionnelles."
+        "conclusion": "La régulation nerveuse passe par le système limbique, véritable cerveau émotionnel, qui alerte l'hypothalamus."
       },
       "structuredSteps": [
         {
@@ -561,258 +496,225 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
           "stepTitle": "Le système limbique",
           "stepTheme": "Le système limbique",
           "stepBadge": "Le système limbique",
-          "paragraphText": "Le système limbique comprend une partie du cortex (cingulum, hippocampe) et des noyaux sous-corticaux (amygdale, septum).",
+          "paragraphText": "• Système limbique : ensemble comprenant un cortex (cingulum, hippocampe) et des noyaux sous-corticaux associés (amygdale, septum).\nLa leçon y situe le cerveau émotionnel.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q1",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q1",
             "type": "mcq",
-            "prompt": "Parmi ces structures du cerveau, lesquelles font partie du système limbique ?",
+            "prompt": "Le système limbique comprend notamment :",
             "options": [
-              "Le cervelet et la moelle épinière",
-              "L'hippocampe, le cingulum, l'amygdale et le septum",
-              "Le lobe occipital seulement",
-              "L'hypophyse et la thyroïde"
+              "Le cervelet et la moelle épinière uniquement",
+              "Le cingulum, l'hippocampe, l'amygdale et le septum",
+              "La corticosurrénale et la médullosurrénale",
+              "Le thalamus seul"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Ces structures entourent le centre du cerveau, près de l'hypothalamus."
+            "explanation": "D'après le document de la leçon, le système limbique associe le cortex (cingulum, hippocampe) et des noyaux sous-corticaux (amygdale, septum)."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "Sans système limbique",
-          "stepTheme": "Sans système limbique",
-          "stepBadge": "Sans système limbique",
-          "paragraphText": "« La destruction du système limbique entraîne une indifférence émotionnelle chez les sujets très agressifs. »",
+          "stepKind": "propriete",
+          "stepTitle": "Le rôle capital du système limbique",
+          "stepTheme": "Le rôle capital du système limbique",
+          "stepBadge": "Le rôle capital du système limbique",
+          "paragraphText": "Les pathologies humaines montrent que le système limbique joue un rôle capital dans le déclenchement des émotions chez l'Homme.\nIl intervient aussi dans le choix du comportement : défense, attaque, fuite, réaction physique.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q2",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q2",
             "type": "mcq",
-            "prompt": "On observe que « la destruction du système limbique entraîne une indifférence émotionnelle chez les sujets très agressifs ». Que peut-on en déduire ?",
+            "prompt": "Selon les cas pathologiques, le système limbique :",
             "options": [
-              "Le système limbique joue un rôle capital dans le déclenchement des émotions",
-              "Le système limbique commande la digestion",
-              "Le système limbique n'a aucun rôle",
-              "Le système limbique produit l'adrénaline"
+              "Atténue seulement l'anxiété",
+              "Ne joue aucun rôle dans les émotions",
+              "Joue un rôle capital dans le déclenchement des émotions",
+              "Sécrète l'adrénaline"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Sans lui, plus d'émotions : c'est le « cerveau émotionnel »."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est la constatation tirée des cas pathologiques : rôle capital dans le déclenchement des émotions. L'atténuation de l'anxiété revient à l'hippocampe."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "L'hippocampe",
-          "stepTheme": "L'hippocampe",
-          "stepBadge": "L'hippocampe",
-          "paragraphText": "« Les malades atteints de lésions de l'hippocampe présentent, lors d'une crise de rage, des symptômes d'anxiété et des paroxysmes d'anxiété. »",
+          "stepKind": "propriete",
+          "stepTitle": "Hippocampe et cortex atténuent",
+          "stepTheme": "Hippocampe et cortex atténuent",
+          "stepBadge": "Hippocampe et cortex atténuent",
+          "paragraphText": "L'hippocampe atténue l'anxiété chez l'Homme.\nLe cortex, lui, atténue les réactions émotionnelles chez l'Homme.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q3",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q3",
             "type": "mcq",
-            "prompt": "Des malades dont l'hippocampe est lésé présentent, lors d'une crise de rage, de très fortes crises d'anxiété. Quel est donc le rôle normal de l'hippocampe ?",
+            "prompt": "Qui atténue l'anxiété chez l'Homme, selon la leçon ?",
             "options": [
-              "Il augmente l'anxiété",
-              "Il atténue l'anxiété",
-              "Il commande les muscles",
-              "Il produit le cortisol"
+              "L'amygdale",
+              "Le septum",
+              "La médullosurrénale",
+              "L'hippocampe"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Sans lui, l'anxiété n'est plus freinée."
+            "correctAnswerIndex": 3,
+            "explanation": "La leçon attribue à l'hippocampe le rôle d'atténuer l'anxiété, et au cortex celui d'atténuer les réactions émotionnelles."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Le cortex modère",
-          "stepTheme": "Le cortex modère",
-          "stepBadge": "Le cortex modère",
-          "paragraphText": "« La lésion du cortex, chez des individus dont l'hypothalamus est intact, provoque des crises de peur ou des pleurs exagérés pour des causes insignifiantes. »",
+          "stepKind": "methode",
+          "stepTitle": "Le trajet du message nerveux",
+          "stepTheme": "Le trajet du message nerveux",
+          "stepBadge": "Le trajet du message nerveux",
+          "paragraphText": "Méthode : suivre l'ordre du mécanisme décrit dans la leçon.\nInformations de l'environnement, aires corticales sensorielles, système limbique, hypothalamus, zones bulbo-médullaires orthosympathiques, réponse somatique.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q4",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q4",
             "type": "mcq",
-            "prompt": "Chez des personnes dont le cortex est lésé mais l'hypothalamus intact, on observe des crises de peur ou des pleurs exagérés pour des causes insignifiantes. Quel est le rôle normal du cortex ?",
+            "prompt": "Dans la régulation nerveuse, le système limbique met en alerte :",
             "options": [
-              "Il déclenche les émotions",
-              "Il atténue les réactions émotionnelles",
-              "Il produit les larmes",
-              "Il n'a aucun rôle"
+              "L'hypothalamus",
+              "La corticosurrénale directement",
+              "Les glandes surrénales uniquement",
+              "Le cortex visuel"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Le cortex freine les réactions émotionnelles."
+            "correctAnswerIndex": 0,
+            "explanation": "Le mécanisme de la leçon : le système limbique met en alerte l'hypothalamus, puis les zones bulbo-médullaires orthosympathiques."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Choisir un comportement",
-          "stepTheme": "Choisir un comportement",
-          "stepBadge": "Choisir un comportement",
-          "paragraphText": "Le système limbique apprend la valeur affective des stimulations et intervient dans le choix du comportement : défense, attaque, fuite.",
+          "stepKind": "piege",
+          "stepTitle": "La valeur affective des stimulations",
+          "stepTheme": "La valeur affective des stimulations",
+          "stepBadge": "La valeur affective des stimulations",
+          "paragraphText": "Piège : le système limbique ne se contente pas de transmettre les messages.\nL'un de ses rôles fondamentaux est d'apprendre quelle est la valeur affective des stimulations sensorielles.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q5",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q5",
             "type": "mcq",
-            "prompt": "Face à un chien qui aboie, une personne décide de fuir. Quelle structure nerveuse intervient dans le choix de ce comportement émotionnel (défense, attaque ou fuite) ?",
+            "prompt": "L'un des rôles fondamentaux du système limbique est :",
             "options": [
-              "Le système limbique",
-              "Le cervelet",
-              "La rétine",
-              "Le muscle de la jambe"
+              "De sécréter le cortisol",
+              "D'apprendre la valeur affective des stimulations sensorielles",
+              "De dilater les bronches",
+              "De produire les larmes"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Il donne une valeur affective à ce que nous percevons."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le rôle fondamental indiqué dans l'interprétation de la leçon. Les autres propositions relèvent des effets hormonaux ou des manifestations."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "methode",
-          "stepTitle": "Le trajet nerveux",
-          "stepTheme": "Le trajet nerveux",
-          "stepBadge": "Le trajet nerveux",
-          "paragraphText": "Aires sensorielles → système limbique → hypothalamus → zones bulbo-médullaires orthosympathiques → réponse somatique.",
+          "stepKind": "exemple",
+          "stepTitle": "Défense, attaque ou fuite",
+          "stepTheme": "Défense, attaque ou fuite",
+          "stepBadge": "Défense, attaque ou fuite",
+          "paragraphText": "Le système limbique intervient dans le choix du comportement face à une situation émotionnelle.\nLa leçon cite quatre conduites possibles : défense, attaque, fuite, réaction physique.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q6",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q6",
             "type": "mcq",
-            "prompt": "Dans la régulation nerveuse des réactions émotionnelles, les messages partent des aires corticales sensorielles et arrivent au système limbique. Quelle structure le système limbique met-il ensuite en alerte ?",
+            "prompt": "Parmi les comportements suivants, lequel le système limbique aide-t-il à choisir ?",
             "options": [
-              "L'hypothalamus",
-              "Le cervelet",
-              "L'œil",
-              "La thyroïde"
+              "La digestion",
+              "Le sommeil profond",
+              "La fuite",
+              "La croissance"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "L'hypothalamus alerte ensuite les centres orthosympathiques du bulbe et de la moelle."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "Le cerveau émotionnel",
-          "stepTheme": "Le cerveau émotionnel",
-          "stepBadge": "Le cerveau émotionnel",
-          "paragraphText": "Le cerveau émotionnel se trouve dans le système limbique ; l'organisme contrôle les réactions émotionnelles par le système nerveux.",
-          "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q7",
-            "type": "mcq",
-            "prompt": "D'après l'étude des cas pathologiques (système limbique, hippocampe, cortex), où se trouve le « cerveau émotionnel » ?",
-            "options": [
-              "Dans le système limbique",
-              "Dans le cervelet",
-              "Dans le lobe occipital",
-              "Dans la moelle épinière"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est la conclusion de la régulation nerveuse."
+            "correctAnswerIndex": 2,
+            "explanation": "Défense, attaque, fuite et réaction physique sont les choix de comportement cités pour le système limbique."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q1",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q1",
           "type": "mcq",
-          "prompt": "Parmi ces structures du cerveau, lesquelles font partie du système limbique ?",
+          "prompt": "Le système limbique comprend notamment :",
           "options": [
-            "Le cervelet et la moelle épinière",
-            "L'hippocampe, le cingulum, l'amygdale et le septum",
-            "Le lobe occipital seulement",
-            "L'hypophyse et la thyroïde"
+            "Le cervelet et la moelle épinière uniquement",
+            "Le cingulum, l'hippocampe, l'amygdale et le septum",
+            "La corticosurrénale et la médullosurrénale",
+            "Le thalamus seul"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Ces structures entourent le centre du cerveau, près de l'hypothalamus."
+          "explanation": "D'après le document de la leçon, le système limbique associe le cortex (cingulum, hippocampe) et des noyaux sous-corticaux (amygdale, septum)."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q2",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q2",
           "type": "mcq",
-          "prompt": "On observe que « la destruction du système limbique entraîne une indifférence émotionnelle chez les sujets très agressifs ». Que peut-on en déduire ?",
+          "prompt": "Selon les cas pathologiques, le système limbique :",
           "options": [
-            "Le système limbique joue un rôle capital dans le déclenchement des émotions",
-            "Le système limbique commande la digestion",
-            "Le système limbique n'a aucun rôle",
-            "Le système limbique produit l'adrénaline"
+            "Atténue seulement l'anxiété",
+            "Ne joue aucun rôle dans les émotions",
+            "Joue un rôle capital dans le déclenchement des émotions",
+            "Sécrète l'adrénaline"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Sans lui, plus d'émotions : c'est le « cerveau émotionnel »."
+          "correctAnswerIndex": 2,
+          "explanation": "C'est la constatation tirée des cas pathologiques : rôle capital dans le déclenchement des émotions. L'atténuation de l'anxiété revient à l'hippocampe."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q3",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q3",
           "type": "mcq",
-          "prompt": "Des malades dont l'hippocampe est lésé présentent, lors d'une crise de rage, de très fortes crises d'anxiété. Quel est donc le rôle normal de l'hippocampe ?",
+          "prompt": "Qui atténue l'anxiété chez l'Homme, selon la leçon ?",
           "options": [
-            "Il augmente l'anxiété",
-            "Il atténue l'anxiété",
-            "Il commande les muscles",
-            "Il produit le cortisol"
+            "L'amygdale",
+            "Le septum",
+            "La médullosurrénale",
+            "L'hippocampe"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "Sans lui, l'anxiété n'est plus freinée."
+          "correctAnswerIndex": 3,
+          "explanation": "La leçon attribue à l'hippocampe le rôle d'atténuer l'anxiété, et au cortex celui d'atténuer les réactions émotionnelles."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q4",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q4",
           "type": "mcq",
-          "prompt": "Chez des personnes dont le cortex est lésé mais l'hypothalamus intact, on observe des crises de peur ou des pleurs exagérés pour des causes insignifiantes. Quel est le rôle normal du cortex ?",
-          "options": [
-            "Il déclenche les émotions",
-            "Il atténue les réactions émotionnelles",
-            "Il produit les larmes",
-            "Il n'a aucun rôle"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le cortex freine les réactions émotionnelles."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q5",
-          "type": "mcq",
-          "prompt": "Face à un chien qui aboie, une personne décide de fuir. Quelle structure nerveuse intervient dans le choix de ce comportement émotionnel (défense, attaque ou fuite) ?",
-          "options": [
-            "Le système limbique",
-            "Le cervelet",
-            "La rétine",
-            "Le muscle de la jambe"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Il donne une valeur affective à ce que nous percevons."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q6",
-          "type": "mcq",
-          "prompt": "Dans la régulation nerveuse des réactions émotionnelles, les messages partent des aires corticales sensorielles et arrivent au système limbique. Quelle structure le système limbique met-il ensuite en alerte ?",
+          "prompt": "Dans la régulation nerveuse, le système limbique met en alerte :",
           "options": [
             "L'hypothalamus",
-            "Le cervelet",
-            "L'œil",
-            "La thyroïde"
+            "La corticosurrénale directement",
+            "Les glandes surrénales uniquement",
+            "Le cortex visuel"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "L'hypothalamus alerte ensuite les centres orthosympathiques du bulbe et de la moelle."
+          "explanation": "Le mécanisme de la leçon : le système limbique met en alerte l'hypothalamus, puis les zones bulbo-médullaires orthosympathiques."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p03_q7",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q5",
           "type": "mcq",
-          "prompt": "D'après l'étude des cas pathologiques (système limbique, hippocampe, cortex), où se trouve le « cerveau émotionnel » ?",
+          "prompt": "L'un des rôles fondamentaux du système limbique est :",
           "options": [
-            "Dans le système limbique",
-            "Dans le cervelet",
-            "Dans le lobe occipital",
-            "Dans la moelle épinière"
+            "De sécréter le cortisol",
+            "D'apprendre la valeur affective des stimulations sensorielles",
+            "De dilater les bronches",
+            "De produire les larmes"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est la conclusion de la régulation nerveuse."
+          "correctAnswerIndex": 1,
+          "explanation": "C'est le rôle fondamental indiqué dans l'interprétation de la leçon. Les autres propositions relèvent des effets hormonaux ou des manifestations."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p03_q6",
+          "type": "mcq",
+          "prompt": "Parmi les comportements suivants, lequel le système limbique aide-t-il à choisir ?",
+          "options": [
+            "La digestion",
+            "Le sommeil profond",
+            "La fuite",
+            "La croissance"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Défense, attaque, fuite et réaction physique sont les choix de comportement cités pour le système limbique."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l01_reactions_emotionnelles_p04",
+      "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04",
       "order": 4,
-      "title": "Les catécholamines : la phase d'alarme",
-      "summary": "L'adrénaline prépare l'organisme à lutter ou à fuir.",
-      "conceptExplanation": "Expérience : on injecte à un rat des catécholamines. Résultat : mobilisation des ressources énergétiques et physiologiques de l'animal (effets orthosympathiques).\n\nLes catécholamines (adrénaline et noradrénaline) sont libérées par la MÉDULLOSURRÉNALE (la partie centrale de la glande surrénale, au-dessus du rein). Elles préparent l'organisme à faire face à l'agression par la LUTTE ou par la FUITE.\n\nLeur libération a lieu pendant la phase d'alarme, au début de la réaction émotionnelle. Effets de l'adrénaline :\n- augmentation de la fréquence et de la force des contractions du cœur ;\n- dilatation des bronches, qui améliore les échanges respiratoires ;\n- glycogénolyse dans le foie : le glycogène stocké est transformé en glucose, ce qui augmente le glucose dans le sang (hyperglycémie) ;\n- redistribution du sang vers les muscles.\n\nCommande nerveuse : la médullosurrénale est commandée par le nerf splanchnique (système orthosympathique). Sa stimulation entraîne la sécrétion d'adrénaline ; sa section tarit définitivement les sécrétions médullosurrénaliennes. Un stress émotionnel peut multiplier par 30 le taux de catécholamines.",
-      "keyRule": "Médullosurrénale → adrénaline et noradrénaline (phase d'alarme) : cœur plus rapide et plus fort, bronches dilatées, glucose libéré par le foie, sang vers les muscles.",
+      "title": "Les catécholamines et la phase d'alarme",
+      "summary": "Décrire l'action des catécholamines libérées par la médullosurrénale pendant la phase d'alarme.",
+      "conceptExplanation": "Les catécholamines et les glucocorticoïdes interviennent dans tous les cas de réaction au stress.\nLes catécholamines (adrénaline et noradrénaline) sont libérées par la médullosurrénale. Elles préparent l'organisme à faire face à l'agression par la lutte ou par la fuite.\nLa libération de l'adrénaline, pendant la phase d'alarme qui traduit le début d'une réaction émotionnelle, entraîne : l'augmentation de la fréquence et de la force des contractions cardiaques ; la dilatation bronchique améliorant les échanges gazeux respiratoires ; la glycogénolyse hépatique, transformation en glucose du glycogène stocké dans le foie, qui augmente la concentration du glucose dans le sang ; la redistribution du sang vers les muscles.\nL'injection de catécholamines à un rat entraîne la mobilisation des ressources énergétiques et physiologiques de l'animal stressé (effets orthosympathiques).",
+      "keyRule": "Phase d'alarme : la médullosurrénale libère adrénaline et noradrénaline, qui mobilisent cœur, bronches, glucose et muscles pour lutter ou fuir.",
       "formulas": [],
       "workedExample": {
-        "title": "Pourquoi le cœur bat vite ?",
-        "statement": "Un élève est poursuivi par un chien : son cœur bat très vite et il court plus vite que d'habitude. Explique.",
+        "title": "L'injection de catécholamines au rat (expériences de la leçon)",
+        "statement": "On injecte des catécholamines à un rat. Quel résultat la leçon rapporte-t-elle et comment l'interpréter ?",
         "methodSteps": [
-          "La peur déclenche la phase d'alarme : la médullosurrénale libère de l'adrénaline.",
-          "L'adrénaline accélère le cœur, dilate les bronches, libère du glucose et envoie le sang vers les muscles."
+          "Résultat observé : mobilisation des ressources énergétiques et physiologiques de l'animal stressé.",
+          "Ces effets sont qualifiés d'effets orthosympathiques dans la leçon.",
+          "Interprétation : les catécholamines préparent l'organisme à faire face à l'agression par la lutte ou par la fuite."
         ],
-        "conclusion": "L'organisme est préparé à la fuite grâce à l'adrénaline."
+        "conclusion": "Les catécholamines mobilisent l'organisme dès la phase d'alarme du stress."
       },
       "structuredSteps": [
         {
@@ -821,259 +723,227 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
           "stepTitle": "Les catécholamines",
           "stepTheme": "Les catécholamines",
           "stepBadge": "Les catécholamines",
-          "paragraphText": "Les catécholamines (adrénaline et noradrénaline) sont libérées par la médullosurrénale.",
+          "paragraphText": "• Catécholamines : hormones du stress regroupant l'adrénaline et la noradrénaline.\nElles sont libérées par la médullosurrénale.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q1",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q1",
             "type": "mcq",
-            "prompt": "Quelle glande libère les catécholamines (adrénaline et noradrénaline) lors d'une réaction émotionnelle ?",
+            "prompt": "Les catécholamines sont :",
             "options": [
-              "La corticosurrénale",
-              "La médullosurrénale",
-              "La thyroïde",
-              "Le pancréas"
+              "Le cortisol et la cortisone",
+              "L'adrénaline et la noradrénaline",
+              "La CRH et l'ACTH",
+              "Le glucose et le glycogène"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La corticosurrénale, elle, libère les glucocorticoïdes."
+            "explanation": "La leçon définit les catécholamines comme l'adrénaline et la noradrénaline, libérées par la médullosurrénale."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Lutter ou fuir",
-          "stepTheme": "Lutter ou fuir",
-          "stepBadge": "Lutter ou fuir",
-          "paragraphText": "Les catécholamines préparent l'organisme à faire face à l'agression par la lutte ou par la fuite.",
+          "stepTitle": "La glande qui libère l'adrénaline",
+          "stepTheme": "La glande qui libère l'adrénaline",
+          "stepBadge": "La glande qui libère l'adrénaline",
+          "paragraphText": "L'adrénaline est libérée par la médullosurrénale pendant la phase d'alarme.\nC'est la partie de la glande surrénale à distinguer de la corticosurrénale, qui libère les glucocorticoïdes.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q2",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q2",
             "type": "mcq",
-            "prompt": "Lors d'une agression, la médullosurrénale libère de l'adrénaline. À quoi cette hormone prépare-t-elle l'organisme ?",
+            "prompt": "L'adrénaline est libérée par :",
             "options": [
-              "À dormir",
-              "À lutter ou à fuir",
-              "À digérer",
-              "À grandir"
+              "La corticosurrénale",
+              "L'hypophyse antérieure",
+              "L'hypothalamus",
+              "La médullosurrénale"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Elle mobilise l'énergie pour réagir vite."
+            "correctAnswerIndex": 3,
+            "explanation": "La médullosurrénale libère les catécholamines. La corticosurrénale libère les glucocorticoïdes, pendant la phase d'adaptation."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "propriete",
-          "stepTitle": "La phase d'alarme",
-          "stepTheme": "La phase d'alarme",
-          "stepBadge": "La phase d'alarme",
-          "paragraphText": "L'adrénaline est libérée pendant la phase d'alarme, qui marque le début de la réaction émotionnelle.",
+          "stepTitle": "Effets cardiaques et bronchiques",
+          "stepTheme": "Effets cardiaques et bronchiques",
+          "stepBadge": "Effets cardiaques et bronchiques",
+          "paragraphText": "Pendant la phase d'alarme, l'adrénaline augmente la fréquence et la force des contractions cardiaques.\nElle provoque aussi une dilatation bronchique, qui améliore les échanges gazeux respiratoires.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q3",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q3",
             "type": "mcq",
-            "prompt": "Une réaction au stress comporte une phase d'alarme puis une phase d'adaptation. Pendant quelle phase l'adrénaline est-elle libérée ?",
+            "prompt": "Pendant la phase d'alarme, l'adrénaline provoque :",
             "options": [
-              "La phase d'alarme, au début de la réaction",
-              "La phase d'adaptation, à la fin",
-              "Pendant le sommeil seulement",
-              "Jamais"
+              "Un ralentissement du cœur et un rétrécissement des bronches",
+              "Une augmentation de la fréquence et de la force des contractions cardiaques et une dilatation bronchique",
+              "Une baisse du glucose sanguin",
+              "Un stockage du glucose sous forme de glycogène"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Les glucocorticoïdes, eux, agissent pendant la phase d'adaptation."
+            "correctAnswerIndex": 1,
+            "explanation": "Ce sont deux des modifications physiologiques listées dans la leçon pour la phase d'alarme."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Le cœur",
-          "stepTheme": "Le cœur",
-          "stepBadge": "Le cœur",
-          "paragraphText": "L'adrénaline augmente la fréquence et la force des contractions cardiaques.",
+          "stepKind": "propriete",
+          "stepTitle": "La glycogénolyse hépatique",
+          "stepTheme": "La glycogénolyse hépatique",
+          "stepBadge": "La glycogénolyse hépatique",
+          "paragraphText": "La glycogénolyse hépatique est la transformation en glucose du glycogène stocké dans le foie.\nElle augmente la concentration du glucose dans le sang, fournissant de l'énergie rapidement disponible.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q4",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q4",
             "type": "mcq",
-            "prompt": "Sous l'effet de l'adrénaline libérée pendant la phase d'alarme, comment évoluent les contractions du cœur ?",
+            "prompt": "La glycogénolyse hépatique consiste à :",
             "options": [
-              "Elles deviennent plus rapides et plus fortes",
-              "Elles s'arrêtent",
-              "Elles ralentissent toujours",
-              "Elles ne changent pas"
+              "Stocker du glucose dans le foie",
+              "Transformer le glycogène du foie en glucose",
+              "Transformer les protéines en glucose",
+              "Libérer des triglycérides du tissu adipeux"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le sang circule plus vite vers les organes qui travaillent."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la définition donnée entre parenthèses dans la leçon. La conversion des acides aminés en glucose est la néoglucogenèse, effet des glucocorticoïdes."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "definition",
-          "stepTitle": "La glycogénolyse",
-          "stepTheme": "La glycogénolyse",
-          "stepBadge": "La glycogénolyse",
-          "paragraphText": "La glycogénolyse hépatique est la transformation en glucose du glycogène stocké dans le foie ; elle augmente le glucose dans le sang.",
+          "stepKind": "piege",
+          "stepTitle": "Lutte ou fuite, pas repos",
+          "stepTheme": "Lutte ou fuite, pas repos",
+          "stepBadge": "Lutte ou fuite, pas repos",
+          "paragraphText": "Piège : les catécholamines ne préparent pas au repos.\nElles préparent l'organisme à faire face à l'agression par la lutte ou par la fuite, avec redistribution du sang vers les muscles.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q5",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q5",
             "type": "mcq",
-            "prompt": "L'adrénaline provoque une glycogénolyse hépatique. De quoi s'agit-il ?",
+            "prompt": "Les catécholamines préparent l'organisme à :",
             "options": [
-              "La transformation en glucose du glycogène stocké dans le foie",
-              "La destruction des globules rouges",
-              "La fabrication de protéines",
-              "La digestion des graisses dans l'intestin"
+              "Dormir et digérer",
+              "Faire face à l'agression par la lutte ou par la fuite",
+              "Stocker les graisses",
+              "Atténuer l'anxiété"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le glucose libéré fournit de l'énergie aux muscles."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le rôle indiqué dans la leçon pour les catécholamines libérées par la médullosurrénale."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Bronches et muscles",
-          "stepTheme": "Bronches et muscles",
-          "stepBadge": "Bronches et muscles",
-          "paragraphText": "L'adrénaline dilate les bronches (meilleurs échanges respiratoires) et redistribue le sang vers les muscles.",
+          "stepTitle": "Le sang redistribué vers les muscles",
+          "stepTheme": "Le sang redistribué vers les muscles",
+          "stepBadge": "Le sang redistribué vers les muscles",
+          "paragraphText": "Parmi les effets de l'adrénaline en phase d'alarme, la leçon cite la redistribution du sang vers les muscles.\nLes muscles, mieux alimentés, sont prêts pour l'effort de lutte ou de fuite.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q6",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q6",
             "type": "mcq",
-            "prompt": "Parmi ces effets, lequel n'est PAS un effet de l'adrénaline libérée lors de la phase d'alarme ?",
+            "prompt": "La redistribution du sang pendant la phase d'alarme se fait vers :",
             "options": [
-              "La dilatation des bronches",
-              "La redistribution du sang vers les muscles",
-              "L'augmentation du glucose dans le sang",
-              "Le ralentissement de la respiration et l'endormissement"
+              "La peau du visage",
+              "Le foie uniquement",
+              "Les muscles",
+              "Le tube digestif uniquement"
             ],
-            "correctAnswerIndex": 3,
-            "explanation": "L'adrénaline active l'organisme ; elle ne l'endort pas."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "exemple",
-          "stepTitle": "Le nerf splanchnique",
-          "stepTheme": "Le nerf splanchnique",
-          "stepBadge": "Le nerf splanchnique",
-          "paragraphText": "La stimulation du nerf splanchnique entraîne la sécrétion d'adrénaline ; sa section tarit définitivement les sécrétions médullosurrénaliennes.",
-          "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q7",
-            "type": "mcq",
-            "prompt": "Chez un chat, la stimulation du nerf splanchnique provoque une sécrétion d'adrénaline, et sa section tarit définitivement les sécrétions de la médullosurrénale. Que montre cette expérience ?",
-            "options": [
-              "La médullosurrénale est commandée par le système nerveux",
-              "La médullosurrénale fonctionne seule",
-              "Le nerf splanchnique produit l'adrénaline",
-              "L'adrénaline vient du foie"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est un lien entre système nerveux et système hormonal."
+            "correctAnswerIndex": 2,
+            "explanation": "La leçon cite la redistribution du sang vers les muscles parmi les effets de la libération d'adrénaline."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q1",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q1",
           "type": "mcq",
-          "prompt": "Quelle glande libère les catécholamines (adrénaline et noradrénaline) lors d'une réaction émotionnelle ?",
+          "prompt": "Les catécholamines sont :",
+          "options": [
+            "Le cortisol et la cortisone",
+            "L'adrénaline et la noradrénaline",
+            "La CRH et l'ACTH",
+            "Le glucose et le glycogène"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La leçon définit les catécholamines comme l'adrénaline et la noradrénaline, libérées par la médullosurrénale."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q2",
+          "type": "mcq",
+          "prompt": "L'adrénaline est libérée par :",
           "options": [
             "La corticosurrénale",
-            "La médullosurrénale",
-            "La thyroïde",
-            "Le pancréas"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "La corticosurrénale, elle, libère les glucocorticoïdes."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q2",
-          "type": "mcq",
-          "prompt": "Lors d'une agression, la médullosurrénale libère de l'adrénaline. À quoi cette hormone prépare-t-elle l'organisme ?",
-          "options": [
-            "À dormir",
-            "À lutter ou à fuir",
-            "À digérer",
-            "À grandir"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Elle mobilise l'énergie pour réagir vite."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q3",
-          "type": "mcq",
-          "prompt": "Une réaction au stress comporte une phase d'alarme puis une phase d'adaptation. Pendant quelle phase l'adrénaline est-elle libérée ?",
-          "options": [
-            "La phase d'alarme, au début de la réaction",
-            "La phase d'adaptation, à la fin",
-            "Pendant le sommeil seulement",
-            "Jamais"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Les glucocorticoïdes, eux, agissent pendant la phase d'adaptation."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q4",
-          "type": "mcq",
-          "prompt": "Sous l'effet de l'adrénaline libérée pendant la phase d'alarme, comment évoluent les contractions du cœur ?",
-          "options": [
-            "Elles deviennent plus rapides et plus fortes",
-            "Elles s'arrêtent",
-            "Elles ralentissent toujours",
-            "Elles ne changent pas"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le sang circule plus vite vers les organes qui travaillent."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q5",
-          "type": "mcq",
-          "prompt": "L'adrénaline provoque une glycogénolyse hépatique. De quoi s'agit-il ?",
-          "options": [
-            "La transformation en glucose du glycogène stocké dans le foie",
-            "La destruction des globules rouges",
-            "La fabrication de protéines",
-            "La digestion des graisses dans l'intestin"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le glucose libéré fournit de l'énergie aux muscles."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q6",
-          "type": "mcq",
-          "prompt": "Parmi ces effets, lequel n'est PAS un effet de l'adrénaline libérée lors de la phase d'alarme ?",
-          "options": [
-            "La dilatation des bronches",
-            "La redistribution du sang vers les muscles",
-            "L'augmentation du glucose dans le sang",
-            "Le ralentissement de la respiration et l'endormissement"
+            "L'hypophyse antérieure",
+            "L'hypothalamus",
+            "La médullosurrénale"
           ],
           "correctAnswerIndex": 3,
-          "explanation": "L'adrénaline active l'organisme ; elle ne l'endort pas."
+          "explanation": "La médullosurrénale libère les catécholamines. La corticosurrénale libère les glucocorticoïdes, pendant la phase d'adaptation."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p04_q7",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q3",
           "type": "mcq",
-          "prompt": "Chez un chat, la stimulation du nerf splanchnique provoque une sécrétion d'adrénaline, et sa section tarit définitivement les sécrétions de la médullosurrénale. Que montre cette expérience ?",
+          "prompt": "Pendant la phase d'alarme, l'adrénaline provoque :",
           "options": [
-            "La médullosurrénale est commandée par le système nerveux",
-            "La médullosurrénale fonctionne seule",
-            "Le nerf splanchnique produit l'adrénaline",
-            "L'adrénaline vient du foie"
+            "Un ralentissement du cœur et un rétrécissement des bronches",
+            "Une augmentation de la fréquence et de la force des contractions cardiaques et une dilatation bronchique",
+            "Une baisse du glucose sanguin",
+            "Un stockage du glucose sous forme de glycogène"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est un lien entre système nerveux et système hormonal."
+          "correctAnswerIndex": 1,
+          "explanation": "Ce sont deux des modifications physiologiques listées dans la leçon pour la phase d'alarme."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q4",
+          "type": "mcq",
+          "prompt": "La glycogénolyse hépatique consiste à :",
+          "options": [
+            "Stocker du glucose dans le foie",
+            "Transformer le glycogène du foie en glucose",
+            "Transformer les protéines en glucose",
+            "Libérer des triglycérides du tissu adipeux"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la définition donnée entre parenthèses dans la leçon. La conversion des acides aminés en glucose est la néoglucogenèse, effet des glucocorticoïdes."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q5",
+          "type": "mcq",
+          "prompt": "Les catécholamines préparent l'organisme à :",
+          "options": [
+            "Dormir et digérer",
+            "Faire face à l'agression par la lutte ou par la fuite",
+            "Stocker les graisses",
+            "Atténuer l'anxiété"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est le rôle indiqué dans la leçon pour les catécholamines libérées par la médullosurrénale."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p04_q6",
+          "type": "mcq",
+          "prompt": "La redistribution du sang pendant la phase d'alarme se fait vers :",
+          "options": [
+            "La peau du visage",
+            "Le foie uniquement",
+            "Les muscles",
+            "Le tube digestif uniquement"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La leçon cite la redistribution du sang vers les muscles parmi les effets de la libération d'adrénaline."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l01_reactions_emotionnelles_p05",
+      "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05",
       "order": 5,
-      "title": "Les glucocorticoïdes et l'axe CRH – ACTH",
-      "summary": "La phase d'adaptation : hypothalamus, hypophyse, corticosurrénale et rétrocontrôle.",
-      "conceptExplanation": "Expérience : on injecte à un rat des glucocorticoïdes. Résultat : renforcement de l'action des catécholamines et amélioration des fonctions nerveuses, ce qui facilite l'adaptation du comportement.\n\nLes glucocorticoïdes (cortisol, cortisone, corticostérone) sont libérés par la CORTICOSURRÉNALE (la partie externe de la surrénale), pendant la phase d'ajustement ou d'adaptation qui suit l'alarme. Effets :\n- dégradation des protéines et libération d'acides aminés ;\n- transformation de ces acides aminés en glucose par le foie (néoglucogenèse) : ce sont des hormones hyperglycémiantes ;\n- libération de graisses (triglycérides) à partir du tissu adipeux ;\n- baisse de la consommation de glucose par beaucoup de cellules ;\n- ils empêchent la vasodilatation généralisée et donc l'hypotension.\n\nMécanisme de la régulation hormonale :\n1. le stimulus stressant augmente l'activité (potentiels d'action) de l'hypothalamus et du système limbique ;\n2. l'hypothalamus sécrète la CRH (corticolibérine), qui agit sur l'hypophyse antérieure ;\n3. l'hypophyse sécrète l'ACTH (corticotrophine), qui stimule la corticosurrénale ;\n4. la corticosurrénale sécrète les glucocorticoïdes ;\n5. les glucocorticoïdes agissent en retour sur l'hypothalamus et l'hypophyse : c'est le RÉTROCONTRÔLE (feed-back).\n\nPrécision : en temps normal ce rétrocontrôle est NÉGATIF : quand le cortisol augmente, il freine la sécrétion de CRH et d'ACTH, ce qui évite un excès d'hormone (le document indique « + ou − »).",
-      "keyRule": "Stress → hypothalamus (CRH) → hypophyse (ACTH) → corticosurrénale (cortisol) ; le cortisol freine en retour l'hypothalamus et l'hypophyse (rétrocontrôle négatif).",
+      "title": "Les glucocorticoïdes et l'axe hypothalamo-hypophysaire",
+      "summary": "Expliquer l'action des glucocorticoïdes et la chaîne CRH, ACTH, corticosurrénale avec son rétrocontrôle.",
+      "conceptExplanation": "Les glucocorticoïdes (cortisol et cortisone) sont libérés par la corticosurrénale pendant la phase d'ajustement ou d'adaptation, qui suit la réaction d'alarme.\nUne concentration élevée de glucocorticoïdes stimule le catabolisme des protéines et libère les acides aminés ; stimule la consommation des acides aminés par le foie et leur conversion en glucose (néoglucogenèse) : ce sont des hormones hyperglycémiantes ; stimule la libération de triglycérides à partir du tissu adipeux ; inhibe la consommation de glucose par beaucoup de cellules ; évite la vasodilatation généralisée des artérioles due au stress et empêche l'hypotension.\nLe mécanisme hormonal est le suivant : le stimulus stressant augmente les potentiels d'action au niveau de l'hypothalamus et du système limbique ; l'hypothalamus stimulé sécrète la CRH, qui agit sur l'hypophyse antérieure ; l'hypophyse sécrète l'ACTH, qui stimule la corticosurrénale ; la corticosurrénale sécrète les glucocorticoïdes, qui exercent une rétroaction (feed-back) sur le complexe hypothalamo-hypophysaire.\nL'injection de glucocorticoïdes renforce l'action des catécholamines et améliore les fonctions nerveuses, facilitant l'adaptation du comportement.",
+      "keyRule": "Chaîne hormonale du stress : hypothalamus (CRH), hypophyse antérieure (ACTH), corticosurrénale (glucocorticoïdes), avec rétrocontrôle sur le complexe hypothalamo-hypophysaire.",
       "formulas": [],
       "workedExample": {
-        "title": "Ordonner l'axe hormonal",
-        "statement": "Remets dans l'ordre : ACTH ; glucocorticoïdes ; CRH ; stimulus stressant.",
+        "title": "Réaliser la chaîne de régulation hormonale (situation d'évaluation)",
+        "statement": "Reconstitue, dans l'ordre, la chaîne qui conduit de l'hypothalamus aux glucocorticoïdes.",
         "methodSteps": [
-          "Le stimulus stressant active l'hypothalamus, qui sécrète la CRH.",
-          "La CRH fait sécréter l'ACTH par l'hypophyse.",
-          "L'ACTH fait sécréter les glucocorticoïdes par la corticosurrénale."
+          "Le stimulus stressant augmente les potentiels d'action au niveau de l'hypothalamus et du système limbique.",
+          "L'hypothalamus sécrète la CRH, hormone de libération des corticotrophines.",
+          "La CRH agit sur l'hypophyse antérieure, qui sécrète l'ACTH.",
+          "L'ACTH stimule la corticosurrénale, qui sécrète les glucocorticoïdes.",
+          "Les glucocorticoïdes exercent un feed-back sur le complexe hypothalamo-hypophysaire."
         ],
-        "conclusion": "Stimulus stressant → CRH → ACTH → glucocorticoïdes."
+        "conclusion": "La régulation hormonale forme une chaîne hypothalamus, hypophyse, corticosurrénale, fermée par un rétrocontrôle."
       },
       "structuredSteps": [
         {
@@ -1082,500 +952,433 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
           "stepTitle": "Les glucocorticoïdes",
           "stepTheme": "Les glucocorticoïdes",
           "stepBadge": "Les glucocorticoïdes",
-          "paragraphText": "Les glucocorticoïdes (cortisol, cortisone) sont libérés par la corticosurrénale pendant la phase d'adaptation.",
+          "paragraphText": "• Glucocorticoïdes : hormones libérées par la corticosurrénale, dont le cortisol et la cortisone.\nLa leçon cite aussi la corticostérone parmi les glucocorticoïdes sécrétés.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q1",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q1",
             "type": "mcq",
-            "prompt": "Quelle glande libère les glucocorticoïdes (cortisol, cortisone) lors d'une réaction au stress ?",
+            "prompt": "Le cortisol et la cortisone sont :",
             "options": [
-              "La médullosurrénale",
-              "La corticosurrénale",
-              "L'hypothalamus",
-              "Le foie"
+              "Des catécholamines",
+              "Des glucocorticoïdes",
+              "Les hormones CRH et ACTH",
+              "Des acides aminés"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Cortico- : la partie externe (le cortex) de la surrénale."
+            "explanation": "Le cortisol et la cortisone sont les glucocorticoïdes cités dans la leçon, libérés par la corticosurrénale."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Des hormones hyperglycémiantes",
-          "stepTheme": "Des hormones hyperglycémiantes",
-          "stepBadge": "Des hormones hyperglycémiantes",
-          "paragraphText": "Les glucocorticoïdes font transformer les acides aminés en glucose par le foie (néoglucogenèse) : ils sont hyperglycémiants.",
+          "stepTitle": "La phase d'adaptation",
+          "stepTheme": "La phase d'adaptation",
+          "stepBadge": "La phase d'adaptation",
+          "paragraphText": "Les glucocorticoïdes sont libérés pendant la phase d'ajustement ou d'adaptation.\nCette phase suit la réaction d'alarme, marquée par la libération de l'adrénaline.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q2",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q2",
             "type": "mcq",
-            "prompt": "Les glucocorticoïdes stimulent la conversion des acides aminés en glucose par le foie (néoglucogenèse). Quel effet cela a-t-il sur le taux de glucose dans le sang ?",
+            "prompt": "Les glucocorticoïdes sont libérés pendant :",
             "options": [
-              "Il diminue",
-              "Il augmente : ce sont des hormones hyperglycémiantes",
-              "Il ne change pas",
-              "Il devient nul"
+              "La phase d'alarme",
+              "Le sommeil uniquement",
+              "La phase d'ajustement ou d'adaptation",
+              "La phase préparatoire du mouvement"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "L'organisme dispose ainsi de plus d'énergie pour s'adapter."
+            "correctAnswerIndex": 2,
+            "explanation": "La leçon situe leur libération dans la phase d'adaptation qui suit la réaction d'alarme."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "La CRH",
-          "stepTheme": "La CRH",
-          "stepBadge": "La CRH",
-          "paragraphText": "Stimulé par le stress, l'hypothalamus sécrète la CRH (corticolibérine), qui agit sur l'hypophyse antérieure.",
+          "stepKind": "definition",
+          "stepTitle": "La néoglucogenèse",
+          "stepTheme": "La néoglucogenèse",
+          "stepBadge": "La néoglucogenèse",
+          "paragraphText": "• Néoglucogenèse : conversion en glucose, par le foie, des acides aminés libérés par le catabolisme des protéines.\nElle explique que les glucocorticoïdes sont des hormones hyperglycémiantes.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q3",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q3",
             "type": "mcq",
-            "prompt": "Dans la régulation hormonale des réactions émotionnelles, quelle hormone l'hypothalamus sécrète-t-il pour agir sur l'hypophyse ?",
+            "prompt": "Les glucocorticoïdes sont dits hyperglycémiants parce qu'ils :",
             "options": [
-              "La CRH (corticolibérine)",
-              "L'ACTH",
-              "Le cortisol",
-              "L'adrénaline"
+              "Font baisser le glucose sanguin",
+              "Stimulent la conversion des acides aminés en glucose par le foie",
+              "Transforment le glucose en glycogène",
+              "Augmentent la consommation de glucose par toutes les cellules"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "CRH : hormone de libération de la corticotrophine."
+            "correctAnswerIndex": 1,
+            "explanation": "La néoglucogenèse hépatique, stimulée par les glucocorticoïdes, augmente le glucose sanguin. Ils inhibent au contraire la consommation de glucose par beaucoup de cellules."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "L'ACTH",
-          "stepTheme": "L'ACTH",
-          "stepBadge": "L'ACTH",
-          "paragraphText": "Stimulée par la CRH, l'hypophyse sécrète l'ACTH (corticotrophine), qui stimule la corticosurrénale.",
+          "stepKind": "methode",
+          "stepTitle": "CRH puis ACTH",
+          "stepTheme": "CRH puis ACTH",
+          "stepBadge": "CRH puis ACTH",
+          "paragraphText": "Méthode : retenir l'ordre des messagers hormonaux.\nHypothalamus : CRH ; hypophyse antérieure : ACTH ; corticosurrénale : glucocorticoïdes.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q4",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q4",
             "type": "mcq",
-            "prompt": "L'hypothalamus sécrète la CRH, qui agit sur l'hypophyse. Quelle hormone l'hypophyse sécrète-t-elle alors pour stimuler la corticosurrénale ?",
+            "prompt": "La CRH sécrétée par l'hypothalamus agit sur :",
             "options": [
-              "La CRH",
-              "L'ACTH (corticotrophine)",
-              "L'adrénaline",
-              "L'insuline"
+              "La corticosurrénale directement",
+              "La médullosurrénale",
+              "L'hypophyse antérieure",
+              "Les muscles"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "L'ACTH fait ensuite libérer le cortisol."
+            "correctAnswerIndex": 2,
+            "explanation": "La CRH agit sur l'hypophyse antérieure, qui sécrète alors l'ACTH destinée à la corticosurrénale."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "L'ordre de l'axe",
-          "stepTheme": "L'ordre de l'axe",
-          "stepBadge": "L'ordre de l'axe",
-          "paragraphText": "Stimulus stressant → hypothalamus (CRH) → hypophyse (ACTH) → corticosurrénale (glucocorticoïdes).",
+          "stepKind": "piege",
+          "stepTitle": "Le feed-back n'est pas une stimulation simple",
+          "stepTheme": "Le feed-back n'est pas une stimulation simple",
+          "stepBadge": "Le feed-back n'est pas une stimulation simple",
+          "paragraphText": "Piège : croire que les glucocorticoïdes ne font qu'agir sur les organes cibles.\nIls influencent aussi la production de la corticolibérine en exerçant une rétroaction, ou feed-back, sur le complexe hypothalamo-hypophysaire.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q5",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q5",
             "type": "mcq",
-            "prompt": "Quel est le bon ordre des organes dans la régulation hormonale du stress (axe CRH – ACTH) ?",
+            "prompt": "Le feed-back des glucocorticoïdes s'exerce sur :",
             "options": [
-              "Corticosurrénale → hypophyse → hypothalamus",
-              "Hypothalamus → hypophyse → corticosurrénale",
-              "Hypophyse → hypothalamus → corticosurrénale",
-              "Médullosurrénale → hypothalamus → hypophyse"
+              "Le complexe hypothalamo-hypophysaire",
+              "Les bronches",
+              "Le foie uniquement",
+              "Les vaisseaux sous-cutanés"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Chaque organe commande le suivant par une hormone."
+            "correctAnswerIndex": 0,
+            "explanation": "Le schéma de la leçon montre le feed-back des glucocorticoïdes vers le complexe hypothalamo-hypophysaire."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "Le rétrocontrôle",
-          "stepTheme": "Le rétrocontrôle",
-          "stepBadge": "Le rétrocontrôle",
-          "paragraphText": "Les glucocorticoïdes agissent en retour sur l'hypothalamus et l'hypophyse : c'est le rétrocontrôle (feed-back), normalement négatif.",
+          "stepKind": "exemple",
+          "stepTitle": "Éviter l'hypotension",
+          "stepTheme": "Éviter l'hypotension",
+          "stepBadge": "Éviter l'hypotension",
+          "paragraphText": "Parmi les effets d'une concentration élevée de glucocorticoïdes, la leçon cite la prévention d'une chute de tension.\nIls évitent la vasodilatation généralisée des artérioles due au stress et empêchent l'hypotension.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q6",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q6",
             "type": "mcq",
-            "prompt": "Quand le taux de cortisol dans le sang devient élevé, il agit en retour sur l'hypothalamus et l'hypophyse. Comment s'appelle ce mécanisme et quel est son effet habituel ?",
+            "prompt": "Une concentration élevée de glucocorticoïdes permet notamment :",
             "options": [
-              "Un rétrocontrôle négatif : il freine la sécrétion de CRH et d'ACTH",
-              "Une glycogénolyse : il libère du glucose",
-              "Une vasoconstriction : il fait pâlir",
-              "Un réflexe : il fait bouger un muscle"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Ce frein évite un excès de cortisol."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Ne pas confondre",
-          "stepTheme": "Ne pas confondre",
-          "stepBadge": "Ne pas confondre",
-          "paragraphText": "Médullosurrénale → catécholamines (alarme) ; corticosurrénale → glucocorticoïdes (adaptation).",
-          "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q7",
-            "type": "mcq",
-            "prompt": "Un élève écrit : « La médullosurrénale sécrète le cortisol sous l'effet de l'ACTH. » Quelle est la correction ?",
-            "options": [
-              "C'est juste",
-              "C'est la corticosurrénale qui sécrète le cortisol sous l'effet de l'ACTH ; la médullosurrénale sécrète l'adrénaline",
-              "C'est l'hypothalamus qui sécrète le cortisol",
-              "C'est le foie qui sécrète l'ACTH"
+              "De provoquer une hypotension",
+              "D'empêcher l'hypotension en évitant la vasodilatation généralisée des artérioles",
+              "De stopper les contractions cardiaques",
+              "De libérer l'adrénaline"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Deux parties de la même glande, deux types d'hormones."
+            "explanation": "C'est l'un des cinq effets listés dans la leçon pour une concentration élevée de glucocorticoïdes."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q1",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q1",
           "type": "mcq",
-          "prompt": "Quelle glande libère les glucocorticoïdes (cortisol, cortisone) lors d'une réaction au stress ?",
+          "prompt": "Le cortisol et la cortisone sont :",
           "options": [
+            "Des catécholamines",
+            "Des glucocorticoïdes",
+            "Les hormones CRH et ACTH",
+            "Des acides aminés"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le cortisol et la cortisone sont les glucocorticoïdes cités dans la leçon, libérés par la corticosurrénale."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q2",
+          "type": "mcq",
+          "prompt": "Les glucocorticoïdes sont libérés pendant :",
+          "options": [
+            "La phase d'alarme",
+            "Le sommeil uniquement",
+            "La phase d'ajustement ou d'adaptation",
+            "La phase préparatoire du mouvement"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La leçon situe leur libération dans la phase d'adaptation qui suit la réaction d'alarme."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q3",
+          "type": "mcq",
+          "prompt": "Les glucocorticoïdes sont dits hyperglycémiants parce qu'ils :",
+          "options": [
+            "Font baisser le glucose sanguin",
+            "Stimulent la conversion des acides aminés en glucose par le foie",
+            "Transforment le glucose en glycogène",
+            "Augmentent la consommation de glucose par toutes les cellules"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La néoglucogenèse hépatique, stimulée par les glucocorticoïdes, augmente le glucose sanguin. Ils inhibent au contraire la consommation de glucose par beaucoup de cellules."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q4",
+          "type": "mcq",
+          "prompt": "La CRH sécrétée par l'hypothalamus agit sur :",
+          "options": [
+            "La corticosurrénale directement",
             "La médullosurrénale",
-            "La corticosurrénale",
-            "L'hypothalamus",
-            "Le foie"
+            "L'hypophyse antérieure",
+            "Les muscles"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "Cortico- : la partie externe (le cortex) de la surrénale."
+          "correctAnswerIndex": 2,
+          "explanation": "La CRH agit sur l'hypophyse antérieure, qui sécrète alors l'ACTH destinée à la corticosurrénale."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q2",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q5",
           "type": "mcq",
-          "prompt": "Les glucocorticoïdes stimulent la conversion des acides aminés en glucose par le foie (néoglucogenèse). Quel effet cela a-t-il sur le taux de glucose dans le sang ?",
+          "prompt": "Le feed-back des glucocorticoïdes s'exerce sur :",
           "options": [
-            "Il diminue",
-            "Il augmente : ce sont des hormones hyperglycémiantes",
-            "Il ne change pas",
-            "Il devient nul"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "L'organisme dispose ainsi de plus d'énergie pour s'adapter."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q3",
-          "type": "mcq",
-          "prompt": "Dans la régulation hormonale des réactions émotionnelles, quelle hormone l'hypothalamus sécrète-t-il pour agir sur l'hypophyse ?",
-          "options": [
-            "La CRH (corticolibérine)",
-            "L'ACTH",
-            "Le cortisol",
-            "L'adrénaline"
+            "Le complexe hypothalamo-hypophysaire",
+            "Les bronches",
+            "Le foie uniquement",
+            "Les vaisseaux sous-cutanés"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "CRH : hormone de libération de la corticotrophine."
+          "explanation": "Le schéma de la leçon montre le feed-back des glucocorticoïdes vers le complexe hypothalamo-hypophysaire."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q4",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p05_q6",
           "type": "mcq",
-          "prompt": "L'hypothalamus sécrète la CRH, qui agit sur l'hypophyse. Quelle hormone l'hypophyse sécrète-t-elle alors pour stimuler la corticosurrénale ?",
+          "prompt": "Une concentration élevée de glucocorticoïdes permet notamment :",
           "options": [
-            "La CRH",
-            "L'ACTH (corticotrophine)",
-            "L'adrénaline",
-            "L'insuline"
+            "De provoquer une hypotension",
+            "D'empêcher l'hypotension en évitant la vasodilatation généralisée des artérioles",
+            "De stopper les contractions cardiaques",
+            "De libérer l'adrénaline"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "L'ACTH fait ensuite libérer le cortisol."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q5",
-          "type": "mcq",
-          "prompt": "Quel est le bon ordre des organes dans la régulation hormonale du stress (axe CRH – ACTH) ?",
-          "options": [
-            "Corticosurrénale → hypophyse → hypothalamus",
-            "Hypothalamus → hypophyse → corticosurrénale",
-            "Hypophyse → hypothalamus → corticosurrénale",
-            "Médullosurrénale → hypothalamus → hypophyse"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Chaque organe commande le suivant par une hormone."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q6",
-          "type": "mcq",
-          "prompt": "Quand le taux de cortisol dans le sang devient élevé, il agit en retour sur l'hypothalamus et l'hypophyse. Comment s'appelle ce mécanisme et quel est son effet habituel ?",
-          "options": [
-            "Un rétrocontrôle négatif : il freine la sécrétion de CRH et d'ACTH",
-            "Une glycogénolyse : il libère du glucose",
-            "Une vasoconstriction : il fait pâlir",
-            "Un réflexe : il fait bouger un muscle"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ce frein évite un excès de cortisol."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p05_q7",
-          "type": "mcq",
-          "prompt": "Un élève écrit : « La médullosurrénale sécrète le cortisol sous l'effet de l'ACTH. » Quelle est la correction ?",
-          "options": [
-            "C'est juste",
-            "C'est la corticosurrénale qui sécrète le cortisol sous l'effet de l'ACTH ; la médullosurrénale sécrète l'adrénaline",
-            "C'est l'hypothalamus qui sécrète le cortisol",
-            "C'est le foie qui sécrète l'ACTH"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Deux parties de la même glande, deux types d'hormones."
+          "explanation": "C'est l'un des cinq effets listés dans la leçon pour une concentration élevée de glucocorticoïdes."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l01_reactions_emotionnelles_p06",
+      "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06",
       "order": 6,
-      "title": "L'intégration neuro-hormonale et la gestion du stress",
-      "summary": "Nerfs et hormones agissent ensemble ; bien décider pour gérer son stress.",
-      "conceptExplanation": "Expériences sur le chat (document 4) :\n- des chats mis en présence de chiens aboyant présentent des réactions de stress, avec une augmentation de la sécrétion de cortisol, qui baisse après le départ des chiens ; les mêmes effets sont produits par la stimulation électrique de certaines zones de l'hypothalamus ;\n- la stimulation des structures limbiques et de l'hypothalamus dorso-latéral entraîne des effets orthosympathiques, une sécrétion d'adrénaline et une hyperactivité du nerf splanchnique ; un stress émotionnel peut multiplier par 30 le taux de catécholamines ;\n- la stimulation du nerf splanchnique donne une réponse analogue ; sa section tarit définitivement les sécrétions médullosurrénaliennes.\n\nInterprétation : la régulation nerveuse et la régulation hormonale ne sont pas indépendantes. Le système limbique et l'hypothalamus jouent le rôle d'INTÉGRATEURS : c'est l'intégration neuro-hormonale.\n\nDéfinitions :\n- le stress : l'état d'alarme qui résulte d'une agression, puis l'état de défense et d'adaptation de l'organisme ; c'est une réaction biologique adaptative aux agresseurs physiques ou psychiques ;\n- une réaction émotionnelle : un ensemble de sentiments et d'émotions provoqué par des contraintes d'ordre émotionnel, des agressions physiques ou des modifications brutales de l'environnement ;\n- l'émotion : une réaction affective passagère, assez intense, habituellement provoquée par une stimulation venue de l'environnement.\n\nGérer ses émotions et son stress par une bonne décision. Étapes de la prise de décision :\n1. identifier le problème posé ;\n2. analyser les différentes options (avantages et inconvénients) ;\n3. prendre conseil ;\n4. prendre la bonne décision ;\n5. appliquer la bonne décision.\nLa prise de décision aide à résister aux pressions qui peuvent conduire à des comportements à risque.",
-      "keyRule": "Intégration neuro-hormonale : le système limbique et l'hypothalamus coordonnent nerfs et hormones. Stress = alarme puis défense et adaptation.",
+      "title": "L'intégration neuro-hormonale, le stress et la prise de décision",
+      "summary": "Montrer que nerveux et hormonal agissent ensemble et retenir les définitions du stress et de l'émotion.",
+      "conceptExplanation": "Lors de toute agression, le système nerveux et le système hormonal mettent en place des mécanismes pour réguler les réactions émotionnelles. Ces mécanismes ne sont pas indépendants.\nLe fonctionnement des divers organes sollicités est cohérent grâce au rôle primordial d'intégrateurs que jouent le système limbique et l'hypothalamus : on parle d'intégration neuro-hormonale.\nLes expériences le montrent : des chats en présence de chiens aboyant augmentent leur sécrétion de cortisol, qui baisse en leur absence ; la stimulation des structures limbiques, de l'hypothalamus dorso-latéral ou du nerf splanchnique entraîne notamment une sécrétion d'adrénaline.\nLe stress est l'état d'alarme qui résulte d'une agression, puis celui de défense et d'adaptation de l'organisme ; c'est aussi une réaction biologique adaptative de l'organisme aux agents agresseurs physiques ou psychiques. L'émotion est une réaction affective transitoire d'assez grande intensité, habituellement provoquée par une stimulation venue de l'environnement.\nPour gérer les émotions et le stress, il faut prendre une bonne décision : identifier le problème posé, analyser différentes options, prendre conseils, prendre la bonne décision, appliquer la bonne décision.",
+      "keyRule": "Nerveux et hormonal régulent ensemble, grâce aux intégrateurs que sont le système limbique et l'hypothalamus : c'est l'intégration neuro-hormonale.",
       "formulas": [],
       "workedExample": {
-        "title": "Décider face à la pression",
-        "statement": "Des camarades poussent un élève stressé par le BAC à prendre des comprimés « pour veiller ». Applique les étapes de la prise de décision.",
+        "title": "Les chats face aux chiens qui aboient (expérience 1 de la leçon)",
+        "statement": "Des chats sont mis en présence de chiens aboyant. Qu'observe-t-on et qu'en déduit-on ?",
         "methodSteps": [
-          "Problème : gérer le stress de l'examen sans se mettre en danger.",
-          "Options : prendre les comprimés (danger pour la santé) ; mieux organiser ses révisions et dormir (plus sûr).",
-          "Prendre conseil (parents, infirmier, professeur), puis décider et appliquer."
+          "En présence des chiens aboyant, les chats présentent des réactions de stress.",
+          "Leur sécrétion de cortisol augmente.",
+          "En l'absence des chiens, cette sécrétion baisse.",
+          "Une situation perçue par le système nerveux modifie donc une sécrétion hormonale."
         ],
-        "conclusion": "Refuser les comprimés et organiser ses révisions : c'est la bonne décision."
+        "conclusion": "Système nerveux et système hormonal fonctionnent de façon coordonnée : c'est l'intégration neuro-hormonale."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "exemple",
-          "stepTitle": "Les chats et les chiens",
-          "stepTheme": "Les chats et les chiens",
-          "stepBadge": "Les chats et les chiens",
-          "paragraphText": "Des chats mis en présence de chiens aboyant présentent une augmentation de la sécrétion de cortisol, qui baisse après la disparition des chiens.",
+          "stepKind": "definition",
+          "stepTitle": "Le stress selon la leçon",
+          "stepTheme": "Le stress selon la leçon",
+          "stepBadge": "Le stress selon la leçon",
+          "paragraphText": "• Stress : état d'alarme qui résulte d'une agression, puis état de défense et d'adaptation de l'organisme.\nLa leçon le définit aussi comme une réaction biologique adaptative de l'organisme aux agents agresseurs physiques ou psychiques.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q1",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q1",
             "type": "mcq",
-            "prompt": "Des chats mis en présence de chiens aboyant sécrètent plus de cortisol ; la sécrétion baisse quand les chiens partent. Les mêmes effets sont obtenus en stimulant certaines zones de l'hypothalamus. Que montre cette expérience ?",
+            "prompt": "Le stress est défini dans la leçon comme :",
             "options": [
-              "Qu'une émotion perçue par le système nerveux déclenche une sécrétion hormonale",
-              "Que le cortisol fait aboyer les chiens",
-              "Que les chats n'ont pas d'hypothalamus",
-              "Que le stress n'a aucun effet"
+              "Une simple manifestation visible",
+              "Une réaction biologique adaptative de l'organisme aux agents agresseurs physiques ou psychiques",
+              "Une hormone sécrétée par la surrénale",
+              "Une maladie du système limbique"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le système nerveux (hypothalamus) commande la réponse hormonale."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est l'une des deux définitions du stress données dans la synthèse de la leçon."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "definition",
-          "stepTitle": "Les intégrateurs",
-          "stepTheme": "Les intégrateurs",
-          "stepBadge": "Les intégrateurs",
-          "paragraphText": "Le système limbique et l'hypothalamus coordonnent les réponses nerveuses et hormonales : c'est l'intégration neuro-hormonale.",
+          "stepTitle": "L'émotion selon la leçon",
+          "stepTheme": "L'émotion selon la leçon",
+          "stepBadge": "L'émotion selon la leçon",
+          "paragraphText": "• Émotion : réaction affective transitoire d'assez grande intensité, habituellement provoquée par une stimulation venue de l'environnement.\nUne réaction émotionnelle est un ensemble de sentiments et émotions provoqué par des contraintes d'ordre émotionnel, des agressions physiques ou des modifications brutales de l'environnement.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q2",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q2",
             "type": "mcq",
-            "prompt": "Les régulations nerveuse et hormonale des réactions émotionnelles ne sont pas indépendantes. Quelles structures jouent le rôle d'intégrateurs ?",
+            "prompt": "L'émotion est :",
             "options": [
-              "Le système limbique et l'hypothalamus",
-              "Le cœur et les poumons",
-              "Le cervelet et la rétine",
-              "Le foie et les reins"
+              "Une réaction affective transitoire d'assez grande intensité",
+              "Un état permanent sans cause",
+              "Une sécrétion hormonale",
+              "Un réflexe de la moelle épinière"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "On parle d'intégration neuro-hormonale."
+            "explanation": "C'est la définition exacte donnée dans la synthèse de la leçon."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "Le stress",
-          "stepTheme": "Le stress",
-          "stepBadge": "Le stress",
-          "paragraphText": "Le stress est l'état d'alarme qui résulte d'une agression, puis l'état de défense et d'adaptation de l'organisme.",
+          "stepKind": "propriete",
+          "stepTitle": "Les intégrateurs neuro-hormonaux",
+          "stepTheme": "Les intégrateurs neuro-hormonaux",
+          "stepBadge": "Les intégrateurs neuro-hormonaux",
+          "paragraphText": "La cohérence du fonctionnement des organes sollicités est possible grâce au rôle primordial d'intégrateurs du système limbique et de l'hypothalamus.\nC'est ce qui fonde l'intégration neuro-hormonale.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q3",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q3",
             "type": "mcq",
-            "prompt": "Quelle est la définition du stress relative aux les réactions émotionnelles ?",
+            "prompt": "Les deux intégrateurs de la régulation neuro-hormonale sont :",
             "options": [
-              "Une maladie contagieuse",
-              "L'état d'alarme qui résulte d'une agression, puis l'état de défense et d'adaptation de l'organisme",
-              "Le sommeil profond",
-              "Une hormone de la thyroïde"
+              "Le cervelet et la moelle épinière",
+              "Le système limbique et l'hypothalamus",
+              "L'hypophyse et la thyroïde",
+              "Le cortex visuel et le cortex auditif"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est une réaction biologique adaptative aux agresseurs physiques ou psychiques."
+            "explanation": "La leçon attribue le rôle primordial d'intégrateurs au système limbique et à l'hypothalamus."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "L'émotion",
-          "stepTheme": "L'émotion",
-          "stepBadge": "L'émotion",
-          "paragraphText": "L'émotion est une réaction affective passagère, assez intense, habituellement provoquée par une stimulation venue de l'environnement.",
+          "stepKind": "propriete",
+          "stepTitle": "Le cortisol des chats stressés",
+          "stepTheme": "Le cortisol des chats stressés",
+          "stepBadge": "Le cortisol des chats stressés",
+          "paragraphText": "Des réactions de stress de chats en présence de chiens aboyant entraînent une augmentation de la sécrétion de cortisol.\nCette sécrétion baisse en l'absence des chiens.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q4",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q4",
             "type": "mcq",
-            "prompt": "Comment définit-on l'émotion en SVT ?",
+            "prompt": "Chez les chats en présence de chiens aboyant, la sécrétion de cortisol :",
             "options": [
-              "Une réaction affective passagère, assez intense, provoquée par une stimulation de l'environnement",
-              "Un sentiment qui dure toute la vie",
-              "Un mouvement volontaire",
-              "Une maladie du cœur"
+              "Baisse immédiatement",
+              "Reste toujours nulle",
+              "Augmente, puis baisse en l'absence des chiens",
+              "Est remplacée par de l'ACTH"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Elle est transitoire, contrairement à un trait de caractère."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est le résultat rapporté dans l'analyse des expériences d'intégration neuro-hormonale."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Bien décider",
-          "stepTheme": "Bien décider",
-          "stepBadge": "Bien décider",
-          "paragraphText": "Étapes de la prise de décision : identifier le problème, analyser les options, prendre conseil, prendre la bonne décision, l'appliquer.",
+          "stepKind": "piege",
+          "stepTitle": "Des mécanismes non indépendants",
+          "stepTheme": "Des mécanismes non indépendants",
+          "stepBadge": "Des mécanismes non indépendants",
+          "paragraphText": "Piège : opposer régulation nerveuse et régulation hormonale comme deux systèmes séparés.\nLa leçon insiste : ces mécanismes de régulation ne sont pas indépendants, et l'organisme contrôle les réactions émotionnelles par leur action conjuguée.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q5",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q5",
             "type": "mcq",
-            "prompt": "Pour gérer son stress par une bonne décision, quelle est la première étape de la prise de décision ?",
+            "prompt": "Selon la conclusion de la leçon, l'organisme contrôle les réactions émotionnelles par :",
             "options": [
-              "Appliquer la décision",
-              "Identifier le problème posé",
-              "Prendre conseil",
-              "Analyser les options"
+              "Le système nerveux seul",
+              "Le système hormonal seul",
+              "L'action conjuguée du système nerveux et du système hormonal",
+              "Aucun système de régulation"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "On ne peut pas choisir une solution avant d'avoir compris le problème."
+            "correctAnswerIndex": 2,
+            "explanation": "Conclusion de la partie sur l'intégration : action conjuguée des deux systèmes."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "methode",
-          "stepTitle": "Analyser les options",
-          "stepTheme": "Analyser les options",
-          "stepBadge": "Analyser les options",
-          "paragraphText": "Après avoir identifié le problème, on analyse les options possibles avec leurs avantages et leurs inconvénients, puis on prend conseil.",
-          "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q6",
-            "type": "mcq",
-            "prompt": "Étapes de la prise de décision : identifier le problème ; … ; prendre conseil ; prendre la bonne décision ; l'appliquer. Quelle étape manque ?",
-            "options": [
-              "Analyser les différentes options (avantages et inconvénients)",
-              "Oublier le problème",
-              "Demander de l'argent",
-              "Fuir"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "On compare les solutions avant de choisir."
-          }
-        },
-        {
-          "stepNumber": 7,
           "stepKind": "exemple",
-          "stepTitle": "Résister aux pressions",
-          "stepTheme": "Résister aux pressions",
-          "stepBadge": "Résister aux pressions",
-          "paragraphText": "La prise de décision est une stratégie de résistance aux pressions qui peuvent conduire à des comportements à risque.",
+          "stepTitle": "Les étapes de la prise de décision",
+          "stepTheme": "Les étapes de la prise de décision",
+          "stepBadge": "Les étapes de la prise de décision",
+          "paragraphText": "Pour gérer les émotions et le stress, la leçon propose la prise d'une bonne décision en cinq étapes.\nIdentifier le problème posé, analyser différentes options (avantages et inconvénients), prendre conseils, prendre la bonne décision, appliquer la bonne décision.",
           "exercise": {
-            "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q7",
+            "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q6",
             "type": "mcq",
-            "prompt": "Stressé par le BAC, un élève est poussé par des camarades à prendre des comprimés pour veiller toute la nuit. Après avoir analysé les options et pris conseil, quelle est la bonne décision ?",
+            "prompt": "Quelle est la première étape de la prise de décision selon la leçon ?",
             "options": [
-              "Prendre les comprimés pour faire comme les autres",
-              "Refuser et organiser ses révisions avec un bon sommeil",
-              "Abandonner l'examen",
-              "Ne plus manger"
+              "Prendre conseils",
+              "Appliquer la bonne décision",
+              "Analyser les options",
+              "Identifier le problème posé"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "La bonne décision protège la santé et résiste à la pression du groupe."
+            "correctAnswerIndex": 3,
+            "explanation": "La liste de la leçon commence par identifier le problème posé, avant l'analyse des options et la prise de conseils."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q1",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q1",
           "type": "mcq",
-          "prompt": "Des chats mis en présence de chiens aboyant sécrètent plus de cortisol ; la sécrétion baisse quand les chiens partent. Les mêmes effets sont obtenus en stimulant certaines zones de l'hypothalamus. Que montre cette expérience ?",
+          "prompt": "Le stress est défini dans la leçon comme :",
           "options": [
-            "Qu'une émotion perçue par le système nerveux déclenche une sécrétion hormonale",
-            "Que le cortisol fait aboyer les chiens",
-            "Que les chats n'ont pas d'hypothalamus",
-            "Que le stress n'a aucun effet"
+            "Une simple manifestation visible",
+            "Une réaction biologique adaptative de l'organisme aux agents agresseurs physiques ou psychiques",
+            "Une hormone sécrétée par la surrénale",
+            "Une maladie du système limbique"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le système nerveux (hypothalamus) commande la réponse hormonale."
+          "correctAnswerIndex": 1,
+          "explanation": "C'est l'une des deux définitions du stress données dans la synthèse de la leçon."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q2",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q2",
           "type": "mcq",
-          "prompt": "Les régulations nerveuse et hormonale des réactions émotionnelles ne sont pas indépendantes. Quelles structures jouent le rôle d'intégrateurs ?",
+          "prompt": "L'émotion est :",
           "options": [
+            "Une réaction affective transitoire d'assez grande intensité",
+            "Un état permanent sans cause",
+            "Une sécrétion hormonale",
+            "Un réflexe de la moelle épinière"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C'est la définition exacte donnée dans la synthèse de la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q3",
+          "type": "mcq",
+          "prompt": "Les deux intégrateurs de la régulation neuro-hormonale sont :",
+          "options": [
+            "Le cervelet et la moelle épinière",
             "Le système limbique et l'hypothalamus",
-            "Le cœur et les poumons",
-            "Le cervelet et la rétine",
-            "Le foie et les reins"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "On parle d'intégration neuro-hormonale."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q3",
-          "type": "mcq",
-          "prompt": "Quelle est la définition du stress relative aux les réactions émotionnelles ?",
-          "options": [
-            "Une maladie contagieuse",
-            "L'état d'alarme qui résulte d'une agression, puis l'état de défense et d'adaptation de l'organisme",
-            "Le sommeil profond",
-            "Une hormone de la thyroïde"
+            "L'hypophyse et la thyroïde",
+            "Le cortex visuel et le cortex auditif"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est une réaction biologique adaptative aux agresseurs physiques ou psychiques."
+          "explanation": "La leçon attribue le rôle primordial d'intégrateurs au système limbique et à l'hypothalamus."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q4",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q4",
           "type": "mcq",
-          "prompt": "Comment définit-on l'émotion en SVT ?",
+          "prompt": "Chez les chats en présence de chiens aboyant, la sécrétion de cortisol :",
           "options": [
-            "Une réaction affective passagère, assez intense, provoquée par une stimulation de l'environnement",
-            "Un sentiment qui dure toute la vie",
-            "Un mouvement volontaire",
-            "Une maladie du cœur"
+            "Baisse immédiatement",
+            "Reste toujours nulle",
+            "Augmente, puis baisse en l'absence des chiens",
+            "Est remplacée par de l'ACTH"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Elle est transitoire, contrairement à un trait de caractère."
+          "correctAnswerIndex": 2,
+          "explanation": "C'est le résultat rapporté dans l'analyse des expériences d'intégration neuro-hormonale."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q5",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q5",
           "type": "mcq",
-          "prompt": "Pour gérer son stress par une bonne décision, quelle est la première étape de la prise de décision ?",
+          "prompt": "Selon la conclusion de la leçon, l'organisme contrôle les réactions émotionnelles par :",
           "options": [
-            "Appliquer la décision",
-            "Identifier le problème posé",
-            "Prendre conseil",
-            "Analyser les options"
+            "Le système nerveux seul",
+            "Le système hormonal seul",
+            "L'action conjuguée du système nerveux et du système hormonal",
+            "Aucun système de régulation"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "On ne peut pas choisir une solution avant d'avoir compris le problème."
+          "correctAnswerIndex": 2,
+          "explanation": "Conclusion de la partie sur l'intégration : action conjuguée des deux systèmes."
         },
         {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q6",
+          "id": "terminale_a1_svt_l01_reactions_emotionnelles_p06_q6",
           "type": "mcq",
-          "prompt": "Étapes de la prise de décision : identifier le problème ; … ; prendre conseil ; prendre la bonne décision ; l'appliquer. Quelle étape manque ?",
+          "prompt": "Quelle est la première étape de la prise de décision selon la leçon ?",
           "options": [
-            "Analyser les différentes options (avantages et inconvénients)",
-            "Oublier le problème",
-            "Demander de l'argent",
-            "Fuir"
+            "Prendre conseils",
+            "Appliquer la bonne décision",
+            "Analyser les options",
+            "Identifier le problème posé"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "On compare les solutions avant de choisir."
-        },
-        {
-          "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q7",
-          "type": "mcq",
-          "prompt": "Stressé par le BAC, un élève est poussé par des camarades à prendre des comprimés pour veiller toute la nuit. Après avoir analysé les options et pris conseil, quelle est la bonne décision ?",
-          "options": [
-            "Prendre les comprimés pour faire comme les autres",
-            "Refuser et organiser ses révisions avec un bon sommeil",
-            "Abandonner l'examen",
-            "Ne plus manger"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "La bonne décision protège la santé et résiste à la pression du groupe."
+          "correctAnswerIndex": 3,
+          "explanation": "La liste de la leçon commence par identifier le problème posé, avant l'analyse des options et la prise de conseils."
         }
       ]
     }

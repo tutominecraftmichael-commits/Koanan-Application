@@ -1,9 +1,9 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT TA_L6_Les prévisions génétiques.pdf » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Leçon 6 : Les prévisions génétiques » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1756
 export const SVT_TLE_A_L06_PREVISIONS_GENETIQUES: CurriculumChapter = {
-  "id": "terminale_a_svt_l06_previsions_genetiques",
+  "id": "terminale_a1_svt_l06_previsions_genetiques",
   "subjectId": "svt",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
@@ -11,547 +11,484 @@ export const SVT_TLE_A_L06_PREVISIONS_GENETIQUES: CurriculumChapter = {
   ],
   "order": 6,
   "title": "Leçon 6 : Les prévisions génétiques",
-  "summary": "Drépanocytose (électrophorèse, allèles codominants, risque de 25 %), hémophilie (allèle récessif lié au chromosome X, conductrices), consultation génétique, examens prénuptiaux et prénataux.",
-  "officialVolumeHours": 6,
+  "summary": "L'Homme peut prévoir les maladies héréditaires en connaissant leur mode de transmission, autosomal codominant pour la drépanocytose et lié au chromosome X récessif pour l'hémophilie, et par des moyens comme la consultation génétique et le diagnostic prénatal.",
   "contentVersion": 2,
-  "source": "SVT TA_L6_Les prévisions génétiques.pdf",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1756",
   "points": [
     {
-      "id": "terminale_a_svt_l06_previsions_genetiques_p01",
+      "id": "terminale_a1_svt_l06_previsions_genetiques_p01",
       "order": 1,
-      "title": "La drépanocytose et l'électrophorèse",
-      "summary": "Hémoglobine A et S : un gène autosomal à allèles codominants.",
-      "conceptExplanation": "Situation : un élève a deux frères drépanocytaires, alors que ses parents semblent en bonne santé ; ses parents attendent un quatrième enfant.\n\nLa drépanocytose (anémie falciforme) est une maladie héréditaire due à une hémoglobine anormale, l'hémoglobine S (HbS), dans les globules rouges ; l'hémoglobine normale est l'hémoglobine A (HbA). Les globules rouges prennent une forme de faucille.\n\nL'électrophorèse fait migrer des substances chargées électriquement dans un champ électrique. L'hémoglobine A, plus électronégative que l'hémoglobine S, migre plus vite vers le pôle + : on sépare ainsi HbA et HbS.\n\nDocument 1 (électrophorèse) :\n- le père et la mère : HbA et HbS ;\n- le premier enfant : HbA seulement ;\n- le fœtus (10 semaines) : HbS seulement.\n\nInterprétation :\n- l'homme comme la femme peuvent porter HbS : le gène est porté par un AUTOSOME (le chromosome 11) ;\n- chez les parents, les deux hémoglobines sont présentes en même temps : les deux allèles s'expriment ensemble, ils sont CODOMINANTS (au niveau des protéines).\n- Symboles : allèle normal A (HbA), allèle malade S (HbS).\n- Génotypes : chaque parent A//S ; premier enfant A//A ; fœtus S//S (drépanocytaire).\n\nPrécision importante : les personnes A//S fabriquent les deux hémoglobines mais sont en général en bonne santé : ce sont des PORTEURS SAINS (on parle de « trait drépanocytaire »). La maladie grave touche les personnes S//S. C'est pourquoi des parents apparemment sains peuvent avoir des enfants drépanocytaires.",
-      "keyRule": "Drépanocytose : gène autosomal (chromosome 11), allèles A et S codominants. A//S = porteur sain ; S//S = drépanocytaire.",
+      "title": "La drépanocytose : une électrophorèse qui révèle les génotypes",
+      "summary": "Lire l'électrophorèse des hémoglobines A et S d'un couple et de ses enfants.",
+      "conceptExplanation": "Le document 1 présente une électrophorèse, qui consiste à faire migrer des substances ionisées sous l'action d'un champ électrique. Elle permet notamment le dosage de protéines du sérum. Ici, l'on dose les hémoglobines A et S, responsables de la drépanocytose.\nRésultats : le père et la mère possèdent les deux types d'hémoglobine, HbA et HbS ; le premier enfant possède uniquement l'hémoglobine A ; le fœtus possède uniquement l'hémoglobine S.\nLe père et la mère ont les deux types d'hémoglobine : la maladie se rencontre chez l'Homme et la femme, et sa transmission se fait par des autosomes et non par les chromosomes sexuels.\nChoix des symboles de la leçon : normal HbA, malade HbS, le couple d'allèles est donc HbA et HbS. Le génotype des deux parents est HbA double barre HbS ; le génotype du premier enfant est HbA double barre HbA ; le génotype de l'enfant à naître est HbS double barre HbS.",
+      "keyRule": "Sur l'électrophorèse, deux bandes (A et S) chez chaque parent, une seule bande A chez l'enfant sain, une seule bande S chez le fœtus malade : les génotypes se lisent directement.",
       "formulas": [],
       "workedExample": {
-        "title": "Lire une électrophorèse",
-        "statement": "À l'électrophorèse, le père et la mère ont deux bandes (HbA et HbS), le premier enfant une bande HbA, le fœtus une bande HbS. Donne les génotypes.",
+        "title": "Lire l'électrophorèse du document 1",
+        "statement": "Un couple et ses enfants passent une électrophorèse des hémoglobines. Comment écrit-on leurs génotypes ?",
         "methodSteps": [
-          "Deux hémoglobines = deux allèles différents : A//S.",
-          "HbA seule : A//A ; HbS seule : S//S."
+          "Les deux parents présentent HbA et HbS : leur génotype est HbA double barre HbS.",
+          "Le premier enfant ne présente que HbA : son génotype est HbA double barre HbA.",
+          "Le fœtus ne présente que HbS : son génotype est HbS double barre HbS.",
+          "La présence des deux sexes atteints et de parents porteurs des deux hémoglobines oriente vers une transmission autosomale."
         ],
-        "conclusion": "Parents A//S (porteurs sains), premier enfant A//A, fœtus S//S (drépanocytaire)."
+        "conclusion": "Parents HbA double barre HbS, premier enfant HbA double barre HbA, fœtus HbS double barre HbS, selon le document 1."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "definition",
-          "stepTitle": "La drépanocytose",
-          "stepTheme": "La drépanocytose",
-          "stepBadge": "La drépanocytose",
-          "paragraphText": "La drépanocytose est une maladie héréditaire due à une hémoglobine anormale, l'hémoglobine S, dans les globules rouges.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q1",
-            "type": "mcq",
-            "prompt": "À quoi est due la drépanocytose (anémie falciforme) ?",
-            "options": [
-              "À un microbe transmis par les moustiques",
-              "À la présence d'une hémoglobine anormale, l'hémoglobine S, dans les globules rouges",
-              "À un manque de vitamines",
-              "À une blessure"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "C'est une maladie génétique, pas une maladie contagieuse."
-          }
-        },
-        {
-          "stepNumber": 2,
           "stepKind": "definition",
           "stepTitle": "L'électrophorèse",
           "stepTheme": "L'électrophorèse",
           "stepBadge": "L'électrophorèse",
-          "paragraphText": "L'électrophorèse fait migrer des substances chargées dans un champ électrique ; l'hémoglobine A, plus électronégative, migre plus vite que l'hémoglobine S.",
+          "paragraphText": "• Électrophorèse : technique qui consiste à faire migrer des substances ionisées sous l'action d'un champ électrique.\nElle permet notamment le dosage de protéines du sérum, ici les hémoglobines A et S.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q2",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q1",
             "type": "mcq",
-            "prompt": "Quelle technique permet de séparer l'hémoglobine A et l'hémoglobine S dans le sang d'une personne, grâce à un champ électrique ?",
+            "prompt": "L'électrophorèse consiste à :",
             "options": [
-              "L'échographie",
-              "L'électrophorèse",
-              "La radiographie",
-              "L'amniocentèse"
+              "Faire migrer des substances ionisées sous l'action d'un champ électrique",
+              "Prendre une photographie des chromosomes",
+              "Prélever du liquide amniotique",
+              "Mesurer uniquement le groupe sanguin"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "HbA, plus électronégative, migre plus vite vers le pôle +."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Lire les résultats",
-          "stepTheme": "Lire les résultats",
-          "stepBadge": "Lire les résultats",
-          "paragraphText": "À l'électrophorèse : père et mère HbA et HbS ; premier enfant HbA seule ; fœtus HbS seule.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q3",
-            "type": "mcq",
-            "prompt": "À l'électrophorèse de l'hémoglobine, le père et la mère présentent chacun deux bandes, HbA et HbS. Quel est leur génotype ?",
-            "options": [
-              "A//A",
-              "S//S",
-              "A//S",
-              "A//O"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Deux hémoglobines différentes = deux allèles différents."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Le fœtus",
-          "stepTheme": "Le fœtus",
-          "stepBadge": "Le fœtus",
-          "paragraphText": "Le fœtus ne possède que l'hémoglobine S : son génotype est S//S, il est drépanocytaire.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q4",
-            "type": "mcq",
-            "prompt": "À l'électrophorèse, le fœtus de 10 semaines ne présente qu'une bande d'hémoglobine S. Quel est son génotype et son état ?",
-            "options": [
-              "A//A, sain",
-              "A//S, porteur sain",
-              "S//S, drépanocytaire",
-              "On ne peut rien dire"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Il a reçu un allèle S de chacun de ses parents."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Un gène autosomal",
-          "stepTheme": "Un gène autosomal",
-          "stepBadge": "Un gène autosomal",
-          "paragraphText": "Le père et la mère portent tous deux HbS : le gène de la drépanocytose est porté par un autosome (le chromosome 11).",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q5",
-            "type": "mcq",
-            "prompt": "Le père comme la mère portent l'allèle de l'hémoglobine S, et la drépanocytose touche aussi bien les filles que les garçons. Où se trouve le gène de cette maladie ?",
-            "options": [
-              "Sur le chromosome Y",
-              "Sur un autosome",
-              "Sur le chromosome X seulement",
-              "Dans les mitochondries"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Une transmission identique dans les deux sexes indique un autosome."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "Codominance",
-          "stepTheme": "Codominance",
-          "stepBadge": "Codominance",
-          "paragraphText": "Chez les parents A//S, les deux hémoglobines existent en même temps : les allèles A et S s'expriment ensemble, ils sont codominants.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q6",
-            "type": "mcq",
-            "prompt": "Chez les parents A//S, on trouve à la fois de l'hémoglobine A et de l'hémoglobine S. Que peut-on dire des allèles A et S ?",
-            "options": [
-              "A domine S",
-              "S domine A",
-              "Ils sont codominants : ils s'expriment en même temps",
-              "Ils ne s'expriment pas"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Les deux protéines sont fabriquées."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Porteurs sains",
-          "stepTheme": "Porteurs sains",
-          "stepBadge": "Porteurs sains",
-          "paragraphText": "Les personnes A//S sont en général en bonne santé : ce sont des porteurs sains. Des parents apparemment sains peuvent donc avoir des enfants S//S malades.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p01_q7",
-            "type": "mcq",
-            "prompt": "Des parents en bonne santé ont deux enfants drépanocytaires. Comment est-ce possible ?",
-            "options": [
-              "Les enfants ont attrapé la maladie à l'école",
-              "Les deux parents sont porteurs sains (A//S) et ont chacun transmis l'allèle S",
-              "C'est impossible",
-              "Seule la mère a transmis la maladie"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Un enfant S//S reçoit un allèle S de chaque parent."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q1",
-          "type": "mcq",
-          "prompt": "À quoi est due la drépanocytose (anémie falciforme) ?",
-          "options": [
-            "À un microbe transmis par les moustiques",
-            "À la présence d'une hémoglobine anormale, l'hémoglobine S, dans les globules rouges",
-            "À un manque de vitamines",
-            "À une blessure"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "C'est une maladie génétique, pas une maladie contagieuse."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q2",
-          "type": "mcq",
-          "prompt": "Quelle technique permet de séparer l'hémoglobine A et l'hémoglobine S dans le sang d'une personne, grâce à un champ électrique ?",
-          "options": [
-            "L'échographie",
-            "L'électrophorèse",
-            "La radiographie",
-            "L'amniocentèse"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "HbA, plus électronégative, migre plus vite vers le pôle +."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q3",
-          "type": "mcq",
-          "prompt": "À l'électrophorèse de l'hémoglobine, le père et la mère présentent chacun deux bandes, HbA et HbS. Quel est leur génotype ?",
-          "options": [
-            "A//A",
-            "S//S",
-            "A//S",
-            "A//O"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Deux hémoglobines différentes = deux allèles différents."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q4",
-          "type": "mcq",
-          "prompt": "À l'électrophorèse, le fœtus de 10 semaines ne présente qu'une bande d'hémoglobine S. Quel est son génotype et son état ?",
-          "options": [
-            "A//A, sain",
-            "A//S, porteur sain",
-            "S//S, drépanocytaire",
-            "On ne peut rien dire"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Il a reçu un allèle S de chacun de ses parents."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q5",
-          "type": "mcq",
-          "prompt": "Le père comme la mère portent l'allèle de l'hémoglobine S, et la drépanocytose touche aussi bien les filles que les garçons. Où se trouve le gène de cette maladie ?",
-          "options": [
-            "Sur le chromosome Y",
-            "Sur un autosome",
-            "Sur le chromosome X seulement",
-            "Dans les mitochondries"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Une transmission identique dans les deux sexes indique un autosome."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q6",
-          "type": "mcq",
-          "prompt": "Chez les parents A//S, on trouve à la fois de l'hémoglobine A et de l'hémoglobine S. Que peut-on dire des allèles A et S ?",
-          "options": [
-            "A domine S",
-            "S domine A",
-            "Ils sont codominants : ils s'expriment en même temps",
-            "Ils ne s'expriment pas"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Les deux protéines sont fabriquées."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p01_q7",
-          "type": "mcq",
-          "prompt": "Des parents en bonne santé ont deux enfants drépanocytaires. Comment est-ce possible ?",
-          "options": [
-            "Les enfants ont attrapé la maladie à l'école",
-            "Les deux parents sont porteurs sains (A//S) et ont chacun transmis l'allèle S",
-            "C'est impossible",
-            "Seule la mère a transmis la maladie"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Un enfant S//S reçoit un allèle S de chaque parent."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l06_previsions_genetiques_p02",
-      "order": 2,
-      "title": "Calculer le risque pour la drépanocytose",
-      "summary": "A//S × A//S : un risque de 25 % à chaque grossesse.",
-      "conceptExplanation": "Couple C1 × C2, tous deux A//S (porteurs sains).\n- Gamètes de chaque parent : 50 % A, 50 % S.\n- Échiquier de croisement :\n  A × A → A//A [A] (1/4) ;\n  A × S → A//S [AS] (1/4) ;\n  S × A → A//S [AS] (1/4) ;\n  S × S → S//S [S] (1/4).\n- Bilan : 1/4 [A] (sains, non porteurs), 1/2 [AS] (porteurs sains), 1/4 [S] (drépanocytaires).\n\nConclusion : ce couple a 25 % de risque d'avoir un enfant drépanocytaire, à CHAQUE grossesse.\n\nAttention : le hasard n'a pas de mémoire. Même si un couple A//S × A//S a déjà eu deux enfants malades, le risque pour le quatrième reste 1/4 (25 %) ; il n'est ni plus grand ni plus petit.\n\nAutre technique (exercice) : on peut aussi séparer les fragments d'ADN des allèles : l'allèle S donne un fragment de 1,4 kb (kilobase), l'allèle A un fragment de 1,2 kb. C1 et C2 ont les deux fragments (A//S) ; le fœtus F n'a que le fragment de 1,4 kb (S//S).\n\nExercice d'arbre : Sylvie et Charles, sains, ont Franck (malade), Marthe (saine), Romaric (sain) et Odette (malade). Sylvie et Charles sont A//S ; Franck et Odette sont S//S ; Marthe et Romaric sont A//A ou A//S (on ne peut pas trancher sans analyse).",
-      "keyRule": "A//S × A//S → 1/4 A//A, 1/2 A//S, 1/4 S//S. Risque d'enfant drépanocytaire : 25 % à chaque grossesse, quels que soient les enfants précédents.",
-      "formulas": [],
-      "workedExample": {
-        "title": "Le quatrième enfant",
-        "statement": "Des parents A//S ont déjà deux garçons drépanocytaires. Quel est le risque que le quatrième enfant soit drépanocytaire ?",
-        "methodSteps": [
-          "Chaque parent transmet S avec la probabilité 1/2.",
-          "Risque S//S : 1/2 × 1/2 = 1/4, à chaque grossesse, indépendamment des précédentes."
-        ],
-        "conclusion": "Le risque est de 25 %."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "methode",
-          "stepTitle": "Les gamètes",
-          "stepTheme": "Les gamètes",
-          "stepBadge": "Les gamètes",
-          "paragraphText": "Un parent A//S produit 50 % de gamètes portant A et 50 % portant S.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q1",
-            "type": "mcq",
-            "prompt": "Un parent porteur sain de la drépanocytose a le génotype A//S. Quels gamètes produit-il, et en quelles proportions ?",
-            "options": [
-              "100 % A",
-              "100 % S",
-              "50 % A et 50 % S",
-              "25 % A et 75 % S"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "La méiose sépare les deux allèles."
+            "correctAnswerIndex": 0,
+            "explanation": "C'est la définition donnée à la présentation du document 1."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "L'échiquier",
-          "stepTheme": "L'échiquier",
-          "stepBadge": "L'échiquier",
-          "paragraphText": "A//S × A//S donne 1/4 A//A, 1/2 A//S et 1/4 S//S.",
+          "stepKind": "propriete",
+          "stepTitle": "Les deux hémoglobines chez les parents",
+          "stepTheme": "Les deux hémoglobines chez les parents",
+          "stepBadge": "Les deux hémoglobines chez les parents",
+          "paragraphText": "Le père et la mère possèdent les deux types d'hémoglobine, HbA et HbS.\nLe premier enfant n'a que HbA, tandis que le fœtus n'a que HbS.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q2",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q2",
             "type": "mcq",
-            "prompt": "Deux parents de génotype A//S ont un enfant. D'après l'échiquier de croisement, quelle est la probabilité que cet enfant soit drépanocytaire (S//S) ?",
+            "prompt": "Sur le document 1, le fœtus possède :",
             "options": [
-              "0 %",
-              "25 %",
-              "50 %",
-              "100 %"
+              "Les deux hémoglobines A et S",
+              "Uniquement l'hémoglobine A",
+              "Uniquement l'hémoglobine S",
+              "Aucune hémoglobine"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "1/2 × 1/2 = 1/4."
+            "correctAnswerIndex": 2,
+            "explanation": "Résultats du document 1 : fœtus HbS uniquement."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "methode",
-          "stepTitle": "Les porteurs sains",
-          "stepTheme": "Les porteurs sains",
-          "stepBadge": "Les porteurs sains",
-          "paragraphText": "Dans la descendance de A//S × A//S, la moitié des enfants (1/2) sont porteurs sains A//S.",
+          "stepTitle": "Écrire les génotypes à partir des bandes",
+          "stepTheme": "Écrire les génotypes à partir des bandes",
+          "stepBadge": "Écrire les génotypes à partir des bandes",
+          "paragraphText": "Méthode : traduire chaque profil en génotype avec les symboles HbA (normal) et HbS (malade).\nDeux bandes donnent HbA double barre HbS ; une bande A donne HbA double barre HbA ; une bande S donne HbS double barre HbS.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q3",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q3",
             "type": "mcq",
-            "prompt": "Deux parents A//S ont un enfant. Quelle est la probabilité qu'il soit porteur sain (A//S), comme ses parents ?",
+            "prompt": "Le génotype des deux parents du document 1 est :",
             "options": [
-              "1/4",
-              "1/2",
-              "3/4",
-              "1"
+              "HbA double barre HbA",
+              "HbS double barre HbS",
+              "HbA double barre HbS",
+              "Un génotype lié au chromosome X selon la leçon"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Deux cases sur quatre de l'échiquier : A//S et S//A."
+            "correctAnswerIndex": 2,
+            "explanation": "Les deux parents possèdent les deux types d'hémoglobine."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "piege",
-          "stepTitle": "Le hasard n'a pas de mémoire",
-          "stepTheme": "Le hasard n'a pas de mémoire",
-          "stepBadge": "Le hasard n'a pas de mémoire",
-          "paragraphText": "Le risque de 25 % s'applique à chaque grossesse, quels que soient les enfants déjà nés.",
+          "stepKind": "propriete",
+          "stepTitle": "Une maladie chez l'Homme et la femme",
+          "stepTheme": "Une maladie chez l'Homme et la femme",
+          "stepBadge": "Une maladie chez l'Homme et la femme",
+          "paragraphText": "Les deux types d'hémoglobine existent chez le père comme chez la mère.\nLa leçon en déduit que la maladie se rencontre chez l'Homme et la femme, et que sa transmission se fait par des autosomes.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q4",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q4",
             "type": "mcq",
-            "prompt": "Deux parents A//S ont déjà deux garçons drépanocytaires et attendent un quatrième enfant. Quel est le risque que ce bébé soit drépanocytaire ?",
+            "prompt": "La drépanocytose se rencontre :",
             "options": [
-              "0 %, car ils ont déjà eu leurs deux malades",
-              "25 %",
-              "50 %",
-              "100 %"
+              "Uniquement chez les hommes",
+              "Chez l'Homme et la femme",
+              "Uniquement chez les fœtus",
+              "Uniquement chez les parents"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Chaque fécondation est indépendante des précédentes."
+            "explanation": "Interprétation du document 1."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "exemple",
-          "stepTitle": "L'analyse de l'ADN",
-          "stepTheme": "L'analyse de l'ADN",
-          "stepBadge": "L'analyse de l'ADN",
-          "paragraphText": "L'allèle S donne un fragment d'ADN de 1,4 kb, l'allèle A un fragment de 1,2 kb. Un fœtus qui n'a que le fragment de 1,4 kb est S//S.",
+          "stepKind": "piege",
+          "stepTitle": "Ne pas confondre A et S dans les symboles",
+          "stepTheme": "Ne pas confondre A et S dans les symboles",
+          "stepBadge": "Ne pas confondre A et S dans les symboles",
+          "paragraphText": "Piège : inverser les symboles choisis par la leçon.\nNormal correspond à HbA et malade à HbS ; le couple d'allèles est donc formé de HbA et de HbS.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q5",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q5",
             "type": "mcq",
-            "prompt": "Dans une analyse d'ADN, l'allèle S donne un fragment de 1,4 kb et l'allèle A un fragment de 1,2 kb. Les parents C1 et C2 ont les deux fragments ; le fœtus F n'a que celui de 1,4 kb. Quel est le génotype du fœtus ?",
+            "prompt": "Dans le choix des symboles de la leçon, HbS désigne :",
             "options": [
-              "A//A",
-              "A//S",
-              "S//S",
-              "On ne peut pas savoir"
+              "L'hémoglobine normale",
+              "L'hémoglobine de la maladie",
+              "Un chromosome sexuel",
+              "Un groupe sanguin"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "Un seul type de fragment, celui de S : il a deux allèles S."
+            "correctAnswerIndex": 1,
+            "explanation": "Choix des symboles : normal HbA, malade HbS."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Un arbre familial",
-          "stepTheme": "Un arbre familial",
-          "stepBadge": "Un arbre familial",
-          "paragraphText": "Sylvie et Charles, sains, ont deux enfants malades (Franck et Odette) : ils sont tous deux A//S.",
+          "stepTitle": "Le premier enfant uniquement HbA",
+          "stepTheme": "Le premier enfant uniquement HbA",
+          "stepBadge": "Le premier enfant uniquement HbA",
+          "paragraphText": "Le premier enfant du couple ne possède que l'hémoglobine A sur son électrophorèse.\nSon génotype s'écrit donc HbA double barre HbA : il n'a reçu que l'allèle normal de chaque parent.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q6",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q6",
             "type": "mcq",
-            "prompt": "Sylvie et Charles, en bonne santé, ont quatre enfants : Franck et Odette sont drépanocytaires, Marthe et Romaric sont sains. Quel est le génotype de Sylvie et de Charles ?",
+            "prompt": "Le génotype du premier enfant est :",
             "options": [
-              "A//A tous les deux",
-              "A//S tous les deux",
-              "S//S tous les deux",
-              "Sylvie A//A et Charles S//S"
+              "HbS double barre HbS",
+              "HbA double barre HbS",
+              "HbA double barre HbA",
+              "Impossible à déterminer selon la leçon"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Chaque enfant malade S//S a reçu un S de chacun de ses parents sains."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Sain mais peut-être porteur",
-          "stepTheme": "Sain mais peut-être porteur",
-          "stepBadge": "Sain mais peut-être porteur",
-          "paragraphText": "Marthe et Romaric, sains, peuvent être A//A ou A//S : seule une analyse (électrophorèse) permet de le savoir.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p02_q7",
-            "type": "mcq",
-            "prompt": "Marthe, en bonne santé, est la fille de deux parents A//S. Peut-on affirmer, sans analyse, qu'elle ne porte pas l'allèle S ?",
-            "options": [
-              "Oui, puisqu'elle est en bonne santé",
-              "Non : elle peut être A//A ou porteuse saine A//S ; il faut une électrophorèse",
-              "Oui, les filles ne portent jamais S",
-              "Non, elle est forcément S//S"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Parmi les enfants sains de ce couple, 2 sur 3 en moyenne sont porteurs."
+            "correctAnswerIndex": 2,
+            "explanation": "Interprétation du document 1 pour le premier enfant."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q1",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q1",
           "type": "mcq",
-          "prompt": "Un parent porteur sain de la drépanocytose a le génotype A//S. Quels gamètes produit-il, et en quelles proportions ?",
+          "prompt": "L'électrophorèse consiste à :",
           "options": [
-            "100 % A",
-            "100 % S",
-            "50 % A et 50 % S",
-            "25 % A et 75 % S"
+            "Faire migrer des substances ionisées sous l'action d'un champ électrique",
+            "Prendre une photographie des chromosomes",
+            "Prélever du liquide amniotique",
+            "Mesurer uniquement le groupe sanguin"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C'est la définition donnée à la présentation du document 1."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q2",
+          "type": "mcq",
+          "prompt": "Sur le document 1, le fœtus possède :",
+          "options": [
+            "Les deux hémoglobines A et S",
+            "Uniquement l'hémoglobine A",
+            "Uniquement l'hémoglobine S",
+            "Aucune hémoglobine"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "La méiose sépare les deux allèles."
+          "explanation": "Résultats du document 1 : fœtus HbS uniquement."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q2",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q3",
           "type": "mcq",
-          "prompt": "Deux parents de génotype A//S ont un enfant. D'après l'échiquier de croisement, quelle est la probabilité que cet enfant soit drépanocytaire (S//S) ?",
+          "prompt": "Le génotype des deux parents du document 1 est :",
           "options": [
-            "0 %",
-            "25 %",
-            "50 %",
-            "100 %"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "1/2 × 1/2 = 1/4."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q3",
-          "type": "mcq",
-          "prompt": "Deux parents A//S ont un enfant. Quelle est la probabilité qu'il soit porteur sain (A//S), comme ses parents ?",
-          "options": [
-            "1/4",
-            "1/2",
-            "3/4",
-            "1"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Deux cases sur quatre de l'échiquier : A//S et S//A."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q4",
-          "type": "mcq",
-          "prompt": "Deux parents A//S ont déjà deux garçons drépanocytaires et attendent un quatrième enfant. Quel est le risque que ce bébé soit drépanocytaire ?",
-          "options": [
-            "0 %, car ils ont déjà eu leurs deux malades",
-            "25 %",
-            "50 %",
-            "100 %"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Chaque fécondation est indépendante des précédentes."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q5",
-          "type": "mcq",
-          "prompt": "Dans une analyse d'ADN, l'allèle S donne un fragment de 1,4 kb et l'allèle A un fragment de 1,2 kb. Les parents C1 et C2 ont les deux fragments ; le fœtus F n'a que celui de 1,4 kb. Quel est le génotype du fœtus ?",
-          "options": [
-            "A//A",
-            "A//S",
-            "S//S",
-            "On ne peut pas savoir"
+            "HbA double barre HbA",
+            "HbS double barre HbS",
+            "HbA double barre HbS",
+            "Un génotype lié au chromosome X selon la leçon"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Un seul type de fragment, celui de S : il a deux allèles S."
+          "explanation": "Les deux parents possèdent les deux types d'hémoglobine."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q6",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q4",
           "type": "mcq",
-          "prompt": "Sylvie et Charles, en bonne santé, ont quatre enfants : Franck et Odette sont drépanocytaires, Marthe et Romaric sont sains. Quel est le génotype de Sylvie et de Charles ?",
+          "prompt": "La drépanocytose se rencontre :",
           "options": [
-            "A//A tous les deux",
-            "A//S tous les deux",
-            "S//S tous les deux",
-            "Sylvie A//A et Charles S//S"
+            "Uniquement chez les hommes",
+            "Chez l'Homme et la femme",
+            "Uniquement chez les fœtus",
+            "Uniquement chez les parents"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Chaque enfant malade S//S a reçu un S de chacun de ses parents sains."
+          "explanation": "Interprétation du document 1."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p02_q7",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q5",
           "type": "mcq",
-          "prompt": "Marthe, en bonne santé, est la fille de deux parents A//S. Peut-on affirmer, sans analyse, qu'elle ne porte pas l'allèle S ?",
+          "prompt": "Dans le choix des symboles de la leçon, HbS désigne :",
           "options": [
-            "Oui, puisqu'elle est en bonne santé",
-            "Non : elle peut être A//A ou porteuse saine A//S ; il faut une électrophorèse",
-            "Oui, les filles ne portent jamais S",
-            "Non, elle est forcément S//S"
+            "L'hémoglobine normale",
+            "L'hémoglobine de la maladie",
+            "Un chromosome sexuel",
+            "Un groupe sanguin"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Parmi les enfants sains de ce couple, 2 sur 3 en moyenne sont porteurs."
+          "explanation": "Choix des symboles : normal HbA, malade HbS."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p01_q6",
+          "type": "mcq",
+          "prompt": "Le génotype du premier enfant est :",
+          "options": [
+            "HbS double barre HbS",
+            "HbA double barre HbS",
+            "HbA double barre HbA",
+            "Impossible à déterminer selon la leçon"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Interprétation du document 1 pour le premier enfant."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l06_previsions_genetiques_p03",
-      "order": 3,
-      "title": "L'hémophilie : une maladie liée au chromosome X",
-      "summary": "Un allèle récessif porté par le X ; surtout des garçons malades.",
-      "conceptExplanation": "L'hémophilie est une maladie héréditaire où le sang coagule très mal (sang « incoagulable ») : la moindre blessure saigne longtemps.\n\nDocument 2 (arbre d'une famille) :\n- génération I : I1 (homme sain) et I2 (femme saine) ;\n- génération II : leur fille 4 (saine), mariée à 3 (homme sain) ; leur fils 6 (malade), marié à 7 (femme saine) ;\n- génération III : enfants de 3 et 4 : 8 (garçon malade), 9 (fille saine) ; enfants de 6 et 7 : 10 et 11 (garçons malades), 12 (garçon sain), 13 (fille saine).\n\nAnalyse : la maladie n'est pas présente à toutes les générations ; des parents sains (I1, I2) ont un enfant malade ; seuls des hommes sont malades.\n\nInterprétation :\n- des parents sains ont un enfant malade : ils portaient l'allèle de la maladie sous forme masquée : l'allèle de l'hémophilie est RÉCESSIF, l'allèle normal est dominant. Symboles : H (normal), h (hémophilie).\n- la maladie touche seulement les hommes : le gène est porté par le chromosome sexuel X (et n'a pas d'équivalent sur le Y).\n\nGénotypes :\n- homme sain : $X^H$ Y ; homme hémophile : $X^h$ Y (un seul allèle h suffit, car il n'a qu'un X) ;\n- femme saine : $X^H$ $X^H$ ; femme conductrice (porteuse saine) : $X^H$ $X^h$ ; femme hémophile : $X^h$ $X^h$ (très rare).\n- I2 est conductrice ($X^H$ $X^h$), puisqu'elle a un fils malade avec un mari sain.\n- La femme 7 est aussi conductrice : ses fils 10 et 11 sont malades, et un fils reçoit son X de sa mère (le père 6 lui donne un Y).",
-      "keyRule": "Hémophilie : allèle récessif h porté par le X. Homme $X^h$ Y malade ; femme $X^H$ $X^h$ conductrice (saine). Un fils reçoit son X de sa mère.",
+      "id": "terminale_a1_svt_l06_previsions_genetiques_p02",
+      "order": 2,
+      "title": "Codominance et risque d'un enfant drépanocytaire",
+      "summary": "Conclure que les allèles de la drépanocytose sont codominants et calculer le bilan d'un couple HbA double barre HbS.",
+      "conceptExplanation": "Les deux types d'hémoglobine existent en même temps chez les parents. Cela veut dire que les deux allèles responsables de ces protéines s'expriment en même temps : l'allèle de l'hémoglobine A ne domine pas celui de l'allèle S. Les deux allèles sont donc codominants.\nLe gène responsable de la drépanocytose est porté par un autosome.\nDans l'exercice 3, deux parents C1 et C2 possèdent chacun les deux allèles S et A, et le fœtus F uniquement l'allèle S. Leurs génotypes s'écrivent : C1 A double barre S, C2 A double barre S, F S double barre S.\nL'échiquier de croisement de deux parents A double barre S donne le bilan : un quart [A], une moitié [AS], un quart [S]. La conclusion de l'exercice est que ce couple a 25 pour cent de chances d'avoir un enfant drépanocytaire.",
+      "keyRule": "Deux parents porteurs A double barre S : un quart d'enfants [A], une moitié [AS], un quart [S], soit 25 pour cent de risques d'un enfant drépanocytaire à chaque naissance.",
       "formulas": [],
       "workedExample": {
-        "title": "Qui a transmis ?",
-        "statement": "Un homme sain (I1) et une femme saine (I2) ont un fils hémophile (6). Qui lui a transmis l'allèle h ?",
+        "title": "Justifier le génotype du fœtus par un échiquier (exercice 3)",
+        "statement": "Deux parents C1 et C2 sont A double barre S et leur fœtus est S double barre S. Justifie ce génotype et donne le bilan du croisement.",
         "methodSteps": [
-          "Un fils reçoit le Y de son père et le X de sa mère.",
-          "Son X porte h : il vient de la mère, qui est saine, donc conductrice $X^H$ $X^h$."
+          "Chaque parent A double barre S produit deux types de gamètes, porteurs de A ou de S.",
+          "L'échiquier combine ces gamètes deux à deux : AA, AS, AS et SS.",
+          "Le fœtus S double barre S correspond à la rencontre de deux gamètes porteurs de S.",
+          "Bilan : un quart [A], une moitié [AS], un quart [S]."
         ],
-        "conclusion": "C'est la mère, conductrice, qui a transmis l'allèle h."
+        "conclusion": "Corrigé de l'exercice 3 : ce couple a 25 pour cent de chances d'avoir un enfant drépanocytaire."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Des allèles codominants",
+          "stepTheme": "Des allèles codominants",
+          "stepBadge": "Des allèles codominants",
+          "paragraphText": "Les allèles HbA et HbS s'expriment en même temps chez les parents qui les portent tous les deux.\nL'allèle A ne domine pas l'allèle S : les deux allèles de la drépanocytose sont codominants.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q1",
+            "type": "mcq",
+            "prompt": "Les allèles de la drépanocytose sont codominants parce que :",
+            "options": [
+              "L'allèle A écrase toujours l'allèle S",
+              "Les deux allèles s'expriment en même temps chez les parents",
+              "L'allèle S est toujours récessif et invisible",
+              "Ils sont portés par le chromosome X"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Interprétation du document 1."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Un gène porté par un autosome",
+          "stepTheme": "Un gène porté par un autosome",
+          "stepBadge": "Un gène porté par un autosome",
+          "paragraphText": "La conclusion de la première partie est nette sur la localisation du gène.\nLe gène responsable de la drépanocytose est porté par un autosome, et ses deux allèles sont codominants.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q2",
+            "type": "mcq",
+            "prompt": "Le gène de la drépanocytose est porté par :",
+            "options": [
+              "Le chromosome X",
+              "Le chromosome Y",
+              "Un autosome",
+              "Aucun chromosome"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Conclusion de la partie I pour la drépanocytose."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Le bilan un quart, une moitié, un quart",
+          "stepTheme": "Le bilan un quart, une moitié, un quart",
+          "stepBadge": "Le bilan un quart, une moitié, un quart",
+          "paragraphText": "L'échiquier de deux parents A double barre S donne trois catégories d'enfants.\nUn quart [A], une moitié [AS] et un quart [S] : c'est le bilan écrit dans le corrigé de l'exercice 3.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q3",
+            "type": "mcq",
+            "prompt": "Le bilan du croisement de deux parents A double barre S est :",
+            "options": [
+              "Un quart [A], une moitié [AS], un quart [S]",
+              "Moitié [A], moitié [S]",
+              "Trois quarts [S], un quart [A]",
+              "Uniquement des enfants [AS]"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Bilan du corrigé de l'exercice 3."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Convertir le bilan en risque",
+          "stepTheme": "Convertir le bilan en risque",
+          "stepBadge": "Convertir le bilan en risque",
+          "paragraphText": "Méthode : le risque d'un enfant malade [S] est la proportion correspondante dans le bilan de l'échiquier.\nUn quart des enfants sont [S], soit 25 pour cent de chances d'avoir un enfant drépanocytaire pour ce couple.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q4",
+            "type": "mcq",
+            "prompt": "Un couple de deux porteurs A double barre S a, à chaque naissance, un risque d'enfant drépanocytaire de :",
+            "options": [
+              "0 pour cent",
+              "25 pour cent",
+              "50 pour cent",
+              "100 pour cent"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Conclusion chiffrée du corrigé de l'exercice 3."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Un allèle hétérosomal n'est pas un autosome",
+          "stepTheme": "Un allèle hétérosomal n'est pas un autosome",
+          "stepBadge": "Un allèle hétérosomal n'est pas un autosome",
+          "paragraphText": "Piège de l'exercice 1 : « un allèle est dit hétérosomal lorsqu'il est porté par un autosome » est faux.\nHétérosomal renvoie aux chromosomes sexuels (hétérochromosomes), tandis que le gène de la drépanocytose, lui, est bien autosomal.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q5",
+            "type": "mcq",
+            "prompt": "L'affirmation « un allèle est hétérosomal lorsqu'il est porté par un autosome » est jugée :",
+            "options": [
+              "Vraie",
+              "Fausse",
+              "Vraie pour la drépanocytose uniquement",
+              "Non corrigée dans la leçon"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Corrigé de l'exercice 1 : a faux, b faux, c vrai."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le fœtus F de l'exercice 3",
+          "stepTheme": "Le fœtus F de l'exercice 3",
+          "stepBadge": "Le fœtus F de l'exercice 3",
+          "paragraphText": "Dans l'exercice 3, le fœtus F ne possède qu'un seul type d'allèle visible sur l'électrophorèse : l'allèle S.\nSon génotype s'écrit donc S double barre S, alors que ses deux parents sont A double barre S.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q6",
+            "type": "mcq",
+            "prompt": "Le génotype du fœtus F de l'exercice 3 est :",
+            "options": [
+              "A double barre A",
+              "A double barre S",
+              "S double barre S",
+              "Impossible à écrire"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Corrigé de l'exercice 3, question 2."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q1",
+          "type": "mcq",
+          "prompt": "Les allèles de la drépanocytose sont codominants parce que :",
+          "options": [
+            "L'allèle A écrase toujours l'allèle S",
+            "Les deux allèles s'expriment en même temps chez les parents",
+            "L'allèle S est toujours récessif et invisible",
+            "Ils sont portés par le chromosome X"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Interprétation du document 1."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q2",
+          "type": "mcq",
+          "prompt": "Le gène de la drépanocytose est porté par :",
+          "options": [
+            "Le chromosome X",
+            "Le chromosome Y",
+            "Un autosome",
+            "Aucun chromosome"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Conclusion de la partie I pour la drépanocytose."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q3",
+          "type": "mcq",
+          "prompt": "Le bilan du croisement de deux parents A double barre S est :",
+          "options": [
+            "Un quart [A], une moitié [AS], un quart [S]",
+            "Moitié [A], moitié [S]",
+            "Trois quarts [S], un quart [A]",
+            "Uniquement des enfants [AS]"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Bilan du corrigé de l'exercice 3."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q4",
+          "type": "mcq",
+          "prompt": "Un couple de deux porteurs A double barre S a, à chaque naissance, un risque d'enfant drépanocytaire de :",
+          "options": [
+            "0 pour cent",
+            "25 pour cent",
+            "50 pour cent",
+            "100 pour cent"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Conclusion chiffrée du corrigé de l'exercice 3."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q5",
+          "type": "mcq",
+          "prompt": "L'affirmation « un allèle est hétérosomal lorsqu'il est porté par un autosome » est jugée :",
+          "options": [
+            "Vraie",
+            "Fausse",
+            "Vraie pour la drépanocytose uniquement",
+            "Non corrigée dans la leçon"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Corrigé de l'exercice 1 : a faux, b faux, c vrai."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p02_q6",
+          "type": "mcq",
+          "prompt": "Le génotype du fœtus F de l'exercice 3 est :",
+          "options": [
+            "A double barre A",
+            "A double barre S",
+            "S double barre S",
+            "Impossible à écrire"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Corrigé de l'exercice 3, question 2."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l06_previsions_genetiques_p03",
+      "order": 3,
+      "title": "L'hémophilie : une maladie récessive qui n'atteint que les hommes",
+      "summary": "Lire le pédigrée de l'hémophilie et déduire un allèle récessif porté par le chromosome X.",
+      "conceptExplanation": "Le document 2 présente l'hémophilie, une anomalie héréditaire caractérisée par un sang incoagulable, et le pédigrée d'une famille dont certains membres sont hémophiles.\nRésultats : la maladie n'est pas présente dans toutes les générations et elle n'affecte que les hommes.\nLes parents I1 et I2, apparemment sains, ont dans leur descendance un enfant malade. Les parents portent donc l'allèle de l'anomalie, mais sous forme masquée : l'allèle de la maladie est récessif et l'allèle normal est dominant.\nChoix des symboles : normal H, maladie h, le couple d'allèles est donc H et h.\nLa maladie atteignant seulement les hommes, on peut supposer que le gène est porté par le chromosome sexuel X. La conclusion de la partie précise que le gène responsable de l'hémophilie est porté par un hétérochromosome.",
+      "keyRule": "Parents sains avec un enfant malade et seuls des hommes atteints : l'allèle de l'hémophilie est récessif et porté par le chromosome X.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Déduire le mode de transmission du pédigrée (document 2)",
+        "statement": "À partir du pédigrée d'une famille d'hémophiles, déduis deux propriétés de l'allèle de la maladie.",
+        "methodSteps": [
+          "La maladie n'est pas présente dans toutes les générations et des parents apparemment sains ont un enfant malade.",
+          "Les parents portent donc l'allèle sous forme masquée : l'allèle de la maladie est récessif, l'allèle normal est dominant.",
+          "La maladie n'affecte que les hommes.",
+          "On suppose donc que le gène est porté par le chromosome sexuel X."
+        ],
+        "conclusion": "Allèle récessif, gène porté par le chromosome X : c'est le mode de transmission de l'hémophilie."
       },
       "structuredSteps": [
         {
@@ -560,759 +497,888 @@ export const SVT_TLE_A_L06_PREVISIONS_GENETIQUES: CurriculumChapter = {
           "stepTitle": "L'hémophilie",
           "stepTheme": "L'hémophilie",
           "stepBadge": "L'hémophilie",
-          "paragraphText": "L'hémophilie est une anomalie héréditaire caractérisée par un sang qui coagule très mal.",
+          "paragraphText": "• Hémophilie : anomalie héréditaire caractérisée par un sang incoagulable.\nSon pédigrée montre une maladie absente de certaines générations et limitée aux hommes.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q1",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q1",
             "type": "mcq",
-            "prompt": "Qu'est-ce qui caractérise l'hémophilie ?",
+            "prompt": "L'hémophilie est caractérisée par :",
             "options": [
-              "Un sang qui coagule très mal (sang incoagulable)",
-              "Des globules rouges en forme de faucille",
-              "Une perte de mémoire",
-              "Une absence de groupe sanguin"
+              "Une hémoglobine anormale S",
+              "Un sang incoagulable",
+              "Un groupe sanguin AB",
+              "Une absence de chromosomes X"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "La forme en faucille, c'est la drépanocytose."
+            "correctAnswerIndex": 1,
+            "explanation": "Définition donnée à la présentation du document 2."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Un allèle récessif",
-          "stepTheme": "Un allèle récessif",
-          "stepBadge": "Un allèle récessif",
-          "paragraphText": "Des parents sains (I1, I2) ont un fils hémophile : l'allèle de la maladie était masqué, il est récessif.",
+          "stepTitle": "Absente de certaines générations",
+          "stepTheme": "Absente de certaines générations",
+          "stepBadge": "Absente de certaines générations",
+          "paragraphText": "Sur le pédigrée, la maladie n'est pas présente dans toutes les générations.\nDes parents apparemment sains, I1 et I2, ont pourtant un enfant malade dans leur descendance.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q2",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q2",
             "type": "mcq",
-            "prompt": "Dans l'arbre d'une famille, un homme sain et une femme saine ont un fils hémophile. Que peut-on en déduire sur l'allèle de l'hémophilie ?",
+            "prompt": "Le pédigrée de l'hémophilie montre que la maladie :",
             "options": [
-              "Il est dominant",
-              "Il est récessif : il était présent mais masqué",
-              "Il est codominant",
-              "Il n'est pas héréditaire"
+              "Est présente dans toutes les générations",
+              "N'est pas présente dans toutes les générations",
+              "N'atteint que les femmes",
+              "Disparaît définitivement après une génération"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Un allèle masqué chez un parent sain est récessif."
+            "explanation": "Résultats et analyse du document 2."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "propriete",
-          "stepTitle": "Porté par le X",
-          "stepTheme": "Porté par le X",
-          "stepBadge": "Porté par le X",
-          "paragraphText": "Dans cette famille, seuls des hommes sont malades : le gène est porté par le chromosome sexuel X.",
+          "stepTitle": "Un allèle récessif, un allèle normal dominant",
+          "stepTheme": "Un allèle récessif, un allèle normal dominant",
+          "stepBadge": "Un allèle récessif, un allèle normal dominant",
+          "paragraphText": "Les parents sains portent l'allèle de l'anomalie sous forme masquée.\nL'allèle de la maladie est donc récessif (h) et l'allèle normal est dominant (H).",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q3",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q3",
             "type": "mcq",
-            "prompt": "Dans l'arbre de la famille étudiée, tous les hémophiles sont des hommes (6, 8, 10, 11). Quel chromosome porte probablement le gène de l'hémophilie ?",
+            "prompt": "Pour l'hémophilie, le choix des symboles de la leçon est :",
+            "options": [
+              "Normal HbA, malade HbS",
+              "Normal H, maladie h",
+              "Normal S, maladie A",
+              "Normal X, maladie Y"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Choix des symboles du document 2 : normal H, maladie h."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Supposer le chromosome X",
+          "stepTheme": "Supposer le chromosome X",
+          "stepBadge": "Supposer le chromosome X",
+          "paragraphText": "Méthode : croiser les deux indices du pédigrée, récessivité et atteinte des seuls hommes.\nLa leçon en déduit la supposition que le gène est porté par le chromosome sexuel X, à vérifier par l'interprétation chromosomique.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q4",
+            "type": "mcq",
+            "prompt": "La maladie n'atteignant que les hommes, la leçon suppose que le gène est porté par :",
             "options": [
               "Un autosome",
-              "Le chromosome X",
-              "Le chromosome Y",
-              "Le chromosome 11"
+              "Le chromosome sexuel X",
+              "Le chromosome Y uniquement",
+              "Les deux chromosomes sexuels également"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Un seul allèle h suffit chez l'homme, qui n'a qu'un X."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "Le génotype d'un hémophile",
-          "stepTheme": "Le génotype d'un hémophile",
-          "stepBadge": "Le génotype d'un hémophile",
-          "paragraphText": "Un homme hémophile a le génotype $X^h$ Y : comme il n'a qu'un chromosome X, un seul allèle h suffit.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q4",
-            "type": "mcq",
-            "prompt": "Avec H pour l'allèle normal et h pour l'allèle de l'hémophilie (porté par le X), quel est le génotype d'un homme hémophile ?",
-            "options": [
-              "$X^H$ Y (allèle normal sur le X)",
-              "$X^h$ Y (allèle de la maladie sur le X)",
-              "$X^H$ $X^h$ (deux chromosomes X différents)",
-              "$X^h$ $X^h$ (deux X portant la maladie)"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Le Y ne porte pas ce gène : rien ne masque l'allèle h."
+            "explanation": "Analyse du document 2."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "definition",
-          "stepTitle": "La conductrice",
-          "stepTheme": "La conductrice",
-          "stepBadge": "La conductrice",
-          "paragraphText": "Une femme $X^H$ $X^h$ est saine mais porte l'allèle h : on l'appelle conductrice.",
+          "stepKind": "piege",
+          "stepTitle": "Des parents sains peuvent transmettre",
+          "stepTheme": "Des parents sains peuvent transmettre",
+          "stepBadge": "Des parents sains peuvent transmettre",
+          "paragraphText": "Piège : croire que deux parents apparemment sains ne peuvent pas avoir un enfant hémophile.\nLe pédigrée montre le contraire : ils portent l'allèle récessif masqué et peuvent le transmettre.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q5",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q5",
             "type": "mcq",
-            "prompt": "Une femme saine a le génotype $X^H$ $X^h$ pour le gène de l'hémophilie. Comment l'appelle-t-on ?",
+            "prompt": "Deux parents apparemment sains peuvent-ils avoir un enfant hémophile, selon le pédigrée ?",
             "options": [
-              "Une hémophile",
-              "Une conductrice (porteuse saine)",
-              "Une femme homozygote",
-              "Une donneuse universelle"
+              "Non, c'est impossible",
+              "Oui, car ils portent l'allèle de l'anomalie sous forme masquée",
+              "Seulement si le père est malade",
+              "Seulement pour la drépanocytose"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Elle peut transmettre l'allèle h à ses enfants."
+            "explanation": "Analyse du document 2 pour les parents I1 et I2."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "methode",
-          "stepTitle": "Trouver la conductrice",
-          "stepTheme": "Trouver la conductrice",
-          "stepBadge": "Trouver la conductrice",
-          "paragraphText": "Un fils reçoit son X de sa mère : si un fils est hémophile et que sa mère est saine, la mère est conductrice.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q6",
-            "type": "mcq",
-            "prompt": "L'homme sain I1 et la femme saine I2 ont un fils hémophile. Qui lui a transmis l'allèle h, et pourquoi ?",
-            "options": [
-              "Le père I1, par son chromosome Y",
-              "La mère I2, conductrice, car un fils reçoit son chromosome X de sa mère",
-              "Le père I1, par son chromosome X",
-              "Personne : c'est une maladie contagieuse"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Le père donne un Y à ses fils ; le X vient toujours de la mère."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Un père hémophile",
-          "stepTheme": "Un père hémophile",
-          "stepBadge": "Un père hémophile",
-          "paragraphText": "Un père hémophile ($X^h$ Y) ne transmet pas l'hémophilie à ses fils (il leur donne son Y) ; toutes ses filles reçoivent son $X^h$ et sont au moins conductrices.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p03_q7",
-            "type": "mcq",
-            "prompt": "L'homme 6, hémophile ($X^h$ Y), a des fils hémophiles (10 et 11) avec sa femme 7, qui est saine. Qui a transmis l'allèle h à ces fils ?",
-            "options": [
-              "Leur père 6, par son chromosome Y",
-              "Leur mère 7, qui est donc conductrice ($X^H$ $X^h$)",
-              "Leur grand-père I1",
-              "Personne"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Le père donne son Y aux fils ; leur X vient de la mère 7."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q1",
-          "type": "mcq",
-          "prompt": "Qu'est-ce qui caractérise l'hémophilie ?",
-          "options": [
-            "Un sang qui coagule très mal (sang incoagulable)",
-            "Des globules rouges en forme de faucille",
-            "Une perte de mémoire",
-            "Une absence de groupe sanguin"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "La forme en faucille, c'est la drépanocytose."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q2",
-          "type": "mcq",
-          "prompt": "Dans l'arbre d'une famille, un homme sain et une femme saine ont un fils hémophile. Que peut-on en déduire sur l'allèle de l'hémophilie ?",
-          "options": [
-            "Il est dominant",
-            "Il est récessif : il était présent mais masqué",
-            "Il est codominant",
-            "Il n'est pas héréditaire"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Un allèle masqué chez un parent sain est récessif."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q3",
-          "type": "mcq",
-          "prompt": "Dans l'arbre de la famille étudiée, tous les hémophiles sont des hommes (6, 8, 10, 11). Quel chromosome porte probablement le gène de l'hémophilie ?",
-          "options": [
-            "Un autosome",
-            "Le chromosome X",
-            "Le chromosome Y",
-            "Le chromosome 11"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Un seul allèle h suffit chez l'homme, qui n'a qu'un X."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q4",
-          "type": "mcq",
-          "prompt": "Avec H pour l'allèle normal et h pour l'allèle de l'hémophilie (porté par le X), quel est le génotype d'un homme hémophile ?",
-          "options": [
-            "$X^H$ Y (allèle normal sur le X)",
-            "$X^h$ Y (allèle de la maladie sur le X)",
-            "$X^H$ $X^h$ (deux chromosomes X différents)",
-            "$X^h$ $X^h$ (deux X portant la maladie)"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le Y ne porte pas ce gène : rien ne masque l'allèle h."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q5",
-          "type": "mcq",
-          "prompt": "Une femme saine a le génotype $X^H$ $X^h$ pour le gène de l'hémophilie. Comment l'appelle-t-on ?",
-          "options": [
-            "Une hémophile",
-            "Une conductrice (porteuse saine)",
-            "Une femme homozygote",
-            "Une donneuse universelle"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Elle peut transmettre l'allèle h à ses enfants."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q6",
-          "type": "mcq",
-          "prompt": "L'homme sain I1 et la femme saine I2 ont un fils hémophile. Qui lui a transmis l'allèle h, et pourquoi ?",
-          "options": [
-            "Le père I1, par son chromosome Y",
-            "La mère I2, conductrice, car un fils reçoit son chromosome X de sa mère",
-            "Le père I1, par son chromosome X",
-            "Personne : c'est une maladie contagieuse"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le père donne un Y à ses fils ; le X vient toujours de la mère."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p03_q7",
-          "type": "mcq",
-          "prompt": "L'homme 6, hémophile ($X^h$ Y), a des fils hémophiles (10 et 11) avec sa femme 7, qui est saine. Qui a transmis l'allèle h à ces fils ?",
-          "options": [
-            "Leur père 6, par son chromosome Y",
-            "Leur mère 7, qui est donc conductrice ($X^H$ $X^h$)",
-            "Leur grand-père I1",
-            "Personne"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le père donne son Y aux fils ; leur X vient de la mère 7."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l06_previsions_genetiques_p04",
-      "order": 4,
-      "title": "L'échiquier de l'hémophilie",
-      "summary": "Père sain × mère conductrice : aucune fille malade, un garçon sur deux malade.",
-      "conceptExplanation": "Vérification : interprétation chromosomique du couple I1 × I2.\n- I1 (homme sain) : phénotype [H], génotype $X^H$ Y. Gamètes : 50 % $X^H$, 50 % Y.\n- I2 (femme saine conductrice) : phénotype [H], génotype $X^H$ $X^h$. Gamètes : 50 % $X^H$, 50 % $X^h$.\n\nÉchiquier de croisement :\n- $X^H$ (mère) × $X^H$ (père) → $X^H$ $X^H$ : fille saine [H] (1/4) ;\n- $X^H$ (mère) × Y (père) → $X^H$ Y : garçon sain [H] (1/4) ;\n- $X^h$ (mère) × $X^H$ (père) → $X^H$ $X^h$ : fille saine conductrice [H] (1/4) ;\n- $X^h$ (mère) × Y (père) → $X^h$ Y : garçon hémophile [h] (1/4).\n\nBilan : 1/2 de filles [H] (dont la moitié conductrices), 1/4 de garçons [H], 1/4 de garçons [h].\nAucune fille n'est hémophile ; la moitié des garçons est saine, l'autre moitié hémophile. Les résultats théoriques sont conformes aux résultats observés : l'allèle de l'hémophilie est porté par le chromosome X.\n\nConclusion de la partie I :\n- le gène de la drépanocytose est porté par un autosome ; ses allèles sont codominants ;\n- le gène de l'hémophilie est porté par un chromosome sexuel (hétérochromosome X) ; son allèle est récessif.",
-      "keyRule": "$X^H$ Y × $X^H$ $X^h$ → filles : toutes saines (1/2 conductrices) ; garçons : 1/2 sains, 1/2 hémophiles. Risque pour un garçon : 50 %.",
-      "formulas": [],
-      "workedExample": {
-        "title": "Le risque pour un garçon",
-        "statement": "Un homme sain et une femme conductrice attendent un garçon. Quel est le risque qu'il soit hémophile ?",
-        "methodSteps": [
-          "Un garçon reçoit le Y du père et un X de la mère.",
-          "La mère donne $X^H$ ou $X^h$ avec la même probabilité."
-        ],
-        "conclusion": "Le risque est de 1/2, soit 50 %."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "methode",
-          "stepTitle": "Les gamètes du père",
-          "stepTheme": "Les gamètes du père",
-          "stepBadge": "Les gamètes du père",
-          "paragraphText": "Un homme sain $X^H$ Y produit 50 % de spermatozoïdes $X^H$ et 50 % de spermatozoïdes Y.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q1",
-            "type": "mcq",
-            "prompt": "Un homme sain a le génotype $X^H$ Y pour le gène de l'hémophilie. Quels spermatozoïdes produit-il ?",
-            "options": [
-              "100 % $X^H$ (allèle normal)",
-              "50 % $X^H$ (allèle normal) et 50 % Y",
-              "50 % $X^h$ (allèle de la maladie) et 50 % Y",
-              "100 % Y"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "La méiose sépare le X et le Y."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "Les gamètes de la mère",
-          "stepTheme": "Les gamètes de la mère",
-          "stepBadge": "Les gamètes de la mère",
-          "paragraphText": "Une femme conductrice $X^H$ $X^h$ produit 50 % d'ovules $X^H$ et 50 % d'ovules $X^h$.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q2",
-            "type": "mcq",
-            "prompt": "Une femme conductrice a le génotype $X^H$ $X^h$. Quels ovules produit-elle ?",
-            "options": [
-              "Tous des ovules $X^H$ (allèle normal)",
-              "50 % $X^H$ (allèle normal) et 50 % $X^h$ (allèle de la maladie)",
-              "50 % $X^H$ et 50 % Y",
-              "Tous des ovules $X^h$ (allèle de la maladie)"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Chaque ovule reçoit un seul de ses deux X."
-          }
-        },
-        {
-          "stepNumber": 3,
           "stepKind": "exemple",
-          "stepTitle": "Aucune fille malade",
-          "stepTheme": "Aucune fille malade",
-          "stepBadge": "Aucune fille malade",
-          "paragraphText": "Les filles reçoivent le $X^H$ de leur père : avec un père sain, aucune fille n'est hémophile.",
+          "stepTitle": "Que des hommes atteints",
+          "stepTheme": "Que des hommes atteints",
+          "stepBadge": "Que des hommes atteints",
+          "paragraphText": "Dans toute la famille du document 2, seuls des hommes sont hémophiles.\nC'est l'indice visuel le plus frappant du pédigrée, avant même l'analyse des générations.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q3",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q6",
             "type": "mcq",
-            "prompt": "Un homme sain ($X^H$ Y) et une femme conductrice ($X^H$ $X^h$) ont des filles. D'après l'échiquier, combien de ces filles peuvent être hémophiles ?",
+            "prompt": "Sur le pédigrée du document 2, la maladie affecte :",
             "options": [
-              "Aucune",
-              "La moitié",
-              "Toutes",
-              "Un quart"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Chaque fille reçoit $X^H$ de son père : l'allèle H masque h."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Un garçon sur deux",
-          "stepTheme": "Un garçon sur deux",
-          "stepBadge": "Un garçon sur deux",
-          "paragraphText": "Parmi les garçons du couple $X^H$ Y × $X^H$ $X^h$, la moitié sont sains ($X^H$ Y), l'autre moitié hémophiles ($X^h$ Y).",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q4",
-            "type": "mcq",
-            "prompt": "Un homme sain ($X^H$ Y) et une femme conductrice ($X^H$ $X^h$) attendent un garçon. Quel est le risque que ce garçon soit hémophile ?",
-            "options": [
-              "0 %",
-              "25 %",
-              "50 %",
-              "100 %"
+              "Les hommes et les femmes également",
+              "Uniquement les femmes",
+              "Que les hommes",
+              "Uniquement les grands-parents"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "Le garçon reçoit $X^H$ ou $X^h$ de sa mère, avec la même probabilité."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Le bilan global",
-          "stepTheme": "Le bilan global",
-          "stepBadge": "Le bilan global",
-          "paragraphText": "Bilan de $X^H$ Y × $X^H$ $X^h$ : 1/2 de filles saines, 1/4 de garçons sains, 1/4 de garçons hémophiles.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q5",
-            "type": "mcq",
-            "prompt": "Avant de connaître le sexe du bébé, quel est le risque qu'un enfant du couple homme sain ($X^H$ Y) × femme conductrice ($X^H$ $X^h$) soit hémophile ?",
-            "options": [
-              "1/4 (25 %)",
-              "1/2 (50 %)",
-              "3/4 (75 %)",
-              "0"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Une seule case sur quatre : $X^h$ Y."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "exemple",
-          "stepTitle": "Les filles conductrices",
-          "stepTheme": "Les filles conductrices",
-          "stepBadge": "Les filles conductrices",
-          "paragraphText": "La moitié des filles de ce couple sont conductrices ($X^H$ $X^h$) : saines, mais elles peuvent transmettre h.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q6",
-            "type": "mcq",
-            "prompt": "Parmi les filles d'un homme sain ($X^H$ Y) et d'une femme conductrice ($X^H$ $X^h$), quelle proportion est conductrice ?",
-            "options": [
-              "Aucune",
-              "La moitié",
-              "Toutes",
-              "Un quart"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Elles reçoivent $X^H$ du père et $X^H$ ou $X^h$ de la mère."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "propriete",
-          "stepTitle": "Deux modes de transmission",
-          "stepTheme": "Deux modes de transmission",
-          "stepBadge": "Deux modes de transmission",
-          "paragraphText": "Drépanocytose : gène autosomal, allèles codominants. Hémophilie : gène porté par le chromosome X, allèle récessif.",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p04_q7",
-            "type": "mcq",
-            "prompt": "Comparez la drépanocytose et l'hémophilie : où est porté chaque gène ?",
-            "options": [
-              "Les deux sur le chromosome X",
-              "Drépanocytose sur un autosome ; hémophilie sur le chromosome X",
-              "Drépanocytose sur le X ; hémophilie sur un autosome",
-              "Les deux sur le chromosome Y"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "C'est pourquoi l'hémophilie touche surtout les garçons, et la drépanocytose les deux sexes."
+            "explanation": "Résultats du document 2."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q1",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q1",
           "type": "mcq",
-          "prompt": "Un homme sain a le génotype $X^H$ Y pour le gène de l'hémophilie. Quels spermatozoïdes produit-il ?",
+          "prompt": "L'hémophilie est caractérisée par :",
           "options": [
-            "100 % $X^H$ (allèle normal)",
-            "50 % $X^H$ (allèle normal) et 50 % Y",
-            "50 % $X^h$ (allèle de la maladie) et 50 % Y",
-            "100 % Y"
+            "Une hémoglobine anormale S",
+            "Un sang incoagulable",
+            "Un groupe sanguin AB",
+            "Une absence de chromosomes X"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La méiose sépare le X et le Y."
+          "explanation": "Définition donnée à la présentation du document 2."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q2",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q2",
           "type": "mcq",
-          "prompt": "Une femme conductrice a le génotype $X^H$ $X^h$. Quels ovules produit-elle ?",
+          "prompt": "Le pédigrée de l'hémophilie montre que la maladie :",
           "options": [
-            "Tous des ovules $X^H$ (allèle normal)",
-            "50 % $X^H$ (allèle normal) et 50 % $X^h$ (allèle de la maladie)",
-            "50 % $X^H$ et 50 % Y",
-            "Tous des ovules $X^h$ (allèle de la maladie)"
+            "Est présente dans toutes les générations",
+            "N'est pas présente dans toutes les générations",
+            "N'atteint que les femmes",
+            "Disparaît définitivement après une génération"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Chaque ovule reçoit un seul de ses deux X."
+          "explanation": "Résultats et analyse du document 2."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q3",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q3",
           "type": "mcq",
-          "prompt": "Un homme sain ($X^H$ Y) et une femme conductrice ($X^H$ $X^h$) ont des filles. D'après l'échiquier, combien de ces filles peuvent être hémophiles ?",
+          "prompt": "Pour l'hémophilie, le choix des symboles de la leçon est :",
           "options": [
-            "Aucune",
-            "La moitié",
-            "Toutes",
-            "Un quart"
+            "Normal HbA, malade HbS",
+            "Normal H, maladie h",
+            "Normal S, maladie A",
+            "Normal X, maladie Y"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Chaque fille reçoit $X^H$ de son père : l'allèle H masque h."
+          "correctAnswerIndex": 1,
+          "explanation": "Choix des symboles du document 2 : normal H, maladie h."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q4",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q4",
           "type": "mcq",
-          "prompt": "Un homme sain ($X^H$ Y) et une femme conductrice ($X^H$ $X^h$) attendent un garçon. Quel est le risque que ce garçon soit hémophile ?",
+          "prompt": "La maladie n'atteignant que les hommes, la leçon suppose que le gène est porté par :",
           "options": [
-            "0 %",
-            "25 %",
-            "50 %",
-            "100 %"
+            "Un autosome",
+            "Le chromosome sexuel X",
+            "Le chromosome Y uniquement",
+            "Les deux chromosomes sexuels également"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Analyse du document 2."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q5",
+          "type": "mcq",
+          "prompt": "Deux parents apparemment sains peuvent-ils avoir un enfant hémophile, selon le pédigrée ?",
+          "options": [
+            "Non, c'est impossible",
+            "Oui, car ils portent l'allèle de l'anomalie sous forme masquée",
+            "Seulement si le père est malade",
+            "Seulement pour la drépanocytose"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Analyse du document 2 pour les parents I1 et I2."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p03_q6",
+          "type": "mcq",
+          "prompt": "Sur le pédigrée du document 2, la maladie affecte :",
+          "options": [
+            "Les hommes et les femmes également",
+            "Uniquement les femmes",
+            "Que les hommes",
+            "Uniquement les grands-parents"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Le garçon reçoit $X^H$ ou $X^h$ de sa mère, avec la même probabilité."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q5",
-          "type": "mcq",
-          "prompt": "Avant de connaître le sexe du bébé, quel est le risque qu'un enfant du couple homme sain ($X^H$ Y) × femme conductrice ($X^H$ $X^h$) soit hémophile ?",
-          "options": [
-            "1/4 (25 %)",
-            "1/2 (50 %)",
-            "3/4 (75 %)",
-            "0"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Une seule case sur quatre : $X^h$ Y."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q6",
-          "type": "mcq",
-          "prompt": "Parmi les filles d'un homme sain ($X^H$ Y) et d'une femme conductrice ($X^H$ $X^h$), quelle proportion est conductrice ?",
-          "options": [
-            "Aucune",
-            "La moitié",
-            "Toutes",
-            "Un quart"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Elles reçoivent $X^H$ du père et $X^H$ ou $X^h$ de la mère."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p04_q7",
-          "type": "mcq",
-          "prompt": "Comparez la drépanocytose et l'hémophilie : où est porté chaque gène ?",
-          "options": [
-            "Les deux sur le chromosome X",
-            "Drépanocytose sur un autosome ; hémophilie sur le chromosome X",
-            "Drépanocytose sur le X ; hémophilie sur un autosome",
-            "Les deux sur le chromosome Y"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "C'est pourquoi l'hémophilie touche surtout les garçons, et la drépanocytose les deux sexes."
+          "explanation": "Résultats du document 2."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l06_previsions_genetiques_p05",
-      "order": 5,
-      "title": "Les moyens de prévoir : conseil génétique et diagnostic prénatal",
-      "summary": "Examens prénuptiaux des parents, examens prénataux du fœtus.",
-      "conceptExplanation": "1. La consultation et le conseil génétiques : des couples demandent l'avis de médecins (par exemple en cas d'antécédents familiaux). Le médecin informe les parents et respecte leur choix.\n\n2. Les examens PRÉNUPTIAUX (chez les futurs parents, avant le mariage ou la grossesse) :\n- la drépanocytose, par l'électrophorèse de l'hémoglobine ;\n- l'hémophilie, par le dosage des facteurs de coagulation dans le sang ;\n- le facteur Rhésus, par le groupage sanguin.\n\n3. Les examens PRÉNATAUX (chez le fœtus, pendant la grossesse) :\n- l'échographie (images par ultrasons) ;\n- la biopsie des villosités choriales (biopsie fœtale) : avec une pince introduite dans l'utérus, on prélève des cellules d'origine fœtale du placenta, à partir de la 9e semaine environ, sous contrôle échographique ;\n- l'amniocentèse : avec une seringue introduite à travers la paroi de l'abdomen, on prélève du liquide amniotique contenant des cellules fœtales, à partir de la 17e semaine environ, sous contrôle échographique ;\n- l'embryoscopie (observation directe de l'embryon).\nLes cellules prélevées sont mises en culture, puis on fait une analyse chromosomique (caryotype : trisomie 21, etc.) ou une analyse biochimique ou de l'ADN (drépanocytose, hémophilie…).\n\nCorrection du corrigé du document : il faut lire « consultation prénuptiale », et non « consolidation prénuptiale ».\n\nConclusion générale : les maladies héréditaires se transmettent par les autosomes ou par les chromosomes sexuels. Ce sont des maladies graves que l'on peut prévoir en connaissant leur mode de transmission et en consultant un médecin généticien, surtout si l'un des parents est malade ou porteur.",
-      "keyRule": "Prévoir : consultation et conseil génétiques ; examens prénuptiaux (électrophorèse, coagulation, groupage) ; examens prénataux (échographie, biopsie des villosités choriales, amniocentèse, embryoscopie).",
+      "id": "terminale_a1_svt_l06_previsions_genetiques_p04",
+      "order": 4,
+      "title": "Le bilan chromosomique de l'hémophilie",
+      "summary": "Vérifier par l'interprétation chromosomique qu'aucune fille n'est hémophile et que la moitié des garçons l'est.",
+      "conceptExplanation": "La vérification chromosomique croise les gamètes des deux parents en tenant compte du chromosome X porteur de l'allèle.\nLe bilan de la leçon est le suivant : une moitié de filles [H], un quart de garçons [H], un quart de garçons [h].\nConclusion du bilan : aucune fille n'est hémophile ; la moitié des garçons est normale, tandis que l'autre moitié est hémophile.\nLes résultats théoriques sont conformes aux résultats observés sur le pédigrée.\nL'allèle de l'hémophilie est donc bien porté par un chromosome sexuel X, et le gène responsable de l'hémophilie est porté par un hétérochromosome, contrairement à celui de la drépanocytose, porté par un autosome.",
+      "keyRule": "Bilan à retenir : moitié de filles [H], quart de garçons [H], quart de garçons [h] ; aucune fille hémophile, un garçon sur deux hémophile.",
       "formulas": [],
       "workedExample": {
-        "title": "Classer des examens",
-        "statement": "Le père et la mère font des examens de l'hémoglobine ; pendant la grossesse, la mère fait une échographie et une amniocentèse. Comment appelle-t-on chaque groupe d'examens ?",
+        "title": "Vérifier le pédigrée par le bilan théorique (document 2, suite)",
+        "statement": "Donne le bilan de l'interprétation chromosomique et sa conclusion pour l'hémophilie.",
         "methodSteps": [
-          "Les examens des futurs parents se font avant la grossesse : examens prénuptiaux.",
-          "Les examens sur l'enfant à naître se font pendant la grossesse : examens prénataux."
+          "On croise les gamètes en suivant l'allèle porté par le chromosome X.",
+          "Bilan : une moitié de filles [H], un quart de garçons [H], un quart de garçons [h].",
+          "Aucune fille n'est hémophile ; la moitié des garçons est normale et l'autre moitié hémophile.",
+          "Ces résultats théoriques sont conformes aux résultats observés : l'allèle est bien porté par le chromosome X."
         ],
-        "conclusion": "Parents : consultation prénuptiale ; enfant à naître : examens prénataux."
+        "conclusion": "La conformité entre théorie et pédigrée confirme la localisation sur le chromosome X."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Le conseil génétique",
-          "stepTheme": "Le conseil génétique",
-          "stepBadge": "Le conseil génétique",
-          "paragraphText": "Lors d'une consultation génétique, des médecins informent un couple sur les risques de maladie héréditaire et respectent son choix.",
+          "stepTitle": "Un hétérochromosome",
+          "stepTheme": "Un hétérochromosome",
+          "stepBadge": "Un hétérochromosome",
+          "paragraphText": "La conclusion de la partie I oppose les deux maladies par la localisation de leur gène.\nLe gène de l'hémophilie est porté par un hétérochromosome, c'est-à-dire un chromosome sexuel, ici le X.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q1",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q1",
             "type": "mcq",
-            "prompt": "Un couple dont un frère est hémophile s'inquiète pour ses futurs enfants. Que peut-il demander ?",
+            "prompt": "Le gène responsable de l'hémophilie est porté par :",
             "options": [
-              "Une consultation et un conseil génétiques auprès d'un médecin",
-              "Un vaccin contre l'hémophilie",
-              "Un changement de groupe sanguin",
-              "Rien, on ne peut rien prévoir"
+              "Un autosome",
+              "Un hétérochromosome",
+              "Aucun chromosome",
+              "Le chromosome Y uniquement selon la conclusion"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Conclusion de la partie I : gène porté par un hétérochromosome."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Aucune fille hémophile dans ce bilan",
+          "stepTheme": "Aucune fille hémophile dans ce bilan",
+          "stepBadge": "Aucune fille hémophile dans ce bilan",
+          "paragraphText": "Le bilan chromosomique donne une moitié de filles, toutes de phénotype [H].\nLa conclusion est formelle : aucune fille n'est hémophile dans ce croisement.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q2",
+            "type": "mcq",
+            "prompt": "Dans le bilan de la leçon, les filles sont :",
+            "options": [
+              "Toutes hémophiles",
+              "Pour moitié hémophiles",
+              "Aucune hémophile, toutes [H]",
+              "Absentes du bilan"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Bilan et conclusion de l'interprétation chromosomique."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "La moitié des garçons hémophiles",
+          "stepTheme": "La moitié des garçons hémophiles",
+          "stepBadge": "La moitié des garçons hémophiles",
+          "paragraphText": "Les garçons se partagent en deux quarts : un quart [H] et un quart [h].\nAutrement dit, la moitié des garçons est normale et l'autre moitié est hémophile.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q3",
+            "type": "mcq",
+            "prompt": "Parmi les garçons du bilan, la proportion d'hémophiles est de :",
+            "options": [
+              "Aucun garçon",
+              "Un quart des garçons",
+              "La moitié des garçons",
+              "Tous les garçons"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Un quart de garçons [h] sur un demi total de garçons : la moitié des garçons."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Confronter théorie et observation",
+          "stepTheme": "Confronter théorie et observation",
+          "stepBadge": "Confronter théorie et observation",
+          "paragraphText": "Méthode de vérification de la leçon : comparer les résultats théoriques de l'échiquier chromosomique aux résultats observés sur le pédigrée.\nLeur conformité valide la supposition d'un gène porté par le chromosome X.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q4",
+            "type": "mcq",
+            "prompt": "La vérification est concluante parce que :",
+            "options": [
+              "Les résultats théoriques sont conformes aux résultats observés",
+              "Le pédigrée a été modifié",
+              "Toutes les filles sont malades",
+              "Le gène est finalement autosomal"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Le médecin évalue le risque et informe le couple."
+            "explanation": "Phrase de conclusion du bilan du document 2."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Ne pas échanger les deux maladies",
+          "stepTheme": "Ne pas échanger les deux maladies",
+          "stepBadge": "Ne pas échanger les deux maladies",
+          "paragraphText": "Piège de synthèse : attribuer l'autosome à l'hémophilie et le chromosome X à la drépanocytose.\nC'est l'inverse : drépanocytose autosomale codominante, hémophilie récessive portée par un hétérochromosome.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q5",
+            "type": "mcq",
+            "prompt": "La bonne association est :",
+            "options": [
+              "Drépanocytose liée à X, hémophilie autosomale",
+              "Drépanocytose autosomale codominante, hémophilie récessive portée par un hétérochromosome",
+              "Les deux maladies autosomales récessives",
+              "Les deux maladies liées au chromosome Y"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Conclusion de la partie I, qui oppose les deux modes de transmission."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Un quart de garçons [h]",
+          "stepTheme": "Un quart de garçons [h]",
+          "stepBadge": "Un quart de garçons [h]",
+          "paragraphText": "Le quart de garçons [h] du bilan correspond aux garçons hémophiles attendus.\nIl explique les cas masculins observés dans la descendance des parents I1 et I2 du pédigrée.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q6",
+            "type": "mcq",
+            "prompt": "Dans le bilan, les garçons hémophiles représentent :",
+            "options": [
+              "Une moitié de l'ensemble des enfants",
+              "Un quart de l'ensemble des enfants",
+              "Toutes les filles",
+              "Trois quarts des enfants"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Bilan : un quart de garçons [h] sur l'ensemble de la descendance."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q1",
+          "type": "mcq",
+          "prompt": "Le gène responsable de l'hémophilie est porté par :",
+          "options": [
+            "Un autosome",
+            "Un hétérochromosome",
+            "Aucun chromosome",
+            "Le chromosome Y uniquement selon la conclusion"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Conclusion de la partie I : gène porté par un hétérochromosome."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q2",
+          "type": "mcq",
+          "prompt": "Dans le bilan de la leçon, les filles sont :",
+          "options": [
+            "Toutes hémophiles",
+            "Pour moitié hémophiles",
+            "Aucune hémophile, toutes [H]",
+            "Absentes du bilan"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Bilan et conclusion de l'interprétation chromosomique."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q3",
+          "type": "mcq",
+          "prompt": "Parmi les garçons du bilan, la proportion d'hémophiles est de :",
+          "options": [
+            "Aucun garçon",
+            "Un quart des garçons",
+            "La moitié des garçons",
+            "Tous les garçons"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Un quart de garçons [h] sur un demi total de garçons : la moitié des garçons."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q4",
+          "type": "mcq",
+          "prompt": "La vérification est concluante parce que :",
+          "options": [
+            "Les résultats théoriques sont conformes aux résultats observés",
+            "Le pédigrée a été modifié",
+            "Toutes les filles sont malades",
+            "Le gène est finalement autosomal"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Phrase de conclusion du bilan du document 2."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q5",
+          "type": "mcq",
+          "prompt": "La bonne association est :",
+          "options": [
+            "Drépanocytose liée à X, hémophilie autosomale",
+            "Drépanocytose autosomale codominante, hémophilie récessive portée par un hétérochromosome",
+            "Les deux maladies autosomales récessives",
+            "Les deux maladies liées au chromosome Y"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Conclusion de la partie I, qui oppose les deux modes de transmission."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p04_q6",
+          "type": "mcq",
+          "prompt": "Dans le bilan, les garçons hémophiles représentent :",
+          "options": [
+            "Une moitié de l'ensemble des enfants",
+            "Un quart de l'ensemble des enfants",
+            "Toutes les filles",
+            "Trois quarts des enfants"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Bilan : un quart de garçons [h] sur l'ensemble de la descendance."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l06_previsions_genetiques_p05",
+      "order": 5,
+      "title": "La consultation génétique et le conseil génétique",
+      "summary": "Présenter la consultation prénuptiale et les examens des parents : hémophilie, facteur rhésus et drépanocytose.",
+      "conceptExplanation": "Le document 1 présente des moyens pour éviter d'avoir des enfants malades : la consultation génétique, qui apporte l'information aux parents et respecte leur choix, et le conseil génétique, où des couples demandent l'avis du corps médical pour des raisons très variables, par exemple la crainte dans le cas de certains antécédents familiaux.\nLa consultation peut se faire chez les parents : on parle de consultation prénuptiale. Elle permet par exemple de rechercher l'hémophilie en mesurant le taux sanguin, le facteur rhésus par groupage sanguin à partir du sérum test, et la drépanocytose par l'électrophorèse.\nLa consultation peut aussi se faire chez le fœtus : on parle alors d'examens prénataux.\nLa situation d'évaluation oppose ainsi le groupe d'examens faits par les parents, qualifié dans le corrigé de consolidation prénuptiale (pour consultation prénuptiale), et celui des examens faits sur l'enfant à naître, l'examen prénatal. Le bien-fondé de ces examens est d'éviter les maladies héréditaires graves.",
+      "keyRule": "Avant le mariage ou la conception : consultation et conseil génétiques, avec trois recherches citées, taux sanguin pour l'hémophilie, groupage pour le rhésus, électrophorèse pour la drépanocytose.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Qualifier les deux groupes d'examens (situation d'évaluation)",
+        "statement": "Le père et la mère font des examens portant sur l'hémoglobine, et la mère suit pendant sa grossesse des examens de dépistage sur l'enfant à naître. Comment qualifier ces deux groupes d'examens ?",
+        "methodSteps": [
+          "L'examen portant sur les types d'hémoglobine recherche la drépanocytose.",
+          "Les examens faits par les parents relèvent de la consultation prénuptiale (le corrigé écrit consolidation prénuptiale).",
+          "Les examens faits sur l'enfant à naître relèvent de l'examen prénatal.",
+          "Leur bien-fondé : éviter les maladies héréditaires graves."
+        ],
+        "conclusion": "Corrigé de la situation d'évaluation : consultation des parents d'un côté, examens prénataux de l'autre, pour prévenir les maladies graves."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La consultation génétique",
+          "stepTheme": "La consultation génétique",
+          "stepBadge": "La consultation génétique",
+          "paragraphText": "• Consultation génétique : démarche qui apporte l'information aux parents et respecte leur choix.\nLe texte la distingue du conseil génétique, où le corps médical donne un avis à la demande des couples.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q1",
+            "type": "mcq",
+            "prompt": "La consultation génétique apporte aux parents :",
+            "options": [
+              "Une obligation de ne pas avoir d'enfants",
+              "L'information, en respectant leur choix",
+              "Uniquement un diagnostic du fœtus",
+              "Un traitement de l'hémophilie"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Texte du document 1 de la partie II."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "definition",
-          "stepTitle": "L'examen prénuptial",
-          "stepTheme": "L'examen prénuptial",
-          "stepBadge": "L'examen prénuptial",
-          "paragraphText": "Les examens prénuptiaux se font chez les futurs parents : électrophorèse (drépanocytose), dosage de la coagulation (hémophilie), groupage sanguin (Rhésus).",
+          "stepTitle": "La consultation prénuptiale",
+          "stepTheme": "La consultation prénuptiale",
+          "stepBadge": "La consultation prénuptiale",
+          "paragraphText": "La consultation chez les parents, avant l'union ou la conception, est appelée consultation prénuptiale dans l'analyse.\nElle recherche notamment l'hémophilie, le facteur rhésus et la drépanocytose.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q2",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q2",
             "type": "mcq",
-            "prompt": "Avant de se marier, un homme et une femme font chacun une électrophorèse de leur hémoglobine. Quelle maladie recherche-t-on ainsi ?",
+            "prompt": "La consultation des parents est appelée :",
             "options": [
-              "L'hémophilie",
-              "La drépanocytose",
-              "Le paludisme",
-              "La trisomie 21"
+              "Amniocentèse",
+              "Biopsie fœtale",
+              "Consultation prénuptiale",
+              "Échographie"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "L'électrophorèse distingue HbA et HbS."
+            "correctAnswerIndex": 2,
+            "explanation": "Analyse du document 1 de la partie II."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "La biopsie des villosités choriales",
-          "stepTheme": "La biopsie des villosités choriales",
-          "stepBadge": "La biopsie des villosités choriales",
-          "paragraphText": "Avec une pince introduite dans l'utérus, on prélève des cellules fœtales du placenta, à partir de la 9e semaine environ, sous échographie.",
+          "stepKind": "propriete",
+          "stepTitle": "Trois recherches chez les parents",
+          "stepTheme": "Trois recherches chez les parents",
+          "stepBadge": "Trois recherches chez les parents",
+          "paragraphText": "L'analyse liste trois recherches possibles en consultation prénuptiale.\nL'hémophilie en mesurant le taux sanguin, le facteur rhésus par groupage sanguin à partir du sérum test, et la drépanocytose par l'électrophorèse.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q3",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q3",
             "type": "mcq",
-            "prompt": "On prélève, à l'aide d'une pince introduite dans l'utérus et sous contrôle échographique, des cellules d'origine fœtale du placenta, à partir de la 9e semaine. Comment s'appelle cet examen ?",
+            "prompt": "La drépanocytose est recherchée chez les parents par :",
             "options": [
-              "L'amniocentèse",
-              "La biopsie des villosités choriales (biopsie fœtale)",
+              "Le groupage sanguin",
               "L'électrophorèse",
-              "La radiographie"
+              "La mesure du taux sanguin",
+              "L'échographie"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est l'examen le plus précoce."
+            "explanation": "C'est le troisième examen listé dans l'analyse."
           }
         },
         {
           "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Quel examen pour quelle recherche",
+          "stepTheme": "Quel examen pour quelle recherche",
+          "stepBadge": "Quel examen pour quelle recherche",
+          "paragraphText": "Méthode : associer chaque recherche à sa technique.\nTaux sanguin pour l'hémophilie, groupage sanguin à partir du sérum test pour le facteur rhésus, électrophorèse pour la drépanocytose.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q4",
+            "type": "mcq",
+            "prompt": "Le facteur rhésus est recherché par :",
+            "options": [
+              "L'électrophorèse",
+              "La biopsie des villosités choriales",
+              "Le groupage sanguin à partir du sérum test",
+              "L'embryoscopie"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Analyse du document 1 : groupage sanguin à partir du sérum test."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le dépistage ne se fait pas uniquement chez les parents",
+          "stepTheme": "Le dépistage ne se fait pas uniquement chez les parents",
+          "stepBadge": "Le dépistage ne se fait pas uniquement chez les parents",
+          "paragraphText": "Piège de l'exercice 1 : « la prévision des anomalies héréditaires se fait par un dépistage uniquement chez les parents » est faux.\nLe dépistage concerne aussi le fœtus, par les examens prénataux de la partie suivante.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q5",
+            "type": "mcq",
+            "prompt": "L'affirmation « le dépistage se fait uniquement chez les parents » est jugée :",
+            "options": [
+              "Vraie",
+              "Vraie pour l'hémophilie seulement",
+              "Fausse",
+              "Non corrigée"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Corrigé de l'exercice 1 : a faux, b faux, c vrai (l'Homme peut prévoir l'apparition des maladies héréditaires)."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La crainte liée aux antécédents familiaux",
+          "stepTheme": "La crainte liée aux antécédents familiaux",
+          "stepBadge": "La crainte liée aux antécédents familiaux",
+          "paragraphText": "Le conseil génétique est illustré par des couples qui demandent l'avis du corps médical.\nLa leçon donne comme exemple de raison la crainte dans le cas de certains antécédents familiaux, comme une famille touchée par la drépanocytose.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q6",
+            "type": "mcq",
+            "prompt": "Un motif de demande de conseil génétique cité par le texte est :",
+            "options": [
+              "Le choix du sexe de l'enfant",
+              "La crainte liée à certains antécédents familiaux",
+              "La préparation d'un concours",
+              "Le groupage sanguin des voisins"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Texte du document 1 : raisons très variables, par exemple la crainte en cas d'antécédents familiaux."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q1",
+          "type": "mcq",
+          "prompt": "La consultation génétique apporte aux parents :",
+          "options": [
+            "Une obligation de ne pas avoir d'enfants",
+            "L'information, en respectant leur choix",
+            "Uniquement un diagnostic du fœtus",
+            "Un traitement de l'hémophilie"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Texte du document 1 de la partie II."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q2",
+          "type": "mcq",
+          "prompt": "La consultation des parents est appelée :",
+          "options": [
+            "Amniocentèse",
+            "Biopsie fœtale",
+            "Consultation prénuptiale",
+            "Échographie"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Analyse du document 1 de la partie II."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q3",
+          "type": "mcq",
+          "prompt": "La drépanocytose est recherchée chez les parents par :",
+          "options": [
+            "Le groupage sanguin",
+            "L'électrophorèse",
+            "La mesure du taux sanguin",
+            "L'échographie"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est le troisième examen listé dans l'analyse."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q4",
+          "type": "mcq",
+          "prompt": "Le facteur rhésus est recherché par :",
+          "options": [
+            "L'électrophorèse",
+            "La biopsie des villosités choriales",
+            "Le groupage sanguin à partir du sérum test",
+            "L'embryoscopie"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Analyse du document 1 : groupage sanguin à partir du sérum test."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q5",
+          "type": "mcq",
+          "prompt": "L'affirmation « le dépistage se fait uniquement chez les parents » est jugée :",
+          "options": [
+            "Vraie",
+            "Vraie pour l'hémophilie seulement",
+            "Fausse",
+            "Non corrigée"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Corrigé de l'exercice 1 : a faux, b faux, c vrai (l'Homme peut prévoir l'apparition des maladies héréditaires)."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p05_q6",
+          "type": "mcq",
+          "prompt": "Un motif de demande de conseil génétique cité par le texte est :",
+          "options": [
+            "Le choix du sexe de l'enfant",
+            "La crainte liée à certains antécédents familiaux",
+            "La préparation d'un concours",
+            "Le groupage sanguin des voisins"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Texte du document 1 : raisons très variables, par exemple la crainte en cas d'antécédents familiaux."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l06_previsions_genetiques_p06",
+      "order": 6,
+      "title": "Le diagnostic prénatal : biopsie, amniocentèse et autres techniques",
+      "summary": "Décrire les prélèvements sur le fœtus, leurs dates et les techniques de dépistage prénatal.",
+      "conceptExplanation": "Le document 2 présente le dépistage de certaines maladies chez le fœtus à partir des villosités choriales ou du liquide amniotique.\nLa biopsie fœtale : à l'aide d'une pince à biopsie introduite dans l'utérus, on prélève des cellules d'origine fœtale du placenta. Ce prélèvement se fait à partir de la 9e semaine, sous contrôle échographique. C'est la biopsie des villosités choriales.\nL'amniocentèse : à l'aide d'une seringue introduite dans l'abdomen, on prélève le liquide amniotique contenant des cellules fœtales ou du sang fœtal. Ce prélèvement se fait à partir de la 17e semaine, sous contrôle échographique.\nDans les deux cas, les cellules prélevées sont mises en culture et le diagnostic se fait soit par analyse chromosomique, soit par une analyse biochimique, à partir de la 20e semaine.\nLes techniques de dépistage prénatal citées sont l'échographie, la biopsie des villosités choriales, l'amniocentèse et l'embryoscopie. Il est donc possible de prévoir la transmission des maladies héréditaires.",
+      "keyRule": "Deux prélèvements à dater sans les inverser : biopsie des villosités choriales dès la 9e semaine, amniocentèse dès la 17e semaine, diagnostic à partir de la 20e semaine.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Les examens de la mère à la PMI (situation d'évaluation, suite)",
+        "statement": "Pendant sa grossesse, une mère fait des examens dont les techniques sont l'échographie, la biopsie des villosités choriales, l'amniocentèse et l'embryoscopie. À quel groupe d'examens appartiennent-ils ?",
+        "methodSteps": [
+          "Ces techniques portent sur l'enfant à naître, le fœtus, et non sur les parents avant conception.",
+          "Elles constituent donc les examens prénataux, à distinguer de la consultation prénuptiale des parents.",
+          "Leur but commun avec les examens des parents est d'éviter les maladies héréditaires graves."
+        ],
+        "conclusion": "Ce sont les examens prénataux, second volet des moyens de prévision de la leçon."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La biopsie fœtale",
+          "stepTheme": "La biopsie fœtale",
+          "stepBadge": "La biopsie fœtale",
+          "paragraphText": "• Biopsie fœtale (biopsie des villosités choriales) : prélèvement de cellules d'origine fœtale du placenta, à l'aide d'une pince à biopsie introduite dans l'utérus.\nElle se fait à partir de la 9e semaine, sous contrôle échographique.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q1",
+            "type": "mcq",
+            "prompt": "La biopsie fœtale se fait à partir de :",
+            "options": [
+              "La 17e semaine",
+              "La 20e semaine",
+              "La 9e semaine",
+              "La naissance"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Analyse du document 2 : prélèvement à partir de la 9e semaine."
+          }
+        },
+        {
+          "stepNumber": 2,
           "stepKind": "definition",
           "stepTitle": "L'amniocentèse",
           "stepTheme": "L'amniocentèse",
           "stepBadge": "L'amniocentèse",
-          "paragraphText": "Avec une seringue introduite à travers l'abdomen, on prélève du liquide amniotique contenant des cellules fœtales, à partir de la 17e semaine environ.",
+          "paragraphText": "• Amniocentèse : prélèvement du liquide amniotique contenant des cellules fœtales ou du sang fœtal, à l'aide d'une seringue introduite dans l'abdomen.\nElle se fait à partir de la 17e semaine, sous contrôle échographique.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q4",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q2",
             "type": "mcq",
-            "prompt": "À l'aide d'une seringue introduite à travers la paroi de l'abdomen, sous échographie, on prélève du liquide amniotique contenant des cellules du fœtus, vers la 17e semaine. Comment s'appelle cet examen ?",
+            "prompt": "L'amniocentèse prélève :",
             "options": [
-              "La biopsie des villosités choriales",
-              "L'amniocentèse",
-              "L'embryoscopie",
-              "Le groupage sanguin"
+              "Des cellules du placenta avec une pince",
+              "Le liquide amniotique, avec une seringue introduite dans l'abdomen",
+              "Uniquement du sang maternel",
+              "Des cellules de la peau du fœtus"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "« Amnio » : le liquide amniotique."
+            "explanation": "Analyse du document 2 pour l'amniocentèse."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Un diagnostic à partir de la 20e semaine",
+          "stepTheme": "Un diagnostic à partir de la 20e semaine",
+          "stepBadge": "Un diagnostic à partir de la 20e semaine",
+          "paragraphText": "Dans les deux techniques, les cellules prélevées sont mises en culture.\nLe diagnostic se fait ensuite soit par analyse chromosomique, soit par une analyse biochimique, à partir de la 20e semaine.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q3",
+            "type": "mcq",
+            "prompt": "Après mise en culture des cellules, le diagnostic se fait à partir de :",
+            "options": [
+              "La 9e semaine",
+              "La 17e semaine",
+              "La 20e semaine",
+              "La 40e semaine uniquement"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Analyse du document 2 : diagnostic à partir de la 20e semaine."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Quatre techniques de dépistage prénatal",
+          "stepTheme": "Quatre techniques de dépistage prénatal",
+          "stepBadge": "Quatre techniques de dépistage prénatal",
+          "paragraphText": "La leçon énumère les techniques de dépistage chez le fœtus.\nCe sont l'échographie, la biopsie des villosités choriales, l'amniocentèse et l'embryoscopie.",
+          "exercise": {
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q4",
+            "type": "mcq",
+            "prompt": "Laquelle de ces techniques fait partie du dépistage prénatal cité ?",
+            "options": [
+              "L'embryoscopie",
+              "Le groupage sanguin des parents",
+              "La mesure du taux sanguin paternel",
+              "La consultation prénuptiale"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'embryoscopie figure dans la liste des techniques de dépistage sur l'enfant à naître."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "L'analyse des cellules",
-          "stepTheme": "L'analyse des cellules",
-          "stepBadge": "L'analyse des cellules",
-          "paragraphText": "Les cellules prélevées sont mises en culture, puis analysées : caryotype (anomalies des chromosomes) ou analyse biochimique et de l'ADN (maladies des gènes).",
+          "stepKind": "piege",
+          "stepTitle": "Ne pas inverser 9e et 17e semaines",
+          "stepTheme": "Ne pas inverser 9e et 17e semaines",
+          "stepBadge": "Ne pas inverser 9e et 17e semaines",
+          "paragraphText": "Piège fréquent : attribuer la 9e semaine à l'amniocentèse et la 17e à la biopsie.\nC'est l'inverse : biopsie des villosités choriales dès la 9e semaine, amniocentèse dès la 17e semaine, toutes deux sous contrôle échographique.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q5",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q5",
             "type": "mcq",
-            "prompt": "Après une amniocentèse, que fait-on des cellules fœtales prélevées pour établir un diagnostic ?",
+            "prompt": "Le prélèvement le plus précoce, dès la 9e semaine, est :",
             "options": [
-              "On les jette",
-              "On les met en culture, puis on fait une analyse chromosomique ou biochimique (ADN)",
-              "On les injecte à la mère",
-              "On les fait congeler sans analyse"
+              "L'amniocentèse",
+              "La biopsie fœtale des villosités choriales",
+              "L'analyse biochimique",
+              "L'embryoscopie selon la leçon"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Le caryotype détecte par exemple la trisomie 21."
+            "explanation": "Analyse du document 2 : la biopsie se fait à partir de la 9e semaine, l'amniocentèse à partir de la 17e."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "methode",
-          "stepTitle": "Prénuptial ou prénatal ?",
-          "stepTheme": "Prénuptial ou prénatal ?",
-          "stepBadge": "Prénuptial ou prénatal ?",
-          "paragraphText": "Examens des futurs parents : consultation prénuptiale. Examens de l'enfant à naître : examens prénataux.",
+          "stepKind": "exemple",
+          "stepTitle": "Prélever à partir des villosités choriales ou du liquide amniotique",
+          "stepTheme": "Prélever à partir des villosités choriales ou du liquide amniotique",
+          "stepBadge": "Prélever à partir des villosités choriales ou du liquide amniotique",
+          "paragraphText": "Le document 2 est présenté comme le dépistage de certaines maladies chez le fœtus.\nLes deux matériaux de départ sont les villosités choriales, pour la biopsie, et le liquide amniotique, pour l'amniocentèse.",
           "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q6",
+            "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q6",
             "type": "mcq",
-            "prompt": "Pendant sa grossesse, une femme fait une échographie, une biopsie des villosités choriales et une amniocentèse. Comment appelle-t-on ces examens faits sur l'enfant à naître ?",
+            "prompt": "Le dépistage du document 2 se fait à partir :",
             "options": [
-              "Des examens prénuptiaux",
-              "Des examens prénataux",
-              "Des examens post-mortem",
-              "Des examens sportifs"
+              "Du sang des deux parents uniquement",
+              "Des villosités choriales ou du liquide amniotique",
+              "Du sérum test uniquement",
+              "Des hémoglobines A et S uniquement"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "« Pré-natal » : avant la naissance."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Pas seulement chez les parents",
-          "stepTheme": "Pas seulement chez les parents",
-          "stepBadge": "Pas seulement chez les parents",
-          "paragraphText": "La prévision des maladies héréditaires se fait chez les parents (prénuptial) ET chez le fœtus (prénatal).",
-          "exercise": {
-            "id": "terminale_a_svt_l06_previsions_genetiques_p05_q7",
-            "type": "mcq",
-            "prompt": "Vrai ou faux : « La prévision des anomalies héréditaires se fait par un dépistage uniquement chez les parents. »",
-            "options": [
-              "Vrai",
-              "Faux : elle se fait aussi chez le fœtus, par des examens prénataux",
-              "Vrai, seulement pour la drépanocytose",
-              "Faux : elle se fait seulement après la naissance"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Biopsie des villosités choriales et amniocentèse concernent le fœtus."
+            "explanation": "Présentation du document 2 de la partie II."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q1",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q1",
           "type": "mcq",
-          "prompt": "Un couple dont un frère est hémophile s'inquiète pour ses futurs enfants. Que peut-il demander ?",
+          "prompt": "La biopsie fœtale se fait à partir de :",
           "options": [
-            "Une consultation et un conseil génétiques auprès d'un médecin",
-            "Un vaccin contre l'hémophilie",
-            "Un changement de groupe sanguin",
-            "Rien, on ne peut rien prévoir"
+            "La 17e semaine",
+            "La 20e semaine",
+            "La 9e semaine",
+            "La naissance"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Analyse du document 2 : prélèvement à partir de la 9e semaine."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q2",
+          "type": "mcq",
+          "prompt": "L'amniocentèse prélève :",
+          "options": [
+            "Des cellules du placenta avec une pince",
+            "Le liquide amniotique, avec une seringue introduite dans l'abdomen",
+            "Uniquement du sang maternel",
+            "Des cellules de la peau du fœtus"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Analyse du document 2 pour l'amniocentèse."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q3",
+          "type": "mcq",
+          "prompt": "Après mise en culture des cellules, le diagnostic se fait à partir de :",
+          "options": [
+            "La 9e semaine",
+            "La 17e semaine",
+            "La 20e semaine",
+            "La 40e semaine uniquement"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Analyse du document 2 : diagnostic à partir de la 20e semaine."
+        },
+        {
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q4",
+          "type": "mcq",
+          "prompt": "Laquelle de ces techniques fait partie du dépistage prénatal cité ?",
+          "options": [
+            "L'embryoscopie",
+            "Le groupage sanguin des parents",
+            "La mesure du taux sanguin paternel",
+            "La consultation prénuptiale"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Le médecin évalue le risque et informe le couple."
+          "explanation": "L'embryoscopie figure dans la liste des techniques de dépistage sur l'enfant à naître."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q2",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q5",
           "type": "mcq",
-          "prompt": "Avant de se marier, un homme et une femme font chacun une électrophorèse de leur hémoglobine. Quelle maladie recherche-t-on ainsi ?",
-          "options": [
-            "L'hémophilie",
-            "La drépanocytose",
-            "Le paludisme",
-            "La trisomie 21"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "L'électrophorèse distingue HbA et HbS."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q3",
-          "type": "mcq",
-          "prompt": "On prélève, à l'aide d'une pince introduite dans l'utérus et sous contrôle échographique, des cellules d'origine fœtale du placenta, à partir de la 9e semaine. Comment s'appelle cet examen ?",
+          "prompt": "Le prélèvement le plus précoce, dès la 9e semaine, est :",
           "options": [
             "L'amniocentèse",
-            "La biopsie des villosités choriales (biopsie fœtale)",
-            "L'électrophorèse",
-            "La radiographie"
+            "La biopsie fœtale des villosités choriales",
+            "L'analyse biochimique",
+            "L'embryoscopie selon la leçon"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est l'examen le plus précoce."
+          "explanation": "Analyse du document 2 : la biopsie se fait à partir de la 9e semaine, l'amniocentèse à partir de la 17e."
         },
         {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q4",
+          "id": "terminale_a1_svt_l06_previsions_genetiques_p06_q6",
           "type": "mcq",
-          "prompt": "À l'aide d'une seringue introduite à travers la paroi de l'abdomen, sous échographie, on prélève du liquide amniotique contenant des cellules du fœtus, vers la 17e semaine. Comment s'appelle cet examen ?",
+          "prompt": "Le dépistage du document 2 se fait à partir :",
           "options": [
-            "La biopsie des villosités choriales",
-            "L'amniocentèse",
-            "L'embryoscopie",
-            "Le groupage sanguin"
+            "Du sang des deux parents uniquement",
+            "Des villosités choriales ou du liquide amniotique",
+            "Du sérum test uniquement",
+            "Des hémoglobines A et S uniquement"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "« Amnio » : le liquide amniotique."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q5",
-          "type": "mcq",
-          "prompt": "Après une amniocentèse, que fait-on des cellules fœtales prélevées pour établir un diagnostic ?",
-          "options": [
-            "On les jette",
-            "On les met en culture, puis on fait une analyse chromosomique ou biochimique (ADN)",
-            "On les injecte à la mère",
-            "On les fait congeler sans analyse"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le caryotype détecte par exemple la trisomie 21."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q6",
-          "type": "mcq",
-          "prompt": "Pendant sa grossesse, une femme fait une échographie, une biopsie des villosités choriales et une amniocentèse. Comment appelle-t-on ces examens faits sur l'enfant à naître ?",
-          "options": [
-            "Des examens prénuptiaux",
-            "Des examens prénataux",
-            "Des examens post-mortem",
-            "Des examens sportifs"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "« Pré-natal » : avant la naissance."
-        },
-        {
-          "id": "terminale_a_svt_l06_previsions_genetiques_p05_q7",
-          "type": "mcq",
-          "prompt": "Vrai ou faux : « La prévision des anomalies héréditaires se fait par un dépistage uniquement chez les parents. »",
-          "options": [
-            "Vrai",
-            "Faux : elle se fait aussi chez le fœtus, par des examens prénataux",
-            "Vrai, seulement pour la drépanocytose",
-            "Faux : elle se fait seulement après la naissance"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Biopsie des villosités choriales et amniocentèse concernent le fœtus."
+          "explanation": "Présentation du document 2 de la partie II."
         }
       ]
     }

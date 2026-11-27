@@ -1,973 +1,578 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « Programme de Terminale A fourni par l'équipe KONAN (pas de PDF officiel), vérifié et corrigé » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Fonction exponentielle » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1615
 export const MATHS_TLE_A_L04_EXPONENTIELLE: CurriculumChapter = {
-  "id": "terminale_a_maths_numerique_l04_exponentielle",
+  "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle",
   "subjectId": "maths",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
     "terminale_a2"
   ],
   "order": 4,
-  "title": "Leçon 4 : La fonction exponentielle",
-  "summary": "Définition et règles de calcul, limites, dérivée de e puissance u, équations et inéquations.",
-  "officialVolumeHours": 10,
+  "title": "Leçon 4 : Fonction exponentielle népérienne",
+  "summary": "Des élèves travaillant dans le service marketing d'un grand magasin cherchent, à partir de la proportion $P(t) = 1 - e^{-0{,}21t}$ de la population informée après $t$ jours d'annonces, combien de jours de publicité il faudra pour atteindre $90\\%$ de la population : ils découvrent la fonction exponentielle népérienne, ses propriétés, ses limites et ses équations.",
   "contentVersion": 2,
-  "source": "Programme de Terminale A fourni par l'équipe KONAN, vérifié et corrigé",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1615",
   "points": [
     {
-      "id": "terminale_a_maths_numerique_l04_exponentielle_p01",
+      "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01",
       "order": 1,
-      "title": "La fonction exponentielle : définition et règles de calcul",
-      "summary": "$e^x>0$, $e^0=1$, le lien avec $\\ln$ et les règles de calcul des puissances.",
-      "conceptExplanation": "La fonction exponentielle, notée $\\exp(x)$ ou $e^x$, est la fonction réciproque de $\\ln$. Elle est définie sur tout $\\mathbb{R}$.\n\nValeurs remarquables : $e^0=1$ et $e^1=e$.\n\nPropriété cruciale : pour tout réel $x$, $e^x>0$. Une exponentielle n'est jamais nulle ni négative.\n\nLien avec $\\ln$ : pour tout réel $x$, $\\ln(e^x)=x$ ; pour tout $y>0$, $e^{\\ln y}=y$.\n\nRègles de calcul (pour tous réels $a$ et $b$, et tout entier $n$) :\n- $e^{a+b}=e^a\\times e^b$ ;\n- $e^{-a}=\\dfrac{1}{e^a}$ ;\n- $e^{a-b}=\\dfrac{e^a}{e^b}$ ;\n- $(e^a)^n=e^{na}$.\n\nAttention : $e^a+e^b\\neq e^{a+b}$. C'est le produit $e^a\\times e^b$ qui vaut $e^{a+b}$.",
-      "keyRule": "$e^x>0$ toujours ; $e^0=1$ ; $e^{a+b}=e^ae^b$ ; $e^{-a}=\\dfrac{1}{e^a}$ ; $(e^a)^n=e^{na}$.",
+      "title": "Définition et premières conséquences",
+      "summary": "Définir exp comme réciproque de ln et connaître ses premières valeurs.",
+      "conceptExplanation": "La fonction exponentielle népérienne, notée $\\exp$, est la fonction réciproque de la fonction logarithme népérien.\nAutre notation : pour tout nombre réel $x$, $\\exp(x)$ se note également $e^x$.\nConséquences de la définition :\n• L'ensemble de définition de la fonction $\\exp$ est $\\mathbb{R}$.\n• Pour tout nombre réel $a$ strictement positif et pour tout nombre réel $b$, $\\ln(a) = b$ équivaut à $a = e^b$.\n• $e^0 = 1$ et $e^1 = e$.\n• Pour tout nombre réel $a$, $e^a > 0$.\n• Pour tout nombre réel $a$, $\\ln(e^a) = a$.\n• Pour tout nombre réel $a$ strictement positif, $e^{\\ln a} = a$.",
+      "keyRule": "exp est la réciproque de ln : $\\ln(e^a) = a$ pour tout réel a, et $e^{\\ln a} = a$ pour tout réel a strictement positif.",
       "formulas": [
         {
-          "name": "Produit",
-          "formula": "e^{a+b}=e^a\\times e^b"
+          "name": "Définition de exp",
+          "formula": "\\exp \\text{ est la fonction réciproque de } \\ln \\text{ et } \\exp(x) = e^x \\text{ pour tout réel } x"
         },
         {
-          "name": "Quotient",
-          "formula": "e^{a-b}=\\dfrac{e^a}{e^b}"
+          "name": "Conséquences",
+          "formula": "e^0 = 1 \\text{ , } e^1 = e \\text{ , } \\ln(e^a) = a \\text{ et } e^{\\ln a} = a \\text{ pour } a > 0"
         }
       ],
       "workedExample": {
-        "title": "Simplifier une expression",
-        "statement": "Simplifie $A=\\dfrac{e^5\\times e^{-2}}{e}$.",
+        "title": "Simplifier avec ln et exp (exercice 2 corrigé)",
+        "statement": "Écris chacun des nombres $A = \\ln(e^8)$, $B = \\ln(e^{-5})$, $C = e^{\\ln 3}$ et $D = e^{-\\ln 2}$ sous forme de nombre rationnel.",
         "methodSteps": [
-          "Numérateur : $e^{5+(-2)}=e^3$.",
-          "$A=\\dfrac{e^3}{e^1}=e^{3-1}$."
+          "$A = \\ln(e^8) = 8$.",
+          "$B = \\ln(e^{-5}) = -5$.",
+          "$C = e^{\\ln 3} = 3$.",
+          "$D = e^{-\\ln 2} = e^{\\ln\\left(\\frac{1}{2}\\right)} = \\frac{1}{2}$."
         ],
-        "conclusion": "$A=e^2$."
+        "conclusion": "$A = 8$, $B = -5$, $C = 3$ et $D = \\frac{1}{2}$ : ln et exp se simplifient mutuellement."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Toujours positive",
-          "stepTheme": "Toujours positive",
-          "stepBadge": "Toujours positive",
-          "paragraphText": "Pour tout réel $x$, $e^x>0$.",
+          "stepTitle": "La définition de exp",
+          "stepTheme": "La définition de exp",
+          "stepBadge": "La définition de exp",
+          "paragraphText": "• La fonction exponentielle népérienne, notée $\\exp$, est la fonction réciproque de la fonction logarithme népérien.\nSon ensemble de définition est $\\mathbb{R}$ : tout nombre réel a une image par $\\exp$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q1",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q1",
             "type": "mcq",
-            "prompt": "Quel est le signe de $e^x$ pour n'importe quel nombre réel $x$ ?",
+            "prompt": "La fonction exponentielle népérienne est définie comme :",
             "options": [
-              "Positif si $x>0$ et négatif si $x<0$",
-              "Toujours strictement positif : $e^x>0$",
-              "Toujours supérieur à $1$",
-              "Nul quand $x=0$"
+              "La dérivée de la fonction $\\ln$",
+              "La fonction réciproque de la fonction logarithme népérien",
+              "La primitive de la fonction $\\ln$",
+              "La fonction inverse de $x \\mapsto \\frac{1}{x}$"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Même pour $x$ négatif, $e^x$ est positif (par exemple $e^{-2}\\approx0{,}14$)."
+            "explanation": "Par définition, $\\exp$ est la fonction réciproque de la fonction logarithme népérien."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "propriete",
-          "stepTitle": "e puissance 0",
-          "stepTheme": "e puissance 0",
-          "stepBadge": "e puissance 0",
-          "paragraphText": "$e^0=1$, comme tout nombre non nul à la puissance $0$.",
+          "stepKind": "definition",
+          "stepTitle": "La notation e puissance x",
+          "stepTheme": "La notation e puissance x",
+          "stepBadge": "La notation e puissance x",
+          "paragraphText": "• Pour tout nombre réel $x$, $\\exp(x)$ se note également $e^x$.\nOn retient les valeurs de référence : $e^0 = 1$ et $e^1 = e$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q2",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q2",
             "type": "mcq",
             "prompt": "Que vaut $e^0$ ?",
             "options": [
               "$0$",
               "$e$",
               "$1$",
-              "$-\\infty$"
+              "$-1$"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "$e^0=1$, et donc $\\ln1=0$."
+            "explanation": "Conséquence de la définition donnée dans la leçon : $e^0 = 1$ (et $e^1 = e$)."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "propriete",
-          "stepTitle": "exp et ln se compensent",
-          "stepTheme": "exp et ln se compensent",
-          "stepBadge": "exp et ln se compensent",
-          "paragraphText": "$e^{\\ln y}=y$ pour $y>0$, et $\\ln(e^x)=x$.",
+          "stepTitle": "ln et exp se simplifient",
+          "stepTheme": "ln et exp se simplifient",
+          "stepBadge": "ln et exp se simplifient",
+          "paragraphText": "• Pour tout nombre réel $a$, $\\ln(e^a) = a$.\n• Pour tout nombre réel $a$ strictement positif, $e^{\\ln a} = a$.\nCe sont les deux simplifications qui traduisent que $\\exp$ et $\\ln$ sont réciproques l'une de l'autre.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q3",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q3",
             "type": "mcq",
-            "prompt": "Simplifie $e^{\\ln7}$.",
+            "prompt": "Que vaut $\\ln(e^{51})$ ?",
             "options": [
-              "$7$",
-              "$\\ln7$",
-              "$e^7$",
-              "$7e$"
+              "$e^{51}$",
+              "$\\ln 51$",
+              "$1$",
+              "$51$"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "L'exponentielle et le logarithme sont réciproques."
+            "correctAnswerIndex": 3,
+            "explanation": "Pour tout réel $a$, $\\ln(e^a) = a$ : avec $a = 51$, on obtient $51$. C'est aussi la correction de l'exercice de fixation."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "propriete",
-          "stepTitle": "Le produit",
-          "stepTheme": "Le produit",
-          "stepBadge": "Le produit",
-          "paragraphText": "$e^{a+b}=e^a\\times e^b$ : on additionne les exposants.",
+          "stepTitle": "Une exponentielle est toujours positive",
+          "stepTheme": "Une exponentielle est toujours positive",
+          "stepBadge": "Une exponentielle est toujours positive",
+          "paragraphText": "• Pour tout nombre réel $a$, $e^a > 0$.\nAinsi, même pour un exposant très négatif, une exponentielle reste strictement positive.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q4",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q4",
             "type": "mcq",
-            "prompt": "Pour tous réels $a$ et $b$, l'expression $e^{a+b}$ est égale à :",
+            "prompt": "Quelle affirmation est vraie ?",
             "options": [
-              "$e^a+e^b$",
-              "$e^{a\\times b}$",
-              "$\\dfrac{e^a}{e^b}$",
-              "$e^a\\times e^b$"
+              "$e^{-10} > 0$",
+              "$e^{-10} < 0$",
+              "$e^0 = 0$",
+              "$e^{\\ln 12} = \\ln 12$"
             ],
-            "correctAnswerIndex": 3,
-            "explanation": "C'est la règle fondamentale de l'exponentielle."
+            "correctAnswerIndex": 0,
+            "explanation": "Pour tout réel $a$, $e^a > 0$ : $e^{-10}$ est strictement positif. Les autres affirmations sont celles que l'exercice de fixation corrige en faux."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "L'exposant négatif",
-          "stepTheme": "L'exposant négatif",
-          "stepBadge": "L'exposant négatif",
-          "paragraphText": "$e^{-a}=\\dfrac{1}{e^a}$.",
+          "stepKind": "piege",
+          "stepTitle": "Confondre e puissance ln a et ln a",
+          "stepTheme": "Confondre e puissance ln a et ln a",
+          "stepBadge": "Confondre e puissance ln a et ln a",
+          "paragraphText": "Piège relevé dans l'exercice de fixation corrigé : affirmer que $e^{\\ln(12)}$ est égal à $\\ln 12$ est faux.\nComme $12$ est strictement positif, la simplification des fonctions réciproques donne le nombre lui-même.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q5",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q5",
             "type": "mcq",
-            "prompt": "À quoi est égal $e^{-2}$ ?",
+            "prompt": "Que vaut $e^{\\ln(12)}$ ?",
             "options": [
-              "$-e^2$",
-              "$\\dfrac{1}{e^2}$",
-              "$-2e$",
-              "$\\sqrt{e}$"
+              "$\\ln 12$",
+              "$12$",
+              "$e^{12}$",
+              "$0$"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Un exposant négatif donne l'inverse."
+            "explanation": "Pour tout réel strictement positif $a$, $e^{\\ln a} = a$ : avec $a = 12$, on obtient $12$."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "propriete",
-          "stepTitle": "Puissance d'une puissance",
-          "stepTheme": "Puissance d'une puissance",
-          "stepBadge": "Puissance d'une puissance",
-          "paragraphText": "$(e^a)^n=e^{na}$ : on multiplie les exposants.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q6",
-            "type": "mcq",
-            "prompt": "À quoi est égal $(e^3)^2$ ?",
-            "options": [
-              "$e^5$",
-              "$e^9$",
-              "$e^6$",
-              "$2e^3$"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "$(e^3)^2=e^{3\\times2}=e^6$."
-          }
-        },
-        {
-          "stepNumber": 7,
           "stepKind": "exemple",
-          "stepTitle": "Simplifier",
-          "stepTheme": "Simplifier",
-          "stepBadge": "Simplifier",
-          "paragraphText": "$\\dfrac{e^5\\times e^{-2}}{e}=e^{5-2-1}=e^2$.",
+          "stepTitle": "Un exposant négatif de logarithme",
+          "stepTheme": "Un exposant négatif de logarithme",
+          "stepBadge": "Un exposant négatif de logarithme",
+          "paragraphText": "Exemple de la leçon (exercice 2) : $D = e^{-\\ln 2}$.\nOn écrit d'abord $-\\ln 2 = \\ln\\left(\\frac{1}{2}\\right)$ grâce aux propriétés de $\\ln$, puis on simplifie $\\exp$ et $\\ln$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q7",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q6",
             "type": "mcq",
-            "prompt": "Simplifie $A=\\dfrac{e^5\\times e^{-2}}{e}$.",
+            "prompt": "Que vaut $D = e^{-\\ln 2}$ ?",
             "options": [
-              "$A=e^2$",
-              "$A=e^4$",
-              "$A=e^3$",
-              "$A=e^{-10}$"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "$5+(-2)-1=2$."
-          }
-        },
-        {
-          "stepNumber": 8,
-          "stepKind": "piege",
-          "stepTitle": "Somme et produit",
-          "stepTheme": "Somme et produit",
-          "stepBadge": "Somme et produit",
-          "paragraphText": "$e^2+e^3$ ne se simplifie pas ; c'est $e^2\\times e^3$ qui vaut $e^5$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q8",
-            "type": "mcq",
-            "prompt": "Un élève écrit : $e^2+e^3=e^5$. Que faut-il lui répondre ?",
-            "options": [
-              "C'est juste",
-              "Il fallait écrire $e^6$",
-              "C'est faux : c'est $e^2\\times e^3$ qui vaut $e^5$",
-              "Il fallait écrire $2e^5$"
+              "$2$",
+              "$1$",
+              "$\\frac{1}{2}$",
+              "$-2$"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "La règle $e^{a+b}=e^ae^b$ concerne le produit, pas la somme."
+            "explanation": "$e^{-\\ln 2} = e^{\\ln\\left(\\frac{1}{2}\\right)} = \\frac{1}{2}$, d'après la solution de l'exercice 2."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q1",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q1",
           "type": "mcq",
-          "prompt": "Quel est le signe de $e^x$ pour n'importe quel nombre réel $x$ ?",
+          "prompt": "La fonction exponentielle népérienne est définie comme :",
           "options": [
-            "Positif si $x>0$ et négatif si $x<0$",
-            "Toujours strictement positif : $e^x>0$",
-            "Toujours supérieur à $1$",
-            "Nul quand $x=0$"
+            "La dérivée de la fonction $\\ln$",
+            "La fonction réciproque de la fonction logarithme népérien",
+            "La primitive de la fonction $\\ln$",
+            "La fonction inverse de $x \\mapsto \\frac{1}{x}$"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Même pour $x$ négatif, $e^x$ est positif (par exemple $e^{-2}\\approx0{,}14$)."
+          "explanation": "Par définition, $\\exp$ est la fonction réciproque de la fonction logarithme népérien."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q2",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q2",
           "type": "mcq",
           "prompt": "Que vaut $e^0$ ?",
           "options": [
             "$0$",
             "$e$",
             "$1$",
-            "$-\\infty$"
+            "$-1$"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "$e^0=1$, et donc $\\ln1=0$."
+          "explanation": "Conséquence de la définition donnée dans la leçon : $e^0 = 1$ (et $e^1 = e$)."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q3",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q3",
           "type": "mcq",
-          "prompt": "Simplifie $e^{\\ln7}$.",
+          "prompt": "Que vaut $\\ln(e^{51})$ ?",
           "options": [
-            "$7$",
-            "$\\ln7$",
-            "$e^7$",
-            "$7e$"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "L'exponentielle et le logarithme sont réciproques."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q4",
-          "type": "mcq",
-          "prompt": "Pour tous réels $a$ et $b$, l'expression $e^{a+b}$ est égale à :",
-          "options": [
-            "$e^a+e^b$",
-            "$e^{a\\times b}$",
-            "$\\dfrac{e^a}{e^b}$",
-            "$e^a\\times e^b$"
+            "$e^{51}$",
+            "$\\ln 51$",
+            "$1$",
+            "$51$"
           ],
           "correctAnswerIndex": 3,
-          "explanation": "C'est la règle fondamentale de l'exponentielle."
+          "explanation": "Pour tout réel $a$, $\\ln(e^a) = a$ : avec $a = 51$, on obtient $51$. C'est aussi la correction de l'exercice de fixation."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q5",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q4",
           "type": "mcq",
-          "prompt": "À quoi est égal $e^{-2}$ ?",
+          "prompt": "Quelle affirmation est vraie ?",
           "options": [
-            "$-e^2$",
-            "$\\dfrac{1}{e^2}$",
-            "$-2e$",
-            "$\\sqrt{e}$"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Un exposant négatif donne l'inverse."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q6",
-          "type": "mcq",
-          "prompt": "À quoi est égal $(e^3)^2$ ?",
-          "options": [
-            "$e^5$",
-            "$e^9$",
-            "$e^6$",
-            "$2e^3$"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "$(e^3)^2=e^{3\\times2}=e^6$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q7",
-          "type": "mcq",
-          "prompt": "Simplifie $A=\\dfrac{e^5\\times e^{-2}}{e}$.",
-          "options": [
-            "$A=e^2$",
-            "$A=e^4$",
-            "$A=e^3$",
-            "$A=e^{-10}$"
+            "$e^{-10} > 0$",
+            "$e^{-10} < 0$",
+            "$e^0 = 0$",
+            "$e^{\\ln 12} = \\ln 12$"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "$5+(-2)-1=2$."
+          "explanation": "Pour tout réel $a$, $e^a > 0$ : $e^{-10}$ est strictement positif. Les autres affirmations sont celles que l'exercice de fixation corrige en faux."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p01_q8",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q5",
           "type": "mcq",
-          "prompt": "Un élève écrit : $e^2+e^3=e^5$. Que faut-il lui répondre ?",
+          "prompt": "Que vaut $e^{\\ln(12)}$ ?",
           "options": [
-            "C'est juste",
-            "Il fallait écrire $e^6$",
-            "C'est faux : c'est $e^2\\times e^3$ qui vaut $e^5$",
-            "Il fallait écrire $2e^5$"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "La règle $e^{a+b}=e^ae^b$ concerne le produit, pas la somme."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_maths_numerique_l04_exponentielle_p02",
-      "order": 2,
-      "title": "Limites, dérivée et variations de exp",
-      "summary": "Limites en $\\pm\\infty$, asymptote, dérivée de $e^x$ et de $e^u$, croissances comparées.",
-      "conceptExplanation": "Limites de référence :\n- $\\lim\\limits_{x\\to-\\infty}e^x=0$ : l'axe des abscisses (la droite $y=0$) est asymptote horizontale en $-\\infty$ ;\n- $\\lim\\limits_{x\\to+\\infty}e^x=+\\infty$ ;\n- croissances comparées : $\\lim\\limits_{x\\to+\\infty}\\dfrac{e^x}{x}=+\\infty$ et $\\lim\\limits_{x\\to-\\infty}xe^x=0$.\n\nDérivée : $(e^x)'=e^x$. Comme $e^x>0$, l'exponentielle est strictement croissante sur $\\mathbb{R}$.\n\nDérivée de $e^{u}$ : $(e^{u})'=u'e^{u}$. En particulier $(e^{ax+b})'=ae^{ax+b}$.\nExemples : $(e^{3x+2})'=3e^{3x+2}$ ; $(e^{-2x})'=-2e^{-2x}$.\n\nProduit : $(xe^x)'=1\\times e^x+x\\times e^x=(1+x)e^x$.",
-      "keyRule": "$(e^x)'=e^x$ ; $(e^u)'=u'e^u$ ; $e^x\\to0$ en $-\\infty$ et $+\\infty$ en $+\\infty$.",
-      "formulas": [
-        {
-          "name": "Dérivée",
-          "formula": "(e^{u})'=u'e^{u}"
-        }
-      ],
-      "workedExample": {
-        "title": "Dériver un produit avec exp",
-        "statement": "Dérive $f(x)=xe^x$.",
-        "methodSteps": [
-          "$u=x$, $u'=1$ ; $v=e^x$, $v'=e^x$.",
-          "$f'(x)=1\\times e^x+x\\times e^x$."
-        ],
-        "conclusion": "$f'(x)=(1+x)e^x$."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "propriete",
-          "stepTitle": "Limite en −∞",
-          "stepTheme": "Limite en −∞",
-          "stepBadge": "Limite en −∞",
-          "paragraphText": "$\\lim\\limits_{x\\to-\\infty}e^x=0$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q1",
-            "type": "mcq",
-            "prompt": "Quelle est la limite de $e^x$ lorsque $x$ tend vers $-\\infty$ ?",
-            "options": [
-              "$-\\infty$",
-              "$1$",
-              "$+\\infty$",
-              "$0$"
-            ],
-            "correctAnswerIndex": 3,
-            "explanation": "$e^x$ reste positif et se rapproche de $0$."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "propriete",
-          "stepTitle": "Limite en +∞",
-          "stepTheme": "Limite en +∞",
-          "stepBadge": "Limite en +∞",
-          "paragraphText": "$\\lim\\limits_{x\\to+\\infty}e^x=+\\infty$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q2",
-            "type": "mcq",
-            "prompt": "Que vaut $\\lim\\limits_{x\\to+\\infty}e^x$ ?",
-            "options": [
-              "$+\\infty$",
-              "$e$",
-              "$0$",
-              "$1$"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "L'exponentielle grandit très vite."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "L'asymptote",
-          "stepTheme": "L'asymptote",
-          "stepBadge": "L'asymptote",
-          "paragraphText": "Comme $e^x\\to0$ en $-\\infty$, la droite $y=0$ est asymptote horizontale en $-\\infty$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q3",
-            "type": "mcq",
-            "prompt": "On sait que $\\lim\\limits_{x\\to-\\infty}e^x=0$. Quelle est l'interprétation graphique pour la courbe de l'exponentielle ?",
-            "options": [
-              "La droite $x=0$ est asymptote verticale",
-              "L'axe des abscisses (droite $y=0$) est asymptote horizontale en $-\\infty$",
-              "La courbe coupe l'axe des abscisses",
-              "La courbe passe par l'origine"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Limite finie $0$ en $-\\infty$ : asymptote horizontale $y=0$."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "exp est sa propre dérivée",
-          "stepTheme": "exp est sa propre dérivée",
-          "stepBadge": "exp est sa propre dérivée",
-          "paragraphText": "$(e^x)'=e^x$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q4",
-            "type": "mcq",
-            "prompt": "Quelle est la dérivée de la fonction $f(x)=e^x$ ?",
-            "options": [
-              "$xe^{x-1}$",
-              "$\\dfrac{1}{x}$",
-              "$e^x$",
-              "$e$"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "L'exponentielle est égale à sa dérivée."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Dériver e puissance u",
-          "stepTheme": "Dériver e puissance u",
-          "stepBadge": "Dériver e puissance u",
-          "paragraphText": "$(e^{ax+b})'=ae^{ax+b}$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q5",
-            "type": "mcq",
-            "prompt": "Quelle est la dérivée de la fonction $g(x)=e^{3x+2}$ ?",
-            "options": [
-              "$e^{3x+2}$",
-              "$3e^{3x+2}$",
-              "$(3x+2)e^{3x+2}$",
-              "$3e^x$"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "$u=3x+2$, $u'=3$ : $(e^u)'=u'e^u=3e^{3x+2}$."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "exemple",
-          "stepTitle": "Un exposant négatif",
-          "stepTheme": "Un exposant négatif",
-          "stepBadge": "Un exposant négatif",
-          "paragraphText": "$(e^{-2x})'=-2e^{-2x}$ : la fonction est décroissante.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q6",
-            "type": "mcq",
-            "prompt": "Quelle est la dérivée de $f(x)=e^{-2x}$ ?",
-            "options": [
-              "$e^{-2x}$",
-              "$-2xe^{-2x}$",
-              "$2e^{-2x}$",
-              "$-2e^{-2x}$"
-            ],
-            "correctAnswerIndex": 3,
-            "explanation": "$u=-2x$, $u'=-2$."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "exemple",
-          "stepTitle": "Un produit",
-          "stepTheme": "Un produit",
-          "stepBadge": "Un produit",
-          "paragraphText": "$(xe^x)'=e^x+xe^x=(1+x)e^x$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q7",
-            "type": "mcq",
-            "prompt": "Quelle est la dérivée de $f(x)=xe^x$, avec $(uv)'=u'v+uv'$ ?",
-            "options": [
-              "$(1+x)e^x$",
-              "$e^x$",
-              "$xe^x$",
-              "$1+e^x$"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "$1\\times e^x+x\\times e^x=(1+x)e^x$."
-          }
-        },
-        {
-          "stepNumber": 8,
-          "stepKind": "piege",
-          "stepTitle": "Croissance comparée",
-          "stepTheme": "Croissance comparée",
-          "stepBadge": "Croissance comparée",
-          "paragraphText": "$\\lim\\limits_{x\\to+\\infty}\\dfrac{e^x}{x}=+\\infty$ : l'exponentielle l'emporte sur $x$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q8",
-            "type": "mcq",
-            "prompt": "Que vaut $\\lim\\limits_{x\\to+\\infty}\\dfrac{e^x}{x}$ ?",
-            "options": [
-              "$0$",
-              "$1$",
-              "$+\\infty$",
-              "$e$"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "$e^x$ grandit beaucoup plus vite que $x$."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q1",
-          "type": "mcq",
-          "prompt": "Quelle est la limite de $e^x$ lorsque $x$ tend vers $-\\infty$ ?",
-          "options": [
-            "$-\\infty$",
-            "$1$",
-            "$+\\infty$",
+            "$\\ln 12$",
+            "$12$",
+            "$e^{12}$",
             "$0$"
           ],
-          "correctAnswerIndex": 3,
-          "explanation": "$e^x$ reste positif et se rapproche de $0$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q2",
-          "type": "mcq",
-          "prompt": "Que vaut $\\lim\\limits_{x\\to+\\infty}e^x$ ?",
-          "options": [
-            "$+\\infty$",
-            "$e$",
-            "$0$",
-            "$1$"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "L'exponentielle grandit très vite."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q3",
-          "type": "mcq",
-          "prompt": "On sait que $\\lim\\limits_{x\\to-\\infty}e^x=0$. Quelle est l'interprétation graphique pour la courbe de l'exponentielle ?",
-          "options": [
-            "La droite $x=0$ est asymptote verticale",
-            "L'axe des abscisses (droite $y=0$) est asymptote horizontale en $-\\infty$",
-            "La courbe coupe l'axe des abscisses",
-            "La courbe passe par l'origine"
-          ],
           "correctAnswerIndex": 1,
-          "explanation": "Limite finie $0$ en $-\\infty$ : asymptote horizontale $y=0$."
+          "explanation": "Pour tout réel strictement positif $a$, $e^{\\ln a} = a$ : avec $a = 12$, on obtient $12$."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q4",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p01_q6",
           "type": "mcq",
-          "prompt": "Quelle est la dérivée de la fonction $f(x)=e^x$ ?",
+          "prompt": "Que vaut $D = e^{-\\ln 2}$ ?",
           "options": [
-            "$xe^{x-1}$",
-            "$\\dfrac{1}{x}$",
-            "$e^x$",
-            "$e$"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "L'exponentielle est égale à sa dérivée."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q5",
-          "type": "mcq",
-          "prompt": "Quelle est la dérivée de la fonction $g(x)=e^{3x+2}$ ?",
-          "options": [
-            "$e^{3x+2}$",
-            "$3e^{3x+2}$",
-            "$(3x+2)e^{3x+2}$",
-            "$3e^x$"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "$u=3x+2$, $u'=3$ : $(e^u)'=u'e^u=3e^{3x+2}$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q6",
-          "type": "mcq",
-          "prompt": "Quelle est la dérivée de $f(x)=e^{-2x}$ ?",
-          "options": [
-            "$e^{-2x}$",
-            "$-2xe^{-2x}$",
-            "$2e^{-2x}$",
-            "$-2e^{-2x}$"
-          ],
-          "correctAnswerIndex": 3,
-          "explanation": "$u=-2x$, $u'=-2$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q7",
-          "type": "mcq",
-          "prompt": "Quelle est la dérivée de $f(x)=xe^x$, avec $(uv)'=u'v+uv'$ ?",
-          "options": [
-            "$(1+x)e^x$",
-            "$e^x$",
-            "$xe^x$",
-            "$1+e^x$"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "$1\\times e^x+x\\times e^x=(1+x)e^x$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p02_q8",
-          "type": "mcq",
-          "prompt": "Que vaut $\\lim\\limits_{x\\to+\\infty}\\dfrac{e^x}{x}$ ?",
-          "options": [
-            "$0$",
+            "$2$",
             "$1$",
-            "$+\\infty$",
-            "$e$"
+            "$\\frac{1}{2}$",
+            "$-2$"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "$e^x$ grandit beaucoup plus vite que $x$."
+          "explanation": "$e^{-\\ln 2} = e^{\\ln\\left(\\frac{1}{2}\\right)} = \\frac{1}{2}$, d'après la solution de l'exercice 2."
         }
       ]
     },
     {
-      "id": "terminale_a_maths_numerique_l04_exponentielle_p03",
-      "order": 3,
-      "title": "Équations et inéquations avec exp",
-      "summary": "$e^A=e^B\\iff A=B$, $e^x=k\\iff x=\\ln k$ si $k>0$, et les cas sans solution.",
-      "conceptExplanation": "Règles :\n- $e^A=e^B\\iff A=B$ ;\n- $e^A<e^B\\iff A<B$ (le sens est conservé, car exp est croissante) ;\n- $e^x=k$ avec $k>0$ $\\iff x=\\ln k$ ;\n- si $k\\leq0$, l'équation $e^x=k$ n'a aucune solution, car $e^x>0$.\n\nExemples :\n- $e^{2x-1}=e^{x+3}\\iff2x-1=x+3\\iff x=4$ ;\n- $e^x=5\\iff x=\\ln5$ ;\n- $e^{2x}=9\\iff2x=\\ln9\\iff x=\\dfrac{\\ln9}{2}=\\ln3$ ;\n- $e^x<3\\iff x<\\ln3$ ;\n- $e^x>-1$ est vraie pour tout réel $x$ : $S=\\mathbb{R}$.",
-      "keyRule": "$e^x=k\\iff x=\\ln k$ si $k>0$ ; aucune solution si $k\\leq0$.",
+      "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02",
+      "order": 2,
+      "title": "Propriétés algébriques de l'exponentielle",
+      "summary": "Transformer produits, quotients, inverses et puissances d'exponentielles.",
+      "conceptExplanation": "Propriété : pour tous nombres réels $a$ et $b$, et $r$ un nombre rationnel :\n• $e^a \\times e^b = e^{a + b}$.\n• $\\frac{e^a}{e^b} = e^{a - b}$.\n• $(e^a)^r = e^{a \\times r}$.\n• $\\frac{1}{e^a} = e^{-a}$.\nCes propriétés permettent d'écrire un produit, un quotient ou une puissance d'exponentielles sous la forme d'une seule exponentielle $e^k$, avec $k \\in \\mathbb{R}$.",
+      "keyRule": "Avec les exponentielles, un produit devient une somme d'exposants et un quotient une différence d'exposants.",
       "formulas": [
         {
-          "name": "Équation",
-          "formula": "e^x=k\\iff x=\\ln k\\ (k>0)"
+          "name": "Produit et quotient",
+          "formula": "e^a \\times e^b = e^{a + b} \\text{ et } \\frac{e^a}{e^b} = e^{a - b} \\text{ pour tous réels } a \\text{ et } b"
+        },
+        {
+          "name": "Puissance et inverse",
+          "formula": "(e^a)^r = e^{a \\times r} \\text{ pour } r \\text{ rationnel, et } \\frac{1}{e^a} = e^{-a}"
         }
       ],
       "workedExample": {
-        "title": "Résoudre une équation",
-        "statement": "Résous $e^{2x}=9$.",
+        "title": "Écrire sous la forme e puissance k (exercice corrigé)",
+        "statement": "Écris chacun des nombres $E = e^6 \\times e^{-4}$, $F = (e^{-2})^4$ et $G = \\frac{e^4}{e^{-5}}$ sous la forme $e^k$, avec $k \\in \\mathbb{R}$.",
         "methodSteps": [
-          "$9>0$ : on peut prendre le logarithme.",
-          "$2x=\\ln9$, donc $x=\\dfrac{\\ln9}{2}$.",
-          "$\\ln9=\\ln(3^2)=2\\ln3$."
+          "$E = e^6 \\times e^{-4} = e^{6 + (-4)} = e^2$.",
+          "$F = (e^{-2})^4 = e^{-2 \\times 4} = e^{-8}$.",
+          "$G = \\frac{e^4}{e^{-5}} = e^{4 - (-5)} = e^{4 + 5} = e^9$."
         ],
-        "conclusion": "$x=\\ln3$."
+        "conclusion": "$E = e^2$, $F = e^{-8}$ et $G = e^9$."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "exemple",
-          "stepTitle": "e^x = 5",
-          "stepTheme": "e^x = 5",
-          "stepBadge": "e^x = 5",
-          "paragraphText": "$e^x=k$ avec $k>0$ donne $x=\\ln k$.",
+          "stepKind": "propriete",
+          "stepTitle": "Le produit de deux exponentielles",
+          "stepTheme": "Le produit de deux exponentielles",
+          "stepBadge": "Le produit de deux exponentielles",
+          "paragraphText": "• Pour tous réels $a$ et $b$ : $e^a \\times e^b = e^{a + b}$.\nOn additionne les exposants quand on multiplie deux exponentielles.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q1",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q1",
             "type": "mcq",
-            "prompt": "Quelle est la solution dans $\\mathbb{R}$ de l'équation $e^x=5$ ?",
+            "prompt": "Pour tous réels $a$ et $b$, $e^a \\times e^b$ vaut :",
             "options": [
-              "$x=e^5$",
-              "$x=\\ln5$",
-              "$x=\\dfrac{5}{e}$",
-              "Aucune solution"
+              "$e^{a + b}$",
+              "$e^{a \\times b}$",
+              "$e^{a - b}$",
+              "$(e \\times e)^{a + b}$"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "On applique $\\ln$ : $x=\\ln5\\approx1{,}61$."
+            "correctAnswerIndex": 0,
+            "explanation": "Propriété algébrique de la leçon : $e^a \\times e^b = e^{a + b}$."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "piege",
-          "stepTitle": "Un second membre négatif",
-          "stepTheme": "Un second membre négatif",
-          "stepBadge": "Un second membre négatif",
-          "paragraphText": "$e^x>0$ toujours : $e^x=-2$ est impossible.",
+          "stepKind": "propriete",
+          "stepTitle": "Le quotient de deux exponentielles",
+          "stepTheme": "Le quotient de deux exponentielles",
+          "stepBadge": "Le quotient de deux exponentielles",
+          "paragraphText": "• Pour tous réels $a$ et $b$ : $\\frac{e^a}{e^b} = e^{a - b}$.\nOn soustrait les exposants quand on divise deux exponentielles, et $\\frac{1}{e^a} = e^{-a}$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q2",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q2",
             "type": "mcq",
-            "prompt": "Combien de solutions possède l'équation $e^x=-2$ dans $\\mathbb{R}$ ?",
+            "prompt": "Pour tous réels $a$ et $b$, $\\frac{e^a}{e^b}$ vaut :",
             "options": [
-              "Une solution : $x=\\ln(-2)$",
-              "Une solution : $x=-\\ln2$",
-              "Deux solutions",
-              "Aucune solution, car $e^x$ est toujours strictement positif"
+              "$e^{a + b}$",
+              "$e^{\\frac{a}{b}}$",
+              "$e^{a - b}$",
+              "$e^{b - a}$"
             ],
-            "correctAnswerIndex": 3,
-            "explanation": "$\\ln(-2)$ n'existe pas, et aucune exponentielle n'est négative."
+            "correctAnswerIndex": 2,
+            "explanation": "Propriété algébrique de la leçon : $\\frac{e^a}{e^b} = e^{a - b}$."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Deux exponentielles",
-          "stepTheme": "Deux exponentielles",
-          "stepBadge": "Deux exponentielles",
-          "paragraphText": "$e^{2x-1}=e^{x+3}\\iff2x-1=x+3\\iff x=4$.",
+          "stepKind": "propriete",
+          "stepTitle": "La puissance d'une exponentielle",
+          "stepTheme": "La puissance d'une exponentielle",
+          "stepBadge": "La puissance d'une exponentielle",
+          "paragraphText": "• Pour tout réel $a$ et tout rationnel $r$ : $(e^a)^r = e^{a \\times r}$.\nOn multiplie les exposants quand on élève une exponentielle à une puissance.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q3",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q3",
             "type": "mcq",
-            "prompt": "Quelle est la solution de l'équation $e^{2x-1}=e^{x+3}$ ?",
+            "prompt": "Que vaut $(e^{-2})^4$ ?",
             "options": [
-              "$x=2$",
-              "$x=4$",
-              "$x=-4$",
-              "$x=\\dfrac{2}{3}$"
+              "$e^{8}$",
+              "$e^{-8}$",
+              "$e^{-6}$",
+              "$e^{2}$"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "On égale les exposants : $2x-x=3+1$."
+            "explanation": "$(e^{-2})^4 = e^{-2 \\times 4} = e^{-8}$, d'après la solution de l'exercice de fixation."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "exemple",
-          "stepTitle": "e^x = 1",
-          "stepTheme": "e^x = 1",
-          "stepBadge": "e^x = 1",
-          "paragraphText": "$e^x=1=e^0\\iff x=0$.",
+          "stepTitle": "Un produit avec un exposant négatif",
+          "stepTheme": "Un produit avec un exposant négatif",
+          "stepBadge": "Un produit avec un exposant négatif",
+          "paragraphText": "Exemple de la leçon : $E = e^6 \\times e^{-4}$.\nOn additionne les exposants, en faisant attention au signe de $-4$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q4",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q4",
             "type": "mcq",
-            "prompt": "Quelle est la solution de l'équation $e^x=1$ ?",
+            "prompt": "Que vaut $E = e^6 \\times e^{-4}$ ?",
             "options": [
-              "$x=1$",
-              "$x=e$",
-              "$x=0$",
-              "Aucune solution"
+              "$e^{10}$",
+              "$e^{-24}$",
+              "$e^{-2}$",
+              "$e^{2}$"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "$1=e^0$, donc $x=0$."
+            "correctAnswerIndex": 3,
+            "explanation": "$E = e^{6 + (-4)} = e^2$, d'après la solution de l'exercice de fixation."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Une inéquation",
-          "stepTheme": "Une inéquation",
-          "stepBadge": "Une inéquation",
-          "paragraphText": "$e^x>e^2\\iff x>2$ : le sens est conservé.",
+          "stepKind": "exemple",
+          "stepTitle": "Un quotient avec un exposant négatif",
+          "stepTheme": "Un quotient avec un exposant négatif",
+          "stepBadge": "Un quotient avec un exposant négatif",
+          "paragraphText": "Exemple de la leçon : $G = \\frac{e^4}{e^{-5}}$.\nOn soustrait les exposants : soustraire $-5$ revient à ajouter $5$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q5",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q5",
             "type": "mcq",
-            "prompt": "Quel est l'ensemble des solutions de l'inéquation $e^x>e^2$ ?",
+            "prompt": "Que vaut $G = \\frac{e^4}{e^{-5}}$ ?",
             "options": [
-              "$]2;+\\infty[$",
-              "$]-\\infty;2[$",
-              "$]e^2;+\\infty[$",
-              "$\\mathbb{R}$"
+              "$e^{-1}$",
+              "$e^{9}$",
+              "$e^{-9}$",
+              "$e^{20}$"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "L'exponentielle est croissante."
+            "correctAnswerIndex": 1,
+            "explanation": "$G = e^{4 - (-5)} = e^{4 + 5} = e^9$, d'après la solution de l'exercice de fixation."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "exemple",
-          "stepTitle": "e^x < 3",
-          "stepTheme": "e^x < 3",
-          "stepBadge": "e^x < 3",
-          "paragraphText": "$e^x<3\\iff x<\\ln3$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q6",
-            "type": "mcq",
-            "prompt": "Quel est l'ensemble des solutions de l'inéquation $e^x<3$ ?",
-            "options": [
-              "$]-\\infty;3[$",
-              "$]\\ln3;+\\infty[$",
-              "$]0;3[$",
-              "$]-\\infty;\\ln3[$"
-            ],
-            "correctAnswerIndex": 3,
-            "explanation": "On écrit $3=e^{\\ln3}$ et on compare les exposants."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "exemple",
-          "stepTitle": "e^(2x) = 9",
-          "stepTheme": "e^(2x) = 9",
-          "stepBadge": "e^(2x) = 9",
-          "paragraphText": "$2x=\\ln9=2\\ln3$, donc $x=\\ln3$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q7",
-            "type": "mcq",
-            "prompt": "Quelle est la solution de l'équation $e^{2x}=9$ ?",
-            "options": [
-              "$x=\\dfrac{9}{2}$",
-              "$x=\\ln3$",
-              "$x=\\ln(4{,}5)$",
-              "$x=\\dfrac{e^9}{2}$"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "$x=\\dfrac{\\ln9}{2}=\\dfrac{2\\ln3}{2}=\\ln3$."
-          }
-        },
-        {
-          "stepNumber": 8,
           "stepKind": "piege",
-          "stepTitle": "Toujours vrai",
-          "stepTheme": "Toujours vrai",
-          "stepBadge": "Toujours vrai",
-          "paragraphText": "$e^x>0>-1$ pour tout $x$ : l'inéquation $e^x>-1$ est toujours vraie.",
+          "stepTitle": "Produit ou puissance : ne pas confondre",
+          "stepTheme": "Produit ou puissance : ne pas confondre",
+          "stepBadge": "Produit ou puissance : ne pas confondre",
+          "paragraphText": "Piège : dans un produit, on additionne les exposants ; dans une puissance d'exponentielle, on les multiplie.\nAinsi, pour $(e^2)^3$, l'exposant final n'est ni la somme des exposants, ni leur écriture côte à côte.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q8",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q6",
             "type": "mcq",
-            "prompt": "Quel est l'ensemble des solutions de l'inéquation $e^x>-1$ ?",
+            "prompt": "Que vaut $(e^2)^3$ ?",
             "options": [
-              "$\\varnothing$",
-              "$]0;+\\infty[$",
-              "$\\mathbb{R}$",
-              "$]-1;+\\infty[$"
+              "$e^5$",
+              "$e^{32}$",
+              "$e^6$",
+              "$e^{-1}$"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "Une exponentielle est toujours plus grande que $-1$."
+            "explanation": "$(e^2)^3 = e^{2 \\times 3} = e^6$ : on multiplie les exposants, on ne les additionne pas."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q1",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q1",
           "type": "mcq",
-          "prompt": "Quelle est la solution dans $\\mathbb{R}$ de l'équation $e^x=5$ ?",
+          "prompt": "Pour tous réels $a$ et $b$, $e^a \\times e^b$ vaut :",
           "options": [
-            "$x=e^5$",
-            "$x=\\ln5$",
-            "$x=\\dfrac{5}{e}$",
-            "Aucune solution"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "On applique $\\ln$ : $x=\\ln5\\approx1{,}61$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q2",
-          "type": "mcq",
-          "prompt": "Combien de solutions possède l'équation $e^x=-2$ dans $\\mathbb{R}$ ?",
-          "options": [
-            "Une solution : $x=\\ln(-2)$",
-            "Une solution : $x=-\\ln2$",
-            "Deux solutions",
-            "Aucune solution, car $e^x$ est toujours strictement positif"
-          ],
-          "correctAnswerIndex": 3,
-          "explanation": "$\\ln(-2)$ n'existe pas, et aucune exponentielle n'est négative."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q3",
-          "type": "mcq",
-          "prompt": "Quelle est la solution de l'équation $e^{2x-1}=e^{x+3}$ ?",
-          "options": [
-            "$x=2$",
-            "$x=4$",
-            "$x=-4$",
-            "$x=\\dfrac{2}{3}$"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "On égale les exposants : $2x-x=3+1$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q4",
-          "type": "mcq",
-          "prompt": "Quelle est la solution de l'équation $e^x=1$ ?",
-          "options": [
-            "$x=1$",
-            "$x=e$",
-            "$x=0$",
-            "Aucune solution"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "$1=e^0$, donc $x=0$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q5",
-          "type": "mcq",
-          "prompt": "Quel est l'ensemble des solutions de l'inéquation $e^x>e^2$ ?",
-          "options": [
-            "$]2;+\\infty[$",
-            "$]-\\infty;2[$",
-            "$]e^2;+\\infty[$",
-            "$\\mathbb{R}$"
+            "$e^{a + b}$",
+            "$e^{a \\times b}$",
+            "$e^{a - b}$",
+            "$(e \\times e)^{a + b}$"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "L'exponentielle est croissante."
+          "explanation": "Propriété algébrique de la leçon : $e^a \\times e^b = e^{a + b}$."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q6",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q2",
           "type": "mcq",
-          "prompt": "Quel est l'ensemble des solutions de l'inéquation $e^x<3$ ?",
+          "prompt": "Pour tous réels $a$ et $b$, $\\frac{e^a}{e^b}$ vaut :",
           "options": [
-            "$]-\\infty;3[$",
-            "$]\\ln3;+\\infty[$",
-            "$]0;3[$",
-            "$]-\\infty;\\ln3[$"
-          ],
-          "correctAnswerIndex": 3,
-          "explanation": "On écrit $3=e^{\\ln3}$ et on compare les exposants."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q7",
-          "type": "mcq",
-          "prompt": "Quelle est la solution de l'équation $e^{2x}=9$ ?",
-          "options": [
-            "$x=\\dfrac{9}{2}$",
-            "$x=\\ln3$",
-            "$x=\\ln(4{,}5)$",
-            "$x=\\dfrac{e^9}{2}$"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "$x=\\dfrac{\\ln9}{2}=\\dfrac{2\\ln3}{2}=\\ln3$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p03_q8",
-          "type": "mcq",
-          "prompt": "Quel est l'ensemble des solutions de l'inéquation $e^x>-1$ ?",
-          "options": [
-            "$\\varnothing$",
-            "$]0;+\\infty[$",
-            "$\\mathbb{R}$",
-            "$]-1;+\\infty[$"
+            "$e^{a + b}$",
+            "$e^{\\frac{a}{b}}$",
+            "$e^{a - b}$",
+            "$e^{b - a}$"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Une exponentielle est toujours plus grande que $-1$."
+          "explanation": "Propriété algébrique de la leçon : $\\frac{e^a}{e^b} = e^{a - b}$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q3",
+          "type": "mcq",
+          "prompt": "Que vaut $(e^{-2})^4$ ?",
+          "options": [
+            "$e^{8}$",
+            "$e^{-8}$",
+            "$e^{-6}$",
+            "$e^{2}$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "$(e^{-2})^4 = e^{-2 \\times 4} = e^{-8}$, d'après la solution de l'exercice de fixation."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q4",
+          "type": "mcq",
+          "prompt": "Que vaut $E = e^6 \\times e^{-4}$ ?",
+          "options": [
+            "$e^{10}$",
+            "$e^{-24}$",
+            "$e^{-2}$",
+            "$e^{2}$"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "$E = e^{6 + (-4)} = e^2$, d'après la solution de l'exercice de fixation."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q5",
+          "type": "mcq",
+          "prompt": "Que vaut $G = \\frac{e^4}{e^{-5}}$ ?",
+          "options": [
+            "$e^{-1}$",
+            "$e^{9}$",
+            "$e^{-9}$",
+            "$e^{20}$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "$G = e^{4 - (-5)} = e^{4 + 5} = e^9$, d'après la solution de l'exercice de fixation."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p02_q6",
+          "type": "mcq",
+          "prompt": "Que vaut $(e^2)^3$ ?",
+          "options": [
+            "$e^5$",
+            "$e^{32}$",
+            "$e^6$",
+            "$e^{-1}$"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "$(e^2)^3 = e^{2 \\times 3} = e^6$ : on multiplie les exposants, on ne les additionne pas."
         }
       ]
     },
     {
-      "id": "terminale_a_maths_numerique_l04_exponentielle_p04",
-      "order": 4,
-      "title": "Exercice type BAC : étude de f(x) = (x − 1)eˣ",
-      "summary": "Limites, asymptote, dérivée, minimum, point sur l'axe et tangente.",
-      "conceptExplanation": "Sujet : soit $f$ définie sur $\\mathbb{R}$ par $f(x)=(x-1)e^x$.\n\n1. En $+\\infty$ : $x-1\\to+\\infty$ et $e^x\\to+\\infty$, donc $\\lim\\limits_{x\\to+\\infty}f(x)=+\\infty$.\n2. En $-\\infty$ : $f(x)=xe^x-e^x$ ; $xe^x\\to0$ et $e^x\\to0$, donc $\\lim\\limits_{x\\to-\\infty}f(x)=0$ : la droite $y=0$ est asymptote horizontale en $-\\infty$.\n3. $f'(x)=1\\times e^x+(x-1)e^x=xe^x$.\n4. $e^x>0$, donc $f'(x)$ a le signe de $x$ : $f$ est décroissante sur $]-\\infty;0]$ et croissante sur $[0;+\\infty[$.\n5. Minimum : $f(0)=(0-1)e^0=-1$.\n6. Axe des abscisses : $f(x)=0\\iff x-1=0$ (car $e^x\\neq0$), soit $x=1$ : point $(1;0)$.\n7. Tangente en $1$ : $f(1)=0$, $f'(1)=e$, donc $y=e(x-1)=ex-e$.",
-      "keyRule": "Comme $e^x>0$, le signe de $xe^x$ est celui de $x$ : on « oublie » $e^x$ pour étudier un signe.",
-      "formulas": [],
+      "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03",
+      "order": 3,
+      "title": "Limites, dérivée et représentation graphique",
+      "summary": "Connaître les limites de référence de exp, sa dérivée et son asymptote.",
+      "conceptExplanation": "Limites de référence :\n• $\\lim_{x \\to +\\infty} e^x = +\\infty$.\n• $\\lim_{x \\to -\\infty} e^x = 0$.\n• $\\lim_{x \\to +\\infty} \\frac{e^x}{x} = +\\infty$.\n• $\\lim_{x \\to -\\infty} x e^x = 0$.\nDérivée et variation : la fonction exponentielle népérienne est dérivable sur $\\mathbb{R}$ et pour tout nombre réel $x$, $(e^x)' = e^x$. Comme $e^x > 0$, la fonction exponentielle népérienne est strictement croissante sur $\\mathbb{R}$, de $0$ à $+\\infty$.\nReprésentation graphique : comme $\\lim_{x \\to -\\infty} e^x = 0$, la droite d'équation $y = 0$, c'est-à-dire l'axe des abscisses, est asymptote horizontale à la courbe représentative de $\\exp$ en $-\\infty$.",
+      "keyRule": "exp est sa propre dérivée, elle est strictement croissante sur $\\mathbb{R}$, et sa courbe admet l'axe des abscisses pour asymptote en moins l'infini.",
+      "formulas": [
+        {
+          "name": "Limites aux bornes",
+          "formula": "\\lim_{x \\to +\\infty} e^x = +\\infty \\text{ et } \\lim_{x \\to -\\infty} e^x = 0"
+        },
+        {
+          "name": "Limites de comparaison",
+          "formula": "\\lim_{x \\to +\\infty} \\frac{e^x}{x} = +\\infty \\text{ et } \\lim_{x \\to -\\infty} x e^x = 0"
+        },
+        {
+          "name": "Dérivée de exp",
+          "formula": "(e^x)' = e^x \\text{ pour tout réel } x"
+        }
+      ],
       "workedExample": {
-        "title": "Étudier un signe",
-        "statement": "Étudie le signe de $f'(x)=xe^x$.",
+        "title": "La limite de 2x − 1 − e^x en plus l'infini (exercice corrigé)",
+        "statement": "Calcule $\\lim_{x \\to +\\infty} (2x - 1 - e^x)$.",
         "methodSteps": [
-          "$e^x>0$ pour tout réel $x$.",
-          "Le signe de $f'(x)$ est donc celui de $x$."
+          "On factorise par $x$ : $2x - 1 - e^x = x \\left(2 - \\frac{1}{x} - \\frac{e^x}{x}\\right)$.",
+          "Quand $x$ tend vers $+\\infty$, $x$ tend vers $+\\infty$.",
+          "Le facteur entre parenthèses tend vers $-\\infty$, car $\\frac{e^x}{x}$ tend vers $+\\infty$."
         ],
-        "conclusion": "$f'(x)<0$ sur $]-\\infty;0[$ et $f'(x)>0$ sur $]0;+\\infty[$."
+        "conclusion": "$\\lim_{x \\to +\\infty} (2x - 1 - e^x) = -\\infty$ : en $+\\infty$, $e^x$ l'emporte sur $2x - 1$."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "methode",
-          "stepTitle": "Limite en +∞",
-          "stepTheme": "Limite en +∞",
-          "stepBadge": "Limite en +∞",
-          "paragraphText": "$(x-1)\\to+\\infty$ et $e^x\\to+\\infty$ : le produit tend vers $+\\infty$.",
+          "stepKind": "definition",
+          "stepTitle": "Les limites aux bornes",
+          "stepTheme": "Les limites aux bornes",
+          "stepBadge": "Les limites aux bornes",
+          "paragraphText": "• $\\lim_{x \\to +\\infty} e^x = +\\infty$ et $\\lim_{x \\to -\\infty} e^x = 0$.\nCe sont les deux premières limites de référence de la leçon, qui donnent les extrémités du tableau de variation de $\\exp$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q1",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q1",
             "type": "mcq",
-            "prompt": "Soit $f(x)=(x-1)e^x$ sur $\\mathbb{R}$. Que vaut $\\lim\\limits_{x\\to+\\infty}f(x)$ ?",
+            "prompt": "Que vaut $\\lim_{x \\to -\\infty} e^x$ ?",
             "options": [
+              "$+\\infty$",
               "$0$",
               "$-\\infty$",
-              "$+\\infty$",
               "$1$"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "Produit de deux quantités qui tendent vers $+\\infty$."
+            "correctAnswerIndex": 1,
+            "explanation": "Limite de référence (2) de la leçon : $e^x$ tend vers $0$ quand $x$ tend vers $-\\infty$."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "Limite en −∞",
-          "stepTheme": "Limite en −∞",
-          "stepBadge": "Limite en −∞",
-          "paragraphText": "$f(x)=xe^x-e^x$ avec $xe^x\\to0$ et $e^x\\to0$ en $-\\infty$.",
+          "stepKind": "propriete",
+          "stepTitle": "La limite de e puissance x sur x",
+          "stepTheme": "La limite de e puissance x sur x",
+          "stepBadge": "La limite de e puissance x sur x",
+          "paragraphText": "• $\\lim_{x \\to +\\infty} \\frac{e^x}{x} = +\\infty$.\nC'est la troisième limite de référence de la leçon : en $+\\infty$, $e^x$ croît beaucoup plus vite que $x$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q2",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q2",
             "type": "mcq",
-            "prompt": "Soit $f(x)=(x-1)e^x=xe^x-e^x$. Sachant que $\\lim\\limits_{x\\to-\\infty}xe^x=0$, que vaut $\\lim\\limits_{x\\to-\\infty}f(x)$ ?",
+            "prompt": "Que vaut $\\lim_{x \\to +\\infty} \\frac{e^x}{x}$ ?",
+            "options": [
+              "$0$",
+              "$1$",
+              "$+\\infty$",
+              "$e$"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Limite de référence (3) de la leçon : $\\lim_{x \\to +\\infty} \\frac{e^x}{x} = +\\infty$."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "La limite de x e puissance x en moins l'infini",
+          "stepTheme": "La limite de x e puissance x en moins l'infini",
+          "stepBadge": "La limite de x e puissance x en moins l'infini",
+          "paragraphText": "• $\\lim_{x \\to -\\infty} x e^x = 0$.\nC'est la quatrième limite de référence de la leçon, utilisée dans les calculs de limites en $-\\infty$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q3",
+            "type": "mcq",
+            "prompt": "Que vaut $\\lim_{x \\to -\\infty} x e^x$ ?",
             "options": [
               "$0$",
               "$-\\infty$",
@@ -975,154 +580,125 @@ export const MATHS_TLE_A_L04_EXPONENTIELLE: CurriculumChapter = {
               "$-1$"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "$0-0=0$ : la droite $y=0$ est asymptote horizontale en $-\\infty$."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "methode",
-          "stepTitle": "La dérivée",
-          "stepTheme": "La dérivée",
-          "stepBadge": "La dérivée",
-          "paragraphText": "$f'(x)=1\\times e^x+(x-1)e^x=xe^x$.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q3",
-            "type": "mcq",
-            "prompt": "Soit $f(x)=(x-1)e^x$. Avec $(uv)'=u'v+uv'$, que vaut $f'(x)$ ?",
-            "options": [
-              "$e^x$",
-              "$(x-1)e^x$",
-              "$(x-2)e^x$",
-              "$xe^x$"
-            ],
-            "correctAnswerIndex": 3,
-            "explanation": "$e^x+(x-1)e^x=(1+x-1)e^x=xe^x$."
+            "explanation": "Limite de référence (4) de la leçon : $\\lim_{x \\to -\\infty} x e^x = 0$."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "propriete",
-          "stepTitle": "Le signe de f'",
-          "stepTheme": "Le signe de f'",
-          "stepBadge": "Le signe de f'",
-          "paragraphText": "$e^x>0$ : $f'(x)=xe^x$ a le signe de $x$.",
+          "stepTitle": "exp est sa propre dérivée",
+          "stepTheme": "exp est sa propre dérivée",
+          "stepBadge": "exp est sa propre dérivée",
+          "paragraphText": "• La fonction exponentielle népérienne est dérivable sur $\\mathbb{R}$ et $(e^x)' = e^x$ pour tout réel $x$.\nComme $e^x > 0$, la fonction exponentielle népérienne est strictement croissante sur $\\mathbb{R}$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q4",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q4",
             "type": "mcq",
-            "prompt": "Pour $f(x)=(x-1)e^x$, on a $f'(x)=xe^x$. Sur quel intervalle $f$ est-elle décroissante ?",
+            "prompt": "Pour tout réel $x$, $(e^x)'$ vaut :",
             "options": [
-              "$[0;+\\infty[$",
-              "$]-\\infty;0]$",
-              "$]-\\infty;1]$",
-              "$\\mathbb{R}$"
+              "$\\frac{1}{x}$",
+              "$x e^{x - 1}$",
+              "$0$",
+              "$e^x$"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "$f'(x)<0\\iff x<0$."
+            "correctAnswerIndex": 3,
+            "explanation": "La dérivée de la fonction $x \\mapsto e^x$ est la fonction $x \\mapsto e^x$ elle-même, strictement positive : $\\exp$ est strictement croissante."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "exemple",
-          "stepTitle": "Le minimum",
-          "stepTheme": "Le minimum",
-          "stepBadge": "Le minimum",
-          "paragraphText": "$f(0)=(0-1)e^0=-1$.",
+          "stepKind": "piege",
+          "stepTitle": "En moins l'infini, la limite est 0",
+          "stepTheme": "En moins l'infini, la limite est 0",
+          "stepBadge": "En moins l'infini, la limite est 0",
+          "paragraphText": "Piège : croire que $e^x$ tend vers $-\\infty$ quand $x$ tend vers $-\\infty$, par symétrie avec $+\\infty$.\nEn réalité la limite est $0$, et c'est ce qui donne l'asymptote horizontale d'équation $y = 0$ à la courbe de $\\exp$ en $-\\infty$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q5",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q5",
             "type": "mcq",
-            "prompt": "La fonction $f(x)=(x-1)e^x$ admet un minimum en $x=0$. Combien vaut-il ?",
+            "prompt": "Quelle affirmation est fausse ?",
             "options": [
-              "$0$",
-              "$1$",
-              "$-1$",
-              "$-e$"
+              "$\\lim_{x \\to -\\infty} e^x = 0$",
+              "$\\lim_{x \\to +\\infty} e^x = +\\infty$",
+              "$\\lim_{x \\to -\\infty} e^x = -\\infty$",
+              "La fonction $\\exp$ est strictement croissante sur $\\mathbb{R}$"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "$f(0)=-1\\times1=-1$."
+            "explanation": "En $-\\infty$, $e^x$ tend vers $0$, pas vers $-\\infty$ : la troisième affirmation est fausse, les autres sont celles de la leçon."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Couper l'axe des abscisses",
-          "stepTheme": "Couper l'axe des abscisses",
-          "stepBadge": "Couper l'axe des abscisses",
-          "paragraphText": "$(x-1)e^x=0\\iff x-1=0$, car $e^x\\neq0$.",
+          "stepTitle": "Une limite simple en moins l'infini",
+          "stepTheme": "Une limite simple en moins l'infini",
+          "stepBadge": "Une limite simple en moins l'infini",
+          "paragraphText": "Exemple de la leçon : la limite de $e^x + 3$ quand $x$ tend vers $-\\infty$.\nOn utilise $\\lim_{x \\to -\\infty} e^x = 0$ et la limite de la constante $3$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q6",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q6",
             "type": "mcq",
-            "prompt": "En quel point la courbe de $f(x)=(x-1)e^x$ coupe-t-elle l'axe des abscisses ?",
+            "prompt": "Que vaut $\\lim_{x \\to -\\infty} (e^x + 3)$ ?",
             "options": [
-              "$(1;0)$",
-              "$(0;-1)$",
-              "$(-1;0)$",
-              "Elle ne le coupe pas"
+              "$0$",
+              "$3$",
+              "$+\\infty$",
+              "$-\\infty$"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un produit est nul si un facteur est nul, et $e^x$ ne l'est jamais."
+            "correctAnswerIndex": 1,
+            "explanation": "D'après la solution de la leçon : $e^x$ tend vers $0$ et $3$ reste $3$, donc la somme tend vers $3$."
           }
         },
         {
           "stepNumber": 7,
           "stepKind": "exemple",
-          "stepTitle": "Tangente en 1",
-          "stepTheme": "Tangente en 1",
-          "stepBadge": "Tangente en 1",
-          "paragraphText": "$f(1)=0$ et $f'(1)=1\\times e^1=e$ : $y=e(x-1)$.",
+          "stepTitle": "La dérivée de 2x + e puissance x",
+          "stepTheme": "La dérivée de 2x + e puissance x",
+          "stepBadge": "La dérivée de 2x + e puissance x",
+          "paragraphText": "Exemple de la leçon : pour $f(x) = 2x + e^x$, on calcule $f'(x)$ puis le sens de variation de $f$.\nOn dérive terme à terme, et la dérivée de $e^x$ est $e^x$.",
           "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q7",
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q7",
             "type": "mcq",
-            "prompt": "Pour $f(x)=(x-1)e^x$, on a $f(1)=0$ et $f'(1)=e$. Quelle est l'équation de la tangente au point d'abscisse $1$ ?",
+            "prompt": "Pour $f(x) = 2x + e^x$, quelle affirmation est juste ?",
             "options": [
-              "$y=x-1$",
-              "$y=ex$",
-              "$y=e$",
-              "$y=ex-e$"
+              "$f'(x) = 2 + e^x$, donc $f$ est strictement croissante sur $\\mathbb{R}$",
+              "$f'(x) = 2 + \\frac{1}{x}$, donc $f$ est strictement croissante sur $\\mathbb{R}$",
+              "$f'(x) = e^x$, donc $f$ est constante",
+              "$f'(x) = 2 - e^x$, donc $f$ est strictement décroissante sur $\\mathbb{R}$"
             ],
-            "correctAnswerIndex": 3,
-            "explanation": "$y=e(x-1)+0=ex-e$."
-          }
-        },
-        {
-          "stepNumber": 8,
-          "stepKind": "piege",
-          "stepTitle": "Interpréter la limite en −∞",
-          "stepTheme": "Interpréter la limite en −∞",
-          "stepBadge": "Interpréter la limite en −∞",
-          "paragraphText": "Limite $0$ en $-\\infty$ : asymptote horizontale $y=0$, et non verticale.",
-          "exercise": {
-            "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q8",
-            "type": "mcq",
-            "prompt": "Pour $f(x)=(x-1)e^x$, on a $\\lim\\limits_{x\\to-\\infty}f(x)=0$. Quelle est l'interprétation graphique ?",
-            "options": [
-              "La droite $x=0$ est asymptote verticale",
-              "La droite $y=0$ est asymptote horizontale en $-\\infty$",
-              "La courbe passe par l'origine",
-              "La droite $y=-1$ est asymptote"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Limite finie à l'infini : asymptote horizontale."
+            "correctAnswerIndex": 0,
+            "explanation": "D'après la solution de la leçon : $f'(x) = 2 + e^x$, qui est strictement positif pour tout réel $x$, donc $f$ est strictement croissante sur $\\mathbb{R}$."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q1",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q1",
           "type": "mcq",
-          "prompt": "Soit $f(x)=(x-1)e^x$ sur $\\mathbb{R}$. Que vaut $\\lim\\limits_{x\\to+\\infty}f(x)$ ?",
+          "prompt": "Que vaut $\\lim_{x \\to -\\infty} e^x$ ?",
           "options": [
+            "$+\\infty$",
             "$0$",
             "$-\\infty$",
-            "$+\\infty$",
             "$1$"
           ],
-          "correctAnswerIndex": 2,
-          "explanation": "Produit de deux quantités qui tendent vers $+\\infty$."
+          "correctAnswerIndex": 1,
+          "explanation": "Limite de référence (2) de la leçon : $e^x$ tend vers $0$ quand $x$ tend vers $-\\infty$."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q2",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q2",
           "type": "mcq",
-          "prompt": "Soit $f(x)=(x-1)e^x=xe^x-e^x$. Sachant que $\\lim\\limits_{x\\to-\\infty}xe^x=0$, que vaut $\\lim\\limits_{x\\to-\\infty}f(x)$ ?",
+          "prompt": "Que vaut $\\lim_{x \\to +\\infty} \\frac{e^x}{x}$ ?",
+          "options": [
+            "$0$",
+            "$1$",
+            "$+\\infty$",
+            "$e$"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Limite de référence (3) de la leçon : $\\lim_{x \\to +\\infty} \\frac{e^x}{x} = +\\infty$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q3",
+          "type": "mcq",
+          "prompt": "Que vaut $\\lim_{x \\to -\\infty} x e^x$ ?",
           "options": [
             "$0$",
             "$-\\infty$",
@@ -1130,85 +706,562 @@ export const MATHS_TLE_A_L04_EXPONENTIELLE: CurriculumChapter = {
             "$-1$"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "$0-0=0$ : la droite $y=0$ est asymptote horizontale en $-\\infty$."
+          "explanation": "Limite de référence (4) de la leçon : $\\lim_{x \\to -\\infty} x e^x = 0$."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q3",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q4",
           "type": "mcq",
-          "prompt": "Soit $f(x)=(x-1)e^x$. Avec $(uv)'=u'v+uv'$, que vaut $f'(x)$ ?",
+          "prompt": "Pour tout réel $x$, $(e^x)'$ vaut :",
           "options": [
-            "$e^x$",
-            "$(x-1)e^x$",
-            "$(x-2)e^x$",
-            "$xe^x$"
+            "$\\frac{1}{x}$",
+            "$x e^{x - 1}$",
+            "$0$",
+            "$e^x$"
           ],
           "correctAnswerIndex": 3,
-          "explanation": "$e^x+(x-1)e^x=(1+x-1)e^x=xe^x$."
+          "explanation": "La dérivée de la fonction $x \\mapsto e^x$ est la fonction $x \\mapsto e^x$ elle-même, strictement positive : $\\exp$ est strictement croissante."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q4",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q5",
           "type": "mcq",
-          "prompt": "Pour $f(x)=(x-1)e^x$, on a $f'(x)=xe^x$. Sur quel intervalle $f$ est-elle décroissante ?",
+          "prompt": "Quelle affirmation est fausse ?",
           "options": [
-            "$[0;+\\infty[$",
-            "$]-\\infty;0]$",
-            "$]-\\infty;1]$",
-            "$\\mathbb{R}$"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "$f'(x)<0\\iff x<0$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q5",
-          "type": "mcq",
-          "prompt": "La fonction $f(x)=(x-1)e^x$ admet un minimum en $x=0$. Combien vaut-il ?",
-          "options": [
-            "$0$",
-            "$1$",
-            "$-1$",
-            "$-e$"
+            "$\\lim_{x \\to -\\infty} e^x = 0$",
+            "$\\lim_{x \\to +\\infty} e^x = +\\infty$",
+            "$\\lim_{x \\to -\\infty} e^x = -\\infty$",
+            "La fonction $\\exp$ est strictement croissante sur $\\mathbb{R}$"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "$f(0)=-1\\times1=-1$."
+          "explanation": "En $-\\infty$, $e^x$ tend vers $0$, pas vers $-\\infty$ : la troisième affirmation est fausse, les autres sont celles de la leçon."
         },
         {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q6",
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q6",
           "type": "mcq",
-          "prompt": "En quel point la courbe de $f(x)=(x-1)e^x$ coupe-t-elle l'axe des abscisses ?",
+          "prompt": "Que vaut $\\lim_{x \\to -\\infty} (e^x + 3)$ ?",
           "options": [
-            "$(1;0)$",
-            "$(0;-1)$",
-            "$(-1;0)$",
-            "Elle ne le coupe pas"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Un produit est nul si un facteur est nul, et $e^x$ ne l'est jamais."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q7",
-          "type": "mcq",
-          "prompt": "Pour $f(x)=(x-1)e^x$, on a $f(1)=0$ et $f'(1)=e$. Quelle est l'équation de la tangente au point d'abscisse $1$ ?",
-          "options": [
-            "$y=x-1$",
-            "$y=ex$",
-            "$y=e$",
-            "$y=ex-e$"
-          ],
-          "correctAnswerIndex": 3,
-          "explanation": "$y=e(x-1)+0=ex-e$."
-        },
-        {
-          "id": "terminale_a_maths_numerique_l04_exponentielle_p04_q8",
-          "type": "mcq",
-          "prompt": "Pour $f(x)=(x-1)e^x$, on a $\\lim\\limits_{x\\to-\\infty}f(x)=0$. Quelle est l'interprétation graphique ?",
-          "options": [
-            "La droite $x=0$ est asymptote verticale",
-            "La droite $y=0$ est asymptote horizontale en $-\\infty$",
-            "La courbe passe par l'origine",
-            "La droite $y=-1$ est asymptote"
+            "$0$",
+            "$3$",
+            "$+\\infty$",
+            "$-\\infty$"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Limite finie à l'infini : asymptote horizontale."
+          "explanation": "D'après la solution de la leçon : $e^x$ tend vers $0$ et $3$ reste $3$, donc la somme tend vers $3$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p03_q7",
+          "type": "mcq",
+          "prompt": "Pour $f(x) = 2x + e^x$, quelle affirmation est juste ?",
+          "options": [
+            "$f'(x) = 2 + e^x$, donc $f$ est strictement croissante sur $\\mathbb{R}$",
+            "$f'(x) = 2 + \\frac{1}{x}$, donc $f$ est strictement croissante sur $\\mathbb{R}$",
+            "$f'(x) = e^x$, donc $f$ est constante",
+            "$f'(x) = 2 - e^x$, donc $f$ est strictement décroissante sur $\\mathbb{R}$"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après la solution de la leçon : $f'(x) = 2 + e^x$, qui est strictement positif pour tout réel $x$, donc $f$ est strictement croissante sur $\\mathbb{R}$."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04",
+      "order": 4,
+      "title": "Équations et inéquations avec l'exponentielle",
+      "summary": "Résoudre des équations et inéquations avec exp grâce à sa croissance stricte.",
+      "conceptExplanation": "Propriété : pour tous nombres réels $a$ et $b$ : $e^a = e^b$ équivaut à $a = b$ ; $e^a < e^b$ équivaut à $a < b$ ; $e^a \\leq e^b$ équivaut à $a \\leq b$ ; $e^a > e^b$ équivaut à $a > b$ ; $e^a \\geq e^b$ équivaut à $a \\geq b$.\nMéthode : ces équations et inéquations se résolvent dans $\\mathbb{R}$ tout entier, sans ensemble de validité à restreindre. Pour une équation du type $e^x = c$ avec $c$ strictement positif, on passe au logarithme. Pour une équation en $(e^x)^2$, on pose $X = e^x$, en retenant que $X > 0$, et on résout l'équation du second degré en $X$.",
+      "keyRule": "exp conserve l'ordre et l'égalité : on peut enlever les exponentielles des deux côtés, et un $X$ négatif obtenu après le changement d'inconnue est toujours rejeté.",
+      "formulas": [
+        {
+          "name": "Équivalences avec exp",
+          "formula": "e^a = e^b \\iff a = b \\text{ et } e^a < e^b \\iff a < b \\text{ pour tous réels } a \\text{ et } b"
+        }
+      ],
+      "workedExample": {
+        "title": "Résoudre une équation en (e^x) au carré (exemple corrigé)",
+        "statement": "Résous dans $\\mathbb{R}$ l'équation $e^{2x} + e^x - 6 = 0$.",
+        "methodSteps": [
+          "L'ensemble de validité est $V = \\mathbb{R}$ et l'équation équivaut à $(e^x)^2 + e^x - 6 = 0$.",
+          "On pose $X = e^x$, donc $X > 0$ : l'équation devient $X^2 + X - 6 = 0$.",
+          "Le discriminant vaut $25$ : les solutions sont $X = -3$ et $X = 2$.",
+          "$e^x = -3$ est impossible car $e^x > 0$ pour tout réel $x$ ; $e^x = 2$ équivaut à $x = \\ln 2$."
+        ],
+        "conclusion": "$S_{\\mathbb{R}} = \\{\\ln 2\\}$."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Les équivalences avec exp",
+          "stepTheme": "Les équivalences avec exp",
+          "stepBadge": "Les équivalences avec exp",
+          "paragraphText": "• Pour tous réels $a$ et $b$ : $e^a = e^b$ équivaut à $a = b$, et $e^a < e^b$ équivaut à $a < b$.\nLes mêmes équivalences valent avec les inégalités larges. C'est la propriété qui permet de résoudre les équations et inéquations avec la fonction exponentielle.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q1",
+            "type": "mcq",
+            "prompt": "Pour tous réels $a$ et $b$, $e^a = e^b$ équivaut à :",
+            "options": [
+              "$a = -b$",
+              "$a = b$",
+              "$a + b = 0$",
+              "$a \\times b = 1$"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Propriété de la leçon : pour tous réels $a$ et $b$, $e^a = e^b$ équivaut à $a = b$."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "exemple",
+          "stepTitle": "Une première équation",
+          "stepTheme": "Une première équation",
+          "stepBadge": "Une première équation",
+          "paragraphText": "Exemple de la leçon : $e^{2x - 1} = e^{x + 5}$, dans $\\mathbb{R}$.\nD'après la propriété, l'équation équivaut à l'égalité des exposants.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q2",
+            "type": "mcq",
+            "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x - 1} = e^{x + 5}$ ?",
+            "options": [
+              "$\\{5\\}$",
+              "$\\{-6\\}$",
+              "$\\{1\\}$",
+              "$\\{6\\}$"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "$e^{2x - 1} = e^{x + 5}$ équivaut à $2x - 1 = x + 5$, donc $x = 6$ : $S_{\\mathbb{R}} = \\{6\\}$."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "exemple",
+          "stepTitle": "Une équation résolue par ln",
+          "stepTheme": "Une équation résolue par ln",
+          "stepBadge": "Une équation résolue par ln",
+          "paragraphText": "Exemple de la leçon : $e^{x - 2} = 5$, dans $\\mathbb{R}$.\nOn écrit $5 = e^{\\ln 5}$, donc l'équation équivaut à $e^{x - 2} = e^{\\ln 5}$, puis à $x - 2 = \\ln 5$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q3",
+            "type": "mcq",
+            "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{x - 2} = 5$ ?",
+            "options": [
+              "$\\{\\ln 5 - 2\\}$",
+              "$\\{5\\}$",
+              "$\\{2 + \\ln 5\\}$",
+              "$\\{e^5\\}$"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "$e^{x - 2} = 5$ équivaut à $x - 2 = \\ln 5$, donc $x = 2 + \\ln 5$ : $S_{\\mathbb{R}} = \\{2 + \\ln 5\\}$."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Poser X égal à e puissance x",
+          "stepTheme": "Poser X égal à e puissance x",
+          "stepBadge": "Poser X égal à e puissance x",
+          "paragraphText": "Exemple de la leçon : $e^{2x} + e^x - 6 = 0$.\nOn pose $X = e^x$, avec $X > 0$ : l'équation devient $X^2 + X - 6 = 0$, de discriminant $25$, dont les solutions sont $X = -3$ et $X = 2$. On revient ensuite à $e^x$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q4",
+            "type": "mcq",
+            "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x} + e^x - 6 = 0$ ?",
+            "options": [
+              "$\\{\\ln 2\\}$",
+              "$\\{-3 ; 2\\}$",
+              "$\\{\\ln 3 ; \\ln 2\\}$",
+              "$\\{2\\}$"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Seul $X = 2$ convient car $X = e^x > 0$ : $e^x = 2$ équivaut à $x = \\ln 2$, donc $S_{\\mathbb{R}} = \\{\\ln 2\\}$."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Un X négatif est impossible",
+          "stepTheme": "Un X négatif est impossible",
+          "stepBadge": "Un X négatif est impossible",
+          "paragraphText": "Piège : garder la solution $X = -3$ obtenue après avoir posé $X = e^x$.\nLa leçon rejette cette valeur : $e^x = -3$ est impossible, car $e^x > 0$ pour tout réel $x$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q5",
+            "type": "mcq",
+            "prompt": "Dans la résolution de $e^{2x} + e^x - 6 = 0$, pourquoi la valeur $X = -3$ est-elle rejetée ?",
+            "options": [
+              "Parce que $e^x > 0$ pour tout réel $x$",
+              "Parce que $X$ doit être un entier",
+              "Parce que $-3$ est un nombre impair",
+              "Parce que l'ensemble de validité est vide"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Après le changement d'inconnue $X = e^x$, seules les valeurs strictement positives de $X$ peuvent convenir, car $e^x > 0$ pour tout réel $x$."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Une inéquation avec exp",
+          "stepTheme": "Une inéquation avec exp",
+          "stepBadge": "Une inéquation avec exp",
+          "paragraphText": "Exemple de la leçon : $e^{2x - 1} < 8$, dans $\\mathbb{R}$.\nOn prend le logarithme des deux membres : l'inéquation équivaut à $2x - 1 < \\ln 8$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q6",
+            "type": "mcq",
+            "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x - 1} < 8$ ?",
+            "options": [
+              "$]\\frac{1 + \\ln 8}{2} ; +\\infty[$",
+              "$]-\\infty ; \\frac{1 + \\ln 8}{2}[$",
+              "$]-\\infty ; \\ln 8[$",
+              "$[\\frac{1 + \\ln 8}{2} ; +\\infty[$"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "$e^{2x - 1} < 8$ équivaut à $2x - 1 < \\ln 8$, donc $x < \\frac{1 + \\ln 8}{2}$ : $S_{\\mathbb{R}} = ]-\\infty ; \\frac{1 + \\ln 8}{2}[$."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "exemple",
+          "stepTitle": "Une inéquation du second degré en e puissance x",
+          "stepTheme": "Une inéquation du second degré en e puissance x",
+          "stepBadge": "Une inéquation du second degré en e puissance x",
+          "paragraphText": "Exemple de la leçon : $e^{2x} - 5 e^x + 6 \\geq 0$, dans $\\mathbb{R}$.\nOn pose $X = e^x$, avec $X > 0$ : $X^2 - 5X + 6 \\geq 0$ donne $X$ dans $]-\\infty ; 2] \\cup [3 ; +\\infty[$, donc $e^x \\leq 2$ ou $e^x \\geq 3$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q7",
+            "type": "mcq",
+            "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x} - 5 e^x + 6 \\geq 0$ ?",
+            "options": [
+              "$[\\ln 2 ; \\ln 3]$",
+              "$]-\\infty ; 2] \\cup [3 ; +\\infty[$",
+              "$]-\\infty ; \\ln 2] \\cup [\\ln 3 ; +\\infty[$",
+              "$[2 ; 3]$"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "$e^x \\leq 2$ équivaut à $x \\leq \\ln 2$ et $e^x \\geq 3$ équivaut à $x \\geq \\ln 3$ : $S_{\\mathbb{R}} = ]-\\infty ; \\ln 2] \\cup [\\ln 3 ; +\\infty[$."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q1",
+          "type": "mcq",
+          "prompt": "Pour tous réels $a$ et $b$, $e^a = e^b$ équivaut à :",
+          "options": [
+            "$a = -b$",
+            "$a = b$",
+            "$a + b = 0$",
+            "$a \\times b = 1$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Propriété de la leçon : pour tous réels $a$ et $b$, $e^a = e^b$ équivaut à $a = b$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q2",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x - 1} = e^{x + 5}$ ?",
+          "options": [
+            "$\\{5\\}$",
+            "$\\{-6\\}$",
+            "$\\{1\\}$",
+            "$\\{6\\}$"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "$e^{2x - 1} = e^{x + 5}$ équivaut à $2x - 1 = x + 5$, donc $x = 6$ : $S_{\\mathbb{R}} = \\{6\\}$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q3",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{x - 2} = 5$ ?",
+          "options": [
+            "$\\{\\ln 5 - 2\\}$",
+            "$\\{5\\}$",
+            "$\\{2 + \\ln 5\\}$",
+            "$\\{e^5\\}$"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "$e^{x - 2} = 5$ équivaut à $x - 2 = \\ln 5$, donc $x = 2 + \\ln 5$ : $S_{\\mathbb{R}} = \\{2 + \\ln 5\\}$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q4",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x} + e^x - 6 = 0$ ?",
+          "options": [
+            "$\\{\\ln 2\\}$",
+            "$\\{-3 ; 2\\}$",
+            "$\\{\\ln 3 ; \\ln 2\\}$",
+            "$\\{2\\}$"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Seul $X = 2$ convient car $X = e^x > 0$ : $e^x = 2$ équivaut à $x = \\ln 2$, donc $S_{\\mathbb{R}} = \\{\\ln 2\\}$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q5",
+          "type": "mcq",
+          "prompt": "Dans la résolution de $e^{2x} + e^x - 6 = 0$, pourquoi la valeur $X = -3$ est-elle rejetée ?",
+          "options": [
+            "Parce que $e^x > 0$ pour tout réel $x$",
+            "Parce que $X$ doit être un entier",
+            "Parce que $-3$ est un nombre impair",
+            "Parce que l'ensemble de validité est vide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Après le changement d'inconnue $X = e^x$, seules les valeurs strictement positives de $X$ peuvent convenir, car $e^x > 0$ pour tout réel $x$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q6",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x - 1} < 8$ ?",
+          "options": [
+            "$]\\frac{1 + \\ln 8}{2} ; +\\infty[$",
+            "$]-\\infty ; \\frac{1 + \\ln 8}{2}[$",
+            "$]-\\infty ; \\ln 8[$",
+            "$[\\frac{1 + \\ln 8}{2} ; +\\infty[$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "$e^{2x - 1} < 8$ équivaut à $2x - 1 < \\ln 8$, donc $x < \\frac{1 + \\ln 8}{2}$ : $S_{\\mathbb{R}} = ]-\\infty ; \\frac{1 + \\ln 8}{2}[$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p04_q7",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble des solutions dans $\\mathbb{R}$ de $e^{2x} - 5 e^x + 6 \\geq 0$ ?",
+          "options": [
+            "$[\\ln 2 ; \\ln 3]$",
+            "$]-\\infty ; 2] \\cup [3 ; +\\infty[$",
+            "$]-\\infty ; \\ln 2] \\cup [\\ln 3 ; +\\infty[$",
+            "$[2 ; 3]$"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "$e^x \\leq 2$ équivaut à $x \\leq \\ln 2$ et $e^x \\geq 3$ équivaut à $x \\geq \\ln 3$ : $S_{\\mathbb{R}} = ]-\\infty ; \\ln 2] \\cup [\\ln 3 ; +\\infty[$."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05",
+      "order": 5,
+      "title": "Dérivée de e puissance u et primitives",
+      "summary": "Dériver e puissance u et reconnaître les primitives liées à exp, partie primitives réservée à la Terminale A1.",
+      "conceptExplanation": "Dérivée : si $u$ est une fonction dérivable sur un intervalle $K$, alors $e^u$ est dérivable sur $K$ et $(e^u)' = u' e^u$.\nPrimitives (Terminale A1 uniquement) : si $u$ est une fonction dérivable sur un intervalle $K$, alors la fonction $u' e^u$ a pour primitive sur $K$ la fonction $e^u + \\alpha$, avec $\\alpha \\in \\mathbb{R}$.\nPoint méthode de la leçon : la fonction $x \\mapsto e^x$ a pour primitives les fonctions $x \\mapsto e^x + k$ ; la fonction $x \\mapsto e^{ax + b}$, avec $a \\neq 0$, a pour primitives les fonctions $x \\mapsto \\frac{1}{a} e^{ax + b} + k$ ; la fonction $x \\mapsto u'(x) e^{u(x)}$ a pour primitives les fonctions $x \\mapsto e^{u(x)} + k$.",
+      "keyRule": "Dériver $e^u$ multiplie par $u'$ ; primitiver $e^{ax + b}$ divise par $a$.",
+      "formulas": [
+        {
+          "name": "Dérivée de e puissance u",
+          "formula": "(e^u)' = u' e^u \\text{ si } u \\text{ est dérivable }"
+        },
+        {
+          "name": "Primitives liées à exp (A1 uniquement)",
+          "formula": "\\text{ La fonction } u' e^u \\text{ a pour primitives } e^u + \\alpha \\text{ , avec } \\alpha \\in \\mathbb{R}"
+        }
+      ],
+      "workedExample": {
+        "title": "Les primitives de x fois e puissance x au carré (exercice corrigé)",
+        "statement": "Détermine sur $\\mathbb{R}$ les primitives de la fonction $f$ définie par $f(x) = x e^{x^2}$.",
+        "methodSteps": [
+          "On pose $u(x) = x^2$ ; alors $u'(x) = 2x$.",
+          "On a $u'(x) e^{u(x)} = 2x e^{x^2}$, donc $f(x) = \\frac{1}{2} u'(x) e^{u(x)}$.",
+          "Les primitives sont donc les fonctions $F$ telles que $F(x) = \\frac{1}{2} e^{x^2} + \\alpha$, avec $\\alpha \\in \\mathbb{R}$."
+        ],
+        "conclusion": "Les primitives de $f$ sur $\\mathbb{R}$ sont les fonctions $x \\mapsto \\frac{1}{2} e^{x^2} + \\alpha$."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La dérivée de e puissance u",
+          "stepTheme": "La dérivée de e puissance u",
+          "stepBadge": "La dérivée de e puissance u",
+          "paragraphText": "• Si $u$ est une fonction dérivable sur un intervalle $K$, alors $e^u$ est dérivable sur $K$ et $(e^u)' = u' e^u$.\nPar rapport à la dérivée de $e^x$, il apparaît le facteur $u'$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q1",
+            "type": "mcq",
+            "prompt": "Si $u$ est dérivable sur $K$, $(e^u)'$ vaut :",
+            "options": [
+              "$e^u$",
+              "$e^{u'}$",
+              "$u' e^u$",
+              "$\\frac{e^u}{u'}$"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Propriété de la leçon : $(e^u)' = u' e^u$."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "exemple",
+          "stepTitle": "Dériver une exponentielle affine",
+          "stepTheme": "Dériver une exponentielle affine",
+          "stepBadge": "Dériver une exponentielle affine",
+          "paragraphText": "Exemple de la leçon : $f(x) = e^{-4x + 3}$, dérivable sur $\\mathbb{R}$.\nIci $u(x) = -4x + 3$, donc $u'(x) = -4$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q2",
+            "type": "mcq",
+            "prompt": "Pour $f(x) = e^{-4x + 3}$, que vaut $f'(x)$ ?",
+            "options": [
+              "$-4 e^{-4x + 3}$",
+              "$e^{-4x + 3}$",
+              "$4 e^{-4x + 3}$",
+              "$-4x e^{-4x + 3}$"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Avec $u'(x) = -4$ : $f'(x) = u'(x) e^{u(x)} = -4 e^{-4x + 3}$, d'après la solution de la leçon."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "exemple",
+          "stepTitle": "Dériver un produit avec exp",
+          "stepTheme": "Dériver un produit avec exp",
+          "stepBadge": "Dériver un produit avec exp",
+          "paragraphText": "Exemple de la leçon : $f(x) = (2x + 1) e^x$, dérivable sur $\\mathbb{R}$.\nOn dérive le produit : la dérivée de $2x + 1$ est $2$, et celle de $e^x$ est $e^x$, puis on factorise par $e^x$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q3",
+            "type": "mcq",
+            "prompt": "Pour $f(x) = (2x + 1) e^x$, que vaut $f'(x)$ ?",
+            "options": [
+              "$2 e^x$",
+              "$(2x + 3) e^x$",
+              "$(2x + 1) e^x$",
+              "$2x e^x$"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "$f'(x) = 2 e^x + (2x + 1) e^x = (2x + 3) e^x$, d'après la solution de la leçon."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Les primitives liées à exp",
+          "stepTheme": "Les primitives liées à exp",
+          "stepBadge": "Les primitives liées à exp",
+          "paragraphText": "• Primitives (Terminale A1 uniquement) : si $u$ est dérivable sur $K$, la fonction $u' e^u$ a pour primitive sur $K$ la fonction $e^u + \\alpha$, avec $\\alpha \\in \\mathbb{R}$.\nEn particulier, la fonction $x \\mapsto e^x$ a pour primitives les fonctions $x \\mapsto e^x + k$.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q4",
+            "type": "mcq",
+            "prompt": "Quelles sont les primitives de la fonction $x \\mapsto e^x$ sur $\\mathbb{R}$ ?",
+            "options": [
+              "Les fonctions $x \\mapsto x e^x + \\alpha$",
+              "Les fonctions $x \\mapsto \\frac{e^x}{x} + \\alpha$",
+              "Les fonctions $x \\mapsto \\ln x + \\alpha$",
+              "Les fonctions $x \\mapsto e^x + \\alpha$, avec $\\alpha \\in \\mathbb{R}$"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "D'après le point méthode de la leçon, les primitives de $x \\mapsto e^x$ sont les fonctions $x \\mapsto e^x + k$."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "exemple",
+          "stepTitle": "Une primitive avec un exposant affine",
+          "stepTheme": "Une primitive avec un exposant affine",
+          "stepBadge": "Une primitive avec un exposant affine",
+          "paragraphText": "Exemple de la leçon : les primitives de la fonction $f$ définie par $f(x) = e^{-3x + 7}$ sur $\\mathbb{R}$.\nOn reconnaît la forme $e^{ax + b}$ du point méthode, avec le coefficient $\\frac{1}{a}$ devant l'exponentielle dans la primitive.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q5",
+            "type": "mcq",
+            "prompt": "Quelles sont les primitives de $f(x) = e^{-3x + 7}$ sur $\\mathbb{R}$ ?",
+            "options": [
+              "Les fonctions $x \\mapsto -3 e^{-3x + 7} + \\alpha$",
+              "Les fonctions $x \\mapsto -\\frac{1}{3} e^{-3x + 7} + \\alpha$",
+              "Les fonctions $x \\mapsto e^{-3x + 7} + \\alpha$",
+              "Les fonctions $x \\mapsto \\frac{1}{3} e^{-3x + 7} + \\alpha$"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Avec $a = -3$, le point méthode donne le coefficient $\\frac{1}{a} = -\\frac{1}{3}$ : les primitives sont $x \\mapsto -\\frac{1}{3} e^{-3x + 7} + \\alpha$, d'après la solution de la leçon."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "piege",
+          "stepTitle": "Oublier le coefficient devant l'exponentielle",
+          "stepTheme": "Oublier le coefficient devant l'exponentielle",
+          "stepBadge": "Oublier le coefficient devant l'exponentielle",
+          "paragraphText": "Piège : primitiver $e^{ax + b}$ en recopiant simplement $e^{ax + b}$, sans le coefficient du point méthode.\nLa leçon donne, pour $a \\neq 0$, les primitives sous la forme $x \\mapsto \\frac{1}{a} e^{ax + b} + k$ : vérifier en dérivant permet de retrouver ce coefficient.",
+          "exercise": {
+            "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q6",
+            "type": "mcq",
+            "prompt": "Une primitive de la fonction $x \\mapsto e^{4x}$ sur $\\mathbb{R}$ est :",
+            "options": [
+              "$x \\mapsto e^{4x}$",
+              "$x \\mapsto \\frac{1}{4} e^{4x}$",
+              "$x \\mapsto 4 e^{4x}$",
+              "$x \\mapsto \\frac{1}{4} e^x$"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Avec $a = 4$, le point méthode donne le coefficient $\\frac{1}{a} = \\frac{1}{4}$ : une primitive est $x \\mapsto \\frac{1}{4} e^{4x}$, ce que confirme l'exercice d'application corrigé de la leçon."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q1",
+          "type": "mcq",
+          "prompt": "Si $u$ est dérivable sur $K$, $(e^u)'$ vaut :",
+          "options": [
+            "$e^u$",
+            "$e^{u'}$",
+            "$u' e^u$",
+            "$\\frac{e^u}{u'}$"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Propriété de la leçon : $(e^u)' = u' e^u$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q2",
+          "type": "mcq",
+          "prompt": "Pour $f(x) = e^{-4x + 3}$, que vaut $f'(x)$ ?",
+          "options": [
+            "$-4 e^{-4x + 3}$",
+            "$e^{-4x + 3}$",
+            "$4 e^{-4x + 3}$",
+            "$-4x e^{-4x + 3}$"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Avec $u'(x) = -4$ : $f'(x) = u'(x) e^{u(x)} = -4 e^{-4x + 3}$, d'après la solution de la leçon."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q3",
+          "type": "mcq",
+          "prompt": "Pour $f(x) = (2x + 1) e^x$, que vaut $f'(x)$ ?",
+          "options": [
+            "$2 e^x$",
+            "$(2x + 3) e^x$",
+            "$(2x + 1) e^x$",
+            "$2x e^x$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "$f'(x) = 2 e^x + (2x + 1) e^x = (2x + 3) e^x$, d'après la solution de la leçon."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q4",
+          "type": "mcq",
+          "prompt": "Quelles sont les primitives de la fonction $x \\mapsto e^x$ sur $\\mathbb{R}$ ?",
+          "options": [
+            "Les fonctions $x \\mapsto x e^x + \\alpha$",
+            "Les fonctions $x \\mapsto \\frac{e^x}{x} + \\alpha$",
+            "Les fonctions $x \\mapsto \\ln x + \\alpha$",
+            "Les fonctions $x \\mapsto e^x + \\alpha$, avec $\\alpha \\in \\mathbb{R}$"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "D'après le point méthode de la leçon, les primitives de $x \\mapsto e^x$ sont les fonctions $x \\mapsto e^x + k$."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q5",
+          "type": "mcq",
+          "prompt": "Quelles sont les primitives de $f(x) = e^{-3x + 7}$ sur $\\mathbb{R}$ ?",
+          "options": [
+            "Les fonctions $x \\mapsto -3 e^{-3x + 7} + \\alpha$",
+            "Les fonctions $x \\mapsto -\\frac{1}{3} e^{-3x + 7} + \\alpha$",
+            "Les fonctions $x \\mapsto e^{-3x + 7} + \\alpha$",
+            "Les fonctions $x \\mapsto \\frac{1}{3} e^{-3x + 7} + \\alpha$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Avec $a = -3$, le point méthode donne le coefficient $\\frac{1}{a} = -\\frac{1}{3}$ : les primitives sont $x \\mapsto -\\frac{1}{3} e^{-3x + 7} + \\alpha$, d'après la solution de la leçon."
+        },
+        {
+          "id": "terminale_a1_maths_numerique_l04_fonction_exponentielle_p05_q6",
+          "type": "mcq",
+          "prompt": "Une primitive de la fonction $x \\mapsto e^{4x}$ sur $\\mathbb{R}$ est :",
+          "options": [
+            "$x \\mapsto e^{4x}$",
+            "$x \\mapsto \\frac{1}{4} e^{4x}$",
+            "$x \\mapsto 4 e^{4x}$",
+            "$x \\mapsto \\frac{1}{4} e^x$"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Avec $a = 4$, le point méthode donne le coefficient $\\frac{1}{a} = \\frac{1}{4}$ : une primitive est $x \\mapsto \\frac{1}{4} e^{4x}$, ce que confirme l'exercice d'application corrigé de la leçon."
         }
       ]
     }

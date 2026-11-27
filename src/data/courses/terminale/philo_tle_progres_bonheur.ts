@@ -148,7 +148,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
           "stepTitle": "Le juste milieu vient d'Aristote",
           "stepTheme": "Le juste milieu vient d'Aristote",
           "stepBadge": "Le juste milieu vient d'Aristote",
-          "paragraphText": "On attribue parfois à tort à Platon (Phédon) la formule « La vertu réside dans le juste milieu ».\nEn réalité, la vertu comme juste milieu entre deux excès est la doctrine d'Aristote (Éthique à Nicomaque) : le courage est entre la lâcheté et la témérité.",
+          "paragraphText": "Le PDF attribue à Platon (Phédon) la formule « La vertu réside dans le juste milieu ».\nEn réalité, la vertu comme juste milieu entre deux excès est la doctrine d'Aristote (Éthique à Nicomaque) : le courage est entre la lâcheté et la témérité.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p01_q6",
             "type": "mcq",
@@ -601,7 +601,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
           "stepTitle": "Platon n'admire pas l'art",
           "stepTheme": "Platon n'admire pas l'art",
           "stepBadge": "Platon n'admire pas l'art",
-          "paragraphText": "Piège classique en vrai/faux : « Selon Platon, l'imagination et l'art, dont les œuvres sont de pures créations, font progresser l'humanité. »\nC'est faux : Platon se méfie de l'art d'imitation, qu'il juge éloigné du vrai.",
+          "paragraphText": "Attention au vrai ou faux du PDF : « Selon Platon, l'imagination et l'art, dont les œuvres sont de pures créations, font progresser l'humanité. »\nC'est faux : Platon se méfie de l'art d'imitation, qu'il juge éloigné du vrai.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p03_q6",
             "type": "mcq",
@@ -827,7 +827,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
           "stepTitle": "Une citation de Kant détournée",
           "stepTheme": "Une citation de Kant détournée",
           "stepBadge": "Une citation de Kant détournée",
-          "paragraphText": "On présente parfois à tort « Le Je pense doit pouvoir accompagner toutes mes représentations » comme une recommandation morale.\nEn réalité, dans la Critique de la raison pure, cette phrase concerne la connaissance : l'unité de la conscience qui relie nos représentations. Ne l'utilisez pas pour parler de progrès moral.",
+          "paragraphText": "Le PDF présente « Le Je pense doit pouvoir accompagner toutes mes représentations » comme une recommandation morale.\nEn réalité, dans la Critique de la raison pure, cette phrase concerne la connaissance : l'unité de la conscience qui relie nos représentations. Ne l'utilisez pas pour parler de progrès moral.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p04_q6",
             "type": "mcq",
@@ -969,11 +969,11 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
           "stepTitle": "La vraie thèse de Freud est nuancée",
           "stepTheme": "La vraie thèse de Freud est nuancée",
           "stepBadge": "La vraie thèse de Freud est nuancée",
-          "paragraphText": "Attention à ne pas résumer trop vite la thèse par : les hommes ne sont pas plus heureux. C'est incomplet.\nFreud conclut que la domination de la nature n'est pas la seule condition du bonheur, mais il refuse de dire que la technique est sans valeur pour notre bonheur.",
+          "paragraphText": "Le corrigé du PDF résume la thèse : les hommes ne sont pas plus heureux. C'est incomplet.\nFreud conclut que la domination de la nature n'est pas la seule condition du bonheur, mais il refuse de dire que la technique est sans valeur pour notre bonheur.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p05_q2",
             "type": "mcq",
-            "prompt": "Dans Malaise dans la civilisation (1930), Freud constate que les hommes, fiers de dominer la nature, ne se sentent pas plus heureux. Quelle est sa conclusion exacte ?",
+            "prompt": "Quelle est la conclusion exacte de Freud dans ce texte ?",
             "options": [
               "La maîtrise de la nature n'est pas la seule condition du bonheur, mais elle a de la valeur",
               "La technique n'a aucune valeur pour le bonheur",
@@ -1086,7 +1086,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p05_q2",
           "type": "mcq",
-          "prompt": "Dans Malaise dans la civilisation (1930), Freud constate que les hommes, fiers de dominer la nature, ne se sentent pas plus heureux. Quelle est sa conclusion exacte ?",
+          "prompt": "Quelle est la conclusion exacte de Freud dans ce texte ?",
           "options": [
             "La maîtrise de la nature n'est pas la seule condition du bonheur, mais elle a de la valeur",
             "La technique n'a aucune valeur pour le bonheur",
@@ -1279,7 +1279,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
           "stepTitle": "Ellul, critique de la technique",
           "stepTheme": "Ellul, critique de la technique",
           "stepBadge": "Ellul, critique de la technique",
-          "paragraphText": "Attention à ne pas citer Jacques Ellul comme s'il célébrait la technique (« le nouveau Dieu qui sauve »).\nAttention : Ellul (La Technique ou l'enjeu du siècle) est un grand critique de la technique. Il décrit la technique devenue sacrée pour l'homme moderne afin de le dénoncer, pas pour l'approuver.",
+          "paragraphText": "Le corrigé du PDF cite Jacques Ellul comme s'il célébrait la technique (« le nouveau Dieu qui sauve »).\nAttention : Ellul (La Technique ou l'enjeu du siècle) est un grand critique de la technique. Il décrit la technique devenue sacrée pour l'homme moderne afin de le dénoncer, pas pour l'approuver.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p06_q6",
             "type": "mcq",

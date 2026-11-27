@@ -1,9 +1,9 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT TA_L3_Lorigine de la vie.pdf » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Leçon 3 : L'origine de la vie » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1761
 export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
-  "id": "terminale_a_svt_l03_origine_vie",
+  "id": "terminale_a1_svt_l03_origine_vie",
   "subjectId": "svt",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
@@ -11,547 +11,709 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
   ],
   "order": 3,
   "title": "Leçon 3 : L'origine de la vie",
-  "summary": "Faits paléontologiques (pechblende, fers rubanés, couches rouges, bactéries des milieux hostiles) et faits expérimentaux (soupe primitive, Miller et Urey, météorites), du minéral à la première cellule, chronologie de la vie.",
-  "officialVolumeHours": 6,
+  "summary": "L'origine de la vie s'explique par des faits paléontologiques, liés à l'évolution du dioxygène dans l'atmosphère, et par des faits expérimentaux, de la soupe primitive de Oparin et Haldane à l'expérience de Miller et Urey.",
   "contentVersion": 2,
-  "source": "SVT TA_L3_Lorigine de la vie.pdf",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1761",
   "points": [
     {
-      "id": "terminale_a_svt_l03_origine_vie_p01",
+      "id": "terminale_a1_svt_l03_origine_vie_p01",
       "order": 1,
-      "title": "Les roches racontent l'atmosphère primitive",
-      "summary": "Pechblende, fers rubanés et couches rouges : l'oxygène est apparu peu à peu.",
-      "conceptExplanation": "Situation : lors d'une conférence, un scientifique présente une explication scientifique de l'origine de la vie ; des religieux soutiennent le contraire. Deux hypothèses scientifiques : l'origine de la vie s'explique par des faits paléontologiques (roches, fossiles) et par des faits expérimentaux.\n\nTexte 1 (faits géologiques) :\n- des sables de rivière datant de 2,3 milliards d'années, trouvés en Amérique et en Afrique, contiennent beaucoup de pechblende (minerai d'uranium qui s'oxyde très facilement) : l'atmosphère contenait alors très peu de dioxygène (O₂) ;\n- les fers rubanés alternent des couches claires et des couches rouges : couches claires = fer ferreux déposé quand l'atmosphère était réductrice (sans O₂) ; couches rouges = oxydes de fer (hématite, magnétite) déposés pendant les saisons où les algues faisaient beaucoup de photosynthèse et produisaient de l'O₂ ;\n- on ne trouve les fers rubanés que dans les roches de plus de 2 milliards d'années ;\n- après −2 milliards d'années apparaissent les couches rouges (« redbeds ») : de l'O₂ est présent en permanence dans l'atmosphère, à environ 1 % de sa teneur actuelle ;\n- l'O₂ produit par la photosynthèse n'est plus consommé par les réactions chimiques : il envahit l'atmosphère et forme la couche d'ozone, qui protège les êtres vivants des rayons ultraviolets du Soleil.\n\nConclusion : il existe un lien étroit entre l'enrichissement de l'atmosphère en O₂ et l'évolution de la vie.",
-      "keyRule": "Atmosphère primitive : réductrice, presque sans O₂ (pechblende, fers rubanés). Les algues ont produit l'O₂ (couches rouges après −2 milliards d'années), puis la couche d'ozone.",
+      "title": "Une atmosphère d'abord pauvre en dioxygène",
+      "summary": "Lire dans la pechblende et les fers rubanés la faible teneur primitive de l'atmosphère en dioxygène.",
+      "conceptExplanation": "Des sables fluviatiles datant de 2,3 milliards d'années, découverts en Amérique et en Afrique, contiennent de grandes quantités de pechblende. L'abondance de ce minerai d'uranium hautement oxydable n'est compatible qu'avec une faible teneur de l'atmosphère en dioxygène au moment de son dépôt.\nOn trouve également des formations sédimentaires appelées fer rubané, à cause de l'alternance de strates blanches et de strates rouges. Pendant les périodes où l'atmosphère était réductrice, sédimentait du fer ferreux (couches claires) ; pendant les périodes où elle était légèrement oxydante, saisons favorables à la prolifération des algues et à une importante activité photosynthétique, se déposaient des oxydes de fer (hématite et magnétite), dont l'existence témoigne de la présence d'oxygène dans l'atmosphère.\nLa présence des fers rubanés dans les seules formations datant de plus de 2 milliards d'années permet de penser que ces conditions atmosphériques ont duré jusqu'à cette période. Au début de la vie, l'atmosphère était donc très pauvre en dioxygène, puis elle s'est progressivement enrichie.",
+      "keyRule": "Pechblende abondante et fers rubanés prouvent une atmosphère primitive réductrice, très pauvre en dioxygène.",
       "formulas": [],
       "workedExample": {
-        "title": "Lire un fer rubané",
-        "statement": "Un fer rubané alterne des couches claires (fer ferreux) et des couches rouges (oxydes de fer). Que nous apprend-il ?",
+        "title": "Ce que racontent les sables de 2,3 milliards d'années (texte 1)",
+        "statement": "Des sables fluviatiles de 2,3 milliards d'années contiennent beaucoup de pechblende. Qu'en déduit-on pour l'atmosphère de l'époque ?",
         "methodSteps": [
-          "Fer ferreux : il se dépose quand il n'y a pas d'O₂ (atmosphère réductrice).",
-          "Oxydes de fer : il faut de l'O₂, produit par la photosynthèse des algues."
+          "La pechblende est un minerai d'uranium hautement oxydable : elle ne peut s'accumuler que si l'oxygène est rare.",
+          "Son abondance dans ces sables anciens est donc incompatible avec une atmosphère riche en dioxygène.",
+          "On en déduit une faible teneur de l'atmosphère en dioxygène au moment du dépôt, il y a 2,3 milliards d'années."
         ],
-        "conclusion": "L'atmosphère alternait entre des périodes sans O₂ et des périodes légèrement oxydantes, grâce aux algues."
+        "conclusion": "À 2,3 milliards d'années, l'atmosphère était très pauvre en dioxygène."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "propriete",
-          "stepTitle": "Deux sortes de faits",
-          "stepTheme": "Deux sortes de faits",
-          "stepBadge": "Deux sortes de faits",
-          "paragraphText": "L'origine de la vie peut s'expliquer par des faits paléontologiques (roches, fossiles) et par des faits expérimentaux (expériences en laboratoire).",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q1",
-            "type": "mcq",
-            "prompt": "Par quels deux types de faits scientifiques peut-on expliquer l'origine de la vie ?",
-            "options": [
-              "Des faits paléontologiques et des faits expérimentaux",
-              "Des légendes et des rêves",
-              "Des faits politiques et économiques",
-              "Des faits astrologiques"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Les roches anciennes et les expériences de laboratoire."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "La pechblende",
-          "stepTheme": "La pechblende",
-          "stepBadge": "La pechblende",
-          "paragraphText": "Des sables de 2,3 milliards d'années riches en pechblende, minerai d'uranium très oxydable, montrent que l'atmosphère avait alors très peu de dioxygène.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q2",
-            "type": "mcq",
-            "prompt": "Des sables de rivière vieux de 2,3 milliards d'années contiennent beaucoup de pechblende, un minerai d'uranium qui s'oxyde très facilement. Que peut-on en déduire sur l'atmosphère de cette époque ?",
-            "options": [
-              "Elle était très riche en dioxygène",
-              "Elle était très pauvre en dioxygène",
-              "Elle était identique à l'atmosphère actuelle",
-              "Elle n'existait pas"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Avec beaucoup d'O₂, la pechblende aurait été oxydée et détruite."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Les fers rubanés",
-          "stepTheme": "Les fers rubanés",
-          "stepBadge": "Les fers rubanés",
-          "paragraphText": "Les fers rubanés alternent couches claires (fer ferreux, atmosphère réductrice) et couches rouges (oxydes de fer, présence d'O₂ produit par les algues).",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q3",
-            "type": "mcq",
-            "prompt": "Dans les fers rubanés (plus de 2 milliards d'années), les couches rouges sont faites d'oxydes de fer (hématite, magnétite). Que montre leur présence ?",
-            "options": [
-              "La présence de dioxygène, produit par la photosynthèse des algues",
-              "L'absence totale de vie",
-              "Une très forte teneur en méthane",
-              "La présence de dinosaures"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour former des oxydes de fer, il faut de l'oxygène."
-          }
-        },
-        {
-          "stepNumber": 4,
           "stepKind": "definition",
-          "stepTitle": "Atmosphère réductrice",
-          "stepTheme": "Atmosphère réductrice",
-          "stepBadge": "Atmosphère réductrice",
-          "paragraphText": "Une atmosphère réductrice ne contient pas (ou presque pas) de dioxygène ; une atmosphère oxydante en contient.",
+          "stepTitle": "La pechblende, témoin du manque d'oxygène",
+          "stepTheme": "La pechblende, témoin du manque d'oxygène",
+          "stepBadge": "La pechblende, témoin du manque d'oxygène",
+          "paragraphText": "• Pechblende : minerai d'uranium hautement oxydable, abondant dans des sables fluviatiles de 2,3 milliards d'années.\nSon abondance n'est compatible qu'avec une faible teneur de l'atmosphère en dioxygène au moment de son dépôt.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q4",
+            "id": "terminale_a1_svt_l03_origine_vie_p01_q1",
             "type": "mcq",
-            "prompt": "Les couches claires des fers rubanés contiennent du fer ferreux, déposé quand « l'atmosphère était réductrice ». Que signifie « atmosphère réductrice » ?",
+            "prompt": "L'abondance de pechblende dans les sables anciens indique :",
             "options": [
-              "Une atmosphère sans (ou presque sans) dioxygène",
               "Une atmosphère très riche en dioxygène",
-              "Une atmosphère très froide",
-              "Une atmosphère sans eau"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le fer ferreux ne s'oxyde pas en l'absence d'O₂."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "exemple",
-          "stepTitle": "Les couches rouges",
-          "stepTheme": "Les couches rouges",
-          "stepBadge": "Les couches rouges",
-          "paragraphText": "Après −2 milliards d'années, les couches rouges (« redbeds ») montrent que l'O₂ est présent en permanence, à environ 1 % de sa teneur actuelle.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q5",
-            "type": "mcq",
-            "prompt": "Après −2 milliards d'années, les fers rubanés laissent place à des sables continentaux riches en oxyde de fer : les couches rouges (redbeds). Que montrent-elles ?",
-            "options": [
-              "Que le dioxygène est désormais présent en permanence dans l'atmosphère",
-              "Que le dioxygène a disparu",
-              "Que la vie a disparu",
-              "Que l'atmosphère est devenue réductrice"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Environ 1 % de la teneur actuelle, mais de façon constante."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "propriete",
-          "stepTitle": "La couche d'ozone",
-          "stepTheme": "La couche d'ozone",
-          "stepBadge": "La couche d'ozone",
-          "paragraphText": "L'O₂ produit par la photosynthèse a envahi l'atmosphère et formé la couche d'ozone, qui protège les êtres vivants des rayons ultraviolets.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q6",
-            "type": "mcq",
-            "prompt": "Le dioxygène libéré par la photosynthèse a fini par envahir l'atmosphère. Quelle couche protectrice s'est alors formée, et contre quoi protège-t-elle ?",
-            "options": [
-              "La couche d'ozone, contre les rayons ultraviolets du Soleil",
-              "La couche de nuages, contre la pluie",
-              "La croûte terrestre, contre les volcans",
-              "La couche de glace, contre le froid"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Sans couche d'ozone, la vie hors de l'eau serait très difficile."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "propriete",
-          "stepTitle": "Oxygène et vie",
-          "stepTheme": "Oxygène et vie",
-          "stepBadge": "Oxygène et vie",
-          "paragraphText": "Il existe un lien étroit entre l'enrichissement de l'atmosphère en O₂ et l'évolution de la vie : plus il y a d'O₂, plus les organismes deviennent complexes.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p01_q7",
-            "type": "mcq",
-            "prompt": "D'après les faits paléontologiques (pechblende, fers rubanés, couches rouges), quel lien existe-t-il entre l'oxygène de l'atmosphère et la vie ?",
-            "options": [
-              "Aucun lien",
-              "Plus l'atmosphère s'enrichit en O₂, plus on passe d'organismes unicellulaires à des organismes pluricellulaires",
-              "L'O₂ a empêché toute vie",
-              "La vie a disparu quand l'O₂ est apparu"
+              "Une faible teneur de l'atmosphère en dioxygène",
+              "La présence d'animaux terrestres",
+              "Une atmosphère identique à l'actuelle"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est la conclusion des faits paléontologiques."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q1",
-          "type": "mcq",
-          "prompt": "Par quels deux types de faits scientifiques peut-on expliquer l'origine de la vie ?",
-          "options": [
-            "Des faits paléontologiques et des faits expérimentaux",
-            "Des légendes et des rêves",
-            "Des faits politiques et économiques",
-            "Des faits astrologiques"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Les roches anciennes et les expériences de laboratoire."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q2",
-          "type": "mcq",
-          "prompt": "Des sables de rivière vieux de 2,3 milliards d'années contiennent beaucoup de pechblende, un minerai d'uranium qui s'oxyde très facilement. Que peut-on en déduire sur l'atmosphère de cette époque ?",
-          "options": [
-            "Elle était très riche en dioxygène",
-            "Elle était très pauvre en dioxygène",
-            "Elle était identique à l'atmosphère actuelle",
-            "Elle n'existait pas"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Avec beaucoup d'O₂, la pechblende aurait été oxydée et détruite."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q3",
-          "type": "mcq",
-          "prompt": "Dans les fers rubanés (plus de 2 milliards d'années), les couches rouges sont faites d'oxydes de fer (hématite, magnétite). Que montre leur présence ?",
-          "options": [
-            "La présence de dioxygène, produit par la photosynthèse des algues",
-            "L'absence totale de vie",
-            "Une très forte teneur en méthane",
-            "La présence de dinosaures"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Pour former des oxydes de fer, il faut de l'oxygène."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q4",
-          "type": "mcq",
-          "prompt": "Les couches claires des fers rubanés contiennent du fer ferreux, déposé quand « l'atmosphère était réductrice ». Que signifie « atmosphère réductrice » ?",
-          "options": [
-            "Une atmosphère sans (ou presque sans) dioxygène",
-            "Une atmosphère très riche en dioxygène",
-            "Une atmosphère très froide",
-            "Une atmosphère sans eau"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le fer ferreux ne s'oxyde pas en l'absence d'O₂."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q5",
-          "type": "mcq",
-          "prompt": "Après −2 milliards d'années, les fers rubanés laissent place à des sables continentaux riches en oxyde de fer : les couches rouges (redbeds). Que montrent-elles ?",
-          "options": [
-            "Que le dioxygène est désormais présent en permanence dans l'atmosphère",
-            "Que le dioxygène a disparu",
-            "Que la vie a disparu",
-            "Que l'atmosphère est devenue réductrice"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Environ 1 % de la teneur actuelle, mais de façon constante."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q6",
-          "type": "mcq",
-          "prompt": "Le dioxygène libéré par la photosynthèse a fini par envahir l'atmosphère. Quelle couche protectrice s'est alors formée, et contre quoi protège-t-elle ?",
-          "options": [
-            "La couche d'ozone, contre les rayons ultraviolets du Soleil",
-            "La couche de nuages, contre la pluie",
-            "La croûte terrestre, contre les volcans",
-            "La couche de glace, contre le froid"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Sans couche d'ozone, la vie hors de l'eau serait très difficile."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p01_q7",
-          "type": "mcq",
-          "prompt": "D'après les faits paléontologiques (pechblende, fers rubanés, couches rouges), quel lien existe-t-il entre l'oxygène de l'atmosphère et la vie ?",
-          "options": [
-            "Aucun lien",
-            "Plus l'atmosphère s'enrichit en O₂, plus on passe d'organismes unicellulaires à des organismes pluricellulaires",
-            "L'O₂ a empêché toute vie",
-            "La vie a disparu quand l'O₂ est apparu"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "C'est la conclusion des faits paléontologiques."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l03_origine_vie_p02",
-      "order": 2,
-      "title": "La vie dans des milieux hostiles et l'évolution",
-      "summary": "Des bactéries dans l'eau bouillante et acide ; des procaryotes aux vertébrés.",
-      "conceptExplanation": "Texte 2 :\n- dans les eaux chaudes et acides (90 °C, pH = 1) des geysers du parc de Yellowstone (États-Unis), on trouve des bactéries du genre Sulfolobus, de 1 à 2 µm de diamètre (le document écrit « Sulfoborus » ou « Sulforobus » : le nom exact est Sulfolobus) ;\n- les « fumeurs » des dorsales océaniques rejettent des eaux à 350 °C, riches en sulfures ; on y a trouvé des organismes très proches des premières bactéries.\nSi des bactéries vivent dans ces milieux hostiles, la vie a pu apparaître dans l'océan primitif, où les conditions étaient comparables (chaud, acide, riche en soufre).\n\nCorrection importante du document : les végétaux chlorophylliens font la photosynthèse le JOUR, à la lumière : ils absorbent le CO₂ et rejettent l'O₂. La nuit, ils respirent comme les animaux (ils absorbent l'O₂ et rejettent le CO₂). Les animaux respirent le jour ET la nuit.\n\nÉvolution de la vie (document 3) :\n- avant la vie, l'atmosphère était réductrice ;\n- l'apparition des algues enrichit l'atmosphère en O₂ et forme la couche d'ozone ;\n- on passe des procaryotes (cellules sans noyau) aux eucaryotes (cellules avec noyau), puis aux êtres pluricellulaires ;\n- de la reproduction asexuée à la reproduction sexuée ;\n- des invertébrés aquatiques aux vertébrés terrestres.",
-      "keyRule": "Des bactéries vivent à 90 °C et pH = 1 (Sulfolobus) : la vie a pu naître dans l'océan primitif hostile. Évolution : procaryotes → eucaryotes → pluricellulaires ; eau → terre.",
-      "formulas": [],
-      "workedExample": {
-        "title": "Corriger une erreur",
-        "statement": "Un document affirme : « Les végétaux chlorophylliens rejettent l'O₂ la nuit, les animaux rejettent le CO₂ le jour. » Corrige.",
-        "methodSteps": [
-          "La photosynthèse a besoin de lumière : elle a lieu le jour.",
-          "La respiration a lieu jour et nuit, chez les plantes comme chez les animaux."
-        ],
-        "conclusion": "Les plantes rejettent l'O₂ le jour (photosynthèse) ; plantes et animaux rejettent le CO₂ jour et nuit (respiration)."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "exemple",
-          "stepTitle": "Les geysers",
-          "stepTheme": "Les geysers",
-          "stepBadge": "Les geysers",
-          "paragraphText": "Dans les eaux à 90 °C et pH = 1 des geysers de Yellowstone vivent des bactéries du genre Sulfolobus.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q1",
-            "type": "mcq",
-            "prompt": "On trouve des bactéries Sulfolobus dans les eaux des geysers de Yellowstone, à 90 °C et pH = 1. Que montre cette observation ?",
-            "options": [
-              "Que la vie est possible dans des milieux très chauds et très acides",
-              "Que les bactéries meurent à 90 °C",
-              "Que l'eau des geysers est pure",
-              "Que la vie n'existe que dans l'eau froide"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Ces milieux ressemblent à ceux de l'océan primitif."
+            "explanation": "Un minerai hautement oxydable ne peut abonder que si l'oxygène est rare."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "Les fumeurs océaniques",
-          "stepTheme": "Les fumeurs océaniques",
-          "stepBadge": "Les fumeurs océaniques",
-          "paragraphText": "Les fumeurs des dorsales océaniques rejettent des eaux à 350 °C riches en sulfures ; on y trouve des organismes proches des premières bactéries.",
+          "stepKind": "definition",
+          "stepTitle": "Le fer rubané",
+          "stepTheme": "Le fer rubané",
+          "stepBadge": "Le fer rubané",
+          "paragraphText": "• Fer rubané : formation sédimentaire faite d'une alternance de strates blanches et de strates rouges.\nLes couches claires correspondent au fer ferreux déposé en atmosphère réductrice ; les oxydes de fer des autres couches témoignent de la présence d'oxygène.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q2",
+            "id": "terminale_a1_svt_l03_origine_vie_p01_q2",
             "type": "mcq",
-            "prompt": "Près des fumeurs des dorsales océaniques, qui rejettent des eaux à 350 °C riches en sulfures, on trouve des organismes très proches des premières bactéries. Où la vie a-t-elle donc pu apparaître ?",
+            "prompt": "Le fer rubané doit son nom à :",
             "options": [
-              "Dans l'océan primitif, aux conditions comparables",
-              "Dans les déserts actuels",
-              "Sur la Lune",
-              "Dans les glaciers"
+              "Sa forme de ruban métallique",
+              "L'alternance de strates blanches et de strates rouges qui le constituent",
+              "La présence de pechblende",
+              "Des fossiles en forme de ruban"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Chaleur, acidité, soufre : comme dans l'océan primitif."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est l'explication donnée dans le texte 1 de la leçon."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "piege",
-          "stepTitle": "Le nom exact",
-          "stepTheme": "Le nom exact",
-          "stepBadge": "Le nom exact",
-          "paragraphText": "Le genre de bactéries des geysers s'appelle Sulfolobus (le document écrit par erreur « Sulfoborus » ou « Sulforobus »).",
+          "stepKind": "propriete",
+          "stepTitle": "Réductrice puis légèrement oxydante",
+          "stepTheme": "Réductrice puis légèrement oxydante",
+          "stepBadge": "Réductrice puis légèrement oxydante",
+          "paragraphText": "La structure du fer rubané s'explique par la succession de périodes où l'atmosphère était réductrice et de périodes où elle était légèrement oxydante.\nPendant les secondes, les algues proliféraient et leur activité photosynthétique produisait de l'oxygène.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q3",
+            "id": "terminale_a1_svt_l03_origine_vie_p01_q3",
             "type": "mcq",
-            "prompt": "Quel est le nom exact du genre de bactéries de 1 à 2 µm qui vit dans les eaux chaudes et acides (90 °C, pH = 1) des geysers ?",
+            "prompt": "Pendant les périodes légèrement oxydantes, se déposaient :",
             "options": [
-              "Sulfolobus",
-              "Sulfoborus",
-              "Salmonella",
-              "Plasmodium"
+              "Du fer ferreux uniquement",
+              "De la pechblende",
+              "Des oxydes de fer, hématite et magnétite",
+              "Des sables rouges continentaux"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "« Sulfo » pour le soufre, « lobus » pour sa forme lobée."
+            "correctAnswerIndex": 2,
+            "explanation": "Le texte associe ces périodes à la prolifération des algues et au dépôt d'hématite et de magnétite."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "piege",
-          "stepTitle": "Photosynthèse : le jour",
-          "stepTheme": "Photosynthèse : le jour",
-          "stepBadge": "Photosynthèse : le jour",
-          "paragraphText": "Les végétaux chlorophylliens absorbent le CO₂ et rejettent l'O₂ le JOUR (photosynthèse, à la lumière). Le document dit « la nuit » : c'est faux.",
+          "stepKind": "propriete",
+          "stepTitle": "Des formations de plus de 2 milliards d'années",
+          "stepTheme": "Des formations de plus de 2 milliards d'années",
+          "stepBadge": "Des formations de plus de 2 milliards d'années",
+          "paragraphText": "Les fers rubanés ne se trouvent que dans les formations datant de plus de 2 milliards d'années.\nLa leçon en déduit que ces conditions atmosphériques alternées ont duré jusqu'à cette période.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q4",
+            "id": "terminale_a1_svt_l03_origine_vie_p01_q4",
             "type": "mcq",
-            "prompt": "Un document affirme : « Les végétaux chlorophylliens consomment le CO₂ et rejettent l'O₂ la nuit. » Quelle est la correction ?",
+            "prompt": "Les fers rubanés se trouvent dans les formations datant de :",
             "options": [
-              "C'est juste",
-              "Ils le font le jour, à la lumière, par la photosynthèse ; la nuit, ils respirent",
-              "Ils ne rejettent jamais d'O₂",
-              "Ils le font seulement en hiver"
+              "Moins de 100 millions d'années",
+              "Plus de 2 milliards d'années",
+              "Toutes les époques sans distinction",
+              "Uniquement l'ère actuelle"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La photosynthèse a besoin de la lumière du Soleil."
+            "explanation": "C'est la datation donnée dans le texte 1."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Procaryotes et eucaryotes",
-          "stepTheme": "Procaryotes et eucaryotes",
-          "stepBadge": "Procaryotes et eucaryotes",
-          "paragraphText": "On passe des procaryotes (cellules sans noyau) aux eucaryotes (cellules avec noyau), puis aux êtres pluricellulaires.",
+          "stepKind": "piege",
+          "stepTitle": "L'atmosphère primitive n'était pas riche en oxygène",
+          "stepTheme": "L'atmosphère primitive n'était pas riche en oxygène",
+          "stepBadge": "L'atmosphère primitive n'était pas riche en oxygène",
+          "paragraphText": "Piège : projeter l'atmosphère actuelle sur la Terre primitive.\nAu début de la vie, l'atmosphère était très pauvre en dioxygène ; elle s'est enrichie progressivement, avec l'apparition des algues qui l'enrichissent encore.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q5",
+            "id": "terminale_a1_svt_l03_origine_vie_p01_q5",
             "type": "mcq",
-            "prompt": "Dans l'histoire de la vie, quel est le bon ordre d'apparition : eucaryotes, êtres pluricellulaires, procaryotes ?",
+            "prompt": "Au début de la vie, l'atmosphère était :",
             "options": [
-              "Pluricellulaires → eucaryotes → procaryotes",
-              "Procaryotes → eucaryotes → pluricellulaires",
-              "Eucaryotes → procaryotes → pluricellulaires",
-              "Tous en même temps"
+              "Aussi riche en dioxygène qu'aujourd'hui",
+              "Très pauvre en dioxygène",
+              "Sans aucun gaz",
+              "Composée uniquement d'ozone"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Les procaryotes, sans noyau, sont les plus anciens."
+            "explanation": "C'est la première conclusion de l'analyse des résultats du texte 1."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "propriete",
-          "stepTitle": "De l'eau à la terre",
-          "stepTheme": "De l'eau à la terre",
-          "stepBadge": "De l'eau à la terre",
-          "paragraphText": "On passe de la reproduction asexuée à la reproduction sexuée, et des invertébrés aquatiques aux vertébrés terrestres.",
+          "stepKind": "exemple",
+          "stepTitle": "Les algues enrichissent l'atmosphère",
+          "stepTheme": "Les algues enrichissent l'atmosphère",
+          "stepBadge": "Les algues enrichissent l'atmosphère",
+          "paragraphText": "Au fur et à mesure que l'on s'élève dans le temps, l'atmosphère s'enrichit progressivement en dioxygène avec l'apparition des algues.\nLeur activité photosynthétique est la source de cet enrichissement.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q6",
+            "id": "terminale_a1_svt_l03_origine_vie_p01_q6",
             "type": "mcq",
-            "prompt": "Concernant l'évolution de la vie, comment ont évolué le mode de reproduction et le milieu de vie des animaux ?",
+            "prompt": "L'enrichissement progressif de l'atmosphère en dioxygène est lié à :",
             "options": [
-              "De la reproduction sexuée à asexuée ; de la terre à l'eau",
-              "De la reproduction asexuée à sexuée ; des invertébrés aquatiques aux vertébrés terrestres",
-              "Aucun changement",
-              "Des vertébrés terrestres aux bactéries"
+              "La pechblende",
+              "L'apparition des algues et à leur photosynthèse",
+              "La formation des sables fluviatiles",
+              "La disparition du fer"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La couche d'ozone a permis la conquête des continents."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "Les procaryotes",
-          "stepTheme": "Les procaryotes",
-          "stepBadge": "Les procaryotes",
-          "paragraphText": "Les premières formes de vie connues sont des cellules isolées ou en filaments, sans vrai noyau : les procaryotes.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p02_q7",
-            "type": "mcq",
-            "prompt": "Les premières formes de vie connues sont des cellules isolées ou regroupées en filaments, dépourvues de noyau. Comment les appelle-t-on ?",
-            "options": [
-              "Des eucaryotes",
-              "Des procaryotes",
-              "Des vertébrés",
-              "Des virus"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Les bactéries actuelles sont aussi des procaryotes."
+            "explanation": "L'analyse des résultats attribue l'enrichissement en dioxygène à l'apparition des algues."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q1",
+          "id": "terminale_a1_svt_l03_origine_vie_p01_q1",
           "type": "mcq",
-          "prompt": "On trouve des bactéries Sulfolobus dans les eaux des geysers de Yellowstone, à 90 °C et pH = 1. Que montre cette observation ?",
+          "prompt": "L'abondance de pechblende dans les sables anciens indique :",
           "options": [
-            "Que la vie est possible dans des milieux très chauds et très acides",
-            "Que les bactéries meurent à 90 °C",
-            "Que l'eau des geysers est pure",
-            "Que la vie n'existe que dans l'eau froide"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ces milieux ressemblent à ceux de l'océan primitif."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q2",
-          "type": "mcq",
-          "prompt": "Près des fumeurs des dorsales océaniques, qui rejettent des eaux à 350 °C riches en sulfures, on trouve des organismes très proches des premières bactéries. Où la vie a-t-elle donc pu apparaître ?",
-          "options": [
-            "Dans l'océan primitif, aux conditions comparables",
-            "Dans les déserts actuels",
-            "Sur la Lune",
-            "Dans les glaciers"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Chaleur, acidité, soufre : comme dans l'océan primitif."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q3",
-          "type": "mcq",
-          "prompt": "Quel est le nom exact du genre de bactéries de 1 à 2 µm qui vit dans les eaux chaudes et acides (90 °C, pH = 1) des geysers ?",
-          "options": [
-            "Sulfolobus",
-            "Sulfoborus",
-            "Salmonella",
-            "Plasmodium"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "« Sulfo » pour le soufre, « lobus » pour sa forme lobée."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q4",
-          "type": "mcq",
-          "prompt": "Un document affirme : « Les végétaux chlorophylliens consomment le CO₂ et rejettent l'O₂ la nuit. » Quelle est la correction ?",
-          "options": [
-            "C'est juste",
-            "Ils le font le jour, à la lumière, par la photosynthèse ; la nuit, ils respirent",
-            "Ils ne rejettent jamais d'O₂",
-            "Ils le font seulement en hiver"
+            "Une atmosphère très riche en dioxygène",
+            "Une faible teneur de l'atmosphère en dioxygène",
+            "La présence d'animaux terrestres",
+            "Une atmosphère identique à l'actuelle"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La photosynthèse a besoin de la lumière du Soleil."
+          "explanation": "Un minerai hautement oxydable ne peut abonder que si l'oxygène est rare."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q5",
+          "id": "terminale_a1_svt_l03_origine_vie_p01_q2",
           "type": "mcq",
-          "prompt": "Dans l'histoire de la vie, quel est le bon ordre d'apparition : eucaryotes, êtres pluricellulaires, procaryotes ?",
+          "prompt": "Le fer rubané doit son nom à :",
           "options": [
-            "Pluricellulaires → eucaryotes → procaryotes",
-            "Procaryotes → eucaryotes → pluricellulaires",
-            "Eucaryotes → procaryotes → pluricellulaires",
-            "Tous en même temps"
+            "Sa forme de ruban métallique",
+            "L'alternance de strates blanches et de strates rouges qui le constituent",
+            "La présence de pechblende",
+            "Des fossiles en forme de ruban"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Les procaryotes, sans noyau, sont les plus anciens."
+          "explanation": "C'est l'explication donnée dans le texte 1 de la leçon."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q6",
+          "id": "terminale_a1_svt_l03_origine_vie_p01_q3",
           "type": "mcq",
-          "prompt": "Concernant l'évolution de la vie, comment ont évolué le mode de reproduction et le milieu de vie des animaux ?",
+          "prompt": "Pendant les périodes légèrement oxydantes, se déposaient :",
           "options": [
-            "De la reproduction sexuée à asexuée ; de la terre à l'eau",
-            "De la reproduction asexuée à sexuée ; des invertébrés aquatiques aux vertébrés terrestres",
-            "Aucun changement",
-            "Des vertébrés terrestres aux bactéries"
+            "Du fer ferreux uniquement",
+            "De la pechblende",
+            "Des oxydes de fer, hématite et magnétite",
+            "Des sables rouges continentaux"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "La couche d'ozone a permis la conquête des continents."
+          "correctAnswerIndex": 2,
+          "explanation": "Le texte associe ces périodes à la prolifération des algues et au dépôt d'hématite et de magnétite."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p02_q7",
+          "id": "terminale_a1_svt_l03_origine_vie_p01_q4",
           "type": "mcq",
-          "prompt": "Les premières formes de vie connues sont des cellules isolées ou regroupées en filaments, dépourvues de noyau. Comment les appelle-t-on ?",
+          "prompt": "Les fers rubanés se trouvent dans les formations datant de :",
           "options": [
-            "Des eucaryotes",
-            "Des procaryotes",
-            "Des vertébrés",
-            "Des virus"
+            "Moins de 100 millions d'années",
+            "Plus de 2 milliards d'années",
+            "Toutes les époques sans distinction",
+            "Uniquement l'ère actuelle"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Les bactéries actuelles sont aussi des procaryotes."
+          "explanation": "C'est la datation donnée dans le texte 1."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p01_q5",
+          "type": "mcq",
+          "prompt": "Au début de la vie, l'atmosphère était :",
+          "options": [
+            "Aussi riche en dioxygène qu'aujourd'hui",
+            "Très pauvre en dioxygène",
+            "Sans aucun gaz",
+            "Composée uniquement d'ozone"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la première conclusion de l'analyse des résultats du texte 1."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p01_q6",
+          "type": "mcq",
+          "prompt": "L'enrichissement progressif de l'atmosphère en dioxygène est lié à :",
+          "options": [
+            "La pechblende",
+            "L'apparition des algues et à leur photosynthèse",
+            "La formation des sables fluviatiles",
+            "La disparition du fer"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'analyse des résultats attribue l'enrichissement en dioxygène à l'apparition des algues."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l03_origine_vie_p03",
-      "order": 3,
-      "title": "La soupe primitive et l'expérience de Miller",
-      "summary": "Oparin et Haldane imaginent, Miller et Urey fabriquent des acides aminés.",
-      "conceptExplanation": "L'hypothèse d'Oparin et Haldane (années 1920) : dans les premiers océans aurait existé une « soupe primitive » de molécules organiques, formées par l'action de l'énergie (rayonnement solaire, éclairs) sur l'atmosphère initiale réductrice, faite de méthane (CH₄), d'ammoniac (NH₃), d'hydrogène et de vapeur d'eau.\nCorrection : le document écrit « Aldane » ; le savant s'appelle Haldane (John B. S. Haldane, britannique). Oparin est russe. Leurs travaux datent de 1924 (Oparin) et 1929 (Haldane).\n\nL'expérience de Miller et Urey (1953, États-Unis) :\n- dans un appareil fermé, ils reconstituent la mer primitive (ballon d'eau en ébullition) et l'atmosphère primitive (méthane, ammoniac, hydrogène, vapeur d'eau) ;\n- des électrodes produisent des étincelles électriques, comme des éclairs ;\n- un réfrigérant condense la vapeur, qui retombe dans l'« océan » ;\n- au bout de quelques jours, ils obtiennent des ACIDES AMINÉS : la glycine et l'alanine.\n\nConclusion : la synthèse de molécules organiques (constituants des êtres vivants) peut se faire à partir d'éléments minéraux, dans les conditions de la Terre primitive.\n\nRappel : les acides aminés sont les briques qui forment les protéines.",
-      "keyRule": "Miller et Urey (1953) : gaz de l'atmosphère primitive + eau + étincelles électriques → acides aminés (glycine, alanine). Des molécules organiques naissent de matière minérale.",
+      "id": "terminale_a1_svt_l03_origine_vie_p02",
+      "order": 2,
+      "title": "Des couches rouges à la couche d'ozone et à la diversification",
+      "summary": "Suivre l'enrichissement durable en dioxygène, la formation de l'ozone et le passage des procaryotes aux pluricellulaires.",
+      "conceptExplanation": "Au-delà de 2 milliards d'années, les fers rubanés laissent place à des sables d'origine continentale riches en oxyde de fer : ce sont les premières couches rouges (redbeds), dont l'abondance témoigne de la présence constante d'oxygène dans l'atmosphère, à une teneur voisine de 1 % de sa valeur actuelle.\nLe dioxygène libéré par photosynthèse a cessé d'être mobilisé par des réactions chimiques et a pu envahir l'atmosphère, formant la couche d'ozone capable de protéger les êtres vivants des radiations solaires ultraviolettes.\nL'interprétation de la leçon enchaîne les grandes étapes : des procaryotes, on passe aux eucaryotes, puis aux êtres pluricellulaires ; de la reproduction asexuée, on passe à la reproduction sexuée ; des invertébrés aquatiques, on passe aux vertébrés terrestres.\nIl existe donc un lien étroit entre l'évolution du dioxygène et la naissance de la vie sur Terre : plus l'atmosphère s'enrichit en dioxygène, plus on passe des organismes unicellulaires aux organismes pluricellulaires. L'apparition de la vie est synonyme de l'apparition des premières cellules, des procaryotes, cellules isolées ou regroupées en filaments et dépourvues de noyaux caractérisés.",
+      "keyRule": "Couches rouges, ozone protecteur et diversification vont ensemble : l'oxygène devenu constant permet le passage des procaryotes aux eucaryotes puis aux pluricellulaires.",
       "formulas": [],
       "workedExample": {
-        "title": "Analyser l'expérience",
-        "statement": "Dans l'appareil de Miller, quel élément imite les éclairs de l'atmosphère primitive, et que obtient-on ?",
+        "title": "Dater le changement avec les couches rouges (texte 1)",
+        "statement": "Que remplacent les couches rouges et que prouve leur abondance ?",
         "methodSteps": [
-          "Les deux électrodes en tungstène produisent des étincelles électriques : elles imitent les éclairs.",
-          "On analyse l'eau recueillie : elle contient des acides aminés."
+          "Au-delà de 2 milliards d'années, les couches rouges remplacent les fers rubanés.",
+          "Ce sont des sables d'origine continentale riches en oxyde de fer.",
+          "Leur abondance témoigne de la présence constante d'oxygène dans l'atmosphère, à une teneur voisine de 1 % de sa valeur actuelle."
         ],
-        "conclusion": "Les étincelles fournissent l'énergie ; on obtient de la glycine et de l'alanine."
+        "conclusion": "Les couches rouges marquent le passage à une atmosphère durablement oxygénée."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Les couches rouges (redbeds)",
+          "stepTheme": "Les couches rouges (redbeds)",
+          "stepBadge": "Les couches rouges (redbeds)",
+          "paragraphText": "• Couches rouges (redbeds) : premières couches de sables d'origine continentale riches en oxyde de fer, apparues au-delà de 2 milliards d'années.\nLeur abondance témoigne de la présence constante d'oxygène dans l'atmosphère.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p02_q1",
+            "type": "mcq",
+            "prompt": "Les couches rouges témoignent :",
+            "options": [
+              "D'une disparition totale de l'oxygène",
+              "De la présence constante d'oxygène dans l'atmosphère",
+              "D'une atmosphère purement réductrice",
+              "De l'apparition des vertébrés"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est l'interprétation donnée dans le texte 1."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Une teneur voisine de 1 pour cent",
+          "stepTheme": "Une teneur voisine de 1 pour cent",
+          "stepBadge": "Une teneur voisine de 1 pour cent",
+          "paragraphText": "La teneur en oxygène attestée par les couches rouges est voisine de 1 % de sa valeur actuelle.\nElle reste donc très inférieure à la teneur d'aujourd'hui, mais elle est devenue constante.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p02_q2",
+            "type": "mcq",
+            "prompt": "La teneur en oxygène de l'époque des couches rouges est estimée à environ :",
+            "options": [
+              "La même que la valeur actuelle",
+              "La moitié de la valeur actuelle",
+              "1 % de sa valeur actuelle",
+              "10 fois la valeur actuelle"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Le texte précise : une teneur voisine de 1 % de sa valeur actuelle."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "La couche d'ozone protectrice",
+          "stepTheme": "La couche d'ozone protectrice",
+          "stepBadge": "La couche d'ozone protectrice",
+          "paragraphText": "Le dioxygène libéré par photosynthèse, n'étant plus mobilisé par des réactions chimiques, a envahi l'atmosphère.\nIl a formé la couche d'ozone, capable de protéger les êtres vivants des radiations solaires ultraviolettes.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p02_q3",
+            "type": "mcq",
+            "prompt": "La couche d'ozone protège les êtres vivants :",
+            "options": [
+              "Du froid des profondeurs marines",
+              "Des radiations solaires ultraviolettes",
+              "Des sulfures des dorsales",
+              "De la déshydratation uniquement"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le rôle indiqué dans le texte 1."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "De procaryotes à pluricellulaires",
+          "stepTheme": "De procaryotes à pluricellulaires",
+          "stepBadge": "De procaryotes à pluricellulaires",
+          "paragraphText": "La leçon résume la diversification en trois passages successifs.\nDes procaryotes aux eucaryotes puis aux êtres pluricellulaires ; de la reproduction asexuée à la reproduction sexuée ; des invertébrés aquatiques aux vertébrés terrestres.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p02_q4",
+            "type": "mcq",
+            "prompt": "Selon l'interprétation de la leçon, on passe successivement :",
+            "options": [
+              "Des vertébrés aux invertébrés",
+              "Des eucaryotes aux procaryotes",
+              "Des procaryotes aux eucaryotes puis aux êtres pluricellulaires",
+              "Des pluricellulaires aux unicellulaires"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "C'est l'ordre donné dans le document d'interprétation de la leçon."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Les premières formes de vie sont des procaryotes",
+          "stepTheme": "Les premières formes de vie sont des procaryotes",
+          "stepBadge": "Les premières formes de vie sont des procaryotes",
+          "paragraphText": "Piège : imaginer les premières formes de vie comme des cellules complètes avec noyau.\nLes premières formes de vie connues sont des cellules isolées ou regroupées en filaments, dépourvues de noyaux caractérisés : les procaryotes.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p02_q5",
+            "type": "mcq",
+            "prompt": "Les premières formes de vie connues sont :",
+            "options": [
+              "Des vertébrés aquatiques",
+              "Des procaryotes, cellules dépourvues de noyaux caractérisés",
+              "Des algues pluricellulaires",
+              "Des eucaryotes à noyau bien formé"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Conclusion générale de la leçon : l'apparition de la vie est l'apparition des premières cellules, les procaryotes."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le lien entre oxygène et complexité",
+          "stepTheme": "Le lien entre oxygène et complexité",
+          "stepBadge": "Le lien entre oxygène et complexité",
+          "paragraphText": "La conclusion de la première partie établit un lien étroit entre l'évolution du dioxygène et la naissance de la vie.\nPlus l'atmosphère s'enrichit en dioxygène, plus on passe des organismes unicellulaires aux organismes pluricellulaires.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p02_q6",
+            "type": "mcq",
+            "prompt": "Plus l'atmosphère s'enrichit en dioxygène, plus on passe :",
+            "options": [
+              "Des pluricellulaires aux unicellulaires",
+              "Des organismes unicellulaires aux organismes pluricellulaires",
+              "Des eucaryotes aux procaryotes",
+              "Des vertébrés aux invertébrés"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la formulation même de la conclusion de la leçon."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p02_q1",
+          "type": "mcq",
+          "prompt": "Les couches rouges témoignent :",
+          "options": [
+            "D'une disparition totale de l'oxygène",
+            "De la présence constante d'oxygène dans l'atmosphère",
+            "D'une atmosphère purement réductrice",
+            "De l'apparition des vertébrés"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est l'interprétation donnée dans le texte 1."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p02_q2",
+          "type": "mcq",
+          "prompt": "La teneur en oxygène de l'époque des couches rouges est estimée à environ :",
+          "options": [
+            "La même que la valeur actuelle",
+            "La moitié de la valeur actuelle",
+            "1 % de sa valeur actuelle",
+            "10 fois la valeur actuelle"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le texte précise : une teneur voisine de 1 % de sa valeur actuelle."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p02_q3",
+          "type": "mcq",
+          "prompt": "La couche d'ozone protège les êtres vivants :",
+          "options": [
+            "Du froid des profondeurs marines",
+            "Des radiations solaires ultraviolettes",
+            "Des sulfures des dorsales",
+            "De la déshydratation uniquement"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est le rôle indiqué dans le texte 1."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p02_q4",
+          "type": "mcq",
+          "prompt": "Selon l'interprétation de la leçon, on passe successivement :",
+          "options": [
+            "Des vertébrés aux invertébrés",
+            "Des eucaryotes aux procaryotes",
+            "Des procaryotes aux eucaryotes puis aux êtres pluricellulaires",
+            "Des pluricellulaires aux unicellulaires"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "C'est l'ordre donné dans le document d'interprétation de la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p02_q5",
+          "type": "mcq",
+          "prompt": "Les premières formes de vie connues sont :",
+          "options": [
+            "Des vertébrés aquatiques",
+            "Des procaryotes, cellules dépourvues de noyaux caractérisés",
+            "Des algues pluricellulaires",
+            "Des eucaryotes à noyau bien formé"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Conclusion générale de la leçon : l'apparition de la vie est l'apparition des premières cellules, les procaryotes."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p02_q6",
+          "type": "mcq",
+          "prompt": "Plus l'atmosphère s'enrichit en dioxygène, plus on passe :",
+          "options": [
+            "Des pluricellulaires aux unicellulaires",
+            "Des organismes unicellulaires aux organismes pluricellulaires",
+            "Des eucaryotes aux procaryotes",
+            "Des vertébrés aux invertébrés"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la formulation même de la conclusion de la leçon."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l03_origine_vie_p03",
+      "order": 3,
+      "title": "Une vie née dans des conditions hostiles, dans l'océan primitif",
+      "summary": "Montrer, avec les bactéries des geysers et des dorsales, que la vie a pu apparaître dans l'océan primitif hostile.",
+      "conceptExplanation": "Dans les eaux chaudes et acides (90 degrés, pH égal à 1) des geysers du parc de Yellowstone (Wyoming), on trouve des bactéries du genre Sulfolobus, dont le diamètre varie de 1 à 2 micromètres (le texte écrit Sulfoborus puis Sulforobus pour le même genre).\nLes fumeurs des dorsales océaniques rejettent des eaux à 350 degrés, riches en sulfures. On y a trouvé des organismes très proches des premières bactéries.\nSi des bactéries peuvent vivre dans cet environnement hostile, il est logique de penser que la vie a pu apparaître dans l'océan primitif, où les conditions étaient comparables.\nLa leçon conclut que les premiers êtres vivants sont apparus dans des conditions hostiles, dans l'océan primitif à température élevée, acide ou riche en sulfures.",
+      "keyRule": "Des bactéries vivent aujourd'hui dans des eaux à 90 degrés et pH 1 ou des fumeurs à 350 degrés riches en sulfures : la vie a donc pu naître en milieu hostile, dans l'océan primitif.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Des geysers de Yellowstone à l'océan primitif (texte 2)",
+        "statement": "Quel raisonnement la leçon tire-t-elle des bactéries de Yellowstone et des dorsales océaniques ?",
+        "methodSteps": [
+          "À Yellowstone, des bactéries vivent dans des eaux chaudes et acides à 90 degrés et pH 1.",
+          "Près des fumeurs des dorsales, des organismes proches des premières bactéries vivent dans des eaux à 350 degrés riches en sulfures.",
+          "Si la vie résiste aujourd'hui à un environnement hostile, elle a pu apparaître dans l'océan primitif, où les conditions étaient comparables."
+        ],
+        "conclusion": "Les milieux extrêmes actuels rendent plausible une naissance de la vie en milieu hostile."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Les bactéries de Yellowstone",
+          "stepTheme": "Les bactéries de Yellowstone",
+          "stepBadge": "Les bactéries de Yellowstone",
+          "paragraphText": "• Bactéries des geysers de Yellowstone : bactéries du genre appelé Sulfoborus dans le texte, vivant dans des eaux chaudes et acides des geysers du Wyoming.\nLeur diamètre varie de 1 à 2 micromètres.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p03_q1",
+            "type": "mcq",
+            "prompt": "Les bactéries de Yellowstone vivent dans des eaux :",
+            "options": [
+              "Froides et alcalines",
+              "Chaudes et acides, à 90 degrés et pH 1",
+              "Douces et tempérées",
+              "Sans aucun sulfure, à 20 degrés"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Ce sont les conditions chiffrées données dans le texte 2."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les fumeurs des dorsales océaniques",
+          "stepTheme": "Les fumeurs des dorsales océaniques",
+          "stepBadge": "Les fumeurs des dorsales océaniques",
+          "paragraphText": "Les fumeurs des dorsales océaniques rejettent des eaux à 350 degrés, riches en sulfures.\nOn y a trouvé des organismes très proches des premières bactéries.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p03_q2",
+            "type": "mcq",
+            "prompt": "Les eaux rejetées par les fumeurs des dorsales sont :",
+            "options": [
+              "À 350 degrés et riches en sulfures",
+              "À 10 degrés et pauvres en minéraux",
+              "Identiques à l'eau des geysers",
+              "Sans organismes vivants"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ce sont les valeurs et la composition données dans le texte 2."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "methode",
+          "stepTitle": "Raisonner par comparaison des conditions",
+          "stepTheme": "Raisonner par comparaison des conditions",
+          "stepBadge": "Raisonner par comparaison des conditions",
+          "paragraphText": "Méthode de la leçon : comparer les milieux extrêmes actuels à l'océan primitif.\nSi des bactéries vivent dans cet environnement hostile, la vie a pu apparaître dans l'océan primitif où les conditions étaient comparables.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p03_q3",
+            "type": "mcq",
+            "prompt": "Le raisonnement du texte 2 conclut que la vie a pu apparaître :",
+            "options": [
+              "Uniquement dans les lacs d'eau douce",
+              "Dans l'océan primitif, aux conditions comparables aux milieux hostiles actuels",
+              "Seulement après la couche d'ozone",
+              "Dans l'atmosphère actuelle"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la conclusion logique tirée dans le texte 2."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Un océan primitif hostile",
+          "stepTheme": "Un océan primitif hostile",
+          "stepBadge": "Un océan primitif hostile",
+          "paragraphText": "L'analyse des résultats décrit l'océan primitif comme un milieu à température élevée, acide ou riche en sulfures.\nC'est dans ces conditions hostiles que les premiers êtres vivants sont apparus.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p03_q4",
+            "type": "mcq",
+            "prompt": "L'océan primitif est décrit comme :",
+            "options": [
+              "Froid et riche en oxygène",
+              "À température élevée, acide ou riche en sulfures",
+              "Identique aux océans actuels",
+              "Sans eau liquide"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Ce sont les trois traits retenus dans l'analyse des résultats."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "La taille des premières bactéries",
+          "stepTheme": "La taille des premières bactéries",
+          "stepBadge": "La taille des premières bactéries",
+          "paragraphText": "Piège : confondre l'élément de 2 micromètres obtenu à Tokyo avec les bactéries de Yellowstone.\nCelles de Yellowstone mesurent de 1 à 2 micromètres de diamètre ; l'élément de Tokyo, comparable au même genre, mesure 2 micromètres.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p03_q5",
+            "type": "mcq",
+            "prompt": "Le diamètre des bactéries de Yellowstone varie de :",
+            "options": [
+              "10 à 20 micromètres",
+              "1 à 2 micromètres",
+              "100 à 200 micromètres",
+              "1 à 2 millimètres"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la fourchette donnée dans le texte 2."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Des organismes proches des premières bactéries",
+          "stepTheme": "Des organismes proches des premières bactéries",
+          "stepBadge": "Des organismes proches des premières bactéries",
+          "paragraphText": "Près des fumeurs des dorsales, les organismes trouvés sont très proches des premières bactéries.\nIls servent donc d'exemple actuel de ce à quoi pouvaient ressembler les premiers vivants.",
+          "exercise": {
+            "id": "terminale_a1_svt_l03_origine_vie_p03_q6",
+            "type": "mcq",
+            "prompt": "Les organismes des fumeurs des dorsales sont décrits comme :",
+            "options": [
+              "Identiques aux algues des fers rubanés",
+              "Très proches des premières bactéries",
+              "Des vertébrés primitifs",
+              "Des procaryotes disparus sans descendants"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le texte les présente comme très proches des premières bactéries."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p03_q1",
+          "type": "mcq",
+          "prompt": "Les bactéries de Yellowstone vivent dans des eaux :",
+          "options": [
+            "Froides et alcalines",
+            "Chaudes et acides, à 90 degrés et pH 1",
+            "Douces et tempérées",
+            "Sans aucun sulfure, à 20 degrés"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Ce sont les conditions chiffrées données dans le texte 2."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p03_q2",
+          "type": "mcq",
+          "prompt": "Les eaux rejetées par les fumeurs des dorsales sont :",
+          "options": [
+            "À 350 degrés et riches en sulfures",
+            "À 10 degrés et pauvres en minéraux",
+            "Identiques à l'eau des geysers",
+            "Sans organismes vivants"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ce sont les valeurs et la composition données dans le texte 2."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p03_q3",
+          "type": "mcq",
+          "prompt": "Le raisonnement du texte 2 conclut que la vie a pu apparaître :",
+          "options": [
+            "Uniquement dans les lacs d'eau douce",
+            "Dans l'océan primitif, aux conditions comparables aux milieux hostiles actuels",
+            "Seulement après la couche d'ozone",
+            "Dans l'atmosphère actuelle"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la conclusion logique tirée dans le texte 2."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p03_q4",
+          "type": "mcq",
+          "prompt": "L'océan primitif est décrit comme :",
+          "options": [
+            "Froid et riche en oxygène",
+            "À température élevée, acide ou riche en sulfures",
+            "Identique aux océans actuels",
+            "Sans eau liquide"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Ce sont les trois traits retenus dans l'analyse des résultats."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p03_q5",
+          "type": "mcq",
+          "prompt": "Le diamètre des bactéries de Yellowstone varie de :",
+          "options": [
+            "10 à 20 micromètres",
+            "1 à 2 micromètres",
+            "100 à 200 micromètres",
+            "1 à 2 millimètres"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la fourchette donnée dans le texte 2."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p03_q6",
+          "type": "mcq",
+          "prompt": "Les organismes des fumeurs des dorsales sont décrits comme :",
+          "options": [
+            "Identiques aux algues des fers rubanés",
+            "Très proches des premières bactéries",
+            "Des vertébrés primitifs",
+            "Des procaryotes disparus sans descendants"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le texte les présente comme très proches des premières bactéries."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l03_origine_vie_p04",
+      "order": 4,
+      "title": "La soupe primitive et l'expérience de Miller et Urey",
+      "summary": "Présenter l'hypothèse de Oparin et Haldane et sa vérification expérimentale de 1953.",
+      "conceptExplanation": "En 1920, Oparin et Haldane (le texte écrit Aldane puis Oparin et Aldane) émettent l'hypothèse suivante : il aurait existé dans les premiers océans une soupe primitive de molécules organiques formées par l'action du rayonnement solaire sur l'atmosphère initiale réductrice ; ils estimaient que cette soupe comprenait principalement du méthane, de l'ammoniac, de l'eau et du dioxyde de carbone.\nEn 1953, les Américains Miller et Urey reconstituent en vase clos la mer et l'atmosphère primitive. En provoquant des étincelles électriques dans ce bouillon originel, ils obtiennent des acides aminés, la glycine et l'alanine.\nIls montrent ainsi que la synthèse de molécules organiques peut se faire à partir d'éléments minéraux.\nFormées dans l'atmosphère primitive ou apportées depuis l'espace par les météorites ou les comètes, les molécules organiques s'accumulent dans l'océan primitif, où elles donnent naissance à la soupe primitive.",
+      "keyRule": "Hypothèse de 1920, preuve de 1953 : des étincelles dans une atmosphère primitive reconstituée produisent des acides aminés à partir d'éléments minéraux.",
+      "formulas": [],
+      "workedExample": {
+        "title": "L'expérience de 1953, pas à pas (texte expérimental)",
+        "statement": "Décris le dispositif de Miller et Urey et son résultat.",
+        "methodSteps": [
+          "Miller et Urey reconstituent en vase clos la mer et l'atmosphère primitive.",
+          "Ils provoquent des étincelles électriques dans ce bouillon originel, simulant une source d'énergie.",
+          "Ils obtiennent des acides aminés : la glycine et l'alanine.",
+          "Ils montrent ainsi que la synthèse de molécules organiques peut se faire à partir d'éléments minéraux."
+        ],
+        "conclusion": "La matière organique peut naître de la matière minérale dans les conditions primitives simulées."
       },
       "structuredSteps": [
         {
@@ -560,759 +722,433 @@ export const SVT_TLE_A_L03_ORIGINE_VIE: CurriculumChapter = {
           "stepTitle": "La soupe primitive",
           "stepTheme": "La soupe primitive",
           "stepBadge": "La soupe primitive",
-          "paragraphText": "Oparin et Haldane supposent qu'il existait dans les premiers océans une « soupe primitive » de molécules organiques.",
+          "paragraphText": "• Soupe primitive : ensemble de molécules organiques qui, selon Oparin et Haldane, existait dans les premiers océans.\nElle se serait formée par l'action du rayonnement solaire sur l'atmosphère initiale réductrice et comprenait principalement méthane, ammoniac, eau et dioxyde de carbone.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q1",
+            "id": "terminale_a1_svt_l03_origine_vie_p04_q1",
             "type": "mcq",
-            "prompt": "Dans les années 1920, Oparin et Haldane émettent une hypothèse sur l'origine de la vie. Que supposent-ils ?",
+            "prompt": "La soupe primitive de Oparin et Haldane aurait existé :",
             "options": [
-              "Qu'il existait dans les premiers océans une « soupe primitive » de molécules organiques",
-              "Que la vie est arrivée toute faite sur une comète",
-              "Que la vie est apparue il y a 10 000 ans",
-              "Que la vie est née dans les volcans éteints"
+              "Dans les premiers océans",
+              "Dans les geysers actuels uniquement",
+              "Dans les météorites seulement",
+              "Dans la couche d'ozone"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Ces molécules auraient été formées grâce à l'énergie du Soleil et des éclairs."
+            "explanation": "L'hypothèse situe la soupe primitive dans les premiers océans."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "L'atmosphère primitive",
-          "stepTheme": "L'atmosphère primitive",
-          "stepBadge": "L'atmosphère primitive",
-          "paragraphText": "L'atmosphère primitive imaginée par Oparin et Haldane est réductrice : méthane, ammoniac, hydrogène, vapeur d'eau, sans dioxygène.",
+          "stepTitle": "Les auteurs et la date de l'hypothèse",
+          "stepTheme": "Les auteurs et la date de l'hypothèse",
+          "stepBadge": "Les auteurs et la date de l'hypothèse",
+          "paragraphText": "L'hypothèse de la soupe primitive est émise en 1920.\nLe texte l'attribue à Oparin et à Haldane, orthographié Aldane dans la suite du document.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q2",
+            "id": "terminale_a1_svt_l03_origine_vie_p04_q2",
             "type": "mcq",
-            "prompt": "Quels gaz composaient l'atmosphère primitive réductrice imaginée par Oparin et Haldane, et reconstituée par Miller en 1953 ?",
+            "prompt": "L'hypothèse de la soupe primitive date de :",
             "options": [
-              "Dioxygène et azote, comme aujourd'hui",
-              "Méthane, ammoniac, hydrogène et vapeur d'eau",
-              "Uniquement du dioxygène",
-              "Du chlore et de l'hélium"
+              "1953",
+              "1960",
+              "1920",
+              "1989"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Il n'y avait pas encore de dioxygène."
+            "correctAnswerIndex": 2,
+            "explanation": "1920 pour l'hypothèse ; 1953 pour l'expérience de Miller et Urey ; 1960 pour les nouvelles analyses des météorites."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "L'appareil de Miller",
-          "stepTheme": "L'appareil de Miller",
-          "stepBadge": "L'appareil de Miller",
-          "paragraphText": "En 1953, Miller et Urey reconstituent en vase clos la mer (eau en ébullition) et l'atmosphère primitive, et y produisent des étincelles électriques.",
+          "stepKind": "propriete",
+          "stepTitle": "Les étincelles de Miller et Urey",
+          "stepTheme": "Les étincelles de Miller et Urey",
+          "stepBadge": "Les étincelles de Miller et Urey",
+          "paragraphText": "Miller et Urey provoquent des étincelles électriques dans le bouillon originel reconstitué en vase clos.\nIls reproduisent ainsi une source d'énergie agissant sur la mer et l'atmosphère primitives.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q3",
+            "id": "terminale_a1_svt_l03_origine_vie_p04_q3",
             "type": "mcq",
-            "prompt": "Dans l'appareil de Miller et Urey (1953), deux électrodes en tungstène produisent des étincelles dans le mélange de gaz. Que représentent ces étincelles ?",
+            "prompt": "Dans leur expérience, Miller et Urey provoquent :",
             "options": [
-              "Les éclairs de l'atmosphère primitive (source d'énergie)",
-              "La lumière de la Lune",
-              "Les volcans",
-              "La pluie"
+              "Une baisse de température à 0 degré",
+              "Des étincelles électriques dans le bouillon originel",
+              "Une photosynthèse d'algues",
+              "Une fermentation"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Elles fournissent l'énergie nécessaire aux réactions."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le geste expérimental central décrit dans le texte."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Le résultat",
-          "stepTheme": "Le résultat",
-          "stepBadge": "Le résultat",
-          "paragraphText": "Miller et Urey obtiennent des acides aminés : la glycine et l'alanine.",
+          "stepKind": "propriete",
+          "stepTitle": "Glycine et alanine obtenues",
+          "stepTheme": "Glycine et alanine obtenues",
+          "stepBadge": "Glycine et alanine obtenues",
+          "paragraphText": "L'expérience de 1953 produit des acides aminés précis, nommés dans le texte.\nIl s'agit de la glycine et de l'alanine, obtenues à partir d'éléments minéraux.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q4",
+            "id": "terminale_a1_svt_l03_origine_vie_p04_q4",
             "type": "mcq",
-            "prompt": "En provoquant des étincelles électriques dans un mélange de méthane, d'ammoniac, d'hydrogène et de vapeur d'eau, qu'obtiennent Miller et Urey en 1953 ?",
+            "prompt": "Les acides aminés obtenus par Miller et Urey sont :",
             "options": [
-              "Des cellules vivantes",
-              "Des acides aminés : glycine et alanine",
-              "Du dioxygène",
-              "De l'ADN complet"
+              "La leucine et la glutamine",
+              "La méthionine et l'isoleucine",
+              "La glycine et l'alanine",
+              "Aucun, l'expérience a échoué"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Ce ne sont pas des êtres vivants, mais des constituants du vivant."
+            "correctAnswerIndex": 2,
+            "explanation": "Le texte nomme la glycine et l'alanine."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Du minéral à l'organique",
-          "stepTheme": "Du minéral à l'organique",
-          "stepBadge": "Du minéral à l'organique",
-          "paragraphText": "L'expérience montre que la synthèse de molécules organiques peut se faire à partir d'éléments minéraux.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q5",
-            "type": "mcq",
-            "prompt": "Miller et Urey obtiennent de la glycine et de l'alanine à partir de gaz simples et d'eau. Que démontre leur expérience ?",
-            "options": [
-              "Que des molécules organiques peuvent se former à partir d'éléments minéraux",
-              "Que la vie est impossible",
-              "Que les acides aminés viennent seulement des êtres vivants",
-              "Que l'eau est inutile"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est un premier pas de l'inanimé vers le vivant."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "Les acides aminés",
-          "stepTheme": "Les acides aminés",
-          "stepBadge": "Les acides aminés",
-          "paragraphText": "Les acides aminés sont les briques qui forment les protéines, constituants essentiels des êtres vivants.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q6",
-            "type": "mcq",
-            "prompt": "Pourquoi l'obtention d'acides aminés (glycine, alanine) dans l'expérience de Miller est-elle importante pour expliquer l'origine de la vie ?",
-            "options": [
-              "Parce que les acides aminés forment les protéines, constituants du vivant",
-              "Parce que les acides aminés sont des minéraux",
-              "Parce que les acides aminés produisent de l'oxygène",
-              "Parce qu'ils sont radioactifs"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Les protéines sont indispensables à toute cellule."
-          }
-        },
-        {
-          "stepNumber": 7,
           "stepKind": "piege",
-          "stepTitle": "Haldane, pas « Aldane »",
-          "stepTheme": "Haldane, pas « Aldane »",
-          "stepBadge": "Haldane, pas « Aldane »",
-          "paragraphText": "L'hypothèse de la soupe primitive est due au Russe Oparin (1924) et au Britannique Haldane (1929) ; le document écrit « Aldane ».",
+          "stepTitle": "Une synthèse à partir d'éléments minéraux",
+          "stepTheme": "Une synthèse à partir d'éléments minéraux",
+          "stepBadge": "Une synthèse à partir d'éléments minéraux",
+          "paragraphText": "Piège : croire que Miller et Urey ont créé des êtres vivants.\nIls ont seulement montré que la synthèse de molécules organiques peut se faire à partir d'éléments minéraux, première étape vers la vie.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p03_q7",
+            "id": "terminale_a1_svt_l03_origine_vie_p04_q5",
             "type": "mcq",
-            "prompt": "Qui sont les deux savants des années 1920 à l'origine de l'hypothèse de la « soupe primitive » ?",
+            "prompt": "L'expérience de Miller et Urey montre que :",
             "options": [
-              "Oparin et Haldane",
-              "Miller et Urey",
-              "Pasteur et Darwin",
-              "Mendel et Watson"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Miller et Urey ont testé leur hypothèse en 1953."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q1",
-          "type": "mcq",
-          "prompt": "Dans les années 1920, Oparin et Haldane émettent une hypothèse sur l'origine de la vie. Que supposent-ils ?",
-          "options": [
-            "Qu'il existait dans les premiers océans une « soupe primitive » de molécules organiques",
-            "Que la vie est arrivée toute faite sur une comète",
-            "Que la vie est apparue il y a 10 000 ans",
-            "Que la vie est née dans les volcans éteints"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ces molécules auraient été formées grâce à l'énergie du Soleil et des éclairs."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q2",
-          "type": "mcq",
-          "prompt": "Quels gaz composaient l'atmosphère primitive réductrice imaginée par Oparin et Haldane, et reconstituée par Miller en 1953 ?",
-          "options": [
-            "Dioxygène et azote, comme aujourd'hui",
-            "Méthane, ammoniac, hydrogène et vapeur d'eau",
-            "Uniquement du dioxygène",
-            "Du chlore et de l'hélium"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Il n'y avait pas encore de dioxygène."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q3",
-          "type": "mcq",
-          "prompt": "Dans l'appareil de Miller et Urey (1953), deux électrodes en tungstène produisent des étincelles dans le mélange de gaz. Que représentent ces étincelles ?",
-          "options": [
-            "Les éclairs de l'atmosphère primitive (source d'énergie)",
-            "La lumière de la Lune",
-            "Les volcans",
-            "La pluie"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Elles fournissent l'énergie nécessaire aux réactions."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q4",
-          "type": "mcq",
-          "prompt": "En provoquant des étincelles électriques dans un mélange de méthane, d'ammoniac, d'hydrogène et de vapeur d'eau, qu'obtiennent Miller et Urey en 1953 ?",
-          "options": [
-            "Des cellules vivantes",
-            "Des acides aminés : glycine et alanine",
-            "Du dioxygène",
-            "De l'ADN complet"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Ce ne sont pas des êtres vivants, mais des constituants du vivant."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q5",
-          "type": "mcq",
-          "prompt": "Miller et Urey obtiennent de la glycine et de l'alanine à partir de gaz simples et d'eau. Que démontre leur expérience ?",
-          "options": [
-            "Que des molécules organiques peuvent se former à partir d'éléments minéraux",
-            "Que la vie est impossible",
-            "Que les acides aminés viennent seulement des êtres vivants",
-            "Que l'eau est inutile"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est un premier pas de l'inanimé vers le vivant."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q6",
-          "type": "mcq",
-          "prompt": "Pourquoi l'obtention d'acides aminés (glycine, alanine) dans l'expérience de Miller est-elle importante pour expliquer l'origine de la vie ?",
-          "options": [
-            "Parce que les acides aminés forment les protéines, constituants du vivant",
-            "Parce que les acides aminés sont des minéraux",
-            "Parce que les acides aminés produisent de l'oxygène",
-            "Parce qu'ils sont radioactifs"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Les protéines sont indispensables à toute cellule."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p03_q7",
-          "type": "mcq",
-          "prompt": "Qui sont les deux savants des années 1920 à l'origine de l'hypothèse de la « soupe primitive » ?",
-          "options": [
-            "Oparin et Haldane",
-            "Miller et Urey",
-            "Pasteur et Darwin",
-            "Mendel et Watson"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Miller et Urey ont testé leur hypothèse en 1953."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l03_origine_vie_p04",
-      "order": 4,
-      "title": "Des molécules à la cellule",
-      "summary": "Météorites, coacervats, et le passage encore mystérieux à la première cellule.",
-      "conceptExplanation": "Après Miller :\n- dans les mêmes conditions, mais à haute température, on obtient des enchaînements d'acides aminés, dont certains ont une faible activité enzymatique. Oparin a aussi étudié les coacervats : de petites gouttelettes de molécules organiques séparées de l'eau par une limite, qui ressemblent à des cellules ;\n- depuis 1960, l'analyse des météorites montre que l'atmosphère initiale était beaucoup moins riche en méthane et en ammoniac, mais plus riche en CO₂ ; de nouvelles expériences prouvent que la synthèse de molécules organiques reste possible dans ces conditions ;\n- on a découvert des acides aminés et des molécules organiques dans des météorites ;\n- à Tokyo, en mélangeant de grandes quantités d'acides aminés dans de l'eau et de l'azote, sans dioxygène, à 250 °C et 130 atmosphères pendant 6 heures, on a obtenu un élément de 2 µm comparable à Sulfolobus. La vie a donc pu apparaître sans dioxygène, dans les profondeurs de la mer primitive, il y a 3 à 4 milliards d'années.\n\nScénario de l'origine de la vie (document 3) :\n1. énergie (Soleil, éclairs) + atmosphère primitive (CH₄, CO₂, H₂O, H₂S, N₂) → petites molécules organiques réactives (HCN, HCHO…) ; des comètes et des météorites en apportent aussi ;\n2. dans l'océan (sources chaudes, argiles) → constituants du vivant : acides aminés, sucres, bases, phosphates ;\n3. → protéines, lipides, acides nucléiques ;\n4. → une membrane les entoure → la VIE (première cellule).\n\nLimite : les produits obtenus en laboratoire n'ont jamais montré les propriétés fondamentales du vivant : capacité d'AUTORÉGULATION et de REPRODUCTION. Le passage de la molécule inerte à la première cellule vivante reste inconnu.",
-      "keyRule": "Énergie + atmosphère primitive → petites molécules → acides aminés, sucres, bases → protéines, lipides, acides nucléiques → membrane → cellule. Le dernier passage reste inconnu.",
-      "formulas": [],
-      "workedExample": {
-        "title": "Lire le document 3",
-        "statement": "D'où viennent les petites molécules organiques réactives (HCN, HCHO) et où naît la vie ?",
-        "methodSteps": [
-          "Elles se forment dans l'atmosphère primitive grâce à l'énergie (Soleil, éclairs) et sont aussi apportées par les comètes et les météorites.",
-          "Elles s'accumulent dans l'océan, près des sources chaudes et des argiles."
-        ],
-        "conclusion": "La vie naît dans l'océan primitif, quand une membrane entoure protéines, lipides et acides nucléiques."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "exemple",
-          "stepTitle": "Les météorites",
-          "stepTheme": "Les météorites",
-          "stepBadge": "Les météorites",
-          "paragraphText": "Depuis 1960, on a découvert des acides aminés et des molécules organiques dans des météorites.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q1",
-            "type": "mcq",
-            "prompt": "Depuis 1960, on a trouvé des acides aminés et des molécules organiques dans des météorites. Que suggère cette découverte ?",
-            "options": [
-              "Que des molécules organiques ont pu être apportées de l'espace sur la Terre primitive",
-              "Que les météorites sont vivantes",
-              "Que la vie n'existe pas sur Terre",
-              "Que les acides aminés sont des minéraux"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Les météorites et les comètes ont pu enrichir la « soupe primitive »."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "propriete",
-          "stepTitle": "Moins de méthane",
-          "stepTheme": "Moins de méthane",
-          "stepBadge": "Moins de méthane",
-          "paragraphText": "L'atmosphère initiale était moins riche en méthane et en ammoniac, mais plus riche en CO₂ ; la synthèse de molécules organiques reste possible.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q2",
-            "type": "mcq",
-            "prompt": "L'analyse des météorites montre que l'atmosphère initiale avait moins de méthane et d'ammoniac mais plus de CO₂ que ce que pensait Miller. La synthèse de molécules organiques est-elle encore possible ?",
-            "options": [
-              "Non, plus du tout",
-              "Oui, de nouvelles expériences montrent qu'elle reste possible",
-              "Seulement avec du dioxygène",
-              "Seulement sur la Lune"
+              "Des cellules vivantes naissent en vase clos",
+              "La synthèse de molécules organiques peut se faire à partir d'éléments minéraux",
+              "L'atmosphère primitive était riche en oxygène",
+              "Les météorites sont inutiles"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "L'hypothèse reste valable avec une atmosphère corrigée."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "L'expérience de Tokyo",
-          "stepTheme": "L'expérience de Tokyo",
-          "stepBadge": "L'expérience de Tokyo",
-          "paragraphText": "Acides aminés + eau + azote, sans dioxygène, à 250 °C et 130 atmosphères pendant 6 heures : on obtient un élément de 2 µm comparable à Sulfolobus.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q3",
-            "type": "mcq",
-            "prompt": "À Tokyo, en chauffant des acides aminés dans de l'eau et de l'azote, sans dioxygène, à 250 °C et 130 atmosphères pendant 6 heures, on obtient un élément de 2 µm comparable à la bactérie Sulfolobus. Que montre cette expérience ?",
-            "options": [
-              "Que la vie a pu apparaître sans dioxygène, dans les profondeurs de la mer primitive",
-              "Que la vie a besoin de beaucoup de dioxygène",
-              "Que les bactéries naissent du froid",
-              "Que l'azote est un poison"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Les conditions imitent celles des profondeurs océaniques primitives."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "Les coacervats",
-          "stepTheme": "Les coacervats",
-          "stepBadge": "Les coacervats",
-          "paragraphText": "Les coacervats étudiés par Oparin sont de petites gouttelettes de molécules organiques séparées de l'eau, qui ressemblent à des cellules.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q4",
-            "type": "mcq",
-            "prompt": "Oparin a obtenu des coacervats. Que sont-ils ?",
-            "options": [
-              "De petites gouttelettes de molécules organiques séparées de l'eau, ressemblant à des cellules",
-              "Des fossiles de dinosaures",
-              "Des cristaux de sel",
-              "Des bactéries actuelles"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Ils montrent comment une « limite » a pu isoler des molécules."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Les étapes vers la vie",
-          "stepTheme": "Les étapes vers la vie",
-          "stepBadge": "Les étapes vers la vie",
-          "paragraphText": "Petites molécules → acides aminés, sucres, bases, phosphates → protéines, lipides, acides nucléiques → membrane → vie.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q5",
-            "type": "mcq",
-            "prompt": "D'après le document sur l'origine de la vie, quel est le bon ordre : membrane ; acides aminés et sucres ; protéines, lipides et acides nucléiques ; petites molécules organiques (HCN, HCHO) ?",
-            "options": [
-              "Membrane → protéines → acides aminés → petites molécules",
-              "Petites molécules → acides aminés et sucres → protéines, lipides, acides nucléiques → membrane",
-              "Acides aminés → membrane → petites molécules → protéines",
-              "Protéines → petites molécules → membrane → acides aminés"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "On va du plus simple au plus complexe, jusqu'à la cellule."
+            "explanation": "C'est la conclusion exacte tirée dans le texte."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Le lieu de naissance",
-          "stepTheme": "Le lieu de naissance",
-          "stepBadge": "Le lieu de naissance",
-          "paragraphText": "Selon le document, les constituants du vivant se forment dans l'océan, près des sources chaudes et des argiles.",
+          "stepTitle": "Les météorites apportent aussi des molécules",
+          "stepTheme": "Les météorites apportent aussi des molécules",
+          "stepBadge": "Les météorites apportent aussi des molécules",
+          "paragraphText": "Depuis 1960, on a découvert des acides aminés et des molécules organiques dans les météorites.\nFormées sur la planète ou apportées depuis l'espace par les météorites ou les comètes, ces molécules alimentent la soupe primitive.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q6",
+            "id": "terminale_a1_svt_l03_origine_vie_p04_q6",
             "type": "mcq",
-            "prompt": "Dans le document « origine de la vie », les molécules venues de l'atmosphère, des comètes et des météorites s'accumulent près des sources chaudes et des argiles. Où la vie est-elle née selon ce document ?",
+            "prompt": "Des acides aminés ont été découverts :",
             "options": [
-              "Dans l'océan primitif",
-              "Dans l'atmosphère",
-              "Sur les montagnes",
-              "Dans les déserts"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est la « soupe primitive » de l'océan."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "piege",
-          "stepTitle": "Pas encore la vie",
-          "stepTheme": "Pas encore la vie",
-          "stepBadge": "Pas encore la vie",
-          "paragraphText": "Les produits de laboratoire n'ont jamais montré l'autorégulation ni la reproduction : le passage à la première cellule vivante reste inconnu.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p04_q7",
-            "type": "mcq",
-            "prompt": "Les macromolécules obtenues en laboratoire n'ont jamais manifesté la capacité d'autorégulation et de reproduction. Qu'en conclut-on ?",
-            "options": [
-              "Qu'on a déjà créé la vie en laboratoire",
-              "Que le passage de la molécule inerte à la première cellule vivante reste inconnu",
-              "Que la vie n'existe pas",
-              "Que la reproduction n'est pas une propriété du vivant"
+              "Uniquement à Yellowstone",
+              "Dans les météorites",
+              "Dans les couches rouges",
+              "Dans la pechblende"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Seuls des témoignages indirects permettent d'imaginer ce passage."
+            "explanation": "Le texte rapporte cette découverte faite depuis 1960 par l'analyse des météorites."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q1",
+          "id": "terminale_a1_svt_l03_origine_vie_p04_q1",
           "type": "mcq",
-          "prompt": "Depuis 1960, on a trouvé des acides aminés et des molécules organiques dans des météorites. Que suggère cette découverte ?",
+          "prompt": "La soupe primitive de Oparin et Haldane aurait existé :",
           "options": [
-            "Que des molécules organiques ont pu être apportées de l'espace sur la Terre primitive",
-            "Que les météorites sont vivantes",
-            "Que la vie n'existe pas sur Terre",
-            "Que les acides aminés sont des minéraux"
+            "Dans les premiers océans",
+            "Dans les geysers actuels uniquement",
+            "Dans les météorites seulement",
+            "Dans la couche d'ozone"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Les météorites et les comètes ont pu enrichir la « soupe primitive »."
+          "explanation": "L'hypothèse situe la soupe primitive dans les premiers océans."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q2",
+          "id": "terminale_a1_svt_l03_origine_vie_p04_q2",
           "type": "mcq",
-          "prompt": "L'analyse des météorites montre que l'atmosphère initiale avait moins de méthane et d'ammoniac mais plus de CO₂ que ce que pensait Miller. La synthèse de molécules organiques est-elle encore possible ?",
+          "prompt": "L'hypothèse de la soupe primitive date de :",
           "options": [
-            "Non, plus du tout",
-            "Oui, de nouvelles expériences montrent qu'elle reste possible",
-            "Seulement avec du dioxygène",
-            "Seulement sur la Lune"
+            "1953",
+            "1960",
+            "1920",
+            "1989"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "1920 pour l'hypothèse ; 1953 pour l'expérience de Miller et Urey ; 1960 pour les nouvelles analyses des météorites."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p04_q3",
+          "type": "mcq",
+          "prompt": "Dans leur expérience, Miller et Urey provoquent :",
+          "options": [
+            "Une baisse de température à 0 degré",
+            "Des étincelles électriques dans le bouillon originel",
+            "Une photosynthèse d'algues",
+            "Une fermentation"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "L'hypothèse reste valable avec une atmosphère corrigée."
+          "explanation": "C'est le geste expérimental central décrit dans le texte."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q3",
+          "id": "terminale_a1_svt_l03_origine_vie_p04_q4",
           "type": "mcq",
-          "prompt": "À Tokyo, en chauffant des acides aminés dans de l'eau et de l'azote, sans dioxygène, à 250 °C et 130 atmosphères pendant 6 heures, on obtient un élément de 2 µm comparable à la bactérie Sulfolobus. Que montre cette expérience ?",
+          "prompt": "Les acides aminés obtenus par Miller et Urey sont :",
           "options": [
-            "Que la vie a pu apparaître sans dioxygène, dans les profondeurs de la mer primitive",
-            "Que la vie a besoin de beaucoup de dioxygène",
-            "Que les bactéries naissent du froid",
-            "Que l'azote est un poison"
+            "La leucine et la glutamine",
+            "La méthionine et l'isoleucine",
+            "La glycine et l'alanine",
+            "Aucun, l'expérience a échoué"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Les conditions imitent celles des profondeurs océaniques primitives."
+          "correctAnswerIndex": 2,
+          "explanation": "Le texte nomme la glycine et l'alanine."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q4",
+          "id": "terminale_a1_svt_l03_origine_vie_p04_q5",
           "type": "mcq",
-          "prompt": "Oparin a obtenu des coacervats. Que sont-ils ?",
+          "prompt": "L'expérience de Miller et Urey montre que :",
           "options": [
-            "De petites gouttelettes de molécules organiques séparées de l'eau, ressemblant à des cellules",
-            "Des fossiles de dinosaures",
-            "Des cristaux de sel",
-            "Des bactéries actuelles"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ils montrent comment une « limite » a pu isoler des molécules."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q5",
-          "type": "mcq",
-          "prompt": "D'après le document sur l'origine de la vie, quel est le bon ordre : membrane ; acides aminés et sucres ; protéines, lipides et acides nucléiques ; petites molécules organiques (HCN, HCHO) ?",
-          "options": [
-            "Membrane → protéines → acides aminés → petites molécules",
-            "Petites molécules → acides aminés et sucres → protéines, lipides, acides nucléiques → membrane",
-            "Acides aminés → membrane → petites molécules → protéines",
-            "Protéines → petites molécules → membrane → acides aminés"
+            "Des cellules vivantes naissent en vase clos",
+            "La synthèse de molécules organiques peut se faire à partir d'éléments minéraux",
+            "L'atmosphère primitive était riche en oxygène",
+            "Les météorites sont inutiles"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "On va du plus simple au plus complexe, jusqu'à la cellule."
+          "explanation": "C'est la conclusion exacte tirée dans le texte."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q6",
+          "id": "terminale_a1_svt_l03_origine_vie_p04_q6",
           "type": "mcq",
-          "prompt": "Dans le document « origine de la vie », les molécules venues de l'atmosphère, des comètes et des météorites s'accumulent près des sources chaudes et des argiles. Où la vie est-elle née selon ce document ?",
+          "prompt": "Des acides aminés ont été découverts :",
           "options": [
-            "Dans l'océan primitif",
-            "Dans l'atmosphère",
-            "Sur les montagnes",
-            "Dans les déserts"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est la « soupe primitive » de l'océan."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p04_q7",
-          "type": "mcq",
-          "prompt": "Les macromolécules obtenues en laboratoire n'ont jamais manifesté la capacité d'autorégulation et de reproduction. Qu'en conclut-on ?",
-          "options": [
-            "Qu'on a déjà créé la vie en laboratoire",
-            "Que le passage de la molécule inerte à la première cellule vivante reste inconnu",
-            "Que la vie n'existe pas",
-            "Que la reproduction n'est pas une propriété du vivant"
+            "Uniquement à Yellowstone",
+            "Dans les météorites",
+            "Dans les couches rouges",
+            "Dans la pechblende"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Seuls des témoignages indirects permettent d'imaginer ce passage."
+          "explanation": "Le texte rapporte cette découverte faite depuis 1960 par l'analyse des météorites."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l03_origine_vie_p05",
+      "id": "terminale_a1_svt_l03_origine_vie_p05",
       "order": 5,
-      "title": "La chronologie de la vie sur Terre",
-      "summary": "De la naissance de la Terre à la conquête des continents.",
-      "conceptExplanation": "Chronologie de l'évolution de l'atmosphère et de l'apparition de la vie sur Terre ; les âges sont en millions d'années (Ma) avant aujourd'hui :\n- vers −4 600 Ma : naissance de la Terre ; atmosphère primitive sans dioxygène (CO₂, CH₄, H₂O…) ;\n- vers −3 500 Ma : apparition des premières cellules procaryotes ;\n- de −3 000 à −2 000 Ma : la photosynthèse des algues produit l'O₂ ; dépôt des fers rubanés ;\n- vers −2 000 Ma : l'O₂ s'accumule dans l'atmosphère (couches rouges) ;\n- vers −1 500 Ma : apparition des eucaryotes (cellules avec noyau) ;\n- vers −670 Ma : premiers êtres pluricellulaires (animaux à corps mou) ;\n- vers −540 Ma (début de l'ère primaire) : « explosion » de la vie dans les océans ;\n- vers −450 Ma : début de la conquête des continents par les végétaux et les animaux, protégés des ultraviolets par la couche d'ozone.\n\nToute cette longue période avant l'ère primaire s'appelle le PRÉCAMBRIEN.\n\nConclusion générale : l'origine de la vie s'explique par des faits paléontologiques et par des faits expérimentaux. L'apparition de la vie correspond à l'apparition des premières cellules : les procaryotes.\n\nScience et religion : la science explique l'origine de la vie par des faits observés et des expériences ; elle laisse ouverte la question du sens, qui relève d'autres approches (philosophie, religion).",
-      "keyRule": "Terre −4 600 Ma → procaryotes −3 500 Ma → O₂ (algues) → eucaryotes vers −1 500 Ma → pluricellulaires vers −670 Ma → conquête des continents vers −450 Ma.",
+      "title": "Coacervats, nouvelles expériences et limites des faits expérimentaux",
+      "summary": "Présenter les coacervats de Oparin, l'atmosphère révisée, l'expérience de Tokyo et la limite du passage à la cellule vivante.",
+      "conceptExplanation": "Dans le même temps, Oparin obtient des coacervats dans une atmosphère identique, mais sous l'action de températures élevées. Il s'agit d'enchaînements d'acides aminés dont certains ont des propriétés enzymatiques.\nDepuis 1960, l'analyse des météorites a montré que l'atmosphère initiale était beaucoup moins riche en méthane et en ammoniac qu'on ne le pensait, mais plus riche en dioxyde de carbone. De nouvelles expériences prouvent que la synthèse de nouvelles molécules organiques reste possible dans ces conditions.\nAu laboratoire de la vie, à Tokyo, on a observé au microscope électronique un élément de 2 micromètres de diamètre, comparable aux bactéries de Yellowstone. Il a été obtenu en mélangeant d'énormes quantités d'acides aminés dans de l'eau et de l'azote, sans dioxygène, à une température de 250 degrés et sous une pression de 130 atmosphères pendant 6 heures. Cette expérience montre que la vie a pu apparaître en l'absence de dioxygène, dans les profondeurs de la mer primitive, il y a trois ou quatre milliards d'années.\nLimite essentielle : on peut obtenir expérimentalement des macromolécules par polymérisation, mais les produits obtenus n'ont jamais manifesté une seule des propriétés fondamentales des êtres vivants, capacité d'autorégulation et de reproduction. Les modalités de passage de la molécule organique inerte aux premières cellules vivantes nous sont totalement inconnues.",
+      "keyRule": "Les expériences produisent molécules et coacervats, mais jamais un être vivant : le passage de l'inanimé au vivant reste inconnu, et c'est la limite à retenir.",
       "formulas": [],
       "workedExample": {
-        "title": "Situer une étape",
-        "statement": "Les premières cellules (procaryotes) sont apparues vers −3 500 Ma, la Terre est née vers −4 600 Ma. Combien de temps la Terre est-elle restée sans vie ?",
+        "title": "L'expérience du laboratoire de la vie, à Tokyo (texte expérimental)",
+        "statement": "Quelles conditions l'expérience de Tokyo réunit-elle et que montre-t-elle ?",
         "methodSteps": [
-          "On calcule l'écart : 4 600 − 3 500.",
-          "4 600 − 3 500 = 1 100 millions d'années."
+          "On mélange d'énormes quantités d'acides aminés dans de l'eau et de l'azote, sans dioxygène.",
+          "Le mélange est porté à 250 degrés, sous une pression de 130 atmosphères, pendant 6 heures.",
+          "On observe au microscope électronique un élément de 2 micromètres de diamètre, comparable aux bactéries de Yellowstone.",
+          "L'expérience montre que la vie a pu apparaître sans dioxygène, dans les profondeurs de la mer primitive, il y a trois ou quatre milliards d'années."
         ],
-        "conclusion": "Environ 1,1 milliard d'années sans vie connue."
+        "conclusion": "Des structures comparables aux premières bactéries peuvent se former sans dioxygène, en conditions extrêmes."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "propriete",
-          "stepTitle": "L'âge de la Terre",
-          "stepTheme": "L'âge de la Terre",
-          "stepBadge": "L'âge de la Terre",
-          "paragraphText": "La Terre est née il y a environ 4 600 millions d'années (4,6 milliards d'années).",
+          "stepKind": "definition",
+          "stepTitle": "Les coacervats de Oparin",
+          "stepTheme": "Les coacervats de Oparin",
+          "stepBadge": "Les coacervats de Oparin",
+          "paragraphText": "• Coacervats : enchaînements d'acides aminés obtenus par Oparin sous l'action de températures élevées, dans une atmosphère identique à celle de l'expérience de 1953.\nCertains de ces enchaînements ont des propriétés enzymatiques.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q1",
+            "id": "terminale_a1_svt_l03_origine_vie_p05_q1",
             "type": "mcq",
-            "prompt": "D'après le document sur l'évolution de l'atmosphère et l'apparition de la vie, quand la Terre est-elle née ?",
+            "prompt": "Les coacervats obtenus par Oparin sont :",
             "options": [
-              "Il y a environ 4 600 millions d'années",
-              "Il y a environ 6 000 ans",
-              "Il y a environ 450 millions d'années",
-              "Il y a environ 1 million d'années"
+              "Des cellules vivantes complètes",
+              "Des enchaînements d'acides aminés, dont certains ont des propriétés enzymatiques",
+              "Des fossiles de bactéries",
+              "Des couches sédimentaires"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "4 600 Ma = 4,6 milliards d'années."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la définition donnée dans le texte."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Les premières cellules",
-          "stepTheme": "Les premières cellules",
-          "stepBadge": "Les premières cellules",
-          "paragraphText": "Les premières cellules procaryotes apparaissent vers −3 500 millions d'années.",
+          "stepTitle": "Une atmosphère initiale révisée depuis 1960",
+          "stepTheme": "Une atmosphère initiale révisée depuis 1960",
+          "stepBadge": "Une atmosphère initiale révisée depuis 1960",
+          "paragraphText": "Depuis 1960, l'analyse des météorites a montré que l'atmosphère initiale était moins riche en méthane et en ammoniac qu'on ne le pensait.\nElle était en revanche plus riche en dioxyde de carbone, et la synthèse de molécules organiques reste possible dans ces conditions.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q2",
+            "id": "terminale_a1_svt_l03_origine_vie_p05_q2",
             "type": "mcq",
-            "prompt": "Vers quand apparaissent les premières cellules procaryotes ?",
+            "prompt": "Depuis 1960, on sait que l'atmosphère initiale était :",
             "options": [
-              "Vers −3 500 millions d'années",
-              "Vers −450 millions d'années",
-              "Vers −10 000 ans",
-              "Vers −4 600 millions d'années, en même temps que la Terre"
+              "Plus riche en méthane et en ammoniac",
+              "Moins riche en méthane et en ammoniac, mais plus riche en dioxyde de carbone",
+              "Identique à l'atmosphère actuelle",
+              "Sans dioxyde de carbone"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Environ 1,1 milliard d'années après la naissance de la Terre."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la révision rapportée dans le texte, à partir de l'analyse des météorites."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "methode",
-          "stepTitle": "Calculer un écart",
-          "stepTheme": "Calculer un écart",
-          "stepBadge": "Calculer un écart",
-          "paragraphText": "Terre née vers −4 600 Ma, premières cellules vers −3 500 Ma : 4 600 − 3 500 = 1 100 millions d'années sans vie connue.",
+          "stepKind": "propriete",
+          "stepTitle": "Les conditions de l'expérience de Tokyo",
+          "stepTheme": "Les conditions de l'expérience de Tokyo",
+          "stepBadge": "Les conditions de l'expérience de Tokyo",
+          "paragraphText": "L'élément obtenu à Tokyo l'a été sans dioxygène, à 250 degrés et sous 130 atmosphères pendant 6 heures.\nLe mélange de départ contenait d'énormes quantités d'acides aminés, de l'eau et de l'azote.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q3",
+            "id": "terminale_a1_svt_l03_origine_vie_p05_q3",
             "type": "mcq",
-            "prompt": "La Terre est née vers −4 600 millions d'années et les premières cellules sont apparues vers −3 500 millions d'années. Pendant combien de temps environ la Terre est-elle restée sans vie connue ?",
+            "prompt": "L'expérience de Tokyo se déroule :",
             "options": [
-              "100 millions d'années",
-              "1 100 millions d'années",
-              "8 100 millions d'années",
-              "3 500 millions d'années"
+              "Avec beaucoup de dioxygène, à 20 degrés",
+              "Sans dioxygène, à 250 degrés et 130 atmosphères pendant 6 heures",
+              "À 90 degrés et pH 1",
+              "En vase clos avec des étincelles"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "4 600 − 3 500 = 1 100 millions d'années."
+            "explanation": "Ce sont les conditions chiffrées du texte ; les étincelles décrivent l'expérience de Miller et Urey."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "propriete",
-          "stepTitle": "Les eucaryotes",
-          "stepTheme": "Les eucaryotes",
-          "stepBadge": "Les eucaryotes",
-          "paragraphText": "D'après le document, les eucaryotes (cellules avec noyau) apparaissent vers −1 500 Ma, après l'enrichissement de l'atmosphère en O₂.",
+          "stepKind": "methode",
+          "stepTitle": "Obtenir des macromolécules par polymérisation",
+          "stepTheme": "Obtenir des macromolécules par polymérisation",
+          "stepBadge": "Obtenir des macromolécules par polymérisation",
+          "paragraphText": "Méthode expérimentale rappelée dans l'interprétation : on peut obtenir des macromolécules par polymérisation en laboratoire.\nC'est ainsi que les expériences enchaînent les petites molécules organiques en structures plus grandes.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q4",
+            "id": "terminale_a1_svt_l03_origine_vie_p05_q4",
             "type": "mcq",
-            "prompt": "Les eucaryotes apparaissent vers −1 500 Ma et les procaryotes vers −3 500 Ma. Lesquels sont apparus en premier ?",
+            "prompt": "En laboratoire, les macromolécules sont obtenues expérimentalement par :",
             "options": [
-              "Les eucaryotes",
-              "Les procaryotes",
-              "Ils sont apparus en même temps",
-              "Aucun des deux"
+              "Photosynthèse",
+              "Fermentation",
+              "Polymérisation",
+              "Sédimentation"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "−3 500 Ma est plus ancien que −1 500 Ma."
+            "correctAnswerIndex": 2,
+            "explanation": "Le texte parle d'obtention expérimentale de macromolécules par polymérisation."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "La conquête des continents",
-          "stepTheme": "La conquête des continents",
-          "stepBadge": "La conquête des continents",
-          "paragraphText": "Vers −450 Ma, végétaux et animaux commencent à conquérir les continents, protégés des ultraviolets par la couche d'ozone.",
+          "stepKind": "piege",
+          "stepTitle": "Jamais une propriété du vivant",
+          "stepTheme": "Jamais une propriété du vivant",
+          "stepBadge": "Jamais une propriété du vivant",
+          "paragraphText": "Piège majeur de la leçon : aucun produit expérimental n'a manifesté une propriété fondamentale des êtres vivants.\nNi autorégulation ni reproduction n'ont été obtenues, et le passage de la molécule inerte à la cellule vivante reste totalement inconnu.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q5",
+            "id": "terminale_a1_svt_l03_origine_vie_p05_q5",
             "type": "mcq",
-            "prompt": "Vers −450 millions d'années, les êtres vivants commencent à conquérir les continents. Qu'est-ce qui a rendu cette sortie de l'eau possible ?",
+            "prompt": "Les produits obtenus expérimentalement n'ont jamais manifesté :",
             "options": [
-              "La couche d'ozone, qui protège des ultraviolets",
-              "La disparition du dioxygène",
-              "La baisse de la température à −100 °C",
-              "L'arrivée des météorites"
+              "Aucune réaction chimique",
+              "Les propriétés fondamentales des êtres vivants, autorégulation et reproduction",
+              "Aucune forme observable au microscope",
+              "Aucun acide aminé"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Avant, les ultraviolets rendaient la vie hors de l'eau très difficile."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la limite formulée dans l'interprétation de la leçon."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "Le Précambrien",
-          "stepTheme": "Le Précambrien",
-          "stepBadge": "Le Précambrien",
-          "paragraphText": "La longue période qui va de la naissance de la Terre au début de l'ère primaire (vers −540 Ma) s'appelle le Précambrien.",
+          "stepKind": "exemple",
+          "stepTitle": "Il y a trois ou quatre milliards d'années",
+          "stepTheme": "Il y a trois ou quatre milliards d'années",
+          "stepBadge": "Il y a trois ou quatre milliards d'années",
+          "paragraphText": "L'expérience de Tokyo conduit la leçon à dater l'apparition possible de la vie dans les profondeurs de la mer primitive.\nCette apparition remonterait à trois ou quatre milliards d'années.",
           "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q6",
+            "id": "terminale_a1_svt_l03_origine_vie_p05_q6",
             "type": "mcq",
-            "prompt": "Sur la frise du document 3, comment s'appelle la longue période qui va de la naissance de la Terre jusqu'au début de l'ère primaire (vers −540 millions d'années) ?",
+            "prompt": "Selon l'expérience de Tokyo, la vie a pu apparaître dans les profondeurs de la mer primitive il y a :",
             "options": [
-              "Le Précambrien",
-              "Le Quaternaire",
-              "Le Moyen Âge",
-              "Le Jurassique"
+              "2,3 milliards d'années",
+              "100 millions d'années",
+              "Trois ou quatre milliards d'années",
+              "1953 ans"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est pendant le Précambrien que la vie est apparue."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "propriete",
-          "stepTitle": "La conclusion générale",
-          "stepTheme": "La conclusion générale",
-          "stepBadge": "La conclusion générale",
-          "paragraphText": "L'origine de la vie s'explique par des faits paléontologiques et expérimentaux ; l'apparition de la vie correspond à l'apparition des premières cellules, les procaryotes.",
-          "exercise": {
-            "id": "terminale_a_svt_l03_origine_vie_p05_q7",
-            "type": "mcq",
-            "prompt": "Concernant l'origine de la vie, à quoi correspond l'apparition de la vie ?",
-            "options": [
-              "À l'apparition des premières cellules, les procaryotes",
-              "À l'apparition de l'Homme",
-              "À l'apparition des dinosaures",
-              "À la formation de la Lune"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "La cellule est la plus petite unité vivante."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est la datation donnée à la fin du récit de l'expérience de Tokyo."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q1",
+          "id": "terminale_a1_svt_l03_origine_vie_p05_q1",
           "type": "mcq",
-          "prompt": "D'après le document sur l'évolution de l'atmosphère et l'apparition de la vie, quand la Terre est-elle née ?",
+          "prompt": "Les coacervats obtenus par Oparin sont :",
           "options": [
-            "Il y a environ 4 600 millions d'années",
-            "Il y a environ 6 000 ans",
-            "Il y a environ 450 millions d'années",
-            "Il y a environ 1 million d'années"
+            "Des cellules vivantes complètes",
+            "Des enchaînements d'acides aminés, dont certains ont des propriétés enzymatiques",
+            "Des fossiles de bactéries",
+            "Des couches sédimentaires"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "4 600 Ma = 4,6 milliards d'années."
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la définition donnée dans le texte."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q2",
+          "id": "terminale_a1_svt_l03_origine_vie_p05_q2",
           "type": "mcq",
-          "prompt": "Vers quand apparaissent les premières cellules procaryotes ?",
+          "prompt": "Depuis 1960, on sait que l'atmosphère initiale était :",
           "options": [
-            "Vers −3 500 millions d'années",
-            "Vers −450 millions d'années",
-            "Vers −10 000 ans",
-            "Vers −4 600 millions d'années, en même temps que la Terre"
+            "Plus riche en méthane et en ammoniac",
+            "Moins riche en méthane et en ammoniac, mais plus riche en dioxyde de carbone",
+            "Identique à l'atmosphère actuelle",
+            "Sans dioxyde de carbone"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Environ 1,1 milliard d'années après la naissance de la Terre."
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la révision rapportée dans le texte, à partir de l'analyse des météorites."
         },
         {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q3",
+          "id": "terminale_a1_svt_l03_origine_vie_p05_q3",
           "type": "mcq",
-          "prompt": "La Terre est née vers −4 600 millions d'années et les premières cellules sont apparues vers −3 500 millions d'années. Pendant combien de temps environ la Terre est-elle restée sans vie connue ?",
+          "prompt": "L'expérience de Tokyo se déroule :",
           "options": [
+            "Avec beaucoup de dioxygène, à 20 degrés",
+            "Sans dioxygène, à 250 degrés et 130 atmosphères pendant 6 heures",
+            "À 90 degrés et pH 1",
+            "En vase clos avec des étincelles"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Ce sont les conditions chiffrées du texte ; les étincelles décrivent l'expérience de Miller et Urey."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p05_q4",
+          "type": "mcq",
+          "prompt": "En laboratoire, les macromolécules sont obtenues expérimentalement par :",
+          "options": [
+            "Photosynthèse",
+            "Fermentation",
+            "Polymérisation",
+            "Sédimentation"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le texte parle d'obtention expérimentale de macromolécules par polymérisation."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p05_q5",
+          "type": "mcq",
+          "prompt": "Les produits obtenus expérimentalement n'ont jamais manifesté :",
+          "options": [
+            "Aucune réaction chimique",
+            "Les propriétés fondamentales des êtres vivants, autorégulation et reproduction",
+            "Aucune forme observable au microscope",
+            "Aucun acide aminé"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la limite formulée dans l'interprétation de la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l03_origine_vie_p05_q6",
+          "type": "mcq",
+          "prompt": "Selon l'expérience de Tokyo, la vie a pu apparaître dans les profondeurs de la mer primitive il y a :",
+          "options": [
+            "2,3 milliards d'années",
             "100 millions d'années",
-            "1 100 millions d'années",
-            "8 100 millions d'années",
-            "3 500 millions d'années"
+            "Trois ou quatre milliards d'années",
+            "1953 ans"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "4 600 − 3 500 = 1 100 millions d'années."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q4",
-          "type": "mcq",
-          "prompt": "Les eucaryotes apparaissent vers −1 500 Ma et les procaryotes vers −3 500 Ma. Lesquels sont apparus en premier ?",
-          "options": [
-            "Les eucaryotes",
-            "Les procaryotes",
-            "Ils sont apparus en même temps",
-            "Aucun des deux"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "−3 500 Ma est plus ancien que −1 500 Ma."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q5",
-          "type": "mcq",
-          "prompt": "Vers −450 millions d'années, les êtres vivants commencent à conquérir les continents. Qu'est-ce qui a rendu cette sortie de l'eau possible ?",
-          "options": [
-            "La couche d'ozone, qui protège des ultraviolets",
-            "La disparition du dioxygène",
-            "La baisse de la température à −100 °C",
-            "L'arrivée des météorites"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Avant, les ultraviolets rendaient la vie hors de l'eau très difficile."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q6",
-          "type": "mcq",
-          "prompt": "Sur la frise du document 3, comment s'appelle la longue période qui va de la naissance de la Terre jusqu'au début de l'ère primaire (vers −540 millions d'années) ?",
-          "options": [
-            "Le Précambrien",
-            "Le Quaternaire",
-            "Le Moyen Âge",
-            "Le Jurassique"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est pendant le Précambrien que la vie est apparue."
-        },
-        {
-          "id": "terminale_a_svt_l03_origine_vie_p05_q7",
-          "type": "mcq",
-          "prompt": "Concernant l'origine de la vie, à quoi correspond l'apparition de la vie ?",
-          "options": [
-            "À l'apparition des premières cellules, les procaryotes",
-            "À l'apparition de l'Homme",
-            "À l'apparition des dinosaures",
-            "À la formation de la Lune"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "La cellule est la plus petite unité vivante."
+          "correctAnswerIndex": 2,
+          "explanation": "C'est la datation donnée à la fin du récit de l'expérience de Tokyo."
         }
       ]
     }

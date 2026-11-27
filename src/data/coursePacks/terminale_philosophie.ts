@@ -1,6 +1,7 @@
 /**
  * Paquet de cours : terminale_philosophie. Chargé à la demande par le registre (src/lib/curriculum/curriculumRegistry.ts) :
  * l'élève ne télécharge que les cours de sa classe et de la matière ouverte.
+ * Généré le 2026-11-27 à partir des cours fournis par le fondateur (src/data/courses/terminale/).
  * Pour ajouter une leçon : l'importer ici et l'ajouter au tableau (puis npm run check:cours).
  */
 import type { CurriculumChapter } from '../../lib/curriculum/types';
