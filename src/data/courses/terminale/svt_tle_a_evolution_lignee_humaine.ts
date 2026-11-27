@@ -1,9 +1,9 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT TA_L4_Lévolution de la lignée humaine.pdf » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Leçon 4 : L'évolution de la lignée humaine » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1759
 export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
-  "id": "terminale_a_svt_l04_evolution_lignee_humaine",
+  "id": "terminale_a1_svt_l04_evolution_lignee_humaine",
   "subjectId": "svt",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
@@ -11,820 +11,950 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
   ],
   "order": 4,
   "title": "Leçon 4 : L'évolution de la lignée humaine",
-  "summary": "Crâne et cerveau de l'australopithèque à Homo sapiens, stature et bipédie, comparaison de l'hémoglobine (homme, gorille, porc, cheval), théories de Lamarck, Darwin, De Vries et Morgan, théorie synthétique.",
-  "officialVolumeHours": 6,
+  "summary": "De l'australopithèque à l'Homo sapiens, l'évolution de la lignée humaine s'est faite par des transformations morphologiques du crâne et du cerveau, des modifications de la stature et des modifications moléculaires, que des théories successives expliquent jusqu'à la théorie synthétique.",
   "contentVersion": 2,
-  "source": "SVT TA_L4_Lévolution de la lignée humaine.pdf",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1759",
   "points": [
     {
-      "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01",
+      "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01",
       "order": 1,
-      "title": "Le crâne et le cerveau au cours de l'évolution",
-      "summary": "De l'australopithèque à Homo sapiens : un crâne et un cerveau qui grandissent.",
-      "conceptExplanation": "Situation : un film documentaire montre le passage de l'australopithèque (hominidé fossile) à Homo sapiens, l'homme d'aujourd'hui. Hypothèses : l'évolution de la lignée humaine s'est faite par des transformations morphologiques, des modifications de stature, des modifications moléculaires ; elle est expliquée par des théories.\n\nDocument 1 : crânes et moulages du cerveau de A. Australopithecus, B. Homo habilis, C. Homo erectus, D. Homme de Néandertal (Homo sapiens neanderthalensis, aujourd'hui souvent appelé Homo neanderthalensis), E. Homo sapiens sapiens.\n\nOrdres de grandeur du volume du cerveau (valeurs moyennes habituelles) :\n- australopithèque : environ 450 cm³ ;\n- Homo habilis : environ 650 cm³ ;\n- Homo erectus : environ 1 000 cm³ ;\n- Homme de Néandertal : environ 1 500 cm³ ;\n- Homo sapiens actuel : environ 1 350 cm³.\n\nRésultats : quand on passe des australopithèques à Homo sapiens sapiens :\n- la morphologie du crâne se modifie (front plus droit, face moins avancée) ;\n- la boîte crânienne et le cerveau augmentent progressivement de volume ;\n- les circonvolutions (plis) du cerveau deviennent plus nombreuses ;\n- la vascularisation du cerveau augmente, avec de plus en plus de ramifications.\n\nConclusion : l'évolution de la lignée humaine s'est faite par des transformations morphologiques.\n\nNuance : à l'échelle de la lignée, l'augmentation du volume et de la complexité du cerveau accompagne le développement des capacités (outils, langage). Mais entre individus d'aujourd'hui, la taille du cerveau ne mesure pas l'intelligence ; et Néandertal avait en moyenne un cerveau un peu plus gros que le nôtre.",
-      "keyRule": "De l'australopithèque à Homo sapiens : crâne modifié, boîte crânienne et cerveau plus volumineux, plus de circonvolutions et de vaisseaux.",
+      "title": "Les transformations morphologiques du crâne et du cerveau",
+      "summary": "Décrire l'augmentation de la boîte crânienne et du cerveau des australopithèques aux Homo sapiens.",
+      "conceptExplanation": "Le document 1 montre les différentes évolutions de la boîte crânienne et du cerveau depuis les australopithèques jusqu'aux Homo sapiens.\nLorsque l'on passe des australopithèques aux Homo sapiens-sapiens, on constate une augmentation progressive de la boîte crânienne, une modification de la morphologie du crâne et une augmentation progressive du volume du cerveau.\nOn observe aussi une vascularisation accentuée, avec un nombre de vaisseaux sanguins de plus en plus important et ramifié, et une augmentation du nombre de circonvolutions cérébrales.\nL'évolution de la lignée humaine s'est donc effectivement faite par des transformations morphologiques. La situation d'évaluation relie en outre la taille du cerveau à l'intelligence : plus la taille du cerveau augmente, plus l'intelligence est grande, selon le corrigé de la leçon.",
+      "keyRule": "Des australopithèques aux Homo sapiens : boîte crânienne et cerveau grandissent, vascularisation et circonvolutions augmentent, morphologie du crâne se modifie.",
       "formulas": [],
       "workedExample": {
-        "title": "Comparer deux volumes",
-        "statement": "Le cerveau d'un australopithèque mesure environ 450 cm³, celui d'Homo sapiens environ 1 350 cm³. Combien de fois plus gros est le cerveau d'Homo sapiens ?",
+        "title": "Décrire les transformations des images (situation d'évaluation)",
+        "statement": "Des images montrent la boîte crânienne et le cerveau des australopithèques aux Homo sapiens. Décris les transformations présentées.",
         "methodSteps": [
-          "On divise : 1 350 ÷ 450.",
-          "1 350 ÷ 450 = 3."
+          "On observe une augmentation progressive de la boîte crânienne.",
+          "La morphologie du crâne se modifie.",
+          "Le volume du cerveau augmente progressivement.",
+          "La vascularisation s'accentue et le nombre de circonvolutions cérébrales augmente."
         ],
-        "conclusion": "Le cerveau d'Homo sapiens est environ 3 fois plus volumineux."
+        "conclusion": "Corrigé de la leçon : les quatre transformations morphologiques vont dans le sens d'un cerveau plus grand et plus complexe."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Les hominidés",
-          "stepTheme": "Les hominidés",
-          "stepBadge": "Les hominidés",
-          "paragraphText": "La lignée humaine va de l'australopithèque (hominidé fossile) à Homo sapiens, en passant par Homo habilis, Homo erectus et l'Homme de Néandertal.",
+          "stepTitle": "Une augmentation progressive",
+          "stepTheme": "Une augmentation progressive",
+          "stepBadge": "Une augmentation progressive",
+          "paragraphText": "Les transformations du crâne et du cerveau sont progressives, des australopithèques jusqu'aux Homo sapiens.\nIl s'agit d'une augmentation progressive de la boîte crânienne et du volume du cerveau, pas d'un changement brutal.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q1",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q1",
             "type": "mcq",
-            "prompt": "Le document 1 présente les crânes de l'australopithèque, d'Homo habilis, d'Homo erectus, de l'Homme de Néandertal et d'Homo sapiens. Lequel est le plus ancien ?",
+            "prompt": "Le passage des australopithèques aux Homo sapiens se caractérise par :",
             "options": [
-              "Homo sapiens",
-              "Homo erectus",
-              "L'australopithèque",
-              "L'Homme de Néandertal"
+              "Une diminution du volume du cerveau",
+              "Une augmentation progressive de la boîte crânienne et du volume du cerveau",
+              "Un crâne sans modification",
+              "Une disparition du cerveau"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "L'australopithèque est un hominidé fossile, à la base de la série."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le premier résultat du document 1, confirmé vrai dans l'exercice 1."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Un cerveau plus gros",
-          "stepTheme": "Un cerveau plus gros",
-          "stepBadge": "Un cerveau plus gros",
-          "paragraphText": "Des australopithèques à Homo sapiens, la boîte crânienne et le cerveau augmentent progressivement de volume.",
+          "stepTitle": "La morphologie du crâne se modifie",
+          "stepTheme": "La morphologie du crâne se modifie",
+          "stepBadge": "La morphologie du crâne se modifie",
+          "paragraphText": "La morphologie du crâne se modifie au cours de l'évolution de la lignée humaine.\nCette modification accompagne l'augmentation de la boîte crânienne qui loge le cerveau.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q2",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q2",
             "type": "mcq",
-            "prompt": "Vrai ou faux : « Le passage des australopithèques aux Homo sapiens sapiens se caractérise par une augmentation du volume de la boîte crânienne et du cerveau. »",
+            "prompt": "Au cours de l'évolution de la lignée humaine, la morphologie du crâne :",
             "options": [
-              "Vrai",
-              "Faux : le volume diminue",
-              "Faux : le volume ne change pas",
-              "Faux : seul le crâne grandit, pas le cerveau"
+              "Reste rigoureusement identique",
+              "Se modifie",
+              "Disparaît chez Homo sapiens",
+              "Ne concerne que le gorille"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le cerveau passe d'environ 450 cm³ à environ 1 350 cm³."
+            "correctAnswerIndex": 1,
+            "explanation": "L'exercice 1 confirme cette affirmation comme vraie."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "methode",
-          "stepTitle": "Calculer un rapport",
-          "stepTheme": "Calculer un rapport",
-          "stepBadge": "Calculer un rapport",
-          "paragraphText": "Cerveau d'australopithèque : environ 450 cm³ ; cerveau d'Homo sapiens : environ 1 350 cm³ ; 1 350 ÷ 450 = 3.",
+          "stepKind": "propriete",
+          "stepTitle": "Vascularisation et circonvolutions",
+          "stepTheme": "Vascularisation et circonvolutions",
+          "stepBadge": "Vascularisation et circonvolutions",
+          "paragraphText": "Le cerveau présente une vascularisation accentuée au fil de l'évolution.\nLe nombre de vaisseaux sanguins, faible au départ, augmente avec de plus en plus de ramifications, et le nombre de circonvolutions cérébrales augmente aussi.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q3",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q3",
             "type": "mcq",
-            "prompt": "Le volume moyen du cerveau est d'environ 450 cm³ chez l'australopithèque et d'environ 1 350 cm³ chez Homo sapiens. Combien de fois plus volumineux est le cerveau d'Homo sapiens ?",
+            "prompt": "L'évolution du cerveau s'accompagne d'une augmentation :",
             "options": [
-              "2 fois",
-              "3 fois",
-              "4 fois",
-              "900 fois"
+              "Du nombre de vaisseaux sanguins et de leurs ramifications",
+              "Uniquement de la taille des os du crâne",
+              "Du nombre de dents",
+              "De la courbure de la colonne"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "1 350 ÷ 450 = 3."
+            "correctAnswerIndex": 0,
+            "explanation": "L'analyse des résultats parle d'une vascularisation accentuée et de ramifications de plus en plus nombreuses."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "piege",
-          "stepTitle": "Les circonvolutions",
-          "stepTheme": "Les circonvolutions",
-          "stepBadge": "Les circonvolutions",
-          "paragraphText": "Au cours de l'évolution, les circonvolutions du cerveau deviennent plus nombreuses ; elles ne disparaissent pas.",
+          "stepTitle": "Les circonvolutions ne disparaissent pas",
+          "stepTheme": "Les circonvolutions ne disparaissent pas",
+          "stepBadge": "Les circonvolutions ne disparaissent pas",
+          "paragraphText": "Piège de l'exercice 1 : affirmer que le passage aux Homo sapiens-sapiens se caractérise par la disparition des circonvolutions est faux.\nAu contraire, leur nombre augmente au cours de l'évolution.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q4",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q4",
             "type": "mcq",
-            "prompt": "Vrai ou faux : « Le passage des australopithèques aux Homo sapiens sapiens se caractérise par la disparition des circonvolutions sur le cerveau. »",
+            "prompt": "L'affirmation « les circonvolutions disparaissent sur le cerveau » est jugée dans le corrigé :",
             "options": [
-              "Vrai",
-              "Faux : les circonvolutions deviennent plus nombreuses",
-              "Faux : il n'y a jamais eu de circonvolutions",
-              "Vrai, seulement chez Néandertal"
+              "Vraie",
+              "Vraie seulement chez l'australopithèque",
+              "Fausse",
+              "Non corrigée"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Plus de plis, c'est plus de surface pour le cortex."
+            "correctAnswerIndex": 2,
+            "explanation": "Correction de l'exercice 1 : 1 vrai, 2 vrai, 3 faux, 4 vrai."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "La vascularisation",
-          "stepTheme": "La vascularisation",
-          "stepBadge": "La vascularisation",
-          "paragraphText": "Le nombre de vaisseaux sanguins du cerveau, faible au départ, augmente avec de plus en plus de ramifications.",
+          "stepKind": "exemple",
+          "stepTitle": "Taille du cerveau et intelligence",
+          "stepTheme": "Taille du cerveau et intelligence",
+          "stepBadge": "Taille du cerveau et intelligence",
+          "paragraphText": "La situation d'évaluation demande de mettre en relation la taille du cerveau et l'intelligence.\nLe corrigé de la leçon répond : plus la taille du cerveau augmente, plus l'intelligence est grande.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q5",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q5",
             "type": "mcq",
-            "prompt": "Les moulages du cerveau, de l'australopithèque à Homo sapiens, montrent les traces des vaisseaux sanguins. Comment évolue la vascularisation ?",
+            "prompt": "Selon le corrigé de la situation d'évaluation, plus la taille du cerveau augmente :",
             "options": [
-              "Elle diminue",
-              "Elle augmente, avec de plus en plus de ramifications",
-              "Elle disparaît",
-              "Elle reste identique"
+              "Plus l'intelligence diminue",
+              "Plus l'intelligence est grande",
+              "Moins il y a de circonvolutions",
+              "Plus la stature diminue"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Un cerveau plus actif a besoin de plus de sang."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "exemple",
-          "stepTitle": "Néandertal",
-          "stepTheme": "Néandertal",
-          "stepBadge": "Néandertal",
-          "paragraphText": "L'Homme de Néandertal avait en moyenne un cerveau d'environ 1 500 cm³, un peu plus gros que celui d'Homo sapiens (environ 1 350 cm³).",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q6",
-            "type": "mcq",
-            "prompt": "Le cerveau de l'Homme de Néandertal mesurait en moyenne environ 1 500 cm³, celui d'Homo sapiens environ 1 350 cm³. Que montre cette comparaison ?",
-            "options": [
-              "Que Néandertal était forcément plus intelligent que nous",
-              "Que la taille du cerveau ne suffit pas à mesurer l'intelligence",
-              "Que le cerveau humain a rétréci de moitié",
-              "Que Néandertal n'était pas un hominidé"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "L'organisation du cerveau compte autant que sa taille."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "La conclusion",
-          "stepTheme": "La conclusion",
-          "stepBadge": "La conclusion",
-          "paragraphText": "L'évolution de la lignée humaine s'est faite par des transformations morphologiques du crâne et du cerveau.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q7",
-            "type": "mcq",
-            "prompt": "On observe, de l'australopithèque à Homo sapiens : modification de la forme du crâne, augmentation du volume du cerveau, plus de circonvolutions et de vaisseaux. Quelle conclusion en tire-t-on ?",
-            "options": [
-              "L'évolution humaine s'est faite par des transformations morphologiques",
-              "L'homme n'a pas évolué",
-              "Seule la taille du corps a changé",
-              "Les australopithèques étaient des Homo sapiens"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Morphologie = forme et structure."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q1",
-          "type": "mcq",
-          "prompt": "Le document 1 présente les crânes de l'australopithèque, d'Homo habilis, d'Homo erectus, de l'Homme de Néandertal et d'Homo sapiens. Lequel est le plus ancien ?",
-          "options": [
-            "Homo sapiens",
-            "Homo erectus",
-            "L'australopithèque",
-            "L'Homme de Néandertal"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "L'australopithèque est un hominidé fossile, à la base de la série."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q2",
-          "type": "mcq",
-          "prompt": "Vrai ou faux : « Le passage des australopithèques aux Homo sapiens sapiens se caractérise par une augmentation du volume de la boîte crânienne et du cerveau. »",
-          "options": [
-            "Vrai",
-            "Faux : le volume diminue",
-            "Faux : le volume ne change pas",
-            "Faux : seul le crâne grandit, pas le cerveau"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le cerveau passe d'environ 450 cm³ à environ 1 350 cm³."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q3",
-          "type": "mcq",
-          "prompt": "Le volume moyen du cerveau est d'environ 450 cm³ chez l'australopithèque et d'environ 1 350 cm³ chez Homo sapiens. Combien de fois plus volumineux est le cerveau d'Homo sapiens ?",
-          "options": [
-            "2 fois",
-            "3 fois",
-            "4 fois",
-            "900 fois"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "1 350 ÷ 450 = 3."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q4",
-          "type": "mcq",
-          "prompt": "Vrai ou faux : « Le passage des australopithèques aux Homo sapiens sapiens se caractérise par la disparition des circonvolutions sur le cerveau. »",
-          "options": [
-            "Vrai",
-            "Faux : les circonvolutions deviennent plus nombreuses",
-            "Faux : il n'y a jamais eu de circonvolutions",
-            "Vrai, seulement chez Néandertal"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Plus de plis, c'est plus de surface pour le cortex."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q5",
-          "type": "mcq",
-          "prompt": "Les moulages du cerveau, de l'australopithèque à Homo sapiens, montrent les traces des vaisseaux sanguins. Comment évolue la vascularisation ?",
-          "options": [
-            "Elle diminue",
-            "Elle augmente, avec de plus en plus de ramifications",
-            "Elle disparaît",
-            "Elle reste identique"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Un cerveau plus actif a besoin de plus de sang."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q6",
-          "type": "mcq",
-          "prompt": "Le cerveau de l'Homme de Néandertal mesurait en moyenne environ 1 500 cm³, celui d'Homo sapiens environ 1 350 cm³. Que montre cette comparaison ?",
-          "options": [
-            "Que Néandertal était forcément plus intelligent que nous",
-            "Que la taille du cerveau ne suffit pas à mesurer l'intelligence",
-            "Que le cerveau humain a rétréci de moitié",
-            "Que Néandertal n'était pas un hominidé"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "L'organisation du cerveau compte autant que sa taille."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p01_q7",
-          "type": "mcq",
-          "prompt": "On observe, de l'australopithèque à Homo sapiens : modification de la forme du crâne, augmentation du volume du cerveau, plus de circonvolutions et de vaisseaux. Quelle conclusion en tire-t-on ?",
-          "options": [
-            "L'évolution humaine s'est faite par des transformations morphologiques",
-            "L'homme n'a pas évolué",
-            "Seule la taille du corps a changé",
-            "Les australopithèques étaient des Homo sapiens"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Morphologie = forme et structure."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02",
-      "order": 2,
-      "title": "La stature : debout sur deux jambes",
-      "summary": "Comparer le squelette du chimpanzé (gorille) et celui de l'homme.",
-      "conceptExplanation": "Document 2 : comparaison du squelette du chimpanzé (ou du gorille) et de l'homme. Pour chaque caractère : chimpanzé (gorille) / homme.\n- Colonne vertébrale : une seule courbure (en arc) / 4 courbures (en S) ;\n- Bassin : étroit et allongé / large et court ;\n- Membre supérieur : bras court, paume large, doigts courts / bras plus libre, paume mince, pouce bien dégagé et opposable, doigts longs (main habile) ;\n- Membre inférieur : pied large et court, gros orteil opposé aux autres doigts (pied préhensile), voûte plantaire peu développée / pied mince et long, tous les orteils parallèles, voûte plantaire développée.\n\nInterprétation : ces caractères de l'homme sont des adaptations à la BIPÉDIE (marche debout sur deux jambes) :\n- les 4 courbures de la colonne amortissent les chocs et placent la tête au-dessus du bassin ;\n- le bassin large et court soutient les organes et porte le poids du corps ;\n- la voûte plantaire et les orteils parallèles permettent une marche efficace ;\n- les mains, libérées de la marche, servent à fabriquer et utiliser des outils.\n\nConclusion : l'évolution de la lignée humaine s'est faite par des modifications de la stature : passage d'une posture penchée (quadrupédie) à une posture redressée (bipédie).",
-      "keyRule": "Homme : colonne à 4 courbures, bassin large et court, voûte plantaire, orteils parallèles = bipédie. Chimpanzé : 1 courbure, bassin étroit et allongé, gros orteil opposable.",
-      "formulas": [],
-      "workedExample": {
-        "title": "Reconnaître un squelette",
-        "statement": "Un squelette fossile possède une colonne vertébrale à 4 courbures, un bassin large et court et une voûte plantaire développée. Ressemble-t-il plus à l'homme ou au chimpanzé ?",
-        "methodSteps": [
-          "4 courbures : caractère humain.",
-          "Bassin large et court, voûte plantaire : caractères humains liés à la bipédie."
-        ],
-        "conclusion": "Il ressemble à l'homme : il marchait debout."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "exemple",
-          "stepTitle": "La colonne vertébrale",
-          "stepTheme": "La colonne vertébrale",
-          "stepBadge": "La colonne vertébrale",
-          "paragraphText": "La colonne vertébrale du chimpanzé (gorille) a une seule courbure ; celle de l'homme en a quatre.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q1",
-            "type": "mcq",
-            "prompt": "D'après le tableau de comparaison du chimpanzé (gorille) et de l'homme, combien de courbures possède la colonne vertébrale de l'homme ?",
-            "options": [
-              "Une seule",
-              "Deux",
-              "Quatre",
-              "Aucune"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Le chimpanzé n'en a qu'une : sa colonne est en arc."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "Le bassin",
-          "stepTheme": "Le bassin",
-          "stepBadge": "Le bassin",
-          "paragraphText": "Le bassin du chimpanzé est étroit et allongé ; celui de l'homme est large et court.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q2",
-            "type": "mcq",
-            "prompt": "D'après le tableau de comparaison, comment est le bassin de l'homme par rapport à celui du chimpanzé (étroit et allongé) ?",
-            "options": [
-              "Étroit et allongé lui aussi",
-              "Large et court",
-              "Absent",
-              "Très long"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Un bassin large et court supporte le poids du corps debout."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Le pied",
-          "stepTheme": "Le pied",
-          "stepBadge": "Le pied",
-          "paragraphText": "Chez le chimpanzé, le gros orteil est opposé aux autres doigts et la voûte plantaire est peu développée ; chez l'homme, les orteils sont parallèles et la voûte plantaire est développée.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q3",
-            "type": "mcq",
-            "prompt": "Quel caractère du membre inférieur appartient à l'homme, et non au chimpanzé ?",
-            "options": [
-              "Un gros orteil opposé aux autres doigts",
-              "Une voûte plantaire peu développée",
-              "Des orteils parallèles et une voûte plantaire développée",
-              "Un pied large et court"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Ce pied est adapté à la marche, pas à la saisie des branches."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "La main",
-          "stepTheme": "La main",
-          "stepBadge": "La main",
-          "paragraphText": "La main humaine a une paume mince, des doigts longs et un pouce bien dégagé, opposable aux autres doigts : elle est très habile.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q4",
-            "type": "mcq",
-            "prompt": "D'après le tableau de comparaison, comment est la paume de la main de l'homme, par rapport à celle du chimpanzé (paume large) ?",
-            "options": [
-              "Large",
-              "Mince, avec un pouce bien dégagé",
-              "Sans pouce",
-              "Couverte de poils"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "La main libérée de la marche sert à manipuler et à fabriquer."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "definition",
-          "stepTitle": "La bipédie",
-          "stepTheme": "La bipédie",
-          "stepBadge": "La bipédie",
-          "paragraphText": "La bipédie est la marche debout sur les deux membres inférieurs. Les caractères du squelette humain y sont adaptés.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q5",
-            "type": "mcq",
-            "prompt": "La colonne à 4 courbures, le bassin large et court et la voûte plantaire de l'homme sont des adaptations à quel mode de déplacement ?",
-            "options": [
-              "La nage",
-              "La bipédie (marche debout sur deux jambes)",
-              "Le vol",
-              "La reptation"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Ils maintiennent le corps redressé et amortissent les chocs."
+            "explanation": "C'est la relation énoncée dans le corrigé de la leçon."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "methode",
-          "stepTitle": "Compléter un tableau",
-          "stepTheme": "Compléter un tableau",
-          "stepBadge": "Compléter un tableau",
-          "paragraphText": "Chimpanzé : une courbure, étroit et allongé, paume large, voûte peu développée. Homme : 4 courbures, large et court, paume mince, voûte développée.",
+          "stepTitle": "Lire un document d'évolution morphologique",
+          "stepTheme": "Lire un document d'évolution morphologique",
+          "stepBadge": "Lire un document d'évolution morphologique",
+          "paragraphText": "Méthode : observer le document dans l'ordre chronologique, des australopithèques aux Homo sapiens.\nOn relève alors, caractère par caractère, ce qui augmente ou se modifie : boîte crânienne, morphologie, volume cérébral, vascularisation, circonvolutions.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q6",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q6",
             "type": "mcq",
-            "prompt": "On complète le tableau chimpanzé / homme avec : « une courbure », « 4 courbures », « étroit et allongé », « large et court ». Quelle ligne est juste ?",
+            "prompt": "Pour décrire les transformations morphologiques, il faut comparer :",
             "options": [
-              "Colonne : chimpanzé 4 courbures, homme une courbure",
-              "Bassin : chimpanzé étroit et allongé, homme large et court",
-              "Bassin : chimpanzé large et court, homme étroit et allongé",
-              "Colonne : les deux ont 4 courbures"
+              "Le gorille et le porc",
+              "Les australopithèques et les Homo sapiens, dans l'ordre de l'évolution",
+              "Uniquement deux Homo sapiens",
+              "Le crâne et le bassin du même individu"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Le bassin humain est adapté à la station debout."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "La conclusion",
-          "stepTheme": "La conclusion",
-          "stepBadge": "La conclusion",
-          "paragraphText": "L'évolution de la lignée humaine s'est faite par des modifications de la stature : passage d'une posture penchée à une posture redressée.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q7",
-            "type": "mcq",
-            "prompt": "La comparaison des squelettes du chimpanzé et de l'homme (colonne, bassin, mains, pieds) permet de conclure que l'évolution humaine s'est faite par :",
-            "options": [
-              "Des modifications de la stature (passage à la bipédie)",
-              "Des modifications de la couleur de la peau",
-              "La disparition des membres",
-              "Aucune modification"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Cette hypothèse sur l’évolution humaine est bien vérifiée."
+            "explanation": "Le document 1 est construit sur cette comparaison, des australopithèques jusqu'aux Homo sapiens."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q1",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q1",
           "type": "mcq",
-          "prompt": "D'après le tableau de comparaison du chimpanzé (gorille) et de l'homme, combien de courbures possède la colonne vertébrale de l'homme ?",
+          "prompt": "Le passage des australopithèques aux Homo sapiens se caractérise par :",
           "options": [
-            "Une seule",
-            "Deux",
-            "Quatre",
-            "Aucune"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Le chimpanzé n'en a qu'une : sa colonne est en arc."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q2",
-          "type": "mcq",
-          "prompt": "D'après le tableau de comparaison, comment est le bassin de l'homme par rapport à celui du chimpanzé (étroit et allongé) ?",
-          "options": [
-            "Étroit et allongé lui aussi",
-            "Large et court",
-            "Absent",
-            "Très long"
+            "Une diminution du volume du cerveau",
+            "Une augmentation progressive de la boîte crânienne et du volume du cerveau",
+            "Un crâne sans modification",
+            "Une disparition du cerveau"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Un bassin large et court supporte le poids du corps debout."
+          "explanation": "C'est le premier résultat du document 1, confirmé vrai dans l'exercice 1."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q3",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q2",
           "type": "mcq",
-          "prompt": "Quel caractère du membre inférieur appartient à l'homme, et non au chimpanzé ?",
+          "prompt": "Au cours de l'évolution de la lignée humaine, la morphologie du crâne :",
           "options": [
-            "Un gros orteil opposé aux autres doigts",
-            "Une voûte plantaire peu développée",
-            "Des orteils parallèles et une voûte plantaire développée",
-            "Un pied large et court"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Ce pied est adapté à la marche, pas à la saisie des branches."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q4",
-          "type": "mcq",
-          "prompt": "D'après le tableau de comparaison, comment est la paume de la main de l'homme, par rapport à celle du chimpanzé (paume large) ?",
-          "options": [
-            "Large",
-            "Mince, avec un pouce bien dégagé",
-            "Sans pouce",
-            "Couverte de poils"
+            "Reste rigoureusement identique",
+            "Se modifie",
+            "Disparaît chez Homo sapiens",
+            "Ne concerne que le gorille"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La main libérée de la marche sert à manipuler et à fabriquer."
+          "explanation": "L'exercice 1 confirme cette affirmation comme vraie."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q5",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q3",
           "type": "mcq",
-          "prompt": "La colonne à 4 courbures, le bassin large et court et la voûte plantaire de l'homme sont des adaptations à quel mode de déplacement ?",
+          "prompt": "L'évolution du cerveau s'accompagne d'une augmentation :",
           "options": [
-            "La nage",
-            "La bipédie (marche debout sur deux jambes)",
-            "Le vol",
-            "La reptation"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Ils maintiennent le corps redressé et amortissent les chocs."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q6",
-          "type": "mcq",
-          "prompt": "On complète le tableau chimpanzé / homme avec : « une courbure », « 4 courbures », « étroit et allongé », « large et court ». Quelle ligne est juste ?",
-          "options": [
-            "Colonne : chimpanzé 4 courbures, homme une courbure",
-            "Bassin : chimpanzé étroit et allongé, homme large et court",
-            "Bassin : chimpanzé large et court, homme étroit et allongé",
-            "Colonne : les deux ont 4 courbures"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le bassin humain est adapté à la station debout."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p02_q7",
-          "type": "mcq",
-          "prompt": "La comparaison des squelettes du chimpanzé et de l'homme (colonne, bassin, mains, pieds) permet de conclure que l'évolution humaine s'est faite par :",
-          "options": [
-            "Des modifications de la stature (passage à la bipédie)",
-            "Des modifications de la couleur de la peau",
-            "La disparition des membres",
-            "Aucune modification"
+            "Du nombre de vaisseaux sanguins et de leurs ramifications",
+            "Uniquement de la taille des os du crâne",
+            "Du nombre de dents",
+            "De la courbure de la colonne"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Cette hypothèse sur l’évolution humaine est bien vérifiée."
+          "explanation": "L'analyse des résultats parle d'une vascularisation accentuée et de ramifications de plus en plus nombreuses."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q4",
+          "type": "mcq",
+          "prompt": "L'affirmation « les circonvolutions disparaissent sur le cerveau » est jugée dans le corrigé :",
+          "options": [
+            "Vraie",
+            "Vraie seulement chez l'australopithèque",
+            "Fausse",
+            "Non corrigée"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Correction de l'exercice 1 : 1 vrai, 2 vrai, 3 faux, 4 vrai."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q5",
+          "type": "mcq",
+          "prompt": "Selon le corrigé de la situation d'évaluation, plus la taille du cerveau augmente :",
+          "options": [
+            "Plus l'intelligence diminue",
+            "Plus l'intelligence est grande",
+            "Moins il y a de circonvolutions",
+            "Plus la stature diminue"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la relation énoncée dans le corrigé de la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p01_q6",
+          "type": "mcq",
+          "prompt": "Pour décrire les transformations morphologiques, il faut comparer :",
+          "options": [
+            "Le gorille et le porc",
+            "Les australopithèques et les Homo sapiens, dans l'ordre de l'évolution",
+            "Uniquement deux Homo sapiens",
+            "Le crâne et le bassin du même individu"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le document 1 est construit sur cette comparaison, des australopithèques jusqu'aux Homo sapiens."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03",
-      "order": 3,
-      "title": "Les molécules racontent la parenté",
-      "summary": "Comparer l'hémoglobine de l'homme, du gorille, du porc et du cheval.",
-      "conceptExplanation": "Document 3 : les 19 premiers acides aminés de la chaîne β de l'hémoglobine de 4 espèces.\n- Homme : VAL HIS LEU THR PRO GLU GLU LYS SER ALA VAL THR ALA LEU TRY GLY LYS VAL ASP\n- Gorille : identique à l'homme sur ces 19 acides aminés.\n- Porc : 2 différences avec l'homme : position 4, SER à la place de THR ; position 5, ALA à la place de PRO.\n- Cheval : 4 différences avec l'homme : position 4, SER à la place de THR ; position 5, GLY à la place de PRO ; position 9, ALA à la place de SER ; position 12, LEU à la place de THR.\n- Porc et cheval : 3 différences entre eux (positions 5, 9 et 12).\n\nInterprétation :\n- sur 19 acides aminés, seuls 4 varient : ces 4 espèces sont très apparentées (ce sont des mammifères) ;\n- l'homme et le gorille ont des séquences identiques : le gorille est le plus proche parent de l'homme parmi ces espèces (ce sont des primates) ;\n- plus le nombre d'acides aminés différents est grand, plus les espèces sont éloignées, et plus leur séparation est ancienne : la séparation avec le cheval est la plus ancienne, puis celle avec le porc ; la séparation avec le gorille est la plus récente.\n\nConclusion : l'évolution de la lignée humaine s'est faite aussi par des modifications moléculaires (mutations).\n\nAttention : cela ne veut pas dire que l'homme descend du gorille actuel. L'homme, le gorille et le chimpanzé ont un ANCÊTRE COMMUN, dont les descendants ont évolué chacun de leur côté.",
-      "keyRule": "Moins il y a d'acides aminés différents, plus deux espèces sont proches parentes. Homme-gorille : 0 ; homme-porc : 2 ; homme-cheval : 4 (sur 19).",
+      "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02",
+      "order": 2,
+      "title": "Les modifications de la stature : colonne vertébrale et bassin",
+      "summary": "Comparer colonne vertébrale et bassin chez le chimpanzé (gorille) et chez l'Homme.",
+      "conceptExplanation": "Le document 2 compare quelques caractères de l'Homme et du gorille, désigné dans le tableau comme chimpanzé (gorille).\nLa colonne vertébrale présente une seule courbure chez le chimpanzé, alors que chez l'Homme il y a 4 courbures.\nLe bassin est étroit et allongé chez le chimpanzé, mais large et court chez l'Homme.\nCes différences de stature accompagnent l'évolution de la lignée humaine.",
+      "keyRule": "Colonne et bassin distinguent nettement les deux statures : 1 courbure et bassin étroit et allongé chez le chimpanzé, 4 courbures et bassin large et court chez l'Homme.",
       "formulas": [],
       "workedExample": {
-        "title": "Classer par parenté",
-        "statement": "Sur les 19 premiers acides aminés de la chaîne β de l'hémoglobine, l'homme diffère de 0 acide aminé avec le gorille, de 2 avec le porc et de 4 avec le cheval. Classe ces espèces de la plus proche à la plus éloignée de l'homme.",
+        "title": "Compléter le tableau comparatif (exercice 2)",
+        "statement": "Complète, pour la colonne vertébrale et le bassin, le tableau comparant chimpanzé (gorille) et Homme.",
         "methodSteps": [
-          "Moins de différences = parenté plus proche.",
-          "0 < 2 < 4."
+          "Colonne vertébrale : une courbure chez le chimpanzé, 4 courbures chez l'Homme.",
+          "Bassin : étroit et allongé chez le chimpanzé, large et court chez l'Homme."
         ],
-        "conclusion": "Gorille, puis porc, puis cheval."
+        "conclusion": "Corrigé de l'exercice 2 : les deux caractères opposent nettement les deux statures."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "exemple",
-          "stepTitle": "Homme et gorille",
-          "stepTheme": "Homme et gorille",
-          "stepBadge": "Homme et gorille",
-          "paragraphText": "Sur les 19 premiers acides aminés de la chaîne β de l'hémoglobine, l'homme et le gorille n'ont aucune différence.",
+          "stepKind": "definition",
+          "stepTitle": "Les courbures de la colonne vertébrale",
+          "stepTheme": "Les courbures de la colonne vertébrale",
+          "stepBadge": "Les courbures de la colonne vertébrale",
+          "paragraphText": "La colonne vertébrale compte une seule courbure chez le chimpanzé (gorille).\nChez l'Homme, elle présente 4 courbures.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q1",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q1",
             "type": "mcq",
-            "prompt": "On compare les 19 premiers acides aminés de la chaîne β de l'hémoglobine. Combien de différences y a-t-il entre l'homme et le gorille ?",
+            "prompt": "La colonne vertébrale de l'Homme présente :",
             "options": [
-              "0",
-              "2",
-              "3",
-              "4"
+              "Une courbure",
+              "2 courbures",
+              "4 courbures",
+              "Aucune courbure"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Les deux séquences sont identiques sur ces 19 acides aminés."
+            "correctAnswerIndex": 2,
+            "explanation": "Tableau du document 2 : une courbure chez le chimpanzé, 4 courbures chez l'Homme."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "Homme et porc",
-          "stepTheme": "Homme et porc",
-          "stepBadge": "Homme et porc",
-          "paragraphText": "Avec le porc, 2 acides aminés diffèrent : position 4 (SER au lieu de THR) et position 5 (ALA au lieu de PRO).",
+          "stepKind": "definition",
+          "stepTitle": "La forme du bassin",
+          "stepTheme": "La forme du bassin",
+          "stepBadge": "La forme du bassin",
+          "paragraphText": "Le bassin du chimpanzé est étroit et allongé.\nCelui de l'Homme est large et court : la forme du bassin fait partie des modifications de la stature.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q2",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q2",
             "type": "mcq",
-            "prompt": "Dans la chaîne β de l'hémoglobine, l'homme a THR en position 4 et PRO en position 5 ; le porc a SER en position 4 et ALA en position 5 ; les 17 autres sont identiques. Combien d'acides aminés diffèrent entre l'homme et le porc ?",
+            "prompt": "Le bassin de l'Homme est :",
+            "options": [
+              "Étroit et allongé",
+              "Large et court",
+              "Identique à celui du chimpanzé",
+              "Absent"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la ligne bassin du tableau comparatif de la leçon."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Un même tableau, deux statures",
+          "stepTheme": "Un même tableau, deux statures",
+          "stepBadge": "Un même tableau, deux statures",
+          "paragraphText": "Le document 2 compare les mêmes caractères chez les deux espèces, ligne par ligne.\nColonne vertébrale et bassin montrent déjà des différences nettes de stature entre chimpanzé et Homme.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q3",
+            "type": "mcq",
+            "prompt": "Le document 2 compare :",
+            "options": [
+              "L'Homme et le cheval",
+              "Quelques caractères de l'Homme et du gorille",
+              "Deux populations humaines",
+              "Le crâne uniquement"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le document 2 est la comparaison de quelques caractères de l'Homme et du gorille."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "piege",
+          "stepTitle": "Ne pas inverser les deux colonnes",
+          "stepTheme": "Ne pas inverser les deux colonnes",
+          "stepBadge": "Ne pas inverser les deux colonnes",
+          "paragraphText": "Piège classique du tableau : attribuer les 4 courbures au chimpanzé et la courbure unique à l'Homme.\nC'est l'inverse : une courbure chez le chimpanzé, 4 courbures chez l'Homme, comme le rappelle le corrigé de l'exercice 2.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q4",
+            "type": "mcq",
+            "prompt": "Chez le chimpanzé (gorille), la colonne vertébrale présente :",
+            "options": [
+              "4 courbures",
+              "Une courbure",
+              "3 courbures",
+              "Une voûte plantaire développée"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Corrigé de l'exercice 2 : une courbure chez le chimpanzé, 4 courbures chez l'Homme."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "exemple",
+          "stepTitle": "Le bassin large et court de l'Homme",
+          "stepTheme": "Le bassin large et court de l'Homme",
+          "stepBadge": "Le bassin large et court de l'Homme",
+          "paragraphText": "Le bassin large et court est l'un des caractères humains du tableau.\nIl s'oppose terme à terme au bassin étroit et allongé du chimpanzé, dans le même document.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q5",
+            "type": "mcq",
+            "prompt": "Le caractère « large et court » décrit, dans le tableau :",
+            "options": [
+              "Le bassin de l'Homme",
+              "Le bassin du chimpanzé",
+              "Le membre supérieur du chimpanzé",
+              "Le membre inférieur du chimpanzé"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ligne bassin du document 2 : large et court chez l'Homme."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "methode",
+          "stepTitle": "Comparer caractère par caractère",
+          "stepTheme": "Comparer caractère par caractère",
+          "stepBadge": "Comparer caractère par caractère",
+          "paragraphText": "Méthode : lire le tableau ligne par ligne, un caractère à la fois.\nPour chaque caractère, on note d'abord la forme chez le chimpanzé, puis la forme chez l'Homme, sans mélanger les colonnes.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q6",
+            "type": "mcq",
+            "prompt": "Pour exploiter le document 2, il faut :",
+            "options": [
+              "Lire uniquement la colonne de l'Homme",
+              "Comparer chaque caractère chez le chimpanzé puis chez l'Homme",
+              "Ignorer le bassin",
+              "Comparer les molécules d'hémoglobine"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la démarche d'analyse suivie dans la leçon pour ce tableau."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q1",
+          "type": "mcq",
+          "prompt": "La colonne vertébrale de l'Homme présente :",
+          "options": [
+            "Une courbure",
+            "2 courbures",
+            "4 courbures",
+            "Aucune courbure"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Tableau du document 2 : une courbure chez le chimpanzé, 4 courbures chez l'Homme."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q2",
+          "type": "mcq",
+          "prompt": "Le bassin de l'Homme est :",
+          "options": [
+            "Étroit et allongé",
+            "Large et court",
+            "Identique à celui du chimpanzé",
+            "Absent"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la ligne bassin du tableau comparatif de la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q3",
+          "type": "mcq",
+          "prompt": "Le document 2 compare :",
+          "options": [
+            "L'Homme et le cheval",
+            "Quelques caractères de l'Homme et du gorille",
+            "Deux populations humaines",
+            "Le crâne uniquement"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le document 2 est la comparaison de quelques caractères de l'Homme et du gorille."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q4",
+          "type": "mcq",
+          "prompt": "Chez le chimpanzé (gorille), la colonne vertébrale présente :",
+          "options": [
+            "4 courbures",
+            "Une courbure",
+            "3 courbures",
+            "Une voûte plantaire développée"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Corrigé de l'exercice 2 : une courbure chez le chimpanzé, 4 courbures chez l'Homme."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q5",
+          "type": "mcq",
+          "prompt": "Le caractère « large et court » décrit, dans le tableau :",
+          "options": [
+            "Le bassin de l'Homme",
+            "Le bassin du chimpanzé",
+            "Le membre supérieur du chimpanzé",
+            "Le membre inférieur du chimpanzé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ligne bassin du document 2 : large et court chez l'Homme."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p02_q6",
+          "type": "mcq",
+          "prompt": "Pour exploiter le document 2, il faut :",
+          "options": [
+            "Lire uniquement la colonne de l'Homme",
+            "Comparer chaque caractère chez le chimpanzé puis chez l'Homme",
+            "Ignorer le bassin",
+            "Comparer les molécules d'hémoglobine"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la démarche d'analyse suivie dans la leçon pour ce tableau."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03",
+      "order": 3,
+      "title": "Les modifications de la stature : membres supérieur et inférieur",
+      "summary": "Comparer les membres supérieur et inférieur chez le chimpanzé (gorille) et chez l'Homme.",
+      "conceptExplanation": "Pour le membre supérieur, le chimpanzé a un bras court, une paume large et des doigts courts. L'Homme a un bras long, une paume mince à pouce dégagé (le tableau de l'analyse précise : pouce opposé aux autres doigts) et des doigts longs.\nPour le membre inférieur, celui du chimpanzé est large et court, avec un pouce opposé aux autres doigts et une voûte plantaire moins développée. Celui de l'Homme est mince et long, avec tous les orteils parallèles et une voûte plantaire plus développée.\nL'évolution de la lignée humaine s'est donc aussi faite par des modifications de la stature portant sur les membres.",
+      "keyRule": "Membres humains : bras long, paume mince, doigts longs en haut ; membre inférieur mince et long, orteils parallèles et voûte plantaire développée en bas.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Compléter les lignes des membres (exercice 2, suite)",
+        "statement": "Complète les lignes membre supérieur et membre inférieur du tableau comparatif.",
+        "methodSteps": [
+          "Membre supérieur : paume large chez le chimpanzé, paume mince chez l'Homme.",
+          "Membre inférieur : voûte plantaire moins développée chez le chimpanzé, voûte plantaire plus développée chez l'Homme.",
+          "Le corrigé retient ces deux paires pour l'exercice, les autres traits étant déjà donnés dans le tableau."
+        ],
+        "conclusion": "Paume et voûte plantaire opposent aussi les deux espèces, comme le montre le corrigé."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Le membre supérieur humain",
+          "stepTheme": "Le membre supérieur humain",
+          "stepBadge": "Le membre supérieur humain",
+          "paragraphText": "Le membre supérieur de l'Homme est constitué d'un bras long, avec une paume mince et des doigts longs.\nLe pouce y est dégagé, ce qui le distingue de la main du chimpanzé.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q1",
+            "type": "mcq",
+            "prompt": "Le membre supérieur de l'Homme se caractérise par :",
+            "options": [
+              "Un bras court et une paume large",
+              "Un bras long, une paume mince et des doigts longs",
+              "Des doigts courts uniquement",
+              "Un pouce absent"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la ligne membre supérieur du document 2, côté Homme."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepTitle": "La voûte plantaire",
+          "stepTheme": "La voûte plantaire",
+          "stepBadge": "La voûte plantaire",
+          "paragraphText": "La voûte plantaire est moins développée chez le chimpanzé.\nChez l'Homme, elle est plus développée, ce qui fait partie des caractères du membre inférieur humain.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q2",
+            "type": "mcq",
+            "prompt": "La voûte plantaire est plus développée chez :",
+            "options": [
+              "Le chimpanzé",
+              "Le gorille uniquement",
+              "L'Homme",
+              "Aucune des deux espèces"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Le corrigé de l'exercice 2 oppose voûte moins développée (chimpanzé) et plus développée (Homme)."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Les orteils parallèles de l'Homme",
+          "stepTheme": "Les orteils parallèles de l'Homme",
+          "stepBadge": "Les orteils parallèles de l'Homme",
+          "paragraphText": "Chez l'Homme, tous les orteils du membre inférieur sont parallèles.\nChez le chimpanzé, au contraire, le pouce du membre inférieur est opposé aux autres doigts.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q3",
+            "type": "mcq",
+            "prompt": "Chez le chimpanzé, le membre inférieur présente :",
+            "options": [
+              "Tous les orteils parallèles",
+              "Un pouce opposé aux autres doigts",
+              "Une voûte plantaire très développée",
+              "Un membre mince et long"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le trait donné dans le tableau pour le membre inférieur du chimpanzé."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "La main du chimpanzé",
+          "stepTheme": "La main du chimpanzé",
+          "stepBadge": "La main du chimpanzé",
+          "paragraphText": "Le chimpanzé a un bras court, une paume large et des doigts courts au membre supérieur.\nCes trois traits s'opposent à ceux de la main humaine : bras long, paume mince, doigts longs.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q4",
+            "type": "mcq",
+            "prompt": "La paume du chimpanzé est :",
+            "options": [
+              "Mince",
+              "Large",
+              "Sans doigts",
+              "Identique à celle de l'Homme"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Corrigé de l'exercice 2 : paume large chez le chimpanzé, paume mince chez l'Homme."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Pouce opposable ne suffit pas à trancher",
+          "stepTheme": "Pouce opposable ne suffit pas à trancher",
+          "stepBadge": "Pouce opposable ne suffit pas à trancher",
+          "paragraphText": "Piège : le tableau mentionne un pouce opposé aux autres doigts à deux endroits différents.\nPour le membre inférieur, c'est un trait du chimpanzé ; l'analyse décrit aussi le pouce humain du membre supérieur comme opposé aux autres doigts, avec une paume mince et des doigts longs : il faut préciser le membre concerné.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q5",
+            "type": "mcq",
+            "prompt": "Le trait « pouce opposé aux autres doigts » au membre inférieur caractérise :",
+            "options": [
+              "L'Homme",
+              "Le chimpanzé",
+              "Les deux espèces de la même façon",
+              "Uniquement le porc"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Dans le tableau, au membre inférieur, le pouce opposé est le trait du chimpanzé ; l'Homme y a tous les orteils parallèles."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le membre inférieur mince et long",
+          "stepTheme": "Le membre inférieur mince et long",
+          "stepBadge": "Le membre inférieur mince et long",
+          "paragraphText": "Mince et long : c'est la description du membre inférieur de l'Homme dans le tableau.\nElle s'oppose au membre inférieur large et court du chimpanzé.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q6",
+            "type": "mcq",
+            "prompt": "« Mince et long » décrit, dans le document 2 :",
+            "options": [
+              "Le membre inférieur de l'Homme",
+              "Le membre inférieur du chimpanzé",
+              "Le membre supérieur du chimpanzé",
+              "Le bassin de l'Homme"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ligne membre inférieur du tableau comparatif, côté Homme."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q1",
+          "type": "mcq",
+          "prompt": "Le membre supérieur de l'Homme se caractérise par :",
+          "options": [
+            "Un bras court et une paume large",
+            "Un bras long, une paume mince et des doigts longs",
+            "Des doigts courts uniquement",
+            "Un pouce absent"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la ligne membre supérieur du document 2, côté Homme."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q2",
+          "type": "mcq",
+          "prompt": "La voûte plantaire est plus développée chez :",
+          "options": [
+            "Le chimpanzé",
+            "Le gorille uniquement",
+            "L'Homme",
+            "Aucune des deux espèces"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le corrigé de l'exercice 2 oppose voûte moins développée (chimpanzé) et plus développée (Homme)."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q3",
+          "type": "mcq",
+          "prompt": "Chez le chimpanzé, le membre inférieur présente :",
+          "options": [
+            "Tous les orteils parallèles",
+            "Un pouce opposé aux autres doigts",
+            "Une voûte plantaire très développée",
+            "Un membre mince et long"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est le trait donné dans le tableau pour le membre inférieur du chimpanzé."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q4",
+          "type": "mcq",
+          "prompt": "La paume du chimpanzé est :",
+          "options": [
+            "Mince",
+            "Large",
+            "Sans doigts",
+            "Identique à celle de l'Homme"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Corrigé de l'exercice 2 : paume large chez le chimpanzé, paume mince chez l'Homme."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q5",
+          "type": "mcq",
+          "prompt": "Le trait « pouce opposé aux autres doigts » au membre inférieur caractérise :",
+          "options": [
+            "L'Homme",
+            "Le chimpanzé",
+            "Les deux espèces de la même façon",
+            "Uniquement le porc"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Dans le tableau, au membre inférieur, le pouce opposé est le trait du chimpanzé ; l'Homme y a tous les orteils parallèles."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p03_q6",
+          "type": "mcq",
+          "prompt": "« Mince et long » décrit, dans le document 2 :",
+          "options": [
+            "Le membre inférieur de l'Homme",
+            "Le membre inférieur du chimpanzé",
+            "Le membre supérieur du chimpanzé",
+            "Le bassin de l'Homme"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ligne membre inférieur du tableau comparatif, côté Homme."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04",
+      "order": 4,
+      "title": "Les modifications moléculaires : la chaîne bêta de l'hémoglobine",
+      "summary": "Comparer les 19 premiers acides aminés de la chaîne bêta de l'hémoglobine chez l'Homme, le gorille, le porc et le cheval.",
+      "conceptExplanation": "Le document 3 compare les 19 premiers acides aminés de la chaîne bêta de l'hémoglobine (protéine) de l'Homme, du gorille, du porc et du cheval.\nRésultat : pas de différence d'acides aminés entre la protéine de l'Homme et celle du gorille ; 2 acides aminés différents chez le porc ; 4 acides aminés différents chez le cheval. Le porc et le cheval diffèrent entre eux par trois acides aminés, en positions 5, 9 et 12.\nChez le porc, les différences surviennent en position 4, où la thréonine (THR) est remplacée par la sérine (SER), et en position 5, où la proline (PRO) est remplacée par l'alanine (ALA). Chez le cheval, en position 4 la SER remplace la THR, en position 5 la glycine (GLY) remplace la PRO, en position 9 l'ALA remplace la SER et en position 12 la leucine (LEU) remplace la THR.\nInterprétation : sur les 19 acides aminés, 4 seulement présentent une variation ; il y a donc une grande parenté entre ces espèces, toutes mammifères. L'Homme et le gorille ont des molécules identiques : le gorille est plus proche de l'Homme que les deux autres animaux, ce sont des primates. Le nombre d'acides aminés différents augmente au fur et à mesure que les espèces diffèrent : la séparation d'avec le cheval s'est faite beaucoup plus tôt, suivie de la séparation avec le porc, et la séparation avec le gorille s'est faite beaucoup plus tard.",
+      "keyRule": "Zéro différence Homme-gorille, 2 avec le porc, 4 avec le cheval : plus le nombre d'acides aminés différents est grand, plus la séparation des espèces est ancienne.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Relever conformités et différences (exercice 3)",
+        "statement": "Relève les conformités et les différences entre la chaîne d'acides aminés des 4 espèces, puis explique-les.",
+        "methodSteps": [
+          "Aucune différence d'acides aminés entre la protéine de l'Homme et celle du gorille.",
+          "2 acides aminés différents entre le porc et l'Homme, 4 entre le cheval et l'Homme, 3 entre le porc et le cheval.",
+          "Sur 19 acides aminés, 4 seulement varient : grande parenté entre ces mammifères.",
+          "Le gorille, aux molécules identiques, est le plus proche de l'Homme ; la séparation d'avec le cheval est la plus ancienne."
+        ],
+        "conclusion": "Corrigé de l'exercice 3 : le nombre de différences mesure l'éloignement des espèces."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La protéine comparée",
+          "stepTheme": "La protéine comparée",
+          "stepBadge": "La protéine comparée",
+          "paragraphText": "La comparaison porte sur les 19 premiers acides aminés de la chaîne bêta de l'hémoglobine.\nL'hémoglobine est la protéine choisie pour comparer l'Homme, le gorille, le porc et le cheval.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q1",
+            "type": "mcq",
+            "prompt": "Le document 3 compare :",
+            "options": [
+              "Les 19 premiers acides aminés de la chaîne bêta de l'hémoglobine",
+              "Les chromosomes sexuels",
+              "Les courbures de la colonne",
+              "Les volumes du cerveau"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "C'est l'objet exact du document 3."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Zéro différence Homme-gorille",
+          "stepTheme": "Zéro différence Homme-gorille",
+          "stepBadge": "Zéro différence Homme-gorille",
+          "paragraphText": "Il n'y a pas de différence d'acides aminés entre la protéine de l'Homme et celle du gorille.\nLeurs molécules sont identiques sur la portion comparée.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q2",
+            "type": "mcq",
+            "prompt": "Entre l'Homme et le gorille, le nombre d'acides aminés différents est de :",
+            "options": [
+              "2",
+              "3",
+              "4",
+              "0"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "Résultat du document 3 : pas de différence entre l'Homme et le gorille."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Deux différences avec le porc, quatre avec le cheval",
+          "stepTheme": "Deux différences avec le porc, quatre avec le cheval",
+          "stepBadge": "Deux différences avec le porc, quatre avec le cheval",
+          "paragraphText": "Chez le porc, 2 acides aminés diffèrent de ceux de l'Homme, en positions 4 et 5.\nChez le cheval, 4 acides aminés diffèrent, en positions 4, 5, 9 et 12.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q3",
+            "type": "mcq",
+            "prompt": "Combien d'acides aminés diffèrent entre le cheval et l'Homme ?",
             "options": [
               "0",
               "2",
               "4",
               "19"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Seules les positions 4 et 5 changent."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Homme et cheval",
-          "stepTheme": "Homme et cheval",
-          "stepBadge": "Homme et cheval",
-          "paragraphText": "Avec le cheval, 4 acides aminés diffèrent : positions 4 (SER), 5 (GLY), 9 (ALA) et 12 (LEU).",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q3",
-            "type": "mcq",
-            "prompt": "Par rapport à l'homme, le cheval a SER en position 4, GLY en position 5, ALA en position 9 et LEU en position 12 ; les 15 autres acides aminés sont identiques. Combien de différences y a-t-il ?",
-            "options": [
-              "2",
-              "3",
-              "4",
-              "15"
-            ],
             "correctAnswerIndex": 2,
-            "explanation": "Positions 4, 5, 9 et 12."
+            "explanation": "Le cheval présente 4 acides aminés différents, contre 2 pour le porc."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "methode",
-          "stepTitle": "Porc et cheval",
-          "stepTheme": "Porc et cheval",
-          "stepBadge": "Porc et cheval",
-          "paragraphText": "Porc : SER-ALA en 4-5, SER en 9, THR en 12. Cheval : SER-GLY en 4-5, ALA en 9, LEU en 12. Ils diffèrent aux positions 5, 9 et 12.",
+          "stepTitle": "Dater les séparations par les différences",
+          "stepTheme": "Dater les séparations par les différences",
+          "stepBadge": "Dater les séparations par les différences",
+          "paragraphText": "Méthode : plus le nombre d'acides aminés différents est grand, plus la séparation des espèces est ancienne.\nLa séparation d'avec le cheval (4 différences) s'est faite beaucoup plus tôt, puis celle avec le porc (2 différences), puis celle avec le gorille (0 différence), beaucoup plus tard.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q4",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q4",
             "type": "mcq",
-            "prompt": "Le porc a, en positions 4, 5, 9 et 12 : SER, ALA, SER, THR. Le cheval a, aux mêmes positions : SER, GLY, ALA, LEU. Le reste est identique. Combien d'acides aminés diffèrent entre le porc et le cheval ?",
-            "options": [
-              "1",
-              "2",
-              "3",
-              "4"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Positions 5, 9 et 12 ; la position 4 est identique (SER)."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "La règle de parenté",
-          "stepTheme": "La règle de parenté",
-          "stepBadge": "La règle de parenté",
-          "paragraphText": "Plus deux espèces ont d'acides aminés différents, plus elles sont éloignées et plus leur séparation est ancienne.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q5",
-            "type": "mcq",
-            "prompt": "Sur 19 acides aminés de l'hémoglobine, l'homme diffère de 0 avec le gorille, de 2 avec le porc et de 4 avec le cheval. Avec quelle espèce la séparation de la lignée humaine est-elle la plus ancienne ?",
+            "prompt": "La séparation la plus ancienne concerne :",
             "options": [
               "Le gorille",
               "Le porc",
               "Le cheval",
-              "On ne peut pas savoir"
+              "L'Homme lui-même"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "Le plus de différences = la séparation la plus ancienne."
+            "explanation": "Avec 4 différences, le cheval s'est séparé le plus tôt, selon l'interprétation de la leçon."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Une grande parenté malgré les différences",
+          "stepTheme": "Une grande parenté malgré les différences",
+          "stepBadge": "Une grande parenté malgré les différences",
+          "paragraphText": "Piège : conclure à une absence de parenté parce qu'il existe des différences.\nSur 19 acides aminés, 4 seulement varient : la leçon y voit au contraire une grande parenté entre ces espèces, toutes des mammifères.",
+          "exercise": {
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q5",
+            "type": "mcq",
+            "prompt": "Sur les 19 acides aminés comparés, combien présentent une variation au maximum ?",
+            "options": [
+              "19",
+              "4",
+              "12",
+              "9"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'interprétation précise : sur les 19 acides aminés, 4 présentent une variation."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "piege",
-          "stepTitle": "Un ancêtre commun",
-          "stepTheme": "Un ancêtre commun",
-          "stepBadge": "Un ancêtre commun",
-          "paragraphText": "L'homme ne descend pas du gorille actuel : ils ont un ancêtre commun, et chacun a évolué de son côté.",
+          "stepKind": "exemple",
+          "stepTitle": "La substitution en position 4 chez le porc",
+          "stepTheme": "La substitution en position 4 chez le porc",
+          "stepBadge": "La substitution en position 4 chez le porc",
+          "paragraphText": "Chez le porc, en position 4, la thréonine (THR) est remplacée par la sérine (SER).\nEn position 5, la proline (PRO) est remplacée par l'alanine (ALA) : ce sont ses deux seules différences avec l'Homme.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q6",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q6",
             "type": "mcq",
-            "prompt": "L'homme et le gorille ont des hémoglobines identiques sur 19 acides aminés. Quelle conclusion est scientifiquement correcte ?",
+            "prompt": "En position 4, chez le porc, la THR est remplacée par :",
             "options": [
-              "L'homme descend du gorille actuel",
-              "L'homme et le gorille sont de proches parents qui partagent un ancêtre commun",
-              "Le gorille descend de l'homme",
-              "L'homme et le gorille sont la même espèce"
+              "La GLY",
+              "La LEU",
+              "La SER",
+              "La PRO"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Ce sont des espèces « cousines », pas l'une issue de l'autre."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "Des primates",
-          "stepTheme": "Des primates",
-          "stepBadge": "Des primates",
-          "paragraphText": "L'homme et le gorille sont des primates ; avec le porc et le cheval, ce sont tous des mammifères.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q7",
-            "type": "mcq",
-            "prompt": "L'homme, le gorille, le porc et le cheval n'ont que 4 acides aminés variables sur 19 dans leur hémoglobine. À quel groupe appartiennent-ils tous les quatre ?",
-            "options": [
-              "Aux oiseaux",
-              "Aux mammifères",
-              "Aux poissons",
-              "Aux reptiles"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Parmi eux, l'homme et le gorille forment le sous-groupe des primates."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est la substitution décrite dans l'analyse du document 3."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q1",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q1",
           "type": "mcq",
-          "prompt": "On compare les 19 premiers acides aminés de la chaîne β de l'hémoglobine. Combien de différences y a-t-il entre l'homme et le gorille ?",
+          "prompt": "Le document 3 compare :",
           "options": [
-            "0",
-            "2",
-            "3",
-            "4"
+            "Les 19 premiers acides aminés de la chaîne bêta de l'hémoglobine",
+            "Les chromosomes sexuels",
+            "Les courbures de la colonne",
+            "Les volumes du cerveau"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Les deux séquences sont identiques sur ces 19 acides aminés."
+          "explanation": "C'est l'objet exact du document 3."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q2",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q2",
           "type": "mcq",
-          "prompt": "Dans la chaîne β de l'hémoglobine, l'homme a THR en position 4 et PRO en position 5 ; le porc a SER en position 4 et ALA en position 5 ; les 17 autres sont identiques. Combien d'acides aminés diffèrent entre l'homme et le porc ?",
+          "prompt": "Entre l'Homme et le gorille, le nombre d'acides aminés différents est de :",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "0"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "Résultat du document 3 : pas de différence entre l'Homme et le gorille."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q3",
+          "type": "mcq",
+          "prompt": "Combien d'acides aminés diffèrent entre le cheval et l'Homme ?",
           "options": [
             "0",
             "2",
             "4",
             "19"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "Seules les positions 4 et 5 changent."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q3",
-          "type": "mcq",
-          "prompt": "Par rapport à l'homme, le cheval a SER en position 4, GLY en position 5, ALA en position 9 et LEU en position 12 ; les 15 autres acides aminés sont identiques. Combien de différences y a-t-il ?",
-          "options": [
-            "2",
-            "3",
-            "4",
-            "15"
-          ],
           "correctAnswerIndex": 2,
-          "explanation": "Positions 4, 5, 9 et 12."
+          "explanation": "Le cheval présente 4 acides aminés différents, contre 2 pour le porc."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q4",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q4",
           "type": "mcq",
-          "prompt": "Le porc a, en positions 4, 5, 9 et 12 : SER, ALA, SER, THR. Le cheval a, aux mêmes positions : SER, GLY, ALA, LEU. Le reste est identique. Combien d'acides aminés diffèrent entre le porc et le cheval ?",
-          "options": [
-            "1",
-            "2",
-            "3",
-            "4"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Positions 5, 9 et 12 ; la position 4 est identique (SER)."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q5",
-          "type": "mcq",
-          "prompt": "Sur 19 acides aminés de l'hémoglobine, l'homme diffère de 0 avec le gorille, de 2 avec le porc et de 4 avec le cheval. Avec quelle espèce la séparation de la lignée humaine est-elle la plus ancienne ?",
+          "prompt": "La séparation la plus ancienne concerne :",
           "options": [
             "Le gorille",
             "Le porc",
             "Le cheval",
-            "On ne peut pas savoir"
+            "L'Homme lui-même"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Le plus de différences = la séparation la plus ancienne."
+          "explanation": "Avec 4 différences, le cheval s'est séparé le plus tôt, selon l'interprétation de la leçon."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q6",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q5",
           "type": "mcq",
-          "prompt": "L'homme et le gorille ont des hémoglobines identiques sur 19 acides aminés. Quelle conclusion est scientifiquement correcte ?",
+          "prompt": "Sur les 19 acides aminés comparés, combien présentent une variation au maximum ?",
           "options": [
-            "L'homme descend du gorille actuel",
-            "L'homme et le gorille sont de proches parents qui partagent un ancêtre commun",
-            "Le gorille descend de l'homme",
-            "L'homme et le gorille sont la même espèce"
+            "19",
+            "4",
+            "12",
+            "9"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Ce sont des espèces « cousines », pas l'une issue de l'autre."
+          "explanation": "L'interprétation précise : sur les 19 acides aminés, 4 présentent une variation."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p03_q7",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p04_q6",
           "type": "mcq",
-          "prompt": "L'homme, le gorille, le porc et le cheval n'ont que 4 acides aminés variables sur 19 dans leur hémoglobine. À quel groupe appartiennent-ils tous les quatre ?",
+          "prompt": "En position 4, chez le porc, la THR est remplacée par :",
           "options": [
-            "Aux oiseaux",
-            "Aux mammifères",
-            "Aux poissons",
-            "Aux reptiles"
+            "La GLY",
+            "La LEU",
+            "La SER",
+            "La PRO"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "Parmi eux, l'homme et le gorille forment le sous-groupe des primates."
+          "correctAnswerIndex": 2,
+          "explanation": "C'est la substitution décrite dans l'analyse du document 3."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04",
-      "order": 4,
-      "title": "Les théories de l'évolution",
-      "summary": "Lamarck, Darwin, De Vries et Morgan.",
-      "conceptExplanation": "Texte 1 : quelques théories.\n- Jean-Baptiste Lamarck (1744-1829) : il existe une tendance spontanée des êtres vivants à devenir de plus en plus complexes ; elle est orientée par les circonstances (le milieu), et les modifications acquises sont transmises à la descendance : « la fonction crée l'organe ». Exemple classique : la girafe aurait allongé son cou à force de l'étirer, et transmis ce long cou à ses petits. Cette transmission des caractères acquis n'a pas été confirmée.\n- Charles Darwin (1809-1882) : les êtres vivants se reproduisent en très grand nombre, mais il n'y a pas de surpopulation. La destruction des individus en surnombre ne se fait pas au hasard : ceux qui présentent des variations avantageuses sont favorisés dans la lutte pour la vie ; seuls les plus aptes parviennent à se reproduire : c'est la SÉLECTION NATURELLE.\n- Hugo De Vries (1848-1935) et Thomas Hunt Morgan (1866-1945) : le passage d'une espèce à l'autre se fait par une MUTATION brutale, et non graduellement par la sélection naturelle : c'est le mutationnisme. (Le document indique 1886 pour la naissance de Morgan ; il est né en 1866.)\n- Les généticiens modernes : l'évolution est un changement de la fréquence des gènes (allèles) dans les populations.\n\nPrécision : chez Darwin, les « plus aptes » ne sont pas forcément les plus forts, mais les mieux adaptés à leur milieu (ceux qui survivent et se reproduisent le plus).",
-      "keyRule": "Lamarck : « la fonction crée l'organe » (caractères acquis transmis). Darwin : sélection naturelle des plus aptes. De Vries et Morgan : mutations brutales.",
+      "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05",
+      "order": 5,
+      "title": "Les théories de Lamarck et de Darwin",
+      "summary": "Présenter le lamarckisme (la fonction crée l'organe) et le darwinisme (la sélection naturelle).",
+      "conceptExplanation": "Lamarck (1744-1829) : il existe une tendance spontanée des êtres vivants à devenir de plus en plus complexes. Cette tendance est infléchie par les circonstances et les modifications acquises sont conservées par la descendance : la fonction crée l'organe. Pour Lamarck, c'est une évolution spontanée, car c'est le besoin qui amène l'être à évoluer, et l'évolution acquise se maintient dans la descendance.\nDarwin (1809-1882) : les êtres vivants se reproduisent avec une abondance excessive ; mais malgré cette prolificité, on n'observe pas de surpopulation. La destruction des individus en surnombre ne se fait pas au hasard : les individus présentant les variations avantageuses sont favorisés dans leur lutte pour la survie, seuls les plus aptes parviennent à procréer : il y a sélection naturelle.\nPour Darwin, ce sont les plus faibles qui meurent et les plus forts qui vivent, du fait de cette sélection.",
+      "keyRule": "Lamarck : le besoin crée l'organe et l'acquis se transmet ; Darwin : parmi des individus trop nombreux, la sélection naturelle ne garde que les plus aptes.",
       "formulas": [],
       "workedExample": {
-        "title": "Lamarck ou Darwin ?",
-        "statement": "Pourquoi les girafes ont-elles un long cou ? Donne l'explication de Lamarck puis celle de Darwin.",
+        "title": "Distinguer les deux théories (texte 1 de la leçon)",
+        "statement": "À partir du texte 1, attribue à chaque auteur son idée centrale : la fonction crée l'organe ; il y a sélection naturelle.",
         "methodSteps": [
-          "Lamarck : à force d'étirer leur cou pour manger, les girafes l'ont allongé et ont transmis ce caractère acquis.",
-          "Darwin : parmi des girafes au cou de longueurs variées, celles au cou plus long mangeaient mieux, survivaient et se reproduisaient davantage."
+          "Lamarck soutient une tendance spontanée à la complexité, infléchie par les circonstances, avec conservation des modifications acquises : la fonction crée l'organe.",
+          "Darwin part de la reproduction excessive sans surpopulation observée.",
+          "Il en déduit une destruction non hasardeuse des individus en surnombre : les variations avantageuses sont favorisées, seuls les plus aptes procréent.",
+          "On attribue donc la fonction créatrice de l'organe à Lamarck et la sélection naturelle à Darwin."
         ],
-        "conclusion": "Lamarck : la fonction crée l'organe. Darwin : la sélection naturelle trie les variations existantes."
+        "conclusion": "Deux explications différentes de l'évolution : besoin et acquis transmis chez Lamarck, sélection des plus aptes chez Darwin."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Lamarck",
-          "stepTheme": "Lamarck",
-          "stepBadge": "Lamarck",
-          "paragraphText": "Pour Lamarck (1744-1829), les modifications acquises sous l'effet du milieu sont transmises à la descendance : « la fonction crée l'organe ».",
+          "stepTitle": "La théorie de Lamarck",
+          "stepTheme": "La théorie de Lamarck",
+          "stepBadge": "La théorie de Lamarck",
+          "paragraphText": "• Lamarck (1744-1829) : les êtres vivants ont une tendance spontanée à devenir de plus en plus complexes, infléchie par les circonstances.\nLes modifications acquises sont conservées par la descendance : la fonction crée l'organe.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q1",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q1",
             "type": "mcq",
-            "prompt": "Quel savant a résumé sa théorie de l'évolution par la formule « la fonction crée l'organe » ?",
+            "prompt": "La formule « la fonction crée l'organe » appartient à :",
             "options": [
               "Darwin",
               "Lamarck",
@@ -832,141 +962,120 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
               "Morgan"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Pour Lamarck, le besoin et l'usage transforment les organes."
+            "explanation": "C'est le résumé donné pour Lamarck dans les résultats du texte 1."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "definition",
-          "stepTitle": "Darwin",
-          "stepTheme": "Darwin",
-          "stepBadge": "Darwin",
-          "paragraphText": "Pour Darwin (1809-1882), les individus présentant des variations avantageuses survivent et se reproduisent davantage : c'est la sélection naturelle.",
+          "stepTitle": "La sélection naturelle de Darwin",
+          "stepTheme": "La sélection naturelle de Darwin",
+          "stepBadge": "La sélection naturelle de Darwin",
+          "paragraphText": "• Sélection naturelle (Darwin, 1809-1882) : les individus présentant les variations avantageuses sont favorisés dans leur lutte pour la survie.\nSeuls les plus aptes parviennent à procréer.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q2",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q2",
             "type": "mcq",
-            "prompt": "Darwin observe que les êtres vivants se reproduisent en très grand nombre sans qu'il y ait surpopulation, et que les individus aux variations avantageuses survivent mieux. Comment appelle-t-il ce mécanisme ?",
+            "prompt": "Selon Darwin, seuls parviennent à procréer :",
             "options": [
-              "La mutation brutale",
-              "La sélection naturelle",
-              "La transmission des caractères acquis",
-              "La génération spontanée"
+              "Les individus les plus nombreux",
+              "Les individus en surnombre au hasard",
+              "Les plus aptes, porteurs de variations avantageuses",
+              "Les individus les plus faibles"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "La nature « sélectionne » les plus aptes."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est le cœur de la sélection naturelle décrite dans le texte 1."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "Le mutationnisme",
-          "stepTheme": "Le mutationnisme",
-          "stepBadge": "Le mutationnisme",
-          "paragraphText": "Pour De Vries (1848-1935) et Morgan (1866-1945), le passage d'une espèce à une autre se fait par une mutation brutale.",
+          "stepKind": "propriete",
+          "stepTitle": "Pas de surpopulation malgré la prolificité",
+          "stepTheme": "Pas de surpopulation malgré la prolificité",
+          "stepBadge": "Pas de surpopulation malgré la prolificité",
+          "paragraphText": "Les êtres vivants se reproduisent avec une abondance excessive, rappelle Darwin.\nMais malgré cette prolificité, on n'observe pas de surpopulation : les individus en surnombre sont détruits, et pas au hasard.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q3",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q3",
             "type": "mcq",
-            "prompt": "Selon De Vries et Morgan, comment se fait le passage d'une espèce à une autre ?",
+            "prompt": "Darwin part du constat suivant :",
             "options": [
-              "Par une mutation brutale des gènes",
-              "Par l'usage des organes",
-              "Par la volonté des êtres vivants",
-              "Par la sélection naturelle seule, très lentement"
+              "Les espèces ne se reproduisent presque pas",
+              "Malgré une reproduction excessive, il n'y a pas de surpopulation",
+              "Tous les individus survivent",
+              "Les mutations sont toujours brutales"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "On les appelle les mutationnistes."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est le point de départ du raisonnement darwinien dans le texte 1."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "La girafe de Lamarck",
-          "stepTheme": "La girafe de Lamarck",
-          "stepBadge": "La girafe de Lamarck",
-          "paragraphText": "Pour Lamarck, la girafe aurait allongé son cou à force de l'étirer pour manger les feuilles hautes, et aurait transmis ce cou long à ses petits.",
+          "stepKind": "propriete",
+          "stepTitle": "L'acquis conservé chez Lamarck",
+          "stepTheme": "L'acquis conservé chez Lamarck",
+          "stepBadge": "L'acquis conservé chez Lamarck",
+          "paragraphText": "Chez Lamarck, les modifications acquises sous l'effet des circonstances sont conservées par la descendance.\nL'interprétation ajoute : c'est le besoin qui amène l'être à évoluer, une évolution spontanée.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q4",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q4",
             "type": "mcq",
-            "prompt": "« Les girafes ont allongé leur cou à force de l'étirer pour atteindre les feuilles, puis ont transmis ce long cou à leurs petits. » À quelle théorie correspond cette explication ?",
+            "prompt": "Chez Lamarck, les modifications acquises sont :",
             "options": [
-              "Au darwinisme",
-              "Au lamarckisme",
-              "Au mutationnisme",
-              "À la théorie synthétique"
+              "Perdues à chaque génération",
+              "Conservées par la descendance",
+              "Éliminées par sélection",
+              "Dues à des mutations brutales"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est la transmission d'un caractère acquis par l'usage."
+            "explanation": "C'est le mécanisme de transmission propre à la théorie de Lamarck."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "exemple",
-          "stepTitle": "La girafe de Darwin",
-          "stepTheme": "La girafe de Darwin",
-          "stepBadge": "La girafe de Darwin",
-          "paragraphText": "Pour Darwin, parmi des girafes au cou de longueurs variées, celles au cou plus long mangeaient mieux, survivaient et se reproduisaient plus.",
+          "stepKind": "piege",
+          "stepTitle": "Ne pas attribuer la sélection à Lamarck",
+          "stepTheme": "Ne pas attribuer la sélection à Lamarck",
+          "stepBadge": "Ne pas attribuer la sélection à Lamarck",
+          "paragraphText": "Piège : échanger les deux auteurs dans les résultats du texte 1.\nLa leçon attribue « la fonction crée l'organe » à Lamarck et « il y a sélection naturelle » à Darwin.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q5",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q5",
             "type": "mcq",
-            "prompt": "« Parmi des girafes nées avec des cous de longueurs différentes, celles au cou plus long trouvaient plus de nourriture, survivaient et avaient plus de petits. » À quelle théorie correspond cette explication ?",
+            "prompt": "« Il y a sélection naturelle » est l'idée centrale de :",
             "options": [
-              "Au lamarckisme",
-              "Au darwinisme (sélection naturelle)",
-              "Au mutationnisme",
-              "Au créationnisme"
+              "Lamarck",
+              "Darwin",
+              "De Vries et Morgan",
+              "Les généticiens modernes uniquement"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La variation existe d'abord ; le milieu la trie ensuite."
+            "explanation": "Résultats du texte 1 : sélection naturelle pour Darwin."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "piege",
-          "stepTitle": "Les plus aptes",
-          "stepTheme": "Les plus aptes",
-          "stepBadge": "Les plus aptes",
-          "paragraphText": "Chez Darwin, les « plus aptes » sont les mieux adaptés au milieu, pas forcément les plus forts.",
+          "stepKind": "exemple",
+          "stepTitle": "Les plus faibles meurent, les plus forts vivent",
+          "stepTheme": "Les plus faibles meurent, les plus forts vivent",
+          "stepBadge": "Les plus faibles meurent, les plus forts vivent",
+          "paragraphText": "L'interprétation de la leçon résume Darwin en une phrase imagée.\nCe sont les plus faibles qui meurent et les plus forts qui vivent, du fait de la sélection naturelle.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q6",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q6",
             "type": "mcq",
-            "prompt": "Dans la théorie de Darwin, « seuls les plus aptes parviennent à procréer ». Qui sont les « plus aptes » ?",
+            "prompt": "Selon l'interprétation de la leçon pour Darwin :",
             "options": [
-              "Toujours les plus forts physiquement",
-              "Les mieux adaptés à leur milieu, qui survivent et se reproduisent le plus",
-              "Les plus âgés",
-              "Les plus grands"
+              "Les plus faibles vivent toujours",
+              "Les plus faibles meurent et les plus forts vivent",
+              "Le besoin crée les organes",
+              "Les gènes mutent brutalement"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Un petit animal bien camouflé peut être plus apte qu'un gros."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "Les généticiens modernes",
-          "stepTheme": "Les généticiens modernes",
-          "stepBadge": "Les généticiens modernes",
-          "paragraphText": "Pour les généticiens modernes, l'évolution est un changement de la fréquence des gènes au sein des populations.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q7",
-            "type": "mcq",
-            "prompt": "Selon les généticiens modernes, comment peut-on comprendre l'évolution d'une espèce ?",
-            "options": [
-              "Comme un changement de la fréquence des gènes dans les populations",
-              "Comme la volonté des individus",
-              "Comme un phénomène impossible",
-              "Comme une transmission des caractères acquis"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un allèle avantageux devient plus fréquent au fil des générations."
+            "explanation": "C'est la formulation de l'interprétation pour la théorie de Darwin."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q1",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q1",
           "type": "mcq",
-          "prompt": "Quel savant a résumé sa théorie de l'évolution par la formule « la fonction crée l'organe » ?",
+          "prompt": "La formule « la fonction crée l'organe » appartient à :",
           "options": [
             "Darwin",
             "Lamarck",
@@ -974,346 +1083,300 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
             "Morgan"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Pour Lamarck, le besoin et l'usage transforment les organes."
+          "explanation": "C'est le résumé donné pour Lamarck dans les résultats du texte 1."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q2",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q2",
           "type": "mcq",
-          "prompt": "Darwin observe que les êtres vivants se reproduisent en très grand nombre sans qu'il y ait surpopulation, et que les individus aux variations avantageuses survivent mieux. Comment appelle-t-il ce mécanisme ?",
+          "prompt": "Selon Darwin, seuls parviennent à procréer :",
           "options": [
-            "La mutation brutale",
-            "La sélection naturelle",
-            "La transmission des caractères acquis",
-            "La génération spontanée"
+            "Les individus les plus nombreux",
+            "Les individus en surnombre au hasard",
+            "Les plus aptes, porteurs de variations avantageuses",
+            "Les individus les plus faibles"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "C'est le cœur de la sélection naturelle décrite dans le texte 1."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q3",
+          "type": "mcq",
+          "prompt": "Darwin part du constat suivant :",
+          "options": [
+            "Les espèces ne se reproduisent presque pas",
+            "Malgré une reproduction excessive, il n'y a pas de surpopulation",
+            "Tous les individus survivent",
+            "Les mutations sont toujours brutales"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La nature « sélectionne » les plus aptes."
+          "explanation": "C'est le point de départ du raisonnement darwinien dans le texte 1."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q3",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q4",
           "type": "mcq",
-          "prompt": "Selon De Vries et Morgan, comment se fait le passage d'une espèce à une autre ?",
+          "prompt": "Chez Lamarck, les modifications acquises sont :",
           "options": [
-            "Par une mutation brutale des gènes",
-            "Par l'usage des organes",
-            "Par la volonté des êtres vivants",
-            "Par la sélection naturelle seule, très lentement"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "On les appelle les mutationnistes."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q4",
-          "type": "mcq",
-          "prompt": "« Les girafes ont allongé leur cou à force de l'étirer pour atteindre les feuilles, puis ont transmis ce long cou à leurs petits. » À quelle théorie correspond cette explication ?",
-          "options": [
-            "Au darwinisme",
-            "Au lamarckisme",
-            "Au mutationnisme",
-            "À la théorie synthétique"
+            "Perdues à chaque génération",
+            "Conservées par la descendance",
+            "Éliminées par sélection",
+            "Dues à des mutations brutales"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est la transmission d'un caractère acquis par l'usage."
+          "explanation": "C'est le mécanisme de transmission propre à la théorie de Lamarck."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q5",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q5",
           "type": "mcq",
-          "prompt": "« Parmi des girafes nées avec des cous de longueurs différentes, celles au cou plus long trouvaient plus de nourriture, survivaient et avaient plus de petits. » À quelle théorie correspond cette explication ?",
+          "prompt": "« Il y a sélection naturelle » est l'idée centrale de :",
           "options": [
-            "Au lamarckisme",
-            "Au darwinisme (sélection naturelle)",
-            "Au mutationnisme",
-            "Au créationnisme"
+            "Lamarck",
+            "Darwin",
+            "De Vries et Morgan",
+            "Les généticiens modernes uniquement"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La variation existe d'abord ; le milieu la trie ensuite."
+          "explanation": "Résultats du texte 1 : sélection naturelle pour Darwin."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q6",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p05_q6",
           "type": "mcq",
-          "prompt": "Dans la théorie de Darwin, « seuls les plus aptes parviennent à procréer ». Qui sont les « plus aptes » ?",
+          "prompt": "Selon l'interprétation de la leçon pour Darwin :",
           "options": [
-            "Toujours les plus forts physiquement",
-            "Les mieux adaptés à leur milieu, qui survivent et se reproduisent le plus",
-            "Les plus âgés",
-            "Les plus grands"
+            "Les plus faibles vivent toujours",
+            "Les plus faibles meurent et les plus forts vivent",
+            "Le besoin crée les organes",
+            "Les gènes mutent brutalement"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Un petit animal bien camouflé peut être plus apte qu'un gros."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p04_q7",
-          "type": "mcq",
-          "prompt": "Selon les généticiens modernes, comment peut-on comprendre l'évolution d'une espèce ?",
-          "options": [
-            "Comme un changement de la fréquence des gènes dans les populations",
-            "Comme la volonté des individus",
-            "Comme un phénomène impossible",
-            "Comme une transmission des caractères acquis"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Un allèle avantageux devient plus fréquent au fil des générations."
+          "explanation": "C'est la formulation de l'interprétation pour la théorie de Darwin."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05",
-      "order": 5,
-      "title": "La théorie synthétique de l'évolution",
-      "summary": "Mutation × sélection × temps.",
-      "conceptExplanation": "Texte 2 : « La transformation évolutive de grande amplitude ne peut être immédiate, totale, sous peine d'altérer gravement l'état d'adaptation, donc la viabilité de l'organisme. Une transformation ne pourra se réaliser que de façon progressive, lente, par sommation de petits changements, tous dans le même sens, ce qui peut s'exprimer ainsi : la mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologiste engendre toute la transformation évolutive quelle que soit son amplitude. »\n\nTrois facteurs de l'évolution :\n1. les MUTATIONS : des changements des gènes, qui créent la variation entre individus ;\n2. la SÉLECTION NATURELLE : elle élimine les individus fragiles (mal adaptés) et favorise ceux qui sont adaptés ;\n3. le TEMPS (géologique, paléontologique) : il permet l'accumulation de nombreux petits changements.\n\nLa théorie synthétique de l'évolution (ou néodarwinisme) fait la synthèse des théories précédentes : elle regroupe les données de la systématique (classification), de la paléontologie (fossiles) et de la génétique (gènes, mutations).\n\nChaque théorie a ses limites : Lamarck (la transmission des caractères acquis n'est pas prouvée), Darwin (il ne connaissait pas les gènes), mutationnisme (une seule mutation brutale ne crée pas une nouvelle espèce viable).\n\nConclusion générale : l'évolution de la lignée humaine s'est faite par des transformations morphologiques (crâne, cerveau), des modifications de la stature (bipédie) et des modifications moléculaires ; elle s'explique par la théorie synthétique.",
-      "keyRule": "Théorie synthétique : mutations (variation) × sélection naturelle (tri) × temps (accumulation). Elle réunit systématique, paléontologie et génétique.",
+      "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06",
+      "order": 6,
+      "title": "Du mutationnisme à la théorie synthétique de l'évolution",
+      "summary": "Présenter De Vries, Morgan et les généticiens modernes, puis la synthèse des théories.",
+      "conceptExplanation": "De Vries (1848-1935) et Morgan (1886-1945) : le passage d'une espèce à l'autre se fait par une mutation brutale, et non pas graduellement sous l'action de la sélection naturelle : c'est le mutationnisme.\nLes généticiens modernes : l'évolution peut se comprendre comme un changement de fréquence au sein des populations.\nLe texte 2 précise qu'une transformation évolutive de grande amplitude ne peut être immédiate et totale, sous peine d'altérer gravement l'adaptation et la viabilité de l'organisme. Elle ne peut se réaliser que de façon progressive et lente, par sommation de petits changements tous dans le même sens : la mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologue, engendre toute la transformation évolutive, quelle que soit son amplitude.\nLes transformations viables sont donc dues aux mutations des gènes dans le temps ; ces mutations engendrent des individus fragiles et solides, et les fragiles sont éliminés par la sélection naturelle, également dans le temps.\nConclusion : l'évolution des espèces s'explique par la synthèse des données, c'est-à-dire la synthèse de toutes les théories antérieures ; on parle de théorie synthétique. Elle regroupe les données de la systématique, de la paléontologie et de la génétique. L'évolution s'explique donc par des théories qui ont des limites, dépassées par cette synthèse.",
+      "keyRule": "La théorie synthétique additionne les apports : mutations des gènes, orientation par la sélection naturelle et temps du paléontologue, en regroupant systématique, paléontologie et génétique.",
       "formulas": [],
       "workedExample": {
-        "title": "La formule du texte 2",
-        "statement": "Explique la phrase : « la mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologiste ».",
+        "title": "Justifier l'origine animale de l'Homme (exercice 3, question 3)",
+        "statement": "Justifie, à partir de l'étude moléculaire, la théorie selon laquelle l'Homme proviendrait d'une lignée de singe.",
         "methodSteps": [
-          "Les mutations créent de petites variations.",
-          "La sélection naturelle conserve celles qui sont avantageuses.",
-          "Sur des millions d'années, ces petits changements s'additionnent."
+          "Le nombre d'acides aminés différents augmente au fur et à mesure que les espèces s'éloignent : le lien de parenté s'exprime par ce nombre.",
+          "L'Homme et le gorille, aux molécules identiques, sont donc très proches, comme des primates d'une même lignée.",
+          "Cela s'accorde avec les théories de De Vries, Morgan et des généticiens modernes : l'évolution est liée aux gènes, qui subissent mutation ou changement de fréquence.",
+          "Les transformations viables dues aux mutations dans le temps, triées par la sélection naturelle, expliquent cette descendance commune."
         ],
-        "conclusion": "L'évolution résulte de la combinaison des mutations, de la sélection et du temps."
+        "conclusion": "Corrigé de l'exercice 3 : la proximité moléculaire Homme-gorille s'explique par les mutations des gènes et la sélection naturelle dans le temps."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "propriete",
-          "stepTitle": "Trois facteurs",
-          "stepTheme": "Trois facteurs",
-          "stepBadge": "Trois facteurs",
-          "paragraphText": "« La mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologiste engendre toute la transformation évolutive. »",
+          "stepKind": "definition",
+          "stepTitle": "Le mutationnisme",
+          "stepTheme": "Le mutationnisme",
+          "stepBadge": "Le mutationnisme",
+          "paragraphText": "• Mutationnisme (De Vries, Morgan) : le passage d'une espèce à l'autre se fait par une mutation brutale.\nIl ne se fait donc pas graduellement sous l'action de la sélection naturelle, contrairement au schéma darwinien seul.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q1",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q1",
             "type": "mcq",
-            "prompt": "Le texte dit : « la mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologiste engendre toute la transformation évolutive ». Quels sont les trois facteurs de l'évolution cités ?",
+            "prompt": "Pour De Vries et Morgan, le passage d'une espèce à l'autre se fait par :",
             "options": [
-              "La mutation, la sélection naturelle et le temps",
-              "La volonté, l'effort et l'usage",
-              "Le climat, la nourriture et le sommeil",
-              "La fonction, l'organe et le besoin"
+              "La fonction qui crée l'organe",
+              "Une mutation brutale",
+              "La seule sélection naturelle graduelle",
+              "Un changement de stature uniquement"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est le cœur de la théorie synthétique."
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la thèse mutationniste du texte 1."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Lent et progressif",
-          "stepTheme": "Lent et progressif",
-          "stepBadge": "Lent et progressif",
-          "paragraphText": "Une grande transformation ne peut être immédiate : elle se fait lentement, par l'addition de petits changements dans le même sens.",
+          "stepTitle": "Les généticiens modernes et les fréquences",
+          "stepTheme": "Les généticiens modernes et les fréquences",
+          "stepBadge": "Les généticiens modernes et les fréquences",
+          "paragraphText": "Pour les généticiens modernes, l'évolution peut se comprendre comme un changement de fréquence au sein des populations.\nCe sont les fréquences des gènes dans les populations qui évoluent.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q2",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q2",
             "type": "mcq",
-            "prompt": "Selon le texte 2, pourquoi une grande transformation évolutive ne peut-elle pas être immédiate et totale ?",
+            "prompt": "Les généticiens modernes comprennent l'évolution comme :",
             "options": [
-              "Parce qu'elle altérerait gravement l'adaptation et la viabilité de l'organisme",
-              "Parce que les gènes ne changent jamais",
-              "Parce que Dieu l'interdit",
-              "Parce que les fossiles n'existent pas"
+              "Un changement de fréquence au sein des populations",
+              "Une tendance spontanée à la complexité",
+              "Une destruction au hasard des individus",
+              "Une augmentation du volume du cerveau"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Un changement trop brutal produirait un organisme non viable."
+            "explanation": "C'est leur apport propre, listé dans le texte 1."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "La théorie synthétique",
-          "stepTheme": "La théorie synthétique",
-          "stepBadge": "La théorie synthétique",
-          "paragraphText": "La théorie synthétique fait la synthèse des théories antérieures et regroupe les données de la systématique, de la paléontologie et de la génétique.",
+          "stepKind": "propriete",
+          "stepTitle": "Mutation, sélection et temps",
+          "stepTheme": "Mutation, sélection et temps",
+          "stepBadge": "Mutation, sélection et temps",
+          "paragraphText": "Le texte 2 combine trois facteurs pour engendrer toute transformation évolutive.\nLa mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologue.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q3",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q3",
             "type": "mcq",
-            "prompt": "Quelles disciplines la théorie synthétique de l'évolution regroupe-t-elle ?",
+            "prompt": "La formule du texte 2 combine :",
             "options": [
-              "La systématique, la paléontologie et la génétique",
-              "La chimie, la physique et l'astronomie",
-              "L'histoire, la géographie et la philosophie",
-              "Les mathématiques seulement"
+              "Fonction, organe et besoin",
+              "Mutation, sélection naturelle et temps paléontologique",
+              "Stature, crâne et bassin",
+              "Systématique, hasard et climat"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Classification, fossiles et gènes : trois sources de preuves."
+            "correctAnswerIndex": 1,
+            "explanation": "Résultats du texte 2 : mutation, sélection naturelle, temps paléontologique."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "propriete",
-          "stepTitle": "Le rôle de la sélection",
-          "stepTheme": "Le rôle de la sélection",
-          "stepBadge": "Le rôle de la sélection",
-          "paragraphText": "Les mutations produisent des individus fragiles et des individus résistants ; la sélection naturelle élimine les fragiles au fil du temps.",
+          "stepKind": "methode",
+          "stepTitle": "Des transformations progressives et lentes",
+          "stepTheme": "Des transformations progressives et lentes",
+          "stepBadge": "Des transformations progressives et lentes",
+          "paragraphText": "Méthode du texte 2 : une grande transformation ne peut être immédiate et totale, sous peine de détruire l'adaptation et la viabilité.\nElle se réalise progressivement et lentement, par sommation de petits changements tous dans le même sens.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q4",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q4",
             "type": "mcq",
-            "prompt": "Dans la théorie synthétique, les mutations produisent des individus plus ou moins adaptés. Quel est le rôle de la sélection naturelle ?",
+            "prompt": "Une transformation évolutive de grande amplitude se réalise :",
             "options": [
-              "Créer les mutations",
-              "Éliminer les individus mal adaptés et favoriser les mieux adaptés",
-              "Arrêter le temps",
-              "Transmettre les caractères acquis"
+              "Immédiatement et totalement",
+              "Progressivement et lentement, par sommation de petits changements dans le même sens",
+              "Sans aucun changement génétique",
+              "Uniquement par la stature"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La sélection oriente l'évolution ; les mutations la rendent possible."
+            "explanation": "C'est l'argument d'ouverture du texte 2."
           }
         },
         {
           "stepNumber": 5,
           "stepKind": "piege",
-          "stepTitle": "Les limites",
-          "stepTheme": "Les limites",
-          "stepBadge": "Les limites",
-          "paragraphText": "Chaque théorie a des limites : Lamarck (caractères acquis non transmis), Darwin (ignorait les gènes), mutationnisme (une seule mutation brutale ne suffit pas).",
+          "stepTitle": "La théorie synthétique ne choisit pas une seule théorie",
+          "stepTheme": "La théorie synthétique ne choisit pas une seule théorie",
+          "stepBadge": "La théorie synthétique ne choisit pas une seule théorie",
+          "paragraphText": "Piège : présenter la conclusion comme la victoire d'une seule théorie antérieure.\nLa leçon conclut à une synthèse de toutes les théories antérieures, regroupant systématique, paléontologie et génétique.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q5",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q5",
             "type": "mcq",
-            "prompt": "Un sportif développe ses muscles par l'entraînement. Selon les connaissances actuelles, ses enfants naîtront-ils avec ces muscles développés ?",
+            "prompt": "La théorie synthétique regroupe les données de :",
             "options": [
-              "Oui, comme le dit Lamarck",
-              "Non : un caractère acquis pendant la vie ne se transmet pas par les gènes",
-              "Oui, mais seulement les garçons",
-              "Oui, si les deux parents s'entraînent"
+              "La systématique, la paléontologie et la génétique",
+              "La seule paléontologie",
+              "La chimie et la physique uniquement",
+              "L'anatomie du bassin uniquement"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "C'est la principale limite de la théorie de Lamarck."
+            "correctAnswerIndex": 0,
+            "explanation": "Conclusion de la partie théories : synthèse de ces trois domaines de données."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "methode",
-          "stepTitle": "Associer savant et idée",
-          "stepTheme": "Associer savant et idée",
-          "stepBadge": "Associer savant et idée",
-          "paragraphText": "Lamarck : la fonction crée l'organe. Darwin : sélection naturelle. De Vries et Morgan : mutation. Théorie synthétique : mutation × sélection × temps.",
+          "stepKind": "exemple",
+          "stepTitle": "Des individus fragiles éliminés",
+          "stepTheme": "Des individus fragiles éliminés",
+          "stepBadge": "Des individus fragiles éliminés",
+          "paragraphText": "Les mutations engendrent des individus fragiles et solides, explique l'interprétation.\nCeux qui sont fragiles seront à leur tour éliminés par la sélection naturelle, également dans le temps.",
           "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q6",
+            "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q6",
             "type": "mcq",
-            "prompt": "Associe : Lamarck, Darwin, De Vries. Quelle association est juste ?",
+            "prompt": "Après une mutation, les individus fragiles sont :",
             "options": [
-              "Lamarck – sélection naturelle ; Darwin – mutation ; De Vries – la fonction crée l'organe",
-              "Lamarck – la fonction crée l'organe ; Darwin – sélection naturelle ; De Vries – mutation brutale",
-              "Lamarck – mutation ; Darwin – la fonction crée l'organe ; De Vries – sélection",
-              "Les trois défendent la même idée"
+              "Toujours conservés",
+              "Éliminés par la sélection naturelle dans le temps",
+              "Transformés en gorilles",
+              "Protégés par la couche d'ozone"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La théorie synthétique réunit ensuite ces apports."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "La conclusion générale",
-          "stepTheme": "La conclusion générale",
-          "stepBadge": "La conclusion générale",
-          "paragraphText": "L'évolution de la lignée humaine s'est faite par des transformations morphologiques, des modifications de stature et des modifications moléculaires ; elle s'explique par la théorie synthétique.",
-          "exercise": {
-            "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q7",
-            "type": "mcq",
-            "prompt": "Selon la conclusion générale de la leçon sur l'évolution de la lignée humaine, par quels types de modifications cette évolution s'est-elle faite ?",
-            "options": [
-              "Morphologiques (crâne, cerveau), de stature (bipédie) et moléculaires",
-              "Uniquement de couleur de peau",
-              "Uniquement de taille",
-              "Aucune : l'homme n'a pas évolué"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Ces trois caractéristiques de la lignée humaine sont toutes vérifiées."
+            "explanation": "C'est le sort des individus fragiles décrit dans l'interprétation."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q1",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q1",
           "type": "mcq",
-          "prompt": "Le texte dit : « la mutation du généticien, orientée par la sélection et multipliée par le temps du paléontologiste engendre toute la transformation évolutive ». Quels sont les trois facteurs de l'évolution cités ?",
+          "prompt": "Pour De Vries et Morgan, le passage d'une espèce à l'autre se fait par :",
           "options": [
-            "La mutation, la sélection naturelle et le temps",
-            "La volonté, l'effort et l'usage",
-            "Le climat, la nourriture et le sommeil",
-            "La fonction, l'organe et le besoin"
+            "La fonction qui crée l'organe",
+            "Une mutation brutale",
+            "La seule sélection naturelle graduelle",
+            "Un changement de stature uniquement"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est le cœur de la théorie synthétique."
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la thèse mutationniste du texte 1."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q2",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q2",
           "type": "mcq",
-          "prompt": "Selon le texte 2, pourquoi une grande transformation évolutive ne peut-elle pas être immédiate et totale ?",
+          "prompt": "Les généticiens modernes comprennent l'évolution comme :",
           "options": [
-            "Parce qu'elle altérerait gravement l'adaptation et la viabilité de l'organisme",
-            "Parce que les gènes ne changent jamais",
-            "Parce que Dieu l'interdit",
-            "Parce que les fossiles n'existent pas"
+            "Un changement de fréquence au sein des populations",
+            "Une tendance spontanée à la complexité",
+            "Une destruction au hasard des individus",
+            "Une augmentation du volume du cerveau"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Un changement trop brutal produirait un organisme non viable."
+          "explanation": "C'est leur apport propre, listé dans le texte 1."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q3",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q3",
           "type": "mcq",
-          "prompt": "Quelles disciplines la théorie synthétique de l'évolution regroupe-t-elle ?",
+          "prompt": "La formule du texte 2 combine :",
+          "options": [
+            "Fonction, organe et besoin",
+            "Mutation, sélection naturelle et temps paléontologique",
+            "Stature, crâne et bassin",
+            "Systématique, hasard et climat"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Résultats du texte 2 : mutation, sélection naturelle, temps paléontologique."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q4",
+          "type": "mcq",
+          "prompt": "Une transformation évolutive de grande amplitude se réalise :",
+          "options": [
+            "Immédiatement et totalement",
+            "Progressivement et lentement, par sommation de petits changements dans le même sens",
+            "Sans aucun changement génétique",
+            "Uniquement par la stature"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est l'argument d'ouverture du texte 2."
+        },
+        {
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q5",
+          "type": "mcq",
+          "prompt": "La théorie synthétique regroupe les données de :",
           "options": [
             "La systématique, la paléontologie et la génétique",
-            "La chimie, la physique et l'astronomie",
-            "L'histoire, la géographie et la philosophie",
-            "Les mathématiques seulement"
+            "La seule paléontologie",
+            "La chimie et la physique uniquement",
+            "L'anatomie du bassin uniquement"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Classification, fossiles et gènes : trois sources de preuves."
+          "explanation": "Conclusion de la partie théories : synthèse de ces trois domaines de données."
         },
         {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q4",
+          "id": "terminale_a1_svt_l04_evolution_lignee_humaine_p06_q6",
           "type": "mcq",
-          "prompt": "Dans la théorie synthétique, les mutations produisent des individus plus ou moins adaptés. Quel est le rôle de la sélection naturelle ?",
+          "prompt": "Après une mutation, les individus fragiles sont :",
           "options": [
-            "Créer les mutations",
-            "Éliminer les individus mal adaptés et favoriser les mieux adaptés",
-            "Arrêter le temps",
-            "Transmettre les caractères acquis"
+            "Toujours conservés",
+            "Éliminés par la sélection naturelle dans le temps",
+            "Transformés en gorilles",
+            "Protégés par la couche d'ozone"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La sélection oriente l'évolution ; les mutations la rendent possible."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q5",
-          "type": "mcq",
-          "prompt": "Un sportif développe ses muscles par l'entraînement. Selon les connaissances actuelles, ses enfants naîtront-ils avec ces muscles développés ?",
-          "options": [
-            "Oui, comme le dit Lamarck",
-            "Non : un caractère acquis pendant la vie ne se transmet pas par les gènes",
-            "Oui, mais seulement les garçons",
-            "Oui, si les deux parents s'entraînent"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "C'est la principale limite de la théorie de Lamarck."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q6",
-          "type": "mcq",
-          "prompt": "Associe : Lamarck, Darwin, De Vries. Quelle association est juste ?",
-          "options": [
-            "Lamarck – sélection naturelle ; Darwin – mutation ; De Vries – la fonction crée l'organe",
-            "Lamarck – la fonction crée l'organe ; Darwin – sélection naturelle ; De Vries – mutation brutale",
-            "Lamarck – mutation ; Darwin – la fonction crée l'organe ; De Vries – sélection",
-            "Les trois défendent la même idée"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "La théorie synthétique réunit ensuite ces apports."
-        },
-        {
-          "id": "terminale_a_svt_l04_evolution_lignee_humaine_p05_q7",
-          "type": "mcq",
-          "prompt": "Selon la conclusion générale de la leçon sur l'évolution de la lignée humaine, par quels types de modifications cette évolution s'est-elle faite ?",
-          "options": [
-            "Morphologiques (crâne, cerveau), de stature (bipédie) et moléculaires",
-            "Uniquement de couleur de peau",
-            "Uniquement de taille",
-            "Aucune : l'homme n'a pas évolué"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Ces trois caractéristiques de la lignée humaine sont toutes vérifiées."
+          "explanation": "C'est le sort des individus fragiles décrit dans l'interprétation."
         }
       ]
     }

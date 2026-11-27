@@ -110,7 +110,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_methodologie_l02_commentaire_texte_p01_q4",
             "type": "mcq",
-            "prompt": "Dans son texte sur la tenue du philosophe, Épictète critique le philosophe « malpropre, négligé » qui débite de belles maximes. Quelle est sa thèse ?",
+            "prompt": "Quelle est la thèse d'Épictète dans ce texte ?",
             "options": [
               "Le philosophe doit négliger son corps",
               "Le philosophe et son disciple doivent prendre soin de leur corps et de leur âme",
@@ -207,7 +207,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
         {
           "id": "terminale_philo_methodologie_l02_commentaire_texte_p01_q4",
           "type": "mcq",
-          "prompt": "Dans son texte sur la tenue du philosophe, Épictète critique le philosophe « malpropre, négligé » qui débite de belles maximes. Quelle est sa thèse ?",
+          "prompt": "Quelle est la thèse d'Épictète dans ce texte ?",
           "options": [
             "Le philosophe doit négliger son corps",
             "Le philosophe et son disciple doivent prendre soin de leur corps et de leur âme",
@@ -974,7 +974,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
           "stepTitle": "Dépasser Hountondji",
           "stepTheme": "Dépasser Hountondji",
           "stepBadge": "Dépasser Hountondji",
-          "paragraphText": "Arguments pour la philosophie comme système :\n• Hegel : « Une philosophie qui n'est pas un système ne saurait rien avoir de scientifique. »\n• Descartes : la philosophie est un arbre dont les racines sont la métaphysique, le tronc la physique et les branches les autres sciences.\nPrécision : cette image de l'arbre vient des Principes de la philosophie, pas du Discours de la méthode comme l'écrit une erreur fréquente.",
+          "paragraphText": "Arguments pour la philosophie comme système :\n• Hegel : « Une philosophie qui n'est pas un système ne saurait rien avoir de scientifique. »\n• Descartes : la philosophie est un arbre dont les racines sont la métaphysique, le tronc la physique et les branches les autres sciences.\nPrécision : cette image de l'arbre vient des Principes de la philosophie, pas du Discours de la méthode comme l'écrit le PDF.",
           "exercise": {
             "id": "terminale_philo_methodologie_l02_commentaire_texte_p05_q2",
             "type": "mcq",
@@ -999,7 +999,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_methodologie_l02_commentaire_texte_p05_q3",
             "type": "mcq",
-            "prompt": "Dans un texte sur le rôle de la religion dans la vie de l'homme, Hume se demande à quoi sert la religion. Quelle est sa thèse ?",
+            "prompt": "Quelle est la thèse du texte de Hume ?",
             "options": [
               "La religion est une pure illusion",
               "La religion n'a aucun rôle",
@@ -1104,7 +1104,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
         {
           "id": "terminale_philo_methodologie_l02_commentaire_texte_p05_q3",
           "type": "mcq",
-          "prompt": "Dans un texte sur le rôle de la religion dans la vie de l'homme, Hume se demande à quoi sert la religion. Quelle est sa thèse ?",
+          "prompt": "Quelle est la thèse du texte de Hume ?",
           "options": [
             "La religion est une pure illusion",
             "La religion n'a aucun rôle",

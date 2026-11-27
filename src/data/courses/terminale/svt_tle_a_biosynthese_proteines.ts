@@ -1,9 +1,9 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT TA_L7_La biosynthèse des protéines.pdf » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Leçon 7 : La biosynthèse des protéines » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1754
 export const SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES: CurriculumChapter = {
-  "id": "terminale_a_svt_l07_biosynthese_proteines",
+  "id": "terminale_a1_svt_l07_biosynthese_proteines",
   "subjectId": "svt",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
@@ -11,1568 +11,1372 @@ export const SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES: CurriculumChapter = {
   ],
   "order": 7,
   "title": "Leçon 7 : La biosynthèse des protéines",
-  "summary": "Les acteurs (ADN, ARN, ribosome), le code génétique, la transcription et la traduction, traduire une séquence (ocytocine et vasopressine), les mutations (albinisme).",
-  "officialVolumeHours": 8,
+  "summary": "La cellule synthétise ses protéines à partir des acides aminés grâce à des acteurs (ADN, ARN et ribosomes), selon le code génétique universel, et par un mécanisme en deux grandes étapes : la transcription dans le noyau et la traduction dans le cytoplasme.",
   "contentVersion": 2,
-  "source": "SVT TA_L7_La biosynthèse des protéines.pdf",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1754",
   "points": [
     {
-      "id": "terminale_a_svt_l07_biosynthese_proteines_p01",
+      "id": "terminale_a1_svt_l07_biosynthese_proteines_p01",
       "order": 1,
-      "title": "Les acteurs de la synthèse des protéines",
-      "summary": "ADN, ARN messager, ARN de transfert, ARN ribosomial et ribosome.",
-      "conceptExplanation": "Situation : une vidéo montre la synthèse des protéines dans une cellule. Les protéines ne se forment pas au hasard. Hypothèses : la cellule synthétise les protéines grâce à des acteurs, selon un code et selon un mécanisme.\n\nRappel : une protéine est une grosse molécule formée d'une chaîne d'ACIDES AMINÉS (il en existe 20 sortes), reliés par des liaisons peptidiques.\n\nLes acteurs :\n- l'ADN (acide désoxyribonucléique) : deux brins complémentaires (bicaténaire), situé dans le NOYAU ; ses bases sont A, T, C, G. Un GÈNE est une petite portion d'ADN qui contient l'information pour fabriquer une protéine ;\n- l'ARN (acide ribonucléique) : un seul brin (monocaténaire) ; ses bases sont A, U, C, G (l'uracile U remplace la thymine T). Trois types :\n  · l'ARN messager (ARNm) : copie de l'information d'un gène, il va du noyau au cytoplasme ;\n  · l'ARN de transfert (ARNt) : forme particulière ; il porte un acide aminé et un ANTICODON (3 bases) ;\n  · l'ARN ribosomial (ARNr) : il forme les ribosomes avec des protéines ;\n- le RIBOSOME : formé d'une petite et d'une grande sous-unité ; c'est l'« atelier » où la protéine est assemblée, dans le cytoplasme.\n\nConclusion : la cellule synthétise les protéines grâce à l'ADN, aux ARN et aux ribosomes.",
-      "keyRule": "ADN (2 brins, noyau, A-T-C-G) → ARNm (1 brin, A-U-C-G) → ribosome + ARNt (porte l'acide aminé) → protéine.",
+      "title": "Les acteurs de la biosynthèse des protéines",
+      "summary": "Identifier l'ADN, les trois types d'ARN et le ribosome, acteurs de la synthèse protéique.",
+      "conceptExplanation": "Les acteurs de la synthèse protéique sont l'ADN, l'ARN et le ribosome.\nL'ADN, acide désoxyribonucléique, est constitué par deux brins complémentaires (bicaténaire). Il est localisé dans le noyau.\nL'ARN, acide ribonucléique, est constitué par un seul brin (monocaténaire). On distingue trois types : l'ARN messager (ARNm), l'ARN de transfert (ARNt), qui diffère des autres par sa structure et sa forme, et l'ARN ribosomial (ARNr).\nLe ribosome est composé de deux sous-unités, une petite et une grande.\nLa cellule synthétise donc les protéines grâce à l'ADN, à l'ARN et aux ribosomes.",
+      "keyRule": "Trois acteurs à ne pas confondre : ADN bicaténaire dans le noyau, ARN monocaténaire en trois types (m, t, r) et ribosome en deux sous-unités.",
       "formulas": [],
       "workedExample": {
-        "title": "ADN ou ARN ?",
-        "statement": "Une molécule à un seul brin contient les bases A, U, C et G. Est-ce de l'ADN ou de l'ARN ?",
+        "title": "Choisir les bonnes propositions sur le gène et la protéine (exercice 2)",
+        "statement": "Pour chaque item de l'exercice 2, choisis la bonne proposition : définition d'un gène et définition d'une protéine.",
         "methodSteps": [
-          "Un seul brin : caractère de l'ARN.",
-          "La base U (uracile) n'existe que dans l'ARN ; l'ADN a T à la place."
+          "Un gène est un segment d'ADN (ou plus rarement d'ARN) programmant un caractère phénotypique : proposition a de l'item 1.",
+          "Une protéine est une grosse molécule dont les sous-unités sont des acides aminés : proposition c de l'item 2.",
+          "Les propositions écartent le glucose et les acides gras comme sous-unités des protéines."
         ],
-        "conclusion": "C'est de l'ARN."
+        "conclusion": "Gène : segment d'ADN programmant un caractère ; protéine : assemblage d'acides aminés."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Une protéine",
-          "stepTheme": "Une protéine",
-          "stepBadge": "Une protéine",
-          "paragraphText": "Une protéine est une grosse molécule formée d'une chaîne d'acides aminés reliés par des liaisons peptidiques.",
+          "stepTitle": "L'ADN, molécule bicaténaire du noyau",
+          "stepTheme": "L'ADN, molécule bicaténaire du noyau",
+          "stepBadge": "L'ADN, molécule bicaténaire du noyau",
+          "paragraphText": "• ADN : acide désoxyribonucléique, constitué par deux brins complémentaires, donc bicaténaire.\nIl est localisé dans le noyau de la cellule.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q1",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q1",
             "type": "mcq",
-            "prompt": "Quelles sont les sous-unités qui forment une protéine ?",
+            "prompt": "L'ADN est :",
             "options": [
-              "Des molécules de glucose",
-              "Des acides gras",
-              "Des acides aminés",
-              "Des nucléotides"
+              "Monocaténaire et cytoplasmique",
+              "Bicaténaire et localisé dans le noyau",
+              "Composé de deux sous-unités",
+              "Un type d'ARN"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "Les acides aminés sont reliés par des liaisons peptidiques."
+            "correctAnswerIndex": 1,
+            "explanation": "Résultats de l'observation du schéma des acteurs."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "definition",
-          "stepTitle": "L'ADN",
-          "stepTheme": "L'ADN",
-          "stepBadge": "L'ADN",
-          "paragraphText": "L'ADN est formé de deux brins complémentaires (bicaténaire) et se trouve dans le noyau.",
+          "stepTitle": "L'ARN et ses trois types",
+          "stepTheme": "L'ARN et ses trois types",
+          "stepBadge": "L'ARN et ses trois types",
+          "paragraphText": "• ARN : acide ribonucléique, constitué par un seul brin, donc monocaténaire.\nOn distingue l'ARN messager (ARNm), l'ARN de transfert (ARNt) et l'ARN ribosomial (ARNr).",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q2",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q2",
             "type": "mcq",
-            "prompt": "Parmi les acteurs de la synthèse des protéines, lequel est formé de deux brins complémentaires et se trouve dans le noyau ?",
+            "prompt": "L'ARN est constitué de :",
             "options": [
-              "L'ARN messager",
-              "L'ADN",
-              "Le ribosome",
-              "L'ARN de transfert"
+              "Deux brins complémentaires",
+              "Un seul brin",
+              "Trois brins",
+              "Deux sous-unités"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Les ARN n'ont qu'un seul brin."
+            "explanation": "L'ARN est monocaténaire, à la différence de l'ADN bicaténaire."
           }
         },
         {
           "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "L'ARNt se distingue par sa structure",
+          "stepTheme": "L'ARNt se distingue par sa structure",
+          "stepBadge": "L'ARNt se distingue par sa structure",
+          "paragraphText": "Parmi les trois types d'ARN, l'ARN de transfert diffère des autres par sa structure et sa forme.\nC'est lui qui portera les acides aminés pendant la traduction, avec son anticodon.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q3",
+            "type": "mcq",
+            "prompt": "L'ARN qui diffère des autres par sa structure et sa forme est :",
+            "options": [
+              "L'ARN messager",
+              "L'ARN ribosomial",
+              "L'ARN de transfert",
+              "L'ADN"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Précision donnée dans les résultats de la partie I."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Le ribosome en deux sous-unités",
+          "stepTheme": "Le ribosome en deux sous-unités",
+          "stepBadge": "Le ribosome en deux sous-unités",
+          "paragraphText": "Le ribosome est composé de deux sous-unités.\nIl comprend une petite sous-unité et une grande sous-unité, qui s'assemblent pendant la traduction.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q4",
+            "type": "mcq",
+            "prompt": "Le ribosome est composé de :",
+            "options": [
+              "Deux brins d'ADN",
+              "Une petite et une grande sous-unité",
+              "Trois types d'ARN uniquement",
+              "Un seul élément indivisible"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Résultats de la partie I pour le ribosome."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Les bases de l'ARN ne contiennent pas la thymine",
+          "stepTheme": "Les bases de l'ARN ne contiennent pas la thymine",
+          "stepBadge": "Les bases de l'ARN ne contiennent pas la thymine",
+          "paragraphText": "Piège de l'exercice 3 : lister la thymine parmi les bases de l'ARN.\nL'ARN contient l'adénine, l'uracile, la cytosine et la guanine ; la thymine appartient à l'ADN et est remplacée par l'uracile dans l'ARN.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q5",
+            "type": "mcq",
+            "prompt": "Laquelle de ces bases n'appartient pas à l'ARN ?",
+            "options": [
+              "L'adénine",
+              "L'uracile",
+              "La cytosine",
+              "La thymine"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "Exercice 3, item 1 : les bonnes bases de l'ARN sont adénine, uracile, cytosine et guanine."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Une protéine, assemblage d'acides aminés",
+          "stepTheme": "Une protéine, assemblage d'acides aminés",
+          "stepBadge": "Une protéine, assemblage d'acides aminés",
+          "paragraphText": "Une protéine est une grosse molécule dont les sous-unités sont des acides aminés.\nNi glucose ni acides gras : les exercices de la leçon écartent explicitement ces deux confusions.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q6",
+            "type": "mcq",
+            "prompt": "Les sous-unités d'une protéine sont :",
+            "options": [
+              "Des glucoses",
+              "Des acides gras",
+              "Des acides aminés",
+              "Des nucléotides uniquement"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Exercice 2, item 2, proposition c."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q1",
+          "type": "mcq",
+          "prompt": "L'ADN est :",
+          "options": [
+            "Monocaténaire et cytoplasmique",
+            "Bicaténaire et localisé dans le noyau",
+            "Composé de deux sous-unités",
+            "Un type d'ARN"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Résultats de l'observation du schéma des acteurs."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q2",
+          "type": "mcq",
+          "prompt": "L'ARN est constitué de :",
+          "options": [
+            "Deux brins complémentaires",
+            "Un seul brin",
+            "Trois brins",
+            "Deux sous-unités"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'ARN est monocaténaire, à la différence de l'ADN bicaténaire."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q3",
+          "type": "mcq",
+          "prompt": "L'ARN qui diffère des autres par sa structure et sa forme est :",
+          "options": [
+            "L'ARN messager",
+            "L'ARN ribosomial",
+            "L'ARN de transfert",
+            "L'ADN"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Précision donnée dans les résultats de la partie I."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q4",
+          "type": "mcq",
+          "prompt": "Le ribosome est composé de :",
+          "options": [
+            "Deux brins d'ADN",
+            "Une petite et une grande sous-unité",
+            "Trois types d'ARN uniquement",
+            "Un seul élément indivisible"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Résultats de la partie I pour le ribosome."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q5",
+          "type": "mcq",
+          "prompt": "Laquelle de ces bases n'appartient pas à l'ARN ?",
+          "options": [
+            "L'adénine",
+            "L'uracile",
+            "La cytosine",
+            "La thymine"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "Exercice 3, item 1 : les bonnes bases de l'ARN sont adénine, uracile, cytosine et guanine."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p01_q6",
+          "type": "mcq",
+          "prompt": "Les sous-unités d'une protéine sont :",
+          "options": [
+            "Des glucoses",
+            "Des acides gras",
+            "Des acides aminés",
+            "Des nucléotides uniquement"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Exercice 2, item 2, proposition c."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l07_biosynthese_proteines_p02",
+      "order": 2,
+      "title": "Le code génétique : codons et acides aminés",
+      "summary": "Définir le codon, compter les 64 codons et repérer les trois codons stop.",
+      "conceptExplanation": "Le code génétique établit la correspondance entre les codons et les acides aminés. Il comprend des codons, associations de 3 bases (le texte dit 3 acides nucléiques), et une vingtaine d'acides aminés.\nChaque codon est formé de 3 des 4 bases représentées par les lettres U, C, G et A, disposées en première, deuxième ou troisième position. Le codon correspond à un triplet de nucléotides de l'ARNm.\nLe code génétique comporte 64 codons, dont 61 désignent un acide aminé défini. Les trois autres ne codent aucun acide aminé : ce sont les codons stop, ou codons non-sens, UAA, UAG et UGA.\nLa synthèse d'une protéine commence toujours par le codon AUG (méthionine), appelé codon initiateur.\nLe code génétique est le système de correspondance entre les codons de l'ARNm et les 20 acides aminés spécifiques nécessaires à la synthèse protéique.",
+      "keyRule": "64 codons au total : 61 pour les 20 acides aminés, 3 codons stop (UAA, UAG, UGA) et un codon initiateur AUG pour démarrer.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Associer les notions du code génétique à leurs définitions (activité d'application)",
+        "statement": "Associe chaque notion à sa définition : codon, codon initiateur, codon stop, code génétique redondant, anticodon.",
+        "methodSteps": [
+          "Codon : triplet de bases de l'ARNm.",
+          "Codon initiateur : triplet de bases qui débute la synthèse protéique.",
+          "Codon stop : triplet de bases n'ayant aucune correspondance en acide aminé.",
+          "Code génétique redondant : existence de plusieurs codons pour un même acide aminé.",
+          "Anticodon : triplet de bases complémentaire aux codons, porté par l'ARNt."
+        ],
+        "conclusion": "Les cinq associations de l'activité d'application, toutes tirées des définitions de la leçon."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Le codon, triplet de nucléotides",
+          "stepTheme": "Le codon, triplet de nucléotides",
+          "stepBadge": "Le codon, triplet de nucléotides",
+          "paragraphText": "• Codon : triplet de bases de l'ARNm, formé de 3 des 4 bases U, C, G et A.\nLe mot codon désigne donc une séquence de 3 nucléotides constitutifs de l'ARN messager, et non de l'ARNt ou de l'ARNr.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q1",
+            "type": "mcq",
+            "prompt": "Le mot codon désigne une séquence de 3 nucléotides constitutifs :",
+            "options": [
+              "Du brin transcrit de l'ADN uniquement selon l'exercice",
+              "De l'ARN ribosomal",
+              "De l'ARN de transfert",
+              "De l'ARN messager"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "Exercice 3, item 2 : bonne réponse d, l'ARN messager."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepTitle": "L'anticodon, porté par l'ARNt",
+          "stepTheme": "L'anticodon, porté par l'ARNt",
+          "stepBadge": "L'anticodon, porté par l'ARNt",
+          "paragraphText": "• Anticodon : triplet de bases complémentaire aux codons, porté par l'ARNt.\nLe mot anticodon désigne donc une séquence de 3 nucléotides de l'ARN de transfert.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q2",
+            "type": "mcq",
+            "prompt": "Le mot anticodon désigne une séquence de 3 nucléotides :",
+            "options": [
+              "De l'ARN messager",
+              "De l'ARN de transfert",
+              "De l'ARN ribosomal",
+              "Du brin non transcrit de l'ADN"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Exercice 3, item 3 : bonne réponse c, l'ARN de transfert."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "64 codons, 61 sens et 3 stop",
+          "stepTheme": "64 codons, 61 sens et 3 stop",
+          "stepBadge": "64 codons, 61 sens et 3 stop",
+          "paragraphText": "Le code génétique compte 64 codons au total.\n61 codons correspondent aux 20 acides aminés, et trois codons, UAA, UAG et UGA, ne correspondent à aucun acide aminé.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q3",
+            "type": "mcq",
+            "prompt": "Combien de codons compte le code génétique ?",
+            "options": [
+              "20 codons",
+              "61 codons",
+              "64 codons",
+              "3 codons"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Interprétation de la partie II : 64 codons dont 61 sens et 3 stop."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Les trois codons stop",
+          "stepTheme": "Les trois codons stop",
+          "stepBadge": "Les trois codons stop",
+          "paragraphText": "Les codons UAA, UAG et UGA sont appelés codons stop ou codons non-sens.\nIls permettent d'arrêter la synthèse de la protéine, comme le rappelle le texte à compléter de l'exercice 1.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q4",
+            "type": "mcq",
+            "prompt": "Les codons stop sont :",
+            "options": [
+              "AUG, UAA et UGA",
+              "UAA, UAG et UGA",
+              "UUU, CCC et GGG",
+              "AUG uniquement"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Ce sont les trois codons cités à plusieurs reprises dans la leçon."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le codon initiateur n'est pas un codon stop",
+          "stepTheme": "Le codon initiateur n'est pas un codon stop",
+          "stepBadge": "Le codon initiateur n'est pas un codon stop",
+          "paragraphText": "Piège : ranger AUG parmi les codons non-sens parce qu'il est cité en même temps qu'eux.\nAUG est le codon initiateur, qui correspond à la méthionine et débute toutes les synthèses protéiques.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q5",
+            "type": "mcq",
+            "prompt": "Le codon AUG est :",
+            "options": [
+              "Un codon stop",
+              "Un codon non-sens",
+              "Le codon initiateur, correspondant à la méthionine",
+              "Un anticodon"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Interprétation de la partie II et exercice 1 : toutes les synthèses commencent par AUG, codon initiateur."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Un seul codon pour la méthionine",
+          "stepTheme": "Un seul codon pour la méthionine",
+          "stepBadge": "Un seul codon pour la méthionine",
+          "paragraphText": "La leçon donne la méthionine comme exemple d'acide aminé auquel un seul codon peut correspondre.\nÀ l'inverse, la leucine, la glutamine et l'isoleucine sont citées comme acides aminés à plusieurs codons.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q6",
+            "type": "mcq",
+            "prompt": "Selon l'analyse de la leçon, un seul codon peut correspondre à :",
+            "options": [
+              "La leucine",
+              "La glutamine",
+              "L'isoleucine",
+              "La méthionine"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "Analyse des résultats de la partie II : méthionine en exemple du cas à un seul codon."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q1",
+          "type": "mcq",
+          "prompt": "Le mot codon désigne une séquence de 3 nucléotides constitutifs :",
+          "options": [
+            "Du brin transcrit de l'ADN uniquement selon l'exercice",
+            "De l'ARN ribosomal",
+            "De l'ARN de transfert",
+            "De l'ARN messager"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "Exercice 3, item 2 : bonne réponse d, l'ARN messager."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q2",
+          "type": "mcq",
+          "prompt": "Le mot anticodon désigne une séquence de 3 nucléotides :",
+          "options": [
+            "De l'ARN messager",
+            "De l'ARN de transfert",
+            "De l'ARN ribosomal",
+            "Du brin non transcrit de l'ADN"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Exercice 3, item 3 : bonne réponse c, l'ARN de transfert."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q3",
+          "type": "mcq",
+          "prompt": "Combien de codons compte le code génétique ?",
+          "options": [
+            "20 codons",
+            "61 codons",
+            "64 codons",
+            "3 codons"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Interprétation de la partie II : 64 codons dont 61 sens et 3 stop."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q4",
+          "type": "mcq",
+          "prompt": "Les codons stop sont :",
+          "options": [
+            "AUG, UAA et UGA",
+            "UAA, UAG et UGA",
+            "UUU, CCC et GGG",
+            "AUG uniquement"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Ce sont les trois codons cités à plusieurs reprises dans la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q5",
+          "type": "mcq",
+          "prompt": "Le codon AUG est :",
+          "options": [
+            "Un codon stop",
+            "Un codon non-sens",
+            "Le codon initiateur, correspondant à la méthionine",
+            "Un anticodon"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Interprétation de la partie II et exercice 1 : toutes les synthèses commencent par AUG, codon initiateur."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p02_q6",
+          "type": "mcq",
+          "prompt": "Selon l'analyse de la leçon, un seul codon peut correspondre à :",
+          "options": [
+            "La leucine",
+            "La glutamine",
+            "L'isoleucine",
+            "La méthionine"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "Analyse des résultats de la partie II : méthionine en exemple du cas à un seul codon."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l07_biosynthese_proteines_p03",
+      "order": 3,
+      "title": "Les propriétés du code génétique : redondant, non ambigu et universel",
+      "summary": "Caractériser le code génétique : redondant, non ambigu et universel.",
+      "conceptExplanation": "Plusieurs codons peuvent coder pour un même acide aminé : le code génétique est dit redondant. L'exercice 1 emploie aussi le terme dégénéré pour la même propriété : 20 acides aminés correspondent à 61 codons, donc plusieurs codons correspondent à un même acide aminé.\nUn codon ne correspond qu'à un seul et unique acide aminé : le code génétique est non ambigu, comme le montrent les bonnes propositions de l'exercice 2 (un codon code pour un acide aminé et un seul ; plusieurs codons codent pour un même acide aminé).\nLe code génétique est le même pour tous les organismes vivants : il est universel. L'exercice 1 précise qu'il permet à tous les êtres vivants de synthétiser leurs protéines.\nCes trois propriétés, redondant, non ambigu et universel, caractérisent le code génétique dans la leçon.",
+      "keyRule": "Retiens le trio : redondant (plusieurs codons pour un acide aminé), non ambigu (un codon pour un seul acide aminé) et universel (le même pour tous les vivants).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Compléter le texte sur le code génétique (exercice 1)",
+        "statement": "Complète : plusieurs codons correspondent à un même acide aminé, le code est dit dégénéré ou… ; un codon ne correspond qu'à un seul acide aminé, le code est dit… ; il permet à tous les êtres vivants de synthétiser leurs protéines, il est dit…",
+        "methodSteps": [
+          "Plusieurs codons pour un même acide aminé : le code est dégénéré ou redondant (mot 6 de la liste).",
+          "Un codon pour un seul et unique acide aminé : le code est non ambigu (mot 7 de la liste).",
+          "Valable pour tous les êtres vivants : le code est universel (mot 8 de la liste)."
+        ],
+        "conclusion": "Redondant, non ambigu, universel : les trois propriétés enchaînées dans le texte de l'exercice 1."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Un code redondant",
+          "stepTheme": "Un code redondant",
+          "stepBadge": "Un code redondant",
+          "paragraphText": "• Code génétique redondant : plusieurs codons peuvent coder pour un même acide aminé.\nL'exercice 1 dit aussi dégénéré : 61 codons sens pour seulement 20 acides aminés.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q1",
+            "type": "mcq",
+            "prompt": "Le code génétique est dit redondant parce que :",
+            "options": [
+              "Chaque acide aminé a exactement un codon",
+              "Plusieurs codons peuvent coder pour un même acide aminé",
+              "Les codons stop sont nombreux",
+              "Il change selon les espèces"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Interprétation de la partie II."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepTitle": "Un code non ambigu",
+          "stepTheme": "Un code non ambigu",
+          "stepBadge": "Un code non ambigu",
+          "paragraphText": "Un codon ne correspond qu'à un seul et unique acide aminé.\nLe texte de l'exercice 1 en déduit que le code génétique est non ambigu : aucun codon n'hésite entre deux acides aminés.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q2",
+            "type": "mcq",
+            "prompt": "Le code génétique est non ambigu parce que :",
+            "options": [
+              "Un acide aminé a plusieurs codons",
+              "Un codon ne correspond qu'à un seul et unique acide aminé",
+              "Les codons stop codent parfois un acide aminé",
+              "Il est différent chez chaque espèce"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Texte à compléter de l'exercice 1, proposition 7."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Un code universel",
+          "stepTheme": "Un code universel",
+          "stepBadge": "Un code universel",
+          "paragraphText": "Le code génétique est le même pour tous les organismes vivants.\nLa leçon le dit universel : il permet à tous les êtres vivants de synthétiser leurs protéines avec les mêmes correspondances.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q3",
+            "type": "mcq",
+            "prompt": "Le code génétique est universel car :",
+            "options": [
+              "Il est propre à l'Homme",
+              "Il est le même pour tous les organismes vivants",
+              "Il ne sert qu'aux bactéries",
+              "Il change à chaque génération"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Dernière propriété listée dans l'interprétation de la partie II."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "20 acides aminés pour 61 codons sens",
+          "stepTheme": "20 acides aminés pour 61 codons sens",
+          "stepBadge": "20 acides aminés pour 61 codons sens",
+          "paragraphText": "Le tableau du code génétique compte 20 acides aminés correspondant aux 61 codons restants après retrait des 3 codons stop.\nC'est ce déséquilibre qui rend le code redondant.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q4",
+            "type": "mcq",
+            "prompt": "Les 61 codons sens correspondent à combien d'acides aminés ?",
+            "options": [
+              "64 acides aminés",
+              "61 acides aminés",
+              "20 acides aminés",
+              "3 acides aminés"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Exercice 1 : le tableau compte 20 acides aminés correspondant aux 61 codons restants."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Redondant ne veut pas dire ambigu",
+          "stepTheme": "Redondant ne veut pas dire ambigu",
+          "stepBadge": "Redondant ne veut pas dire ambigu",
+          "paragraphText": "Piège : confondre les deux sens de lecture du code.\nPlusieurs codons vers un même acide aminé, c'est la redondance ; un codon vers plusieurs acides aminés serait l'ambiguïté, que le code n'a pas.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q5",
+            "type": "mcq",
+            "prompt": "Pendant la traduction, la bonne proposition de l'exercice 2 est :",
+            "options": [
+              "Chaque acide aminé est codé par un codon et un seul, sans exception",
+              "Un codon code pour un acide aminé et un seul, et plusieurs codons codent pour un même acide aminé",
+              "Un codon code pour trois acides aminés",
+              "Les codons stop codent la méthionine"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Exercice 2, item 4 : bonnes propositions a et c, qui combinent non-ambiguïté et redondance."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Leucine, glutamine et isoleucine à plusieurs codons",
+          "stepTheme": "Leucine, glutamine et isoleucine à plusieurs codons",
+          "stepBadge": "Leucine, glutamine et isoleucine à plusieurs codons",
+          "paragraphText": "La leçon cite la leucine, la glutamine et l'isoleucine comme exemples d'acides aminés auxquels plusieurs codons peuvent correspondre.\nCe sont des illustrations concrètes de la redondance du code.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q6",
+            "type": "mcq",
+            "prompt": "Lequel de ces acides aminés est cité comme ayant plusieurs codons ?",
+            "options": [
+              "La méthionine",
+              "La leucine",
+              "Aucun, tous ont un seul codon",
+              "Uniquement les codons stop"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Analyse des résultats de la partie II : leucine, glutamine, isoleucine."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q1",
+          "type": "mcq",
+          "prompt": "Le code génétique est dit redondant parce que :",
+          "options": [
+            "Chaque acide aminé a exactement un codon",
+            "Plusieurs codons peuvent coder pour un même acide aminé",
+            "Les codons stop sont nombreux",
+            "Il change selon les espèces"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Interprétation de la partie II."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q2",
+          "type": "mcq",
+          "prompt": "Le code génétique est non ambigu parce que :",
+          "options": [
+            "Un acide aminé a plusieurs codons",
+            "Un codon ne correspond qu'à un seul et unique acide aminé",
+            "Les codons stop codent parfois un acide aminé",
+            "Il est différent chez chaque espèce"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Texte à compléter de l'exercice 1, proposition 7."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q3",
+          "type": "mcq",
+          "prompt": "Le code génétique est universel car :",
+          "options": [
+            "Il est propre à l'Homme",
+            "Il est le même pour tous les organismes vivants",
+            "Il ne sert qu'aux bactéries",
+            "Il change à chaque génération"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Dernière propriété listée dans l'interprétation de la partie II."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q4",
+          "type": "mcq",
+          "prompt": "Les 61 codons sens correspondent à combien d'acides aminés ?",
+          "options": [
+            "64 acides aminés",
+            "61 acides aminés",
+            "20 acides aminés",
+            "3 acides aminés"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Exercice 1 : le tableau compte 20 acides aminés correspondant aux 61 codons restants."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q5",
+          "type": "mcq",
+          "prompt": "Pendant la traduction, la bonne proposition de l'exercice 2 est :",
+          "options": [
+            "Chaque acide aminé est codé par un codon et un seul, sans exception",
+            "Un codon code pour un acide aminé et un seul, et plusieurs codons codent pour un même acide aminé",
+            "Un codon code pour trois acides aminés",
+            "Les codons stop codent la méthionine"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Exercice 2, item 4 : bonnes propositions a et c, qui combinent non-ambiguïté et redondance."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p03_q6",
+          "type": "mcq",
+          "prompt": "Lequel de ces acides aminés est cité comme ayant plusieurs codons ?",
+          "options": [
+            "La méthionine",
+            "La leucine",
+            "Aucun, tous ont un seul codon",
+            "Uniquement les codons stop"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Analyse des résultats de la partie II : leucine, glutamine, isoleucine."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l07_biosynthese_proteines_p04",
+      "order": 4,
+      "title": "La transcription : de l'ADN à l'ARN messager dans le noyau",
+      "summary": "Décrire la transcription de l'ADN en ARNm, le gène et le rôle des polymérases selon la leçon.",
+      "conceptExplanation": "La biosynthèse des protéines se déroule en deux grandes étapes : la transcription et la traduction. La transcription se déroule dans le noyau : il y a formation de l'ARNm à partir de l'ADN. La molécule d'ADN s'ouvre localement au niveau de la portion d'information dont la cellule a besoin.\nCe morceau de l'ADN, qui correspond à une information génétique particulière codant pour une protéine unique, est appelé le gène : c'est une très petite portion de chromosome.\nEnsuite, l'enzyme se déplace le long de la portion du brin d'ADN portant l'information génétique visée, en incorporant les nucléotides libres (précurseurs) par complémentarité avec le brin d'ADN qui sert de matrice. Il se forme ainsi l'ARN messager. Au niveau du brin d'ARN, l'uracile (U) remplace la thymine (T). On dit alors que l'ADN est transcrit en ARNm.\nLe brin d'ADN servant de matrice est appelé brin codant, ou brin transcrit, ou brin informatif, et l'autre brin est le brin non transcrit, selon les termes de la leçon. La leçon attribue la transcription à l'ADN polymérase dans sa première phrase, puis décrit le déplacement de l'ARN polymérase le long du brin : les deux noms apparaissent dans le texte.\nAprès sa synthèse dans le noyau, l'ARNm sort du noyau vers le cytoplasme, où aura lieu la traduction.",
+      "keyRule": "Transcription dans le noyau : l'ADN s'ouvre sur un gène, un brin sert de matrice, l'ARNm se forme par complémentarité avec U à la place de T, puis sort du noyau.",
+      "formulas": [],
+      "workedExample": {
+        "title": "De l'albinisme à la séquence transcrite (situation d'évaluation, exercice 1)",
+        "statement": "On donne la séquence d'un brin codant d'ADN : TAC ACG CGA TTT TAT GTA. Quelles sont les deux premières productions demandées avant la traduction ?",
+        "methodSteps": [
+          "On représente d'abord la séquence correspondante du brin d'ADN complémentaire, par complémentarité des bases.",
+          "On représente ensuite la séquence transcrite en ARN messager, avec l'uracile à la place de la thymine.",
+          "Ces deux étapes préparent la troisième : la séquence des acides aminés de la protéine traduite à partir de l'ARNm."
+        ],
+        "conclusion": "Brin complémentaire, puis ARNm, puis protéine : l'enchaînement transcription puis traduction de l'exercice."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
           "stepKind": "definition",
           "stepTitle": "Le gène",
           "stepTheme": "Le gène",
           "stepBadge": "Le gène",
-          "paragraphText": "Un gène est un segment d'ADN qui contient l'information pour fabriquer une protéine et programme un caractère.",
+          "paragraphText": "• Gène : morceau de l'ADN correspondant à une information génétique particulière, qui code pour une protéine unique.\nLa leçon précise que c'est une très petite portion de chromosome.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q3",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q1",
             "type": "mcq",
-            "prompt": "Qu'est-ce qu'un gène ?",
+            "prompt": "Un gène est :",
             "options": [
-              "Une protéine",
-              "Un segment d'ADN qui programme un caractère (une protéine)",
-              "Un acide aminé",
-              "Un ribosome"
+              "Une protéine du ribosome",
+              "Un morceau d'ADN codant pour une protéine unique, très petite portion de chromosome",
+              "Un type d'ARNt",
+              "Un codon stop"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est une très petite portion de chromosome."
+            "explanation": "Interprétation de la partie III, paragraphe sur la transcription."
           }
         },
         {
-          "stepNumber": 4,
+          "stepNumber": 2,
           "stepKind": "propriete",
-          "stepTitle": "Les bases de l'ARN",
-          "stepTheme": "Les bases de l'ARN",
-          "stepBadge": "Les bases de l'ARN",
-          "paragraphText": "L'ARN a un seul brin ; ses bases sont A, U, C et G : l'uracile (U) remplace la thymine (T) de l'ADN.",
+          "stepTitle": "La transcription a lieu dans le noyau",
+          "stepTheme": "La transcription a lieu dans le noyau",
+          "stepBadge": "La transcription a lieu dans le noyau",
+          "paragraphText": "La transcription de l'ADN en ARN messager se déroule dans le noyau de la cellule.\nC'est là que l'ADN, localisé dans le noyau, s'ouvre localement sur la portion utile.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q4",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q2",
             "type": "mcq",
-            "prompt": "Parmi ces bases (adénine, uracile, cytosine, guanine, thymine), laquelle n'existe PAS dans l'ARN ?",
+            "prompt": "La transcription se déroule :",
+            "options": [
+              "Dans le cytoplasme, au niveau du ribosome",
+              "Dans le noyau",
+              "Dans le liquide amniotique",
+              "Uniquement chez les bactéries"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Analyse des résultats de la partie III ; l'exercice 2 écarte l'idée d'une transcription dans l'hyaloplasme."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "L'uracile remplace la thymine",
+          "stepTheme": "L'uracile remplace la thymine",
+          "stepBadge": "L'uracile remplace la thymine",
+          "paragraphText": "Au niveau du brin d'ARN formé, l'uracile (U) remplace la thymine (T) de l'ADN.\nC'est la différence de bases à appliquer quand on transcrit une séquence.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q3",
+            "type": "mcq",
+            "prompt": "Dans l'ARNm formé, la thymine de l'ADN est remplacée par :",
             "options": [
               "L'adénine",
-              "L'uracile",
+              "La cytosine",
               "La guanine",
-              "La thymine"
+              "L'uracile"
             ],
             "correctAnswerIndex": 3,
-            "explanation": "Dans l'ARN, l'uracile remplace la thymine."
+            "explanation": "Phrase exacte de l'interprétation sur la transcription."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Un brin matrice et la complémentarité",
+          "stepTheme": "Un brin matrice et la complémentarité",
+          "stepBadge": "Un brin matrice et la complémentarité",
+          "paragraphText": "Méthode de la transcription : l'enzyme se déplace le long du brin d'ADN portant l'information, en incorporant les nucléotides libres par complémentarité avec le brin matrice.\nIl se forme ainsi progressivement l'ARN messager.",
+          "exercise": {
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q4",
+            "type": "mcq",
+            "prompt": "Pendant la transcription, les nucléotides libres sont incorporés :",
+            "options": [
+              "Au hasard, sans modèle",
+              "Par complémentarité avec le brin d'ADN qui sert de matrice",
+              "Uniquement par le ribosome",
+              "Après la traduction"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Interprétation de la partie III."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "definition",
-          "stepTitle": "Trois ARN",
-          "stepTheme": "Trois ARN",
-          "stepBadge": "Trois ARN",
-          "paragraphText": "On distingue l'ARN messager (ARNm), l'ARN de transfert (ARNt) et l'ARN ribosomial (ARNr).",
+          "stepKind": "piege",
+          "stepTitle": "La transcription précède la traduction",
+          "stepTheme": "La transcription précède la traduction",
+          "stepBadge": "La transcription précède la traduction",
+          "paragraphText": "Piège de l'exercice 2 : inverser l'ordre des deux grandes étapes.\nLa bonne proposition est que la transcription précède la traduction ; l'inverse est faux.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q5",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q5",
             "type": "mcq",
-            "prompt": "Quel ARN porte un acide aminé et un anticodon, et l'apporte au ribosome ?",
+            "prompt": "Dans la synthèse des protéines :",
             "options": [
-              "L'ARN messager",
-              "L'ARN de transfert",
-              "L'ARN ribosomial",
-              "L'ADN"
+              "La traduction précède la transcription",
+              "La transcription précède la traduction",
+              "Les deux étapes sont simultanées dans le noyau",
+              "La traduction se fait sans ARNm"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Il « transfère » les acides aminés vers le ribosome."
+            "explanation": "Exercice 2, item 3, proposition a."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "Le ribosome",
-          "stepTheme": "Le ribosome",
-          "stepBadge": "Le ribosome",
-          "paragraphText": "Le ribosome, formé d'une petite et d'une grande sous-unité, est le lieu d'assemblage de la protéine, dans le cytoplasme.",
+          "stepKind": "exemple",
+          "stepTitle": "L'ARNm sort du noyau",
+          "stepTheme": "L'ARNm sort du noyau",
+          "stepBadge": "L'ARNm sort du noyau",
+          "paragraphText": "Les résultats du schéma des étapes montrent la sortie de l'ARNm du noyau après sa synthèse.\nLa synthèse de la protéine se fait ensuite dans le cytoplasme, au niveau du ribosome.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q6",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q6",
             "type": "mcq",
-            "prompt": "De combien de sous-unités est composé un ribosome, et où se trouve-t-il ?",
+            "prompt": "Après la transcription, l'ARNm :",
             "options": [
-              "Une seule sous-unité, dans le noyau",
-              "Deux sous-unités (une petite et une grande), dans le cytoplasme",
-              "Trois sous-unités, dans l'ADN",
-              "Quatre sous-unités, dans le sang"
+              "Reste définitivement dans le noyau",
+              "Sort du noyau vers le cytoplasme",
+              "Se transforme en ADN",
+              "Est détruit par les codons stop"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Il lit l'ARNm et assemble les acides aminés."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "methode",
-          "stepTitle": "Reconnaître la molécule",
-          "stepTheme": "Reconnaître la molécule",
-          "stepBadge": "Reconnaître la molécule",
-          "paragraphText": "Un seul brin et la base U : c'est de l'ARN. Deux brins et la base T : c'est de l'ADN.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q7",
-            "type": "mcq",
-            "prompt": "Une molécule à un seul brin contient la séquence AUG UGC GCU. S'agit-il d'ADN ou d'ARN ?",
-            "options": [
-              "D'ADN, car elle contient G",
-              "D'ARN, car elle contient U et n'a qu'un brin",
-              "D'une protéine",
-              "D'un acide aminé"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "U (uracile) n'existe que dans l'ARN."
+            "explanation": "Résultats de l'observation du schéma des étapes de la biosynthèse."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q1",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q1",
           "type": "mcq",
-          "prompt": "Quelles sont les sous-unités qui forment une protéine ?",
+          "prompt": "Un gène est :",
           "options": [
-            "Des molécules de glucose",
-            "Des acides gras",
-            "Des acides aminés",
-            "Des nucléotides"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Les acides aminés sont reliés par des liaisons peptidiques."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q2",
-          "type": "mcq",
-          "prompt": "Parmi les acteurs de la synthèse des protéines, lequel est formé de deux brins complémentaires et se trouve dans le noyau ?",
-          "options": [
-            "L'ARN messager",
-            "L'ADN",
-            "Le ribosome",
-            "L'ARN de transfert"
+            "Une protéine du ribosome",
+            "Un morceau d'ADN codant pour une protéine unique, très petite portion de chromosome",
+            "Un type d'ARNt",
+            "Un codon stop"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Les ARN n'ont qu'un seul brin."
+          "explanation": "Interprétation de la partie III, paragraphe sur la transcription."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q3",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q2",
           "type": "mcq",
-          "prompt": "Qu'est-ce qu'un gène ?",
+          "prompt": "La transcription se déroule :",
           "options": [
-            "Une protéine",
-            "Un segment d'ADN qui programme un caractère (une protéine)",
-            "Un acide aminé",
-            "Un ribosome"
+            "Dans le cytoplasme, au niveau du ribosome",
+            "Dans le noyau",
+            "Dans le liquide amniotique",
+            "Uniquement chez les bactéries"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est une très petite portion de chromosome."
+          "explanation": "Analyse des résultats de la partie III ; l'exercice 2 écarte l'idée d'une transcription dans l'hyaloplasme."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q4",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q3",
           "type": "mcq",
-          "prompt": "Parmi ces bases (adénine, uracile, cytosine, guanine, thymine), laquelle n'existe PAS dans l'ARN ?",
+          "prompt": "Dans l'ARNm formé, la thymine de l'ADN est remplacée par :",
           "options": [
             "L'adénine",
-            "L'uracile",
+            "La cytosine",
             "La guanine",
-            "La thymine"
+            "L'uracile"
           ],
           "correctAnswerIndex": 3,
-          "explanation": "Dans l'ARN, l'uracile remplace la thymine."
+          "explanation": "Phrase exacte de l'interprétation sur la transcription."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q5",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q4",
           "type": "mcq",
-          "prompt": "Quel ARN porte un acide aminé et un anticodon, et l'apporte au ribosome ?",
+          "prompt": "Pendant la transcription, les nucléotides libres sont incorporés :",
           "options": [
-            "L'ARN messager",
-            "L'ARN de transfert",
-            "L'ARN ribosomial",
-            "L'ADN"
+            "Au hasard, sans modèle",
+            "Par complémentarité avec le brin d'ADN qui sert de matrice",
+            "Uniquement par le ribosome",
+            "Après la traduction"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Il « transfère » les acides aminés vers le ribosome."
+          "explanation": "Interprétation de la partie III."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q6",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q5",
           "type": "mcq",
-          "prompt": "De combien de sous-unités est composé un ribosome, et où se trouve-t-il ?",
+          "prompt": "Dans la synthèse des protéines :",
           "options": [
-            "Une seule sous-unité, dans le noyau",
-            "Deux sous-unités (une petite et une grande), dans le cytoplasme",
-            "Trois sous-unités, dans l'ADN",
-            "Quatre sous-unités, dans le sang"
+            "La traduction précède la transcription",
+            "La transcription précède la traduction",
+            "Les deux étapes sont simultanées dans le noyau",
+            "La traduction se fait sans ARNm"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Il lit l'ARNm et assemble les acides aminés."
+          "explanation": "Exercice 2, item 3, proposition a."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p01_q7",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p04_q6",
           "type": "mcq",
-          "prompt": "Une molécule à un seul brin contient la séquence AUG UGC GCU. S'agit-il d'ADN ou d'ARN ?",
+          "prompt": "Après la transcription, l'ARNm :",
           "options": [
-            "D'ADN, car elle contient G",
-            "D'ARN, car elle contient U et n'a qu'un brin",
-            "D'une protéine",
-            "D'un acide aminé"
+            "Reste définitivement dans le noyau",
+            "Sort du noyau vers le cytoplasme",
+            "Se transforme en ADN",
+            "Est détruit par les codons stop"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "U (uracile) n'existe que dans l'ARN."
+          "explanation": "Résultats de l'observation du schéma des étapes de la biosynthèse."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l07_biosynthese_proteines_p02",
-      "order": 2,
-      "title": "Le code génétique",
-      "summary": "64 codons, 20 acides aminés : un code universel, redondant et non ambigu.",
-      "conceptExplanation": "Le code génétique est le système de correspondance entre les CODONS de l'ARNm et les 20 acides aminés.\n\n- Un codon est un triplet de nucléotides (3 bases) de l'ARNm, par exemple AUG.\n- Avec 4 bases (U, C, A, G) prises 3 par 3, on obtient 4 × 4 × 4 = 64 codons.\n- 61 codons désignent un acide aminé.\n- 3 codons ne désignent aucun acide aminé : UAA, UAG et UGA. Ce sont les codons STOP (ou codons non-sens) : ils arrêtent la synthèse.\n- La synthèse commence toujours par le codon AUG (méthionine) : c'est le codon INITIATEUR.\n\nPropriétés :\n- REDONDANT (ou dégénéré) : plusieurs codons peuvent coder le même acide aminé (de 1 à 6 codons selon l'acide aminé ; par exemple la leucine a 6 codons). Le document dit « de 2 à 4 » : c'est inexact, la méthionine et le tryptophane n'ont qu'un codon, la leucine, la sérine et l'arginine en ont six.\n- NON AMBIGU : un codon donné ne correspond qu'à un seul acide aminé.\n- UNIVERSEL : c'est le même code chez presque tous les êtres vivants (bactéries, plantes, animaux, homme).\n\nL'ANTICODON est le triplet de bases porté par l'ARNt, complémentaire du codon de l'ARNm (exemple : codon AUG, anticodon UAC).",
-      "keyRule": "Codon = 3 bases de l'ARNm. 64 codons : 61 codent un acide aminé, 3 stop (UAA, UAG, UGA). AUG = initiateur (méthionine). Code redondant, non ambigu, universel.",
+      "id": "terminale_a1_svt_l07_biosynthese_proteines_p05",
+      "order": 5,
+      "title": "La traduction : initiation et élongation dans le cytoplasme",
+      "summary": "Décrire l'initiation au codon AUG et l'élongation avec les ARNt, les sites P et A et la liaison peptidique.",
+      "conceptExplanation": "La traduction a lieu dans le cytoplasme, à partir de l'ARNm, et fait intervenir les ARNt et les ribosomes. Elle se déroule en trois étapes : initiation, élongation et terminaison.\nInitiation : le premier codon est toujours AUG (codon initiateur), qui correspond à la méthionine. La petite sous-unité du ribosome et un ARNt se lient à une extrémité de l'ARNm portant le codon initiateur. Cet ARNt porte la méthionine et un anticodon complémentaire au codon initiateur AUG. Il se positionne sur le site P du ribosome.\nÉlongation : un nouveau ARNt se place au site A du ribosome, en face du deuxième codon de l'ARNm. Son anticodon est complémentaire à ce deuxième codon et l'acide aminé qu'il porte correspond à ce codon selon le code génétique. Une liaison peptidique s'établit entre les deux acides aminés.\nLe premier ARNt, déchargé de son acide aminé, est libéré. Le ribosome se déplace de telle sorte que son site P soit occupé par le deuxième ARNt et que son site A soit libre. Une nouvelle molécule d'ARNt vient se placer comme précédemment, et ainsi de suite : la chaîne polypeptidique s'allonge.",
+      "keyRule": "Initiation sur AUG au site P avec la méthionine, puis élongation : ARNt au site A, liaison peptidique, libération de l'ARNt vide et déplacement du ribosome.",
       "formulas": [],
       "workedExample": {
-        "title": "Pourquoi 64 codons ?",
-        "statement": "L'ARN a 4 bases (U, C, A, G). Combien de codons différents de 3 bases peut-on former ?",
+        "title": "Suivre les deux premiers acides aminés (mécanisme de la leçon)",
+        "statement": "Décris l'enchaînement qui relie le premier acide aminé au deuxième pendant la traduction.",
         "methodSteps": [
-          "4 choix pour la 1re base, 4 pour la 2e, 4 pour la 3e.",
-          "4 × 4 × 4 = 64."
+          "L'ARNt porteur de la méthionine, avec un anticodon complémentaire de AUG, se positionne sur le site P.",
+          "Un nouveau ARNt se place au site A, en face du deuxième codon, avec un anticodon complémentaire.",
+          "Une liaison peptidique s'établit entre les deux acides aminés.",
+          "Le premier ARNt déchargé est libéré et le ribosome se déplace, laissant le site A libre pour l'ARNt suivant."
         ],
-        "conclusion": "64 codons, pour seulement 20 acides aminés : le code est redondant."
+        "conclusion": "C'est le cycle de l'élongation décrit dans l'interprétation de la partie III."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Le codon",
-          "stepTheme": "Le codon",
-          "stepBadge": "Le codon",
-          "paragraphText": "Un codon est un triplet de bases (3 nucléotides) de l'ARN messager.",
+          "stepTitle": "L'initiation de la traduction",
+          "stepTheme": "L'initiation de la traduction",
+          "stepBadge": "L'initiation de la traduction",
+          "paragraphText": "• Initiation : première étape de la traduction, au niveau du codon initiateur AUG.\nLa petite sous-unité du ribosome et un ARNt porteur de méthionine se lient à l'ARNm.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q1",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q1",
             "type": "mcq",
-            "prompt": "Le mot « codon » désigne une séquence de 3 nucléotides. De quelle molécule ?",
+            "prompt": "L'initiation commence toujours par le codon :",
             "options": [
-              "De l'ARN de transfert",
-              "De l'ARN ribosomial",
-              "De l'ARN messager",
-              "D'une protéine"
+              "UAA",
+              "UAG",
+              "AUG",
+              "UGA"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "Le triplet de l'ARNt s'appelle l'anticodon."
+            "explanation": "Le premier codon est toujours AUG, codon initiateur correspondant à la méthionine."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "64 codons",
-          "stepTheme": "64 codons",
-          "stepBadge": "64 codons",
-          "paragraphText": "Avec 4 bases prises 3 par 3 : 4 × 4 × 4 = 64 codons.",
+          "stepKind": "propriete",
+          "stepTitle": "Le site P accueille le premier ARNt",
+          "stepTheme": "Le site P accueille le premier ARNt",
+          "stepBadge": "Le site P accueille le premier ARNt",
+          "paragraphText": "L'ARNt de la méthionine se positionne sur le site P du ribosome pendant l'initiation.\nSon anticodon est complémentaire du codon initiateur AUG.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q2",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q2",
             "type": "mcq",
-            "prompt": "L'ARN possède 4 bases (U, C, A, G) et un codon est formé de 3 bases. Combien de codons différents existe-t-il ?",
+            "prompt": "Le premier ARNt, porteur de la méthionine, se positionne sur :",
             "options": [
-              "12",
-              "20",
-              "64",
-              "81"
+              "Le site A",
+              "Le site P",
+              "Le noyau",
+              "Le brin d'ADN matrice"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "4 × 4 × 4 = 64."
+            "correctAnswerIndex": 1,
+            "explanation": "Interprétation de la partie III, paragraphe sur l'initiation."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "Les codons stop",
-          "stepTheme": "Les codons stop",
-          "stepBadge": "Les codons stop",
-          "paragraphText": "UAA, UAG et UGA ne correspondent à aucun acide aminé : ce sont les codons stop (non-sens), qui arrêtent la synthèse.",
+          "stepKind": "propriete",
+          "stepTitle": "Le site A reçoit l'ARNt suivant",
+          "stepTheme": "Le site A reçoit l'ARNt suivant",
+          "stepBadge": "Le site A reçoit l'ARNt suivant",
+          "paragraphText": "Pendant l'élongation, un nouveau ARNt se place au site A du ribosome, en face du deuxième codon de l'ARNm.\nSon acide aminé correspond à ce codon selon le code génétique.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q3",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q3",
             "type": "mcq",
-            "prompt": "Les codons UAA, UAG et UGA ne correspondent à aucun acide aminé. Comment les appelle-t-on ?",
+            "prompt": "Pendant l'élongation, le nouvel ARNt se place :",
             "options": [
-              "Des codons initiateurs",
-              "Des codons stop (ou non-sens)",
-              "Des anticodons",
-              "Des codons redondants"
+              "Au site A, en face du codon suivant",
+              "Au site P déjà occupé définitivement",
+              "Dans le noyau",
+              "Sur l'ADN"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Ils marquent la fin de la protéine."
+            "correctAnswerIndex": 0,
+            "explanation": "Interprétation de la partie III, paragraphe sur l'élongation."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "Le codon initiateur",
-          "stepTheme": "Le codon initiateur",
-          "stepBadge": "Le codon initiateur",
-          "paragraphText": "La synthèse d'une protéine commence toujours par le codon AUG, qui code la méthionine : c'est le codon initiateur.",
+          "stepKind": "methode",
+          "stepTitle": "La liaison peptidique relie les acides aminés",
+          "stepTheme": "La liaison peptidique relie les acides aminés",
+          "stepBadge": "La liaison peptidique relie les acides aminés",
+          "paragraphText": "Méthode : à chaque arrivée d'un ARNt au site A, une liaison peptidique s'établit entre les acides aminés présents.\nLa chaîne grandit ainsi acide aminé après acide aminé, dans l'ordre des codons de l'ARNm.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q4",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q4",
             "type": "mcq",
-            "prompt": "Par quel codon commence toujours la synthèse d'une protéine, et quel acide aminé code-t-il ?",
+            "prompt": "Entre les deux acides aminés rapprochés par le ribosome, il s'établit :",
             "options": [
-              "UAA, aucun acide aminé",
-              "AUG, la méthionine",
-              "UGG, le tryptophane",
-              "GGC, la glycine"
+              "Une liaison entre deux codons stop",
+              "Une liaison peptidique",
+              "Une molécule d'ADN nouvelle",
+              "Un anticodon libre"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "AUG est le codon initiateur."
+            "explanation": "C'est le geste central de l'élongation."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Redondant",
-          "stepTheme": "Redondant",
-          "stepBadge": "Redondant",
-          "paragraphText": "Plusieurs codons peuvent coder le même acide aminé : le code est redondant (dégénéré). Exemple : CUU, CUC, CUA, CUG, UUA, UUG codent tous la leucine.",
+          "stepKind": "piege",
+          "stepTitle": "L'ARNt libéré est celui qui est déchargé",
+          "stepTheme": "L'ARNt libéré est celui qui est déchargé",
+          "stepBadge": "L'ARNt libéré est celui qui est déchargé",
+          "paragraphText": "Piège : croire que le ribosome garde tous les ARNt jusqu'à la fin.\nLe premier ARNt, déchargé de son acide aminé, est libéré ; le ribosome se déplace pour que le site P soit occupé par le deuxième ARNt et le site A libre.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q5",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q5",
             "type": "mcq",
-            "prompt": "Les codons CUU, CUC, CUA, CUG, UUA et UUG codent tous la leucine. Quelle propriété du code génétique cela illustre-t-il ?",
+            "prompt": "Après la liaison peptidique, le premier ARNt :",
             "options": [
-              "Il est redondant (plusieurs codons pour un même acide aminé)",
-              "Il est ambigu",
-              "Il n'est pas universel",
-              "Il est stop"
+              "Apporte un nouvel acide aminé",
+              "Est déchargé de son acide aminé et libéré",
+              "Retourne dans le noyau",
+              "Devient un ribosome"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "64 codons pour 20 acides aminés : il y a forcément des « synonymes »."
+            "correctAnswerIndex": 1,
+            "explanation": "Interprétation de la partie III : le premier ARNt déchargé est libéré."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "propriete",
-          "stepTitle": "Non ambigu et universel",
-          "stepTheme": "Non ambigu et universel",
-          "stepBadge": "Non ambigu et universel",
-          "paragraphText": "Un codon ne correspond qu'à un seul acide aminé (non ambigu). Le code est le même chez presque tous les êtres vivants (universel).",
+          "stepKind": "exemple",
+          "stepTitle": "La traduction se fait dans le cytoplasme",
+          "stepTheme": "La traduction se fait dans le cytoplasme",
+          "stepBadge": "La traduction se fait dans le cytoplasme",
+          "paragraphText": "La synthèse de la protéine se fait dans le cytoplasme, au niveau du ribosome, à partir de l'ARNm sorti du noyau.\nElle fait intervenir les ARNt et les ribosomes, selon l'analyse des résultats.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q6",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q6",
             "type": "mcq",
-            "prompt": "Le codon UGG code le tryptophane chez l'homme, chez la bactérie et chez le maïs. Quelle propriété du code génétique cela montre-t-il ?",
-            "options": [
-              "Il est universel",
-              "Il est redondant",
-              "Il est ambigu",
-              "Il est stop"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est pourquoi une bactérie peut fabriquer une protéine humaine (insuline)."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "L'anticodon",
-          "stepTheme": "L'anticodon",
-          "stepBadge": "L'anticodon",
-          "paragraphText": "L'anticodon est le triplet de bases de l'ARNt, complémentaire du codon de l'ARNm (A avec U, C avec G).",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q7",
-            "type": "mcq",
-            "prompt": "Le codon initiateur de l'ARNm est AUG. Sachant que A s'associe à U et C à G, quel est l'anticodon de l'ARNt qui lui correspond ?",
-            "options": [
-              "AUG",
-              "UAC",
-              "TAC",
-              "GUA"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "A→U, U→A, G→C : UAC (sans T, car c'est de l'ARN)."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q1",
-          "type": "mcq",
-          "prompt": "Le mot « codon » désigne une séquence de 3 nucléotides. De quelle molécule ?",
-          "options": [
-            "De l'ARN de transfert",
-            "De l'ARN ribosomial",
-            "De l'ARN messager",
-            "D'une protéine"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Le triplet de l'ARNt s'appelle l'anticodon."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q2",
-          "type": "mcq",
-          "prompt": "L'ARN possède 4 bases (U, C, A, G) et un codon est formé de 3 bases. Combien de codons différents existe-t-il ?",
-          "options": [
-            "12",
-            "20",
-            "64",
-            "81"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "4 × 4 × 4 = 64."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q3",
-          "type": "mcq",
-          "prompt": "Les codons UAA, UAG et UGA ne correspondent à aucun acide aminé. Comment les appelle-t-on ?",
-          "options": [
-            "Des codons initiateurs",
-            "Des codons stop (ou non-sens)",
-            "Des anticodons",
-            "Des codons redondants"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Ils marquent la fin de la protéine."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q4",
-          "type": "mcq",
-          "prompt": "Par quel codon commence toujours la synthèse d'une protéine, et quel acide aminé code-t-il ?",
-          "options": [
-            "UAA, aucun acide aminé",
-            "AUG, la méthionine",
-            "UGG, le tryptophane",
-            "GGC, la glycine"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "AUG est le codon initiateur."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q5",
-          "type": "mcq",
-          "prompt": "Les codons CUU, CUC, CUA, CUG, UUA et UUG codent tous la leucine. Quelle propriété du code génétique cela illustre-t-il ?",
-          "options": [
-            "Il est redondant (plusieurs codons pour un même acide aminé)",
-            "Il est ambigu",
-            "Il n'est pas universel",
-            "Il est stop"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "64 codons pour 20 acides aminés : il y a forcément des « synonymes »."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q6",
-          "type": "mcq",
-          "prompt": "Le codon UGG code le tryptophane chez l'homme, chez la bactérie et chez le maïs. Quelle propriété du code génétique cela montre-t-il ?",
-          "options": [
-            "Il est universel",
-            "Il est redondant",
-            "Il est ambigu",
-            "Il est stop"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est pourquoi une bactérie peut fabriquer une protéine humaine (insuline)."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p02_q7",
-          "type": "mcq",
-          "prompt": "Le codon initiateur de l'ARNm est AUG. Sachant que A s'associe à U et C à G, quel est l'anticodon de l'ARNt qui lui correspond ?",
-          "options": [
-            "AUG",
-            "UAC",
-            "TAC",
-            "GUA"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "A→U, U→A, G→C : UAC (sans T, car c'est de l'ARN)."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l07_biosynthese_proteines_p03",
-      "order": 3,
-      "title": "La transcription : de l'ADN à l'ARN messager",
-      "summary": "Dans le noyau, l'ARN polymérase copie un gène en ARNm.",
-      "conceptExplanation": "La transcription a lieu dans le NOYAU.\n1. La molécule d'ADN s'ouvre localement, au niveau du gène dont la cellule a besoin.\n2. Une enzyme, l'ARN POLYMÉRASE, se déplace le long d'un des deux brins (le brin qui sert de matrice) et assemble des nucléotides libres (ribonucléotides précurseurs) par complémentarité. Il faut de l'énergie.\n3. Il se forme un ARN messager, qui sort ensuite du noyau vers le cytoplasme.\n\nCorrection du document : l'enzyme de la transcription est l'ARN polymérase (le document écrit d'abord « ADN polymérase », qui sert à copier l'ADN lors de la division cellulaire).\n\nRègles de complémentarité pour la transcription (base de l'ADN matrice → base de l'ARNm) :\n- A → U ; T → A ; C → G ; G → C.\n\nNoms des brins dans ce cours : le brin qui sert de matrice est appelé brin CODANT (ou brin transcrit, ou brin informatif) ; l'autre est le brin NON CODANT (non transcrit). L'ARNm est complémentaire du brin codant, et il a la même séquence que le brin non codant, avec U à la place de T.\n(Attention : dans certains manuels étrangers, les noms « codant » et « non codant » sont inversés. Retiens la règle : l'ARNm est COMPLÉMENTAIRE du brin transcrit.)\n\nExemple :\n- brin 1 (codant, transcrit) : AGC TAC GGA TAA GCT TGA\n- brin 2 (non codant) : TCG ATG CCT ATT CGA TCT\n- ARNm : UCG AUG CCU AUU CGA UCU",
-      "keyRule": "Transcription (noyau, ARN polymérase) : ARNm complémentaire du brin transcrit (A→U, T→A, C→G, G→C) = même séquence que l'autre brin, avec U au lieu de T.",
-      "formulas": [],
-      "workedExample": {
-        "title": "Transcrire une séquence",
-        "statement": "Le brin transcrit (brin codant) d'un gène est TAC ACG CGA. Écris l'ARNm.",
-        "methodSteps": [
-          "On remplace chaque base par sa complémentaire, avec U au lieu de T.",
-          "TAC → AUG ; ACG → UGC ; CGA → GCU."
-        ],
-        "conclusion": "ARNm : AUG UGC GCU."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "definition",
-          "stepTitle": "Où ?",
-          "stepTheme": "Où ?",
-          "stepBadge": "Où ?",
-          "paragraphText": "La transcription de l'ADN en ARN messager se déroule dans le noyau.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q1",
-            "type": "mcq",
-            "prompt": "Dans quelle partie de la cellule se déroule la transcription de l'ADN en ARN messager ?",
+            "prompt": "La traduction a lieu :",
             "options": [
               "Dans le noyau",
-              "Dans le cytoplasme, sur le ribosome",
-              "Dans la membrane",
-              "Dans le sang"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "L'ADN reste dans le noyau ; l'ARNm en sort ensuite."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "piege",
-          "stepTitle": "La bonne enzyme",
-          "stepTheme": "La bonne enzyme",
-          "stepBadge": "La bonne enzyme",
-          "paragraphText": "L'enzyme qui fabrique l'ARNm est l'ARN polymérase (et non l'ADN polymérase).",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q2",
-            "type": "mcq",
-            "prompt": "Quelle enzyme se déplace le long du gène et assemble les nucléotides pour fabriquer l'ARN messager ?",
-            "options": [
-              "L'ADN polymérase",
-              "L'ARN polymérase",
-              "L'amylase",
-              "La pepsine"
+              "Dans le cytoplasme, au niveau du ribosome",
+              "Dans les villosités choriales",
+              "Uniquement dans les mitochondries selon la leçon"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Le document écrit d'abord « ADN polymérase » : c'est une erreur."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "propriete",
-          "stepTitle": "La complémentarité",
-          "stepTheme": "La complémentarité",
-          "stepBadge": "La complémentarité",
-          "paragraphText": "Lors de la transcription : A de l'ADN donne U dans l'ARNm, T donne A, C donne G et G donne C.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q3",
-            "type": "mcq",
-            "prompt": "Lors de la transcription, une base A (adénine) du brin transcrit de l'ADN fait placer quelle base dans l'ARN messager ?",
-            "options": [
-              "T (thymine)",
-              "U (uracile)",
-              "A (adénine)",
-              "C (cytosine)"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "L'ARN n'a pas de T : U s'associe à A."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "methode",
-          "stepTitle": "Transcrire",
-          "stepTheme": "Transcrire",
-          "stepBadge": "Transcrire",
-          "paragraphText": "Brin transcrit TAC ACG CGA → ARNm AUG UGC GCU (on prend les complémentaires, avec U au lieu de T).",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q4",
-            "type": "mcq",
-            "prompt": "Le brin transcrit (brin codant) de l'ADN est TAC ACG CGA. Avec les règles A→U, T→A, C→G, G→C, quel est l'ARN messager ?",
-            "options": [
-              "TAC ACG CGA",
-              "AUG UGC GCU",
-              "ATG TGC GCT",
-              "UAC ACG CGA"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "TAC → AUG ; ACG → UGC ; CGA → GCU."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Depuis le brin non codant",
-          "stepTheme": "Depuis le brin non codant",
-          "stepBadge": "Depuis le brin non codant",
-          "paragraphText": "L'ARNm a la même séquence que le brin non codant, avec U à la place de T. Exemple : TGC TAC → UGC UAC.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q5",
-            "type": "mcq",
-            "prompt": "Le brin NON codant (non transcrit) d'un gène est TGC TAC ATC. L'ARNm a la même séquence que ce brin, avec U à la place de T. Quel est l'ARNm ?",
-            "options": [
-              "ACG ATG TAG",
-              "UGC UAC AUC",
-              "TGC TAC ATC",
-              "ACG AUG UAG"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "On remplace simplement chaque T par U."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "methode",
-          "stepTitle": "Le brin complémentaire",
-          "stepTheme": "Le brin complémentaire",
-          "stepBadge": "Le brin complémentaire",
-          "paragraphText": "Dans l'ADN, A s'associe à T et C à G. Le brin complémentaire de TAC ACG est ATG TGC.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q6",
-            "type": "mcq",
-            "prompt": "Dans l'ADN, A s'associe à T et C s'associe à G. Quel est le brin d'ADN complémentaire de TAC ACG CGA ?",
-            "options": [
-              "AUG UGC GCU",
-              "ATG TGC GCT",
-              "TAC ACG CGA",
-              "CGT GTA TAC"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Dans l'ADN, on garde T (pas de U)."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "propriete",
-          "stepTitle": "La sortie du noyau",
-          "stepTheme": "La sortie du noyau",
-          "stepBadge": "La sortie du noyau",
-          "paragraphText": "Une fois formé, l'ARN messager sort du noyau et passe dans le cytoplasme, où se fait la traduction.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q7",
-            "type": "mcq",
-            "prompt": "Dans la synthèse des protéines, quel est le bon ordre des événements ?",
-            "options": [
-              "Traduction dans le noyau, puis transcription dans le cytoplasme",
-              "Transcription dans le noyau, sortie de l'ARNm, puis traduction dans le cytoplasme",
-              "Traduction, puis transcription, dans le sang",
-              "Tout se passe dans l'ADN"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "La transcription précède la traduction."
+            "explanation": "Résultats et analyse de la partie III."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q1",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q1",
           "type": "mcq",
-          "prompt": "Dans quelle partie de la cellule se déroule la transcription de l'ADN en ARN messager ?",
+          "prompt": "L'initiation commence toujours par le codon :",
           "options": [
-            "Dans le noyau",
-            "Dans le cytoplasme, sur le ribosome",
-            "Dans la membrane",
-            "Dans le sang"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "L'ADN reste dans le noyau ; l'ARNm en sort ensuite."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q2",
-          "type": "mcq",
-          "prompt": "Quelle enzyme se déplace le long du gène et assemble les nucléotides pour fabriquer l'ARN messager ?",
-          "options": [
-            "L'ADN polymérase",
-            "L'ARN polymérase",
-            "L'amylase",
-            "La pepsine"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Le document écrit d'abord « ADN polymérase » : c'est une erreur."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q3",
-          "type": "mcq",
-          "prompt": "Lors de la transcription, une base A (adénine) du brin transcrit de l'ADN fait placer quelle base dans l'ARN messager ?",
-          "options": [
-            "T (thymine)",
-            "U (uracile)",
-            "A (adénine)",
-            "C (cytosine)"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "L'ARN n'a pas de T : U s'associe à A."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q4",
-          "type": "mcq",
-          "prompt": "Le brin transcrit (brin codant) de l'ADN est TAC ACG CGA. Avec les règles A→U, T→A, C→G, G→C, quel est l'ARN messager ?",
-          "options": [
-            "TAC ACG CGA",
-            "AUG UGC GCU",
-            "ATG TGC GCT",
-            "UAC ACG CGA"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "TAC → AUG ; ACG → UGC ; CGA → GCU."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q5",
-          "type": "mcq",
-          "prompt": "Le brin NON codant (non transcrit) d'un gène est TGC TAC ATC. L'ARNm a la même séquence que ce brin, avec U à la place de T. Quel est l'ARNm ?",
-          "options": [
-            "ACG ATG TAG",
-            "UGC UAC AUC",
-            "TGC TAC ATC",
-            "ACG AUG UAG"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "On remplace simplement chaque T par U."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q6",
-          "type": "mcq",
-          "prompt": "Dans l'ADN, A s'associe à T et C s'associe à G. Quel est le brin d'ADN complémentaire de TAC ACG CGA ?",
-          "options": [
-            "AUG UGC GCU",
-            "ATG TGC GCT",
-            "TAC ACG CGA",
-            "CGT GTA TAC"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Dans l'ADN, on garde T (pas de U)."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p03_q7",
-          "type": "mcq",
-          "prompt": "Dans la synthèse des protéines, quel est le bon ordre des événements ?",
-          "options": [
-            "Traduction dans le noyau, puis transcription dans le cytoplasme",
-            "Transcription dans le noyau, sortie de l'ARNm, puis traduction dans le cytoplasme",
-            "Traduction, puis transcription, dans le sang",
-            "Tout se passe dans l'ADN"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "La transcription précède la traduction."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l07_biosynthese_proteines_p04",
-      "order": 4,
-      "title": "La traduction : de l'ARN messager à la protéine",
-      "summary": "Initiation, élongation, terminaison sur le ribosome.",
-      "conceptExplanation": "La traduction a lieu dans le CYTOPLASME, sur les ribosomes. Elle utilise l'ARNm, les ARNt chargés d'acides aminés, et de l'énergie. Trois étapes :\n\n1. L'INITIATION : la petite sous-unité du ribosome se fixe sur l'ARNm au niveau du codon initiateur AUG. Un ARNt portant la méthionine, avec l'anticodon UAC, s'y place (site P). La grande sous-unité vient compléter le ribosome.\n\n2. L'ÉLONGATION : un nouvel ARNt se place au site A, en face du 2e codon ; son anticodon est complémentaire de ce codon, et il porte l'acide aminé correspondant selon le code génétique. Une LIAISON PEPTIDIQUE se forme entre les deux acides aminés. Le premier ARNt, déchargé, est libéré ; le ribosome avance d'un codon. Et ainsi de suite.\n\n3. La TERMINAISON : quand le ribosome rencontre un codon STOP (UAA, UAG ou UGA), aucun ARNt ne correspond : la chaîne d'acides aminés (polypeptide) est libérée et le ribosome se sépare de l'ARNm.\n\nVitesse : une chaîne de 400 acides aminés est fabriquée en moins de 20 secondes, soit environ 1/20 de seconde par acide aminé (20 ÷ 400 = 0,05 s).\n\nConclusion : la synthèse des protéines se fait selon un mécanisme en deux grandes étapes : la transcription (noyau) et la traduction (cytoplasme).",
-      "keyRule": "Traduction (cytoplasme, ribosome) : initiation (AUG, méthionine) → élongation (ARNt au site A, liaison peptidique, le ribosome avance) → terminaison (codon stop).",
-      "formulas": [],
-      "workedExample": {
-        "title": "Une question de vitesse",
-        "statement": "Une protéine de 400 acides aminés est fabriquée en 20 secondes. Combien de temps faut-il pour ajouter un acide aminé ?",
-        "methodSteps": [
-          "On divise le temps par le nombre d'acides aminés : 20 ÷ 400.",
-          "20 ÷ 400 = 0,05 s, soit 1/20 de seconde."
-        ],
-        "conclusion": "Environ 1/20 de seconde par acide aminé."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "definition",
-          "stepTitle": "Où ?",
-          "stepTheme": "Où ?",
-          "stepBadge": "Où ?",
-          "paragraphText": "La traduction a lieu dans le cytoplasme, sur les ribosomes.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q1",
-            "type": "mcq",
-            "prompt": "Où se déroule la traduction de l'ARN messager en protéine ?",
-            "options": [
-              "Dans le noyau, sur l'ADN",
-              "Dans le cytoplasme, sur les ribosomes",
-              "Dans le sang",
-              "Dans la membrane du noyau"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "La transcription, elle, se fait dans le noyau."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "propriete",
-          "stepTitle": "Trois étapes",
-          "stepTheme": "Trois étapes",
-          "stepBadge": "Trois étapes",
-          "paragraphText": "La traduction comprend trois étapes : l'initiation, l'élongation et la terminaison.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q2",
-            "type": "mcq",
-            "prompt": "Quelles sont, dans l'ordre, les trois étapes de la traduction ?",
-            "options": [
-              "Terminaison, élongation, initiation",
-              "Initiation, élongation, terminaison",
-              "Transcription, traduction, terminaison",
-              "Acquisition, consolidation, restitution"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "On commence, on allonge la chaîne, on termine."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "L'initiation",
-          "stepTheme": "L'initiation",
-          "stepBadge": "L'initiation",
-          "paragraphText": "À l'initiation, le ribosome se place sur le codon AUG ; un ARNt portant la méthionine (anticodon UAC) s'installe au site P.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q3",
-            "type": "mcq",
-            "prompt": "Pendant l'initiation de la traduction, sur quel codon le ribosome se place-t-il, et quel acide aminé est mis en place en premier ?",
-            "options": [
-              "UAA, aucun",
-              "AUG, la méthionine",
-              "UGC, la cystéine",
-              "GGC, la glycine"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "AUG est le codon initiateur."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "La liaison peptidique",
-          "stepTheme": "La liaison peptidique",
-          "stepBadge": "La liaison peptidique",
-          "paragraphText": "Pendant l'élongation, une liaison peptidique se forme entre l'acide aminé déjà en place et le nouvel acide aminé apporté par l'ARNt.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q4",
-            "type": "mcq",
-            "prompt": "Pendant l'élongation, un nouvel ARNt se place au site A du ribosome. Quelle liaison se forme alors entre les deux acides aminés ?",
-            "options": [
-              "Une liaison peptidique",
-              "Une liaison hydrogène entre bases",
-              "Une liaison ionique avec le sel",
-              "Aucune liaison"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "C'est la liaison qui relie les acides aminés d'une protéine."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Le ribosome avance",
-          "stepTheme": "Le ribosome avance",
-          "stepBadge": "Le ribosome avance",
-          "paragraphText": "Après chaque liaison, l'ARNt déchargé est libéré et le ribosome avance d'un codon sur l'ARNm.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q5",
-            "type": "mcq",
-            "prompt": "Pendant l'élongation, après la formation d'une liaison peptidique, que fait le ribosome ?",
-            "options": [
-              "Il retourne dans le noyau",
-              "Il avance d'un codon sur l'ARNm",
-              "Il détruit l'ARNm",
-              "Il se transforme en ADN"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Il lit l'ARNm codon après codon."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "La terminaison",
-          "stepTheme": "La terminaison",
-          "stepBadge": "La terminaison",
-          "paragraphText": "La traduction s'arrête quand le ribosome rencontre un codon stop (UAA, UAG ou UGA) : la chaîne polypeptidique est libérée.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q6",
-            "type": "mcq",
-            "prompt": "Le ribosome lit l'ARNm AUG UGC GCU UGA. Sachant que UGA est un codon stop, combien d'acides aminés aura la chaîne fabriquée ?",
-            "options": [
-              "2",
-              "3",
-              "4",
-              "5"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "AUG, UGC, GCU donnent 3 acides aminés ; UGA arrête la synthèse."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "methode",
-          "stepTitle": "Une machine rapide",
-          "stepTheme": "Une machine rapide",
-          "stepBadge": "Une machine rapide",
-          "paragraphText": "Une chaîne de 400 acides aminés est fabriquée en moins de 20 secondes : 20 ÷ 400 = 0,05 s par acide aminé.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q7",
-            "type": "mcq",
-            "prompt": "Une chaîne de 400 acides aminés est fabriquée en 20 secondes. Combien de temps faut-il, en moyenne, pour ajouter un acide aminé ?",
-            "options": [
-              "0,05 s (1/20 de seconde)",
-              "0,5 s",
-              "20 s",
-              "8 000 s"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "20 ÷ 400 = 0,05."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q1",
-          "type": "mcq",
-          "prompt": "Où se déroule la traduction de l'ARN messager en protéine ?",
-          "options": [
-            "Dans le noyau, sur l'ADN",
-            "Dans le cytoplasme, sur les ribosomes",
-            "Dans le sang",
-            "Dans la membrane du noyau"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "La transcription, elle, se fait dans le noyau."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q2",
-          "type": "mcq",
-          "prompt": "Quelles sont, dans l'ordre, les trois étapes de la traduction ?",
-          "options": [
-            "Terminaison, élongation, initiation",
-            "Initiation, élongation, terminaison",
-            "Transcription, traduction, terminaison",
-            "Acquisition, consolidation, restitution"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "On commence, on allonge la chaîne, on termine."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q3",
-          "type": "mcq",
-          "prompt": "Pendant l'initiation de la traduction, sur quel codon le ribosome se place-t-il, et quel acide aminé est mis en place en premier ?",
-          "options": [
-            "UAA, aucun",
-            "AUG, la méthionine",
-            "UGC, la cystéine",
-            "GGC, la glycine"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "AUG est le codon initiateur."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q4",
-          "type": "mcq",
-          "prompt": "Pendant l'élongation, un nouvel ARNt se place au site A du ribosome. Quelle liaison se forme alors entre les deux acides aminés ?",
-          "options": [
-            "Une liaison peptidique",
-            "Une liaison hydrogène entre bases",
-            "Une liaison ionique avec le sel",
-            "Aucune liaison"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "C'est la liaison qui relie les acides aminés d'une protéine."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q5",
-          "type": "mcq",
-          "prompt": "Pendant l'élongation, après la formation d'une liaison peptidique, que fait le ribosome ?",
-          "options": [
-            "Il retourne dans le noyau",
-            "Il avance d'un codon sur l'ARNm",
-            "Il détruit l'ARNm",
-            "Il se transforme en ADN"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Il lit l'ARNm codon après codon."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q6",
-          "type": "mcq",
-          "prompt": "Le ribosome lit l'ARNm AUG UGC GCU UGA. Sachant que UGA est un codon stop, combien d'acides aminés aura la chaîne fabriquée ?",
-          "options": [
-            "2",
-            "3",
-            "4",
-            "5"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "AUG, UGC, GCU donnent 3 acides aminés ; UGA arrête la synthèse."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p04_q7",
-          "type": "mcq",
-          "prompt": "Une chaîne de 400 acides aminés est fabriquée en 20 secondes. Combien de temps faut-il, en moyenne, pour ajouter un acide aminé ?",
-          "options": [
-            "0,05 s (1/20 de seconde)",
-            "0,5 s",
-            "20 s",
-            "8 000 s"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "20 ÷ 400 = 0,05."
-        }
-      ]
-    },
-    {
-      "id": "terminale_a_svt_l07_biosynthese_proteines_p05",
-      "order": 5,
-      "title": "Traduire avec le code génétique",
-      "summary": "Ocytocine et vasopressine : de l'ADN à la chaîne d'acides aminés.",
-      "conceptExplanation": "Méthode pour trouver une protéine à partir de l'ADN :\n1. trouver l'ARNm (complémentaire du brin transcrit, ou copie du brin non codant avec U au lieu de T) ;\n2. découper l'ARNm en codons de 3 bases ;\n3. lire chaque codon dans le tableau du code génétique.\n\nExtrait du code génétique utile :\nUGC = cystéine (Cys) ; UAC = tyrosine (Tyr) ; AUC = isoleucine (Ile) ; UUC = phénylalanine (Phe) ; CAG = glutamine (Gln) ; AAC = asparagine (Asn) ; CCC et CCA = proline (Pro) ; CUG = leucine (Leu) ; AGA = arginine (Arg) ; GGC et GGA = glycine (Gly).\n\nSituation : deux hormones humaines très proches.\n- Brin non codant pour l'ocytocine : TGC TAC ATC CAG AAC TGC CCC CTG GGC\n  → ARNm : UGC UAC AUC CAG AAC UGC CCC CUG GGC\n  → Cys – Tyr – Ile – Gln – Asn – Cys – Pro – Leu – Gly\n- Brin non codant pour la vasopressine : TGC TAC TTC CAG AAC TGC CCA AGA GGA\n  → ARNm : UGC UAC UUC CAG AAC UGC CCA AGA GGA\n  → Cys – Tyr – Phe – Gln – Asn – Cys – Pro – Arg – Gly\n\nDifférence : les deux hormones ne diffèrent que par 2 acides aminés : en 3e position (Ile pour l'ocytocine, Phe pour la vasopressine) et en 8e position (Leu pour l'ocytocine, Arg pour la vasopressine). Ces petites différences de séquence d'ADN donnent des protéines différentes, avec des rôles différents (l'ocytocine agit sur l'utérus lors de l'accouchement, la vasopressine sur les reins).\n\nRemarque : CCC et CCA codent tous deux la proline : la différence d'ADN en 7e position (C → A) ne change pas l'acide aminé (redondance du code).",
-      "keyRule": "ADN → ARNm (T devient U) → codons de 3 bases → acides aminés (tableau du code). Ocytocine et vasopressine ne diffèrent que par 2 acides aminés (positions 3 et 8).",
-      "formulas": [],
-      "workedExample": {
-        "title": "Traduire trois codons",
-        "statement": "Traduis l'ARNm UGC UAC AUC, sachant que UGC = Cys, UAC = Tyr, AUC = Ile.",
-        "methodSteps": [
-          "On découpe en codons : UGC / UAC / AUC.",
-          "On lit chaque codon dans le code génétique."
-        ],
-        "conclusion": "Cys – Tyr – Ile."
-      },
-      "structuredSteps": [
-        {
-          "stepNumber": 1,
-          "stepKind": "methode",
-          "stepTitle": "Obtenir l'ARNm",
-          "stepTheme": "Obtenir l'ARNm",
-          "stepBadge": "Obtenir l'ARNm",
-          "paragraphText": "Brin non codant de l'ocytocine : TGC TAC ATC… On remplace T par U : ARNm UGC UAC AUC…",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q1",
-            "type": "mcq",
-            "prompt": "Le brin non codant de l'ADN de l'ocytocine commence par TGC TAC ATC CAG. L'ARNm a la même séquence que ce brin, avec U à la place de T. Quel est le début de l'ARNm ?",
-            "options": [
-              "ACG ATG TAG GTC",
-              "UGC UAC AUC CAG",
-              "TGC TAC ATC CAG",
-              "ACG AUG UAG GUC"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "On remplace seulement T par U."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "Traduire",
-          "stepTheme": "Traduire",
-          "stepBadge": "Traduire",
-          "paragraphText": "Avec le code génétique : UGC = Cys, UAC = Tyr, AUC = Ile, CAG = Gln.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q2",
-            "type": "mcq",
-            "prompt": "D'après le code génétique, UGC = Cys, UAC = Tyr, AUC = Ile, CAG = Gln. Quelle est la séquence d'acides aminés codée par l'ARNm UGC UAC AUC CAG ?",
-            "options": [
-              "Cys – Tyr – Ile – Gln",
-              "Gln – Ile – Tyr – Cys",
-              "Cys – Cys – Ile – Gln",
-              "Tyr – Cys – Gln – Ile"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "On lit les codons dans l'ordre, de gauche à droite."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "L'ocytocine",
-          "stepTheme": "L'ocytocine",
-          "stepBadge": "L'ocytocine",
-          "paragraphText": "ARNm de l'ocytocine : UGC UAC AUC CAG AAC UGC CCC CUG GGC → Cys Tyr Ile Gln Asn Cys Pro Leu Gly.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q3",
-            "type": "mcq",
-            "prompt": "L'ARNm de l'ocytocine est UGC UAC AUC CAG AAC UGC CCC CUG GGC. Combien d'acides aminés contient cette hormone ?",
-            "options": [
-              "3",
-              "9",
-              "27",
-              "64"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "27 bases ÷ 3 = 9 codons, donc 9 acides aminés."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "La vasopressine",
-          "stepTheme": "La vasopressine",
-          "stepBadge": "La vasopressine",
-          "paragraphText": "ARNm de la vasopressine : UGC UAC UUC CAG AAC UGC CCA AGA GGA → Cys Tyr Phe Gln Asn Cys Pro Arg Gly.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q4",
-            "type": "mcq",
-            "prompt": "Le 3e codon de l'ARNm est AUC pour l'ocytocine et UUC pour la vasopressine. Sachant que AUC = isoleucine (Ile) et UUC = phénylalanine (Phe), quel est le 3e acide aminé de la vasopressine ?",
-            "options": [
-              "Isoleucine (Ile)",
-              "Phénylalanine (Phe)",
-              "Cystéine (Cys)",
-              "Glycine (Gly)"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Une seule base différente (A → U) change l'acide aminé."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Comparer",
-          "stepTheme": "Comparer",
-          "stepBadge": "Comparer",
-          "paragraphText": "Ocytocine : Cys Tyr Ile Gln Asn Cys Pro Leu Gly. Vasopressine : Cys Tyr Phe Gln Asn Cys Pro Arg Gly. Deux différences : positions 3 et 8.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q5",
-            "type": "mcq",
-            "prompt": "Ocytocine : Cys–Tyr–Ile–Gln–Asn–Cys–Pro–Leu–Gly. Vasopressine : Cys–Tyr–Phe–Gln–Asn–Cys–Pro–Arg–Gly. Combien d'acides aminés diffèrent entre les deux hormones ?",
-            "options": [
-              "0",
-              "1",
-              "2",
-              "9"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "Position 3 (Ile / Phe) et position 8 (Leu / Arg)."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "piege",
-          "stepTitle": "Une différence sans effet",
-          "stepTheme": "Une différence sans effet",
-          "stepBadge": "Une différence sans effet",
-          "paragraphText": "Le 7e codon est CCC pour l'ocytocine et CCA pour la vasopressine : les deux codent la proline. L'ADN diffère, mais pas l'acide aminé.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q6",
-            "type": "mcq",
-            "prompt": "Le 7e codon est CCC pour l'ocytocine et CCA pour la vasopressine. Sachant que CCC et CCA codent tous deux la proline, le 7e acide aminé est-il différent ?",
-            "options": [
-              "Oui, c'est forcément différent",
-              "Non : c'est la proline dans les deux cas (le code est redondant)",
-              "Non, car il n'y a pas de 7e acide aminé",
-              "Oui, c'est un codon stop"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "C'est la redondance du code génétique."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "propriete",
-          "stepTitle": "Gène, protéine, caractère",
-          "stepTheme": "Gène, protéine, caractère",
-          "stepBadge": "Gène, protéine, caractère",
-          "paragraphText": "Une petite différence dans la séquence d'ADN (le gène) donne une protéine différente, avec un rôle différent : les protéines expriment les caractères codés par les gènes.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q7",
-            "type": "mcq",
-            "prompt": "L'ocytocine et la vasopressine ont des rôles différents alors que leurs gènes ne diffèrent que de quelques bases. Que montre cet exemple ?",
-            "options": [
-              "Que l'ADN ne sert à rien",
-              "Que la séquence de l'ADN détermine la séquence des acides aminés, donc la protéine et son rôle",
-              "Que les protéines se forment au hasard",
-              "Que les hormones ne sont pas des protéines"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Gène → ARNm → protéine → caractère."
-          }
-        }
-      ],
-      "exercises": [
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q1",
-          "type": "mcq",
-          "prompt": "Le brin non codant de l'ADN de l'ocytocine commence par TGC TAC ATC CAG. L'ARNm a la même séquence que ce brin, avec U à la place de T. Quel est le début de l'ARNm ?",
-          "options": [
-            "ACG ATG TAG GTC",
-            "UGC UAC AUC CAG",
-            "TGC TAC ATC CAG",
-            "ACG AUG UAG GUC"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "On remplace seulement T par U."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q2",
-          "type": "mcq",
-          "prompt": "D'après le code génétique, UGC = Cys, UAC = Tyr, AUC = Ile, CAG = Gln. Quelle est la séquence d'acides aminés codée par l'ARNm UGC UAC AUC CAG ?",
-          "options": [
-            "Cys – Tyr – Ile – Gln",
-            "Gln – Ile – Tyr – Cys",
-            "Cys – Cys – Ile – Gln",
-            "Tyr – Cys – Gln – Ile"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "On lit les codons dans l'ordre, de gauche à droite."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q3",
-          "type": "mcq",
-          "prompt": "L'ARNm de l'ocytocine est UGC UAC AUC CAG AAC UGC CCC CUG GGC. Combien d'acides aminés contient cette hormone ?",
-          "options": [
-            "3",
-            "9",
-            "27",
-            "64"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "27 bases ÷ 3 = 9 codons, donc 9 acides aminés."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q4",
-          "type": "mcq",
-          "prompt": "Le 3e codon de l'ARNm est AUC pour l'ocytocine et UUC pour la vasopressine. Sachant que AUC = isoleucine (Ile) et UUC = phénylalanine (Phe), quel est le 3e acide aminé de la vasopressine ?",
-          "options": [
-            "Isoleucine (Ile)",
-            "Phénylalanine (Phe)",
-            "Cystéine (Cys)",
-            "Glycine (Gly)"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Une seule base différente (A → U) change l'acide aminé."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q5",
-          "type": "mcq",
-          "prompt": "Ocytocine : Cys–Tyr–Ile–Gln–Asn–Cys–Pro–Leu–Gly. Vasopressine : Cys–Tyr–Phe–Gln–Asn–Cys–Pro–Arg–Gly. Combien d'acides aminés diffèrent entre les deux hormones ?",
-          "options": [
-            "0",
-            "1",
-            "2",
-            "9"
+            "UAA",
+            "UAG",
+            "AUG",
+            "UGA"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Position 3 (Ile / Phe) et position 8 (Leu / Arg)."
+          "explanation": "Le premier codon est toujours AUG, codon initiateur correspondant à la méthionine."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q6",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q2",
           "type": "mcq",
-          "prompt": "Le 7e codon est CCC pour l'ocytocine et CCA pour la vasopressine. Sachant que CCC et CCA codent tous deux la proline, le 7e acide aminé est-il différent ?",
+          "prompt": "Le premier ARNt, porteur de la méthionine, se positionne sur :",
           "options": [
-            "Oui, c'est forcément différent",
-            "Non : c'est la proline dans les deux cas (le code est redondant)",
-            "Non, car il n'y a pas de 7e acide aminé",
-            "Oui, c'est un codon stop"
+            "Le site A",
+            "Le site P",
+            "Le noyau",
+            "Le brin d'ADN matrice"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est la redondance du code génétique."
+          "explanation": "Interprétation de la partie III, paragraphe sur l'initiation."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p05_q7",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q3",
           "type": "mcq",
-          "prompt": "L'ocytocine et la vasopressine ont des rôles différents alors que leurs gènes ne diffèrent que de quelques bases. Que montre cet exemple ?",
+          "prompt": "Pendant l'élongation, le nouvel ARNt se place :",
           "options": [
-            "Que l'ADN ne sert à rien",
-            "Que la séquence de l'ADN détermine la séquence des acides aminés, donc la protéine et son rôle",
-            "Que les protéines se forment au hasard",
-            "Que les hormones ne sont pas des protéines"
+            "Au site A, en face du codon suivant",
+            "Au site P déjà occupé définitivement",
+            "Dans le noyau",
+            "Sur l'ADN"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Interprétation de la partie III, paragraphe sur l'élongation."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q4",
+          "type": "mcq",
+          "prompt": "Entre les deux acides aminés rapprochés par le ribosome, il s'établit :",
+          "options": [
+            "Une liaison entre deux codons stop",
+            "Une liaison peptidique",
+            "Une molécule d'ADN nouvelle",
+            "Un anticodon libre"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Gène → ARNm → protéine → caractère."
+          "explanation": "C'est le geste central de l'élongation."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q5",
+          "type": "mcq",
+          "prompt": "Après la liaison peptidique, le premier ARNt :",
+          "options": [
+            "Apporte un nouvel acide aminé",
+            "Est déchargé de son acide aminé et libéré",
+            "Retourne dans le noyau",
+            "Devient un ribosome"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Interprétation de la partie III : le premier ARNt déchargé est libéré."
+        },
+        {
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p05_q6",
+          "type": "mcq",
+          "prompt": "La traduction a lieu :",
+          "options": [
+            "Dans le noyau",
+            "Dans le cytoplasme, au niveau du ribosome",
+            "Dans les villosités choriales",
+            "Uniquement dans les mitochondries selon la leçon"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Résultats et analyse de la partie III."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l07_biosynthese_proteines_p06",
+      "id": "terminale_a1_svt_l07_biosynthese_proteines_p06",
       "order": 6,
-      "title": "Les mutations et leurs conséquences",
-      "summary": "Une base change : la protéine change… ou pas.",
-      "conceptExplanation": "Une MUTATION est un changement dans la séquence de l'ADN (par exemple une base remplacée par une autre).\n\nSituation : le petit frère d'Aya est albinos : ses cellules de la peau ne fabriquent pas une protéine qui donne la couleur noire (la mélanine est produite grâce à cette protéine enzyme). Cause : une mutation du gène.\n\nExercice : brin transcrit (codant) d'ADN : TAC ACG CGA TTT TAT GTA.\n- Brin complémentaire : ATG TGC GCT AAA ATA CAT.\n- ARNm : AUG UGC GCU AAA AUA CAU.\n- Acides aminés (d'après le code : AUG = Met, UGC = Cys, GCU = Ala, AAA = Lys, AUA = Ile, CAU = His) : Met – Cys – Ala – Lys – Ile – His.\n\nMutations du 2e triplet ACG :\n- G remplacé par A : ACG → ACA, l'ARNm devient UGU au lieu de UGC. Or UGU code aussi la cystéine : la protéine NE CHANGE PAS (mutation silencieuse, grâce à la redondance du code).\n- G remplacé par C : ACG → ACC, l'ARNm devient UGG, qui code le tryptophane (Trp) : la protéine CHANGE (Cys remplacée par Trp). Elle peut devenir inactive.\n\nAutres conséquences possibles : si la mutation crée un codon stop, la protéine est raccourcie.\nExemple réel : la drépanocytose est due au remplacement d'une seule base du gène de l'hémoglobine (l'acide glutamique est remplacé par la valine).\n\nConclusion générale : la cellule fabrique ses protéines à partir des acides aminés, grâce à des acteurs (ADN, ARN, ribosomes), selon un mécanisme (transcription puis traduction) qui s'appuie sur un code génétique universel. Les protéines permettent l'expression des caractères déterminés par les gènes.",
-      "keyRule": "Mutation = changement de base dans l'ADN. Si le nouveau codon code le même acide aminé, la protéine ne change pas ; sinon, elle change (et peut ne plus fonctionner).",
+      "title": "La terminaison et l'expression des caractères",
+      "summary": "Décrire l'arrêt de la traduction au codon stop et relier protéines synthétisées et caractères déterminés par les gènes.",
+      "conceptExplanation": "La traduction s'arrête lorsque le ribosome rencontre un codon non-sens, ou codon stop, codon ne correspondant à aucun acide aminé.\nIl se produit alors une dissociation entre l'ARNm et la chaîne polypeptidique : la protéine formée est libérée.\nLa synthèse des protéines se fait donc selon un mécanisme particulier comprenant deux grandes étapes, la transcription et la traduction.\nConclusion générale : la cellule synthétise ses protéines à partir des acides aminés, grâce à des acteurs et selon un mécanisme qui s'appuie sur un code génétique universel. Les protéines synthétisées contribuent à l'expression des caractères déterminés par les gènes, portions d'ADN.\nLa situation d'évaluation sur l'ocytocine et la vasopressine illustre ce lien : deux portions d'ADN très proches donnent deux chaînes polypeptidiques d'hormones très proches, dont la différence s'explique par leurs séquences.",
+      "keyRule": "Au codon stop, ARNm et chaîne polypeptidique se séparent ; la protéine obtenue exprime le caractère déterminé par son gène.",
       "formulas": [],
       "workedExample": {
-        "title": "Une mutation silencieuse ?",
-        "statement": "Dans l'ARNm, le codon UGC (cystéine) devient UGU. Sachant que UGU code aussi la cystéine, la protéine change-t-elle ?",
+        "title": "Ocytocine et vasopressine, deux hormones très proches (situation d'évaluation)",
+        "statement": "Deux portions du brin non codant de l'ADN codent pour l'ocytocine et la vasopressine. Quelles sont les trois tâches demandées pour les comparer ?",
         "methodSteps": [
-          "On lit le nouveau codon : UGU = cystéine.",
-          "L'acide aminé est le même qu'avant."
+          "Élaborer le brin codant de chaque ADN, par complémentarité avec le brin non codant donné.",
+          "Déterminer les deux chaînes polypeptidiques, en passant par l'ARNm et le code génétique.",
+          "Expliquer la différence entre les deux molécules à partir des différences de leurs séquences."
         ],
-        "conclusion": "Non : la séquence d'acides aminés n'est pas modifiée."
+        "conclusion": "Deux séquences d'ADN voisines donnent deux hormones voisines : la différence des protéines s'explique par la différence des séquences."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Une mutation",
-          "stepTheme": "Une mutation",
-          "stepBadge": "Une mutation",
-          "paragraphText": "Une mutation est un changement dans la séquence des bases de l'ADN.",
+          "stepTitle": "La terminaison de la traduction",
+          "stepTheme": "La terminaison de la traduction",
+          "stepBadge": "La terminaison de la traduction",
+          "paragraphText": "• Terminaison : troisième étape de la traduction, déclenchée par la rencontre d'un codon stop.\nIl se produit une dissociation entre l'ARNm et la chaîne polypeptidique.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q1",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q1",
             "type": "mcq",
-            "prompt": "Dans un gène, la base G d'un triplet est remplacée par la base A. Comment appelle-t-on ce changement ?",
+            "prompt": "La traduction s'arrête lorsque le ribosome rencontre :",
             "options": [
-              "Une transcription",
-              "Une mutation",
-              "Une traduction",
-              "Une liaison peptidique"
+              "Le codon AUG",
+              "Un codon non-sens, ou codon stop",
+              "Un nouvel ARNt au site A",
+              "Le brin non transcrit"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est une modification de l'information génétique."
+            "explanation": "Interprétation de la partie III, paragraphe sur la terminaison."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "Lire la séquence normale",
-          "stepTheme": "Lire la séquence normale",
-          "stepBadge": "Lire la séquence normale",
-          "paragraphText": "Brin transcrit TAC ACG CGA → ARNm AUG UGC GCU → Met – Cys – Ala.",
+          "stepKind": "propriete",
+          "stepTitle": "La dissociation finale",
+          "stepTheme": "La dissociation finale",
+          "stepBadge": "La dissociation finale",
+          "paragraphText": "À la terminaison, l'ARNm et la chaîne polypeptidique se séparent.\nLa protéine ainsi achevée quitte le ribosome, prête à jouer son rôle dans la cellule.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q2",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q2",
             "type": "mcq",
-            "prompt": "Le brin transcrit d'ADN est TAC ACG CGA ; l'ARNm est donc AUG UGC GCU. Avec AUG = Met, UGC = Cys, GCU = Ala, quelle est la chaîne d'acides aminés ?",
+            "prompt": "À la terminaison, il se produit :",
             "options": [
-              "Met – Cys – Ala",
-              "Ala – Cys – Met",
-              "Met – Met – Ala",
-              "Cys – Ala – Met"
+              "Une association définitive entre ARNm et protéine",
+              "Une dissociation entre l'ARNm et la chaîne polypeptidique",
+              "Une nouvelle transcription",
+              "La formation d'un gène"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "On lit les codons dans l'ordre."
+            "correctAnswerIndex": 1,
+            "explanation": "Phrase exacte de l'interprétation sur la terminaison."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Une mutation silencieuse",
-          "stepTheme": "Une mutation silencieuse",
-          "stepBadge": "Une mutation silencieuse",
-          "paragraphText": "Le 2e triplet ACG devient ACA : l'ARNm porte UGU au lieu de UGC. UGU code aussi la cystéine : la protéine ne change pas.",
+          "stepKind": "propriete",
+          "stepTitle": "Deux grandes étapes au total",
+          "stepTheme": "Deux grandes étapes au total",
+          "stepBadge": "Deux grandes étapes au total",
+          "paragraphText": "Le mécanisme complet de la biosynthèse comprend deux grandes étapes.\nLa transcription, dans le noyau, puis la traduction, dans le cytoplasme, elle-même en initiation, élongation et terminaison.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q3",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q3",
             "type": "mcq",
-            "prompt": "Sur le brin transcrit, le triplet ACG devient ACA ; le codon de l'ARNm passe donc de UGC à UGU. Sachant que UGC et UGU codent tous deux la cystéine, la séquence d'acides aminés est-elle modifiée ?",
+            "prompt": "La biosynthèse des protéines comprend deux grandes étapes :",
             "options": [
-              "Oui, la cystéine disparaît",
-              "Non, c'est toujours la cystéine (mutation silencieuse)",
-              "Oui, la protéine s'arrête",
-              "On ne peut pas savoir"
+              "Initiation et terminaison",
+              "Transcription et traduction",
+              "Élongation et dissociation",
+              "Codon et anticodon"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Grâce à la redondance du code génétique."
+            "explanation": "Conclusion de la partie III."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "exemple",
-          "stepTitle": "Une mutation qui change tout",
-          "stepTheme": "Une mutation qui change tout",
-          "stepBadge": "Une mutation qui change tout",
-          "paragraphText": "Le 2e triplet ACG devient ACC : l'ARNm porte UGG, qui code le tryptophane. La cystéine est remplacée : la protéine change.",
+          "stepKind": "methode",
+          "stepTitle": "Relire le mécanisme dans l'ordre",
+          "stepTheme": "Relire le mécanisme dans l'ordre",
+          "stepBadge": "Relire le mécanisme dans l'ordre",
+          "paragraphText": "Méthode de synthèse : replacer chaque événement à sa place.\nARNm formé dans le noyau, sortie du noyau, initiation sur AUG, élongation codon par codon, terminaison au codon stop.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q4",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q4",
             "type": "mcq",
-            "prompt": "Sur le brin transcrit, le triplet ACG devient ACC ; le codon de l'ARNm passe de UGC (cystéine) à UGG. Sachant que UGG code le tryptophane, la protéine est-elle modifiée ?",
+            "prompt": "L'ordre correct du mécanisme est :",
             "options": [
-              "Non",
-              "Oui : la cystéine est remplacée par le tryptophane",
-              "Oui : la protéine devient de l'ADN",
-              "Non, car UGG est un codon stop"
+              "Traduction puis transcription",
+              "Terminaison, initiation, élongation",
+              "Transcription, puis traduction avec initiation, élongation et terminaison",
+              "Transcription seule, sans traduction"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Un acide aminé différent peut rendre la protéine inactive."
+            "correctAnswerIndex": 2,
+            "explanation": "C'est l'enchaînement décrit dans toute la partie III."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "exemple",
-          "stepTitle": "L'albinisme",
-          "stepTheme": "L'albinisme",
-          "stepBadge": "L'albinisme",
-          "paragraphText": "Chez un enfant albinos, une mutation empêche les cellules de la peau de fabriquer une protéine nécessaire à la couleur noire de la peau.",
+          "stepKind": "piege",
+          "stepTitle": "Un codon stop ne reçoit aucun ARNt d'acide aminé",
+          "stepTheme": "Un codon stop ne reçoit aucun ARNt d'acide aminé",
+          "stepBadge": "Un codon stop ne reçoit aucun ARNt d'acide aminé",
+          "paragraphText": "Piège : attendre un acide aminé supplémentaire au niveau du codon stop.\nPar définition, ce codon ne correspond à aucun acide aminé : aucun ARNt ne vient y déposer d'acide aminé, et la chaîne se termine.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q5",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q5",
             "type": "mcq",
-            "prompt": "Le professeur explique : « les cellules de la peau de cet enfant albinos ne peuvent pas fabriquer une protéine qui donne la couleur noire de la peau ». Quelle est l'origine de ce problème ?",
+            "prompt": "Au niveau d'un codon stop, il arrive :",
             "options": [
-              "Un manque de soleil",
-              "Une mutation du gène qui code cette protéine",
-              "Une maladie contagieuse",
-              "Une alimentation pauvre"
+              "Un ARNt porteur de méthionine",
+              "Aucun acide aminé, car ce codon ne correspond à aucun acide aminé",
+              "Trois acides aminés à la fois",
+              "Un brin d'ADN nouveau"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Gène muté → protéine absente ou inactive → caractère modifié."
+            "explanation": "Définition même du codon stop, rappelée dans la terminaison."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Un codon stop",
-          "stepTheme": "Un codon stop",
-          "stepBadge": "Un codon stop",
-          "paragraphText": "Si une mutation transforme un codon en codon stop (UAA, UAG, UGA), la protéine s'arrête trop tôt : elle est raccourcie.",
+          "stepTitle": "Les protéines expriment les caractères des gènes",
+          "stepTheme": "Les protéines expriment les caractères des gènes",
+          "stepBadge": "Les protéines expriment les caractères des gènes",
+          "paragraphText": "La conclusion générale relie la synthèse protéique à l'hérédité des caractères.\nLes protéines synthétisées contribuent à l'expression des caractères déterminés par les gènes, qui sont des portions d'ADN.",
           "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q6",
+            "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q6",
             "type": "mcq",
-            "prompt": "Une mutation transforme le codon UGG (tryptophane) en UGA. Sachant que UGA est un codon stop, quelle est la conséquence ?",
+            "prompt": "Selon la conclusion générale, les protéines synthétisées contribuent à :",
             "options": [
-              "La protéine est plus longue",
-              "La traduction s'arrête : la protéine est raccourcie",
-              "Rien ne change",
-              "Le ribosome revient au début"
+              "La formation des codons stop",
+              "L'expression des caractères déterminés par les gènes",
+              "La disparition des ribosomes",
+              "La création de nouveaux chromosomes"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Une protéine trop courte est souvent inactive."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "La conclusion générale",
-          "stepTheme": "La conclusion générale",
-          "stepBadge": "La conclusion générale",
-          "paragraphText": "La cellule fabrique ses protéines grâce à l'ADN, aux ARN et aux ribosomes, par transcription puis traduction, selon un code génétique universel ; les protéines expriment les caractères codés par les gènes.",
-          "exercise": {
-            "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q7",
-            "type": "mcq",
-            "prompt": "Selon la conclusion générale de la leçon sur la biosynthèse des protéines, comment la cellule fabrique-t-elle ses protéines ?",
-            "options": [
-              "Au hasard, sans code",
-              "Grâce à des acteurs (ADN, ARN, ribosomes), par transcription puis traduction, selon un code génétique universel",
-              "Uniquement dans le noyau, sans ARN",
-              "Par la digestion des protéines des aliments, sans modification"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Acteurs, code et mécanisme : les trois piliers de la biosynthèse des protéines."
+            "explanation": "Dernière phrase de la conclusion générale de la leçon."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q1",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q1",
           "type": "mcq",
-          "prompt": "Dans un gène, la base G d'un triplet est remplacée par la base A. Comment appelle-t-on ce changement ?",
+          "prompt": "La traduction s'arrête lorsque le ribosome rencontre :",
           "options": [
-            "Une transcription",
-            "Une mutation",
-            "Une traduction",
-            "Une liaison peptidique"
+            "Le codon AUG",
+            "Un codon non-sens, ou codon stop",
+            "Un nouvel ARNt au site A",
+            "Le brin non transcrit"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est une modification de l'information génétique."
+          "explanation": "Interprétation de la partie III, paragraphe sur la terminaison."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q2",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q2",
           "type": "mcq",
-          "prompt": "Le brin transcrit d'ADN est TAC ACG CGA ; l'ARNm est donc AUG UGC GCU. Avec AUG = Met, UGC = Cys, GCU = Ala, quelle est la chaîne d'acides aminés ?",
+          "prompt": "À la terminaison, il se produit :",
           "options": [
-            "Met – Cys – Ala",
-            "Ala – Cys – Met",
-            "Met – Met – Ala",
-            "Cys – Ala – Met"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "On lit les codons dans l'ordre."
-        },
-        {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q3",
-          "type": "mcq",
-          "prompt": "Sur le brin transcrit, le triplet ACG devient ACA ; le codon de l'ARNm passe donc de UGC à UGU. Sachant que UGC et UGU codent tous deux la cystéine, la séquence d'acides aminés est-elle modifiée ?",
-          "options": [
-            "Oui, la cystéine disparaît",
-            "Non, c'est toujours la cystéine (mutation silencieuse)",
-            "Oui, la protéine s'arrête",
-            "On ne peut pas savoir"
+            "Une association définitive entre ARNm et protéine",
+            "Une dissociation entre l'ARNm et la chaîne polypeptidique",
+            "Une nouvelle transcription",
+            "La formation d'un gène"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Grâce à la redondance du code génétique."
+          "explanation": "Phrase exacte de l'interprétation sur la terminaison."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q4",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q3",
           "type": "mcq",
-          "prompt": "Sur le brin transcrit, le triplet ACG devient ACC ; le codon de l'ARNm passe de UGC (cystéine) à UGG. Sachant que UGG code le tryptophane, la protéine est-elle modifiée ?",
+          "prompt": "La biosynthèse des protéines comprend deux grandes étapes :",
           "options": [
-            "Non",
-            "Oui : la cystéine est remplacée par le tryptophane",
-            "Oui : la protéine devient de l'ADN",
-            "Non, car UGG est un codon stop"
+            "Initiation et terminaison",
+            "Transcription et traduction",
+            "Élongation et dissociation",
+            "Codon et anticodon"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Un acide aminé différent peut rendre la protéine inactive."
+          "explanation": "Conclusion de la partie III."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q5",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q4",
           "type": "mcq",
-          "prompt": "Le professeur explique : « les cellules de la peau de cet enfant albinos ne peuvent pas fabriquer une protéine qui donne la couleur noire de la peau ». Quelle est l'origine de ce problème ?",
+          "prompt": "L'ordre correct du mécanisme est :",
           "options": [
-            "Un manque de soleil",
-            "Une mutation du gène qui code cette protéine",
-            "Une maladie contagieuse",
-            "Une alimentation pauvre"
+            "Traduction puis transcription",
+            "Terminaison, initiation, élongation",
+            "Transcription, puis traduction avec initiation, élongation et terminaison",
+            "Transcription seule, sans traduction"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "Gène muté → protéine absente ou inactive → caractère modifié."
+          "correctAnswerIndex": 2,
+          "explanation": "C'est l'enchaînement décrit dans toute la partie III."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q6",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q5",
           "type": "mcq",
-          "prompt": "Une mutation transforme le codon UGG (tryptophane) en UGA. Sachant que UGA est un codon stop, quelle est la conséquence ?",
+          "prompt": "Au niveau d'un codon stop, il arrive :",
           "options": [
-            "La protéine est plus longue",
-            "La traduction s'arrête : la protéine est raccourcie",
-            "Rien ne change",
-            "Le ribosome revient au début"
+            "Un ARNt porteur de méthionine",
+            "Aucun acide aminé, car ce codon ne correspond à aucun acide aminé",
+            "Trois acides aminés à la fois",
+            "Un brin d'ADN nouveau"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Une protéine trop courte est souvent inactive."
+          "explanation": "Définition même du codon stop, rappelée dans la terminaison."
         },
         {
-          "id": "terminale_a_svt_l07_biosynthese_proteines_p06_q7",
+          "id": "terminale_a1_svt_l07_biosynthese_proteines_p06_q6",
           "type": "mcq",
-          "prompt": "Selon la conclusion générale de la leçon sur la biosynthèse des protéines, comment la cellule fabrique-t-elle ses protéines ?",
+          "prompt": "Selon la conclusion générale, les protéines synthétisées contribuent à :",
           "options": [
-            "Au hasard, sans code",
-            "Grâce à des acteurs (ADN, ARN, ribosomes), par transcription puis traduction, selon un code génétique universel",
-            "Uniquement dans le noyau, sans ARN",
-            "Par la digestion des protéines des aliments, sans modification"
+            "La formation des codons stop",
+            "L'expression des caractères déterminés par les gènes",
+            "La disparition des ribosomes",
+            "La création de nouveaux chromosomes"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Acteurs, code et mécanisme : les trois piliers de la biosynthèse des protéines."
+          "explanation": "Dernière phrase de la conclusion générale de la leçon."
         }
       ]
     }

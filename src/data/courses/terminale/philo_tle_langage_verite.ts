@@ -536,7 +536,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "stepTitle": "La bonne source de Hegel",
           "stepTheme": "La bonne source de Hegel",
           "stepBadge": "La bonne source de Hegel",
-          "paragraphText": "On situe parfois à tort cette citation dans la Phénoménologie de l'esprit.\nElle vient en réalité de l'Encyclopédie des sciences philosophiques (Philosophie de l'esprit, § 462). Au BAC, citez l'Encyclopédie.",
+          "paragraphText": "Le PDF situe cette citation dans la Phénoménologie de l'esprit.\nElle vient en réalité de l'Encyclopédie des sciences philosophiques (Philosophie de l'esprit, § 462). Au BAC, citez l'Encyclopédie.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p03_q3",
             "type": "mcq",
@@ -599,7 +599,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "stepTitle": "Deux citations mal attribuées",
           "stepTheme": "Deux citations mal attribuées",
           "stepBadge": "Deux citations mal attribuées",
-          "paragraphText": "Attention à deux erreurs d’attribution fréquentes :\n• « La pensée sans le langage n'est qu'une nébuleuse » n'est pas du peintre Delacroix : c'est l'idée de Saussure (Cours de linguistique générale), pour qui la pensée seule est « comme une nébuleuse ».\n• L'image du recto et du verso d'une même feuille vient aussi de Saussure, pas de Platon.",
+          "paragraphText": "Le PDF commet deux erreurs :\n• « La pensée sans le langage n'est qu'une nébuleuse » n'est pas du peintre Delacroix : c'est l'idée de Saussure (Cours de linguistique générale), pour qui la pensée seule est « comme une nébuleuse ».\n• L'image du recto et du verso d'une même feuille vient aussi de Saussure, pas de Platon.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p03_q6",
             "type": "mcq",
@@ -741,7 +741,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "stepTitle": "Vrai n'est pas réel",
           "stepTheme": "Vrai n'est pas réel",
           "stepBadge": "Vrai n'est pas réel",
-          "paragraphText": "On lit parfois de manière trop rapide que Kant « exige que la vérité soit synonyme de réalité ». C'est trop rapide.\nLa vérité est un accord entre une pensée et la réalité ; ce n'est pas la réalité elle-même. Ce sont nos jugements qui sont vrais ou faux, pas les choses.",
+          "paragraphText": "Le PDF écrit que Kant « exige que la vérité soit synonyme de réalité ». C'est trop rapide.\nLa vérité est un accord entre une pensée et la réalité ; ce n'est pas la réalité elle-même. Ce sont nos jugements qui sont vrais ou faux, pas les choses.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p04_q2",
             "type": "mcq",
@@ -825,7 +825,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "stepTitle": "Source de la phrase de Descartes",
           "stepTheme": "Source de la phrase de Descartes",
           "stepBadge": "Source de la phrase de Descartes",
-          "paragraphText": "« La vérité est une notion si transcendantalement claire qu'il est impossible de l'ignorer » ne vient pas du Discours de la méthode (erreur d’attribution fréquente).\nDescartes l'écrit dans une lettre à Mersenne du 16 octobre 1639.",
+          "paragraphText": "« La vérité est une notion si transcendantalement claire qu'il est impossible de l'ignorer » ne vient pas du Discours de la méthode, comme le dit le PDF.\nDescartes l'écrit dans une lettre à Mersenne du 16 octobre 1639.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p04_q6",
             "type": "mcq",
@@ -1277,7 +1277,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "stepTitle": "Une citation donnée à deux auteurs",
           "stepTheme": "Une citation donnée à deux auteurs",
           "stepBadge": "Une citation donnée à deux auteurs",
-          "paragraphText": "On attribue parfois à tort « Le langage nous trompera parfois » à Locke, puis la même phrase à Bergson.\nC'est Bergson qui écrit : « le langage nous trompera parfois sur le caractère de la sensation éprouvée ». De Locke, retenez plutôt les « imperfections du langage ».",
+          "paragraphText": "Le PDF attribue d'abord « Le langage nous trompera parfois » à Locke, puis la même phrase à Bergson.\nC'est Bergson qui écrit : « le langage nous trompera parfois sur le caractère de la sensation éprouvée ». De Locke, retenez plutôt les « imperfections du langage ».",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p06_q6",
             "type": "mcq",
@@ -1440,7 +1440,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "stepTitle": "« Qui connaît les mots connaît les choses »",
           "stepTheme": "« Qui connaît les mots connaît les choses »",
           "stepBadge": "« Qui connaît les mots connaît les choses »",
-          "paragraphText": "Attention à ne pas attribuer directement cette phrase à Platon dans le Cratyle.\nEn réalité, dans le dialogue, c'est le personnage de Cratyle qui la soutient ; Socrate la discute et conclut qu'il vaut mieux connaître les choses par elles-mêmes que par les noms.\nCitez donc le Cratyle de Platon, en précisant que la thèse y est critiquée.",
+          "paragraphText": "Le PDF donne cette phrase comme la thèse de Platon dans le Cratyle.\nEn réalité, dans le dialogue, c'est le personnage de Cratyle qui la soutient ; Socrate la discute et conclut qu'il vaut mieux connaître les choses par elles-mêmes que par les noms.\nCitez donc le Cratyle de Platon, en précisant que la thèse y est critiquée.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p07_q3",
             "type": "mcq",
@@ -1486,7 +1486,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p07_q5",
             "type": "mcq",
-            "prompt": "Dans l'introduction de la Critique de la raison pure, Kant écrit : « Si toute notre connaissance débute avec l'expérience, cela ne prouve pas qu'elle dérive toute de l'expérience. » Quelle est sa thèse ?",
+            "prompt": "Quelle est la thèse de Kant dans ce texte ?",
             "options": [
               "La connaissance vient uniquement de l'expérience",
               "La connaissance vient uniquement de la raison",
@@ -1575,7 +1575,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p07_q5",
           "type": "mcq",
-          "prompt": "Dans l'introduction de la Critique de la raison pure, Kant écrit : « Si toute notre connaissance débute avec l'expérience, cela ne prouve pas qu'elle dérive toute de l'expérience. » Quelle est sa thèse ?",
+          "prompt": "Quelle est la thèse de Kant dans ce texte ?",
           "options": [
             "La connaissance vient uniquement de l'expérience",
             "La connaissance vient uniquement de la raison",

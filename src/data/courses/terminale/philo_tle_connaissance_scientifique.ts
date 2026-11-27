@@ -994,7 +994,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p05_q3",
             "type": "mcq",
-            "prompt": "Russell (Mysticisme et logique) dit que les mathématiques sont « le domaine dans lequel on ne sait jamais de quoi l'on parle, ni si ce que l'on dit est vrai ». Que veut-il dire ?",
+            "prompt": "Que veut dire Russell par cette formule sur les mathématiques ?",
             "options": [
               "Qu'elles sont inutiles et stériles",
               "Que les mathématiciens se trompent toujours",
@@ -1053,7 +1053,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
           "stepTitle": "Une citation de Pascal mal située",
           "stepTheme": "Une citation de Pascal mal située",
           "stepBadge": "Une citation de Pascal mal située",
-          "paragraphText": "« Les secrets de la nature sont cachés ; […] le temps les révèle d'âge en âge » n'est pas tiré des Pensées (erreur d’attribution fréquente).\nPascal l'écrit dans la Préface pour le Traité du vide, où il défend le progrès des connaissances scientifiques.",
+          "paragraphText": "« Les secrets de la nature sont cachés ; […] le temps les révèle d'âge en âge » n'est pas tiré des Pensées, comme le dit le PDF.\nPascal l'écrit dans la Préface pour le Traité du vide, où il défend le progrès des connaissances scientifiques.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p05_q6",
             "type": "mcq",
@@ -1099,7 +1099,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p05_q3",
           "type": "mcq",
-          "prompt": "Russell (Mysticisme et logique) dit que les mathématiques sont « le domaine dans lequel on ne sait jamais de quoi l'on parle, ni si ce que l'on dit est vrai ». Que veut-il dire ?",
+          "prompt": "Que veut dire Russell par cette formule sur les mathématiques ?",
           "options": [
             "Qu'elles sont inutiles et stériles",
             "Que les mathématiciens se trompent toujours",
@@ -1216,7 +1216,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
           "stepTitle": "La « machine de terre » de Descartes",
           "stepTheme": "La « machine de terre » de Descartes",
           "stepBadge": "La « machine de terre » de Descartes",
-          "paragraphText": "On situe parfois à tort dans le Discours de la méthode la phrase : « Je suppose que le corps n'est autre chose qu'une statue ou machine de terre ».\nElle vient en réalité du Traité de l'homme de Descartes.",
+          "paragraphText": "Le PDF situe dans le Discours de la méthode la phrase : « Je suppose que le corps n'est autre chose qu'une statue ou machine de terre ».\nElle vient en réalité du Traité de l'homme de Descartes.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p06_q3",
             "type": "mcq",
@@ -1647,7 +1647,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
           "stepTitle": "« De l'expérience » : c'est Locke",
           "stepTheme": "« De l'expérience » : c'est Locke",
           "stepBadge": "« De l'expérience » : c'est Locke",
-          "paragraphText": "Attention à l’auteur : on attribue parfois à tort à Hume la phrase : « D'où viennent nos connaissances ? Je réponds en un mot : de l'expérience ».\nElle est de Locke (Essai sur l'entendement humain, livre II, chapitre 1). Hume est bien empiriste, mais la formule est de Locke.",
+          "paragraphText": "Le corrigé du PDF attribue à Hume la phrase : « D'où viennent nos connaissances ? Je réponds en un mot : de l'expérience ».\nElle est de Locke (Essai sur l'entendement humain, livre II, chapitre 1). Hume est bien empiriste, mais la formule est de Locke.",
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p08_q2",
             "type": "mcq",

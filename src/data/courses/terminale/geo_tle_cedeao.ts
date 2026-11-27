@@ -28,7 +28,7 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
       "formulas": [],
       "workedExample": {
         "title": "Compter les membres par langue",
-        "statement": "Combien la CEDEAO compte-t-elle d'États membres ?",
+        "statement": "Selon le cours, combien la CEDEAO compte-t-elle d'États membres ?",
         "methodSteps": [
           "Francophones : 8 (Bénin, Burkina Faso, Côte d'Ivoire, Guinée, Mali, Niger, Sénégal, Togo).",
           "Anglophones : 5 (Gambie, Ghana, Liberia, Nigeria, Sierra Leone).",
@@ -104,10 +104,10 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
         {
           "stepNumber": 4,
           "stepKind": "piege",
-          "stepTitle": "Point de vigilance : le président libérien",
-          "stepTheme": "Point de vigilance : le président libérien",
-          "stepBadge": "Point de vigilance : le président libérien",
-          "paragraphText": "On attribue parfois à tort l'idée, en 1968, au « président du Liberia William Tolbert ».\nEn 1968, le président du Liberia était William Tubman ; Tolbert ne le devient qu'en 1971.\nRetiens surtout que l'idée vient du Liberia et qu'elle aboutit en 1975.",
+          "stepTitle": "Erreur dans le PDF : le président libérien",
+          "stepTheme": "Erreur dans le PDF : le président libérien",
+          "stepBadge": "Erreur dans le PDF : le président libérien",
+          "paragraphText": "Le PDF attribue l'idée, en 1968, au « président du Liberia William Tolbert ».\nEn 1968, le président du Liberia était William Tubman ; Tolbert ne le devient qu'en 1971.\nRetiens surtout que l'idée vient du Liberia et qu'elle aboutit en 1975.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l01_cedeao_p01_q4",
             "type": "mcq",
@@ -128,11 +128,11 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
           "stepTitle": "Trois espaces linguistiques",
           "stepTheme": "Trois espaces linguistiques",
           "stepBadge": "Trois espaces linguistiques",
-          "paragraphText": "La CEDEAO compte 15 États :\n• 8 francophones ;\n• 5 anglophones ;\n• 2 lusophones (langue portugaise) : Cap-Vert et Guinée-Bissau.\nSuperficie : environ 5,1 millions de km² ; population : plus de 300 millions d'habitants.",
+          "paragraphText": "Selon le cours, la CEDEAO compte 15 États :\n• 8 francophones ;\n• 5 anglophones ;\n• 2 lusophones (langue portugaise) : Cap-Vert et Guinée-Bissau.\nSuperficie : environ 5,1 millions de km² ; population : plus de 300 millions d'habitants.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l01_cedeao_p01_q5",
             "type": "mcq",
-            "prompt": "Combien de pays anglophones la CEDEAO compte-t-elle ?",
+            "prompt": "Combien de pays anglophones la CEDEAO compte-t-elle selon le cours ?",
             "options": [
               "8",
               "5",
@@ -171,7 +171,7 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
           "stepTheme": "Actualité : 15 ou 12 membres ?",
           "stepBadge": "Actualité : 15 ou 12 membres ?",
           "paragraphText": "La Mauritanie s'est retirée en 2000.\nDepuis janvier 2025, le Mali, le Burkina Faso et le Niger ont aussi quitté la CEDEAO pour former l'Alliance des États du Sahel (AES).\nLe cours parle de 15 membres ; aujourd'hui, il en reste 12.",
-          "konanTip": "À l'examen, cite les 15 membres historiques, puis précise qu'il en reste 12 depuis 2025.",
+          "konanTip": "À l'examen, cite les 15 membres du cours, puis précise qu'il en reste 12 depuis 2025.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l01_cedeao_p01_q7",
             "type": "mcq",
@@ -243,7 +243,7 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_t3_l01_cedeao_p01_q5",
           "type": "mcq",
-          "prompt": "Combien de pays anglophones la CEDEAO compte-t-elle ?",
+          "prompt": "Combien de pays anglophones la CEDEAO compte-t-elle selon le cours ?",
           "options": [
             "8",
             "5",
@@ -672,7 +672,7 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
           "stepTitle": "Les agences techniques",
           "stepTheme": "Les agences techniques",
           "stepBadge": "Les agences techniques",
-          "paragraphText": "Des agences s'occupent de domaines précis :\n• l'Organisation ouest-africaine de la santé ;\n• le Système d'échanges d'énergie électrique ouest-africain ;\n• l'Unité de coordination des ressources en eau ;\n• l'Agence monétaire de l'Afrique de l'Ouest.",
+          "paragraphText": "Des agences s'occupent de domaines précis :\n• l'Organisation ouest-africaine de la santé ;\n• le Système d'échanges d'énergie électrique ouest-africain (le PDF écrit « électronique » par erreur) ;\n• l'Unité de coordination des ressources en eau ;\n• l'Agence monétaire de l'Afrique de l'Ouest.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l01_cedeao_p03_q6",
             "type": "mcq",
@@ -1172,7 +1172,7 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
           "stepTitle": "BOAD ou BIDC ?",
           "stepTheme": "BOAD ou BIDC ?",
           "stepBadge": "BOAD ou BIDC ?",
-          "paragraphText": "Attention à une confusion fréquente : on présente parfois la BOAD comme une banque de la CEDEAO.\nAttention : la BOAD (Banque ouest-africaine de développement) est la banque de l'UEMOA, l'union des pays du franc CFA.\nLa banque de la CEDEAO est la BIDC.",
+          "paragraphText": "Le PDF présente la BOAD comme une banque de la CEDEAO.\nAttention : la BOAD (Banque ouest-africaine de développement) est la banque de l'UEMOA, l'union des pays du franc CFA.\nLa banque de la CEDEAO est la BIDC.",
           "exercise": {
             "id": "terminale_hg_geographie_t3_l01_cedeao_p05_q5",
             "type": "mcq",
@@ -1590,7 +1590,7 @@ export const GEO_TLE_T3_L01_CEDEAO: CurriculumChapter = {
       "order": 7,
       "title": "Entraînement type BAC",
       "summary": "S'entraîner aux consignes sur la CEDEAO : sujet, explication, prise de position.",
-      "conceptExplanation": "Consigne 1 : nommer le problème en une phrase.\nConsigne 2 : expliquer le passage avec des faits précis.\nConsigne 3 : prendre position et justifier, de façon nuancée.\nSur la CEDEAO, une bonne réponse oppose les réalisations (libre circulation, paix, projets communs) aux insuffisances (instabilité, terrorisme, faibles échanges).",
+      "conceptExplanation": "Consigne 1 : nommer le problème en une phrase.\nConsigne 2 : expliquer le passage avec des faits du cours.\nConsigne 3 : prendre position et justifier, de façon nuancée.\nSur la CEDEAO, une bonne réponse oppose les réalisations (libre circulation, paix, projets communs) aux insuffisances (instabilité, terrorisme, faibles échanges).",
       "keyRule": "Réalisations d'un côté, insuffisances de l'autre : une réponse nuancée sur la CEDEAO cite les deux.",
       "formulas": [],
       "workedExample": {

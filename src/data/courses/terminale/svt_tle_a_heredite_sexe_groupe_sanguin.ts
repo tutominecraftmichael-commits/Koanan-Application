@@ -1,9 +1,9 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT TA_L5_Lhérédité du sexe et du groupe sanguin chez lHomme.pdf » (format v2 : mini-leçons de 5 à 8 étapes).
-// Fichier généré : modifier les brouillons puis relancer l'assemblage plutôt que d'éditer à la main.
+// Leçon reprise de ecole-ci.org — « Leçon 5 : L'hérédité du sexe et du groupe sanguin chez l'Homme » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=1757
 export const SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN: CurriculumChapter = {
-  "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin",
+  "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin",
   "subjectId": "svt",
   "gradeLevel": "terminale_a1",
   "alsoForGrades": [
@@ -11,351 +11,318 @@ export const SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN: CurriculumChapter = {
   ],
   "order": 5,
   "title": "Leçon 5 : L'hérédité du sexe et du groupe sanguin chez l'Homme",
-  "summary": "Arbre généalogique, système ABO (allèles codominants A et B, allèle récessif O, échiquier), chromosomes sexuels XX et XY, détermination du sexe par le spermatozoïde, transfusion et limites de la recherche de paternité.",
-  "officialVolumeHours": 6,
+  "summary": "Les groupes sanguins A, B, AB et O sont déterminés par un gène autosomal à trois allèles transmis par les deux parents, tandis que le sexe de l'enfant est déterminé par le spermatozoïde du père, porteur du chromosome X ou du chromosome Y.",
   "contentVersion": 2,
-  "source": "SVT TA_L5_Lhérédité du sexe et du groupe sanguin chez lHomme.pdf",
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=1757",
   "points": [
     {
-      "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01",
+      "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01",
       "order": 1,
-      "title": "Les groupes sanguins dans une famille",
-      "summary": "Lire un arbre généalogique : une mère A, un père B, quatre enfants de groupes différents.",
-      "conceptExplanation": "Situation : un père menace de divorcer parce que sa femme n'a eu que des filles, toutes de groupes sanguins différents du sien. Il ignore comment se transmettent le groupe sanguin et le sexe.\n\nLire un arbre généalogique :\n- les ronds représentent les femmes, les carrés les hommes ;\n- deux individus reliés par un trait horizontal forment un couple ;\n- leurs enfants sont placés en dessous ;\n- les chiffres romains (I, II) numérotent les générations.\n\nEnquête (arbre généalogique) :\n- génération I : la mère I1 est du groupe A, le père I2 du groupe B ;\n- génération II : II1 (fille) groupe AB, II2 (garçon) groupe O, II3 (garçon) groupe A, II4 (fille) groupe B.\n\nAnalyse :\n- on observe les 4 groupes du système ABO : A, B, AB et O ;\n- la fille II4 a le même groupe que son père ; le garçon II3 a le même groupe que sa mère ;\n- II1 (AB) et II2 (O) ont des groupes différents de ceux de leurs deux parents.\n\nInterprétation :\n- le groupe sanguin est transmis aux filles comme aux garçons, par les deux parents : le gène est porté par un AUTOSOME (en réalité, le chromosome 9), pas par un chromosome sexuel ;\n- l'apparition du groupe O chez un enfant de parents A et B montre que l'allèle O était présent mais masqué chez les deux parents : l'allèle O est RÉCESSIF ;\n- l'apparition du groupe AB montre que les allèles A et B s'expriment ensemble : ils sont CODOMINANTS.",
-      "keyRule": "Rond = femme, carré = homme, trait horizontal = couple. Groupe O né de parents A et B : O est récessif. Groupe AB : A et B sont codominants.",
+      "title": "L'enquête familiale et les quatre groupes sanguins",
+      "summary": "Lire un arbre généalogique du système ABO et constater la diversité des groupes dans une famille.",
+      "conceptExplanation": "L'enquête consiste à déterminer le groupe sanguin des membres d'une famille et à établir un arbre généalogique afin d'étudier la transmission des groupes sanguins au sein de cette famille.\nDans un arbre généalogique, les ronds représentent les femmes, les carrés représentent les hommes, les individus reliés horizontalement forment un couple et les individus placés au-dessous d'eux sont leurs enfants ou descendants.\nDans la famille étudiée, on a 4 groupes sanguins : groupe A, groupe B, groupe AB et groupe O. Les parents sont de groupes A et B. Ils donnent naissance à des enfants des groupes AB, O, A et B.\nLa fille II4 et son père ont le même groupe sanguin ; le garçon II3 a le même groupe sanguin que sa mère ; les enfants II1 et II2 ont des groupes sanguins différents de ceux des parents.",
+      "keyRule": "Un couple A et B peut avoir des enfants A, B, AB et O : l'arbre généalogique le montre génération par génération.",
       "formulas": [],
       "workedExample": {
-        "title": "Expliquer un enfant O",
-        "statement": "Une mère du groupe A et un père du groupe B ont un garçon du groupe O. Comment est-ce possible ?",
+        "title": "La famille de l'exercice 1 : mère A, père B",
+        "statement": "Une mère de groupe A et un père de groupe B ont une fille AB, un garçon B et deux filles O. Relève les groupes présents dans cette famille.",
         "methodSteps": [
-          "Un enfant O doit recevoir un allèle O de chaque parent.",
-          "La mère A possède donc un allèle O masqué (A//O), le père B aussi (B//O)."
+          "Les parents apportent les groupes A (mère) et B (père).",
+          "La fille aînée est du groupe AB et le garçon du groupe B.",
+          "Les deux autres sœurs sont du groupe O.",
+          "La famille présente donc les quatre groupes : A, B, AB et O."
         ],
-        "conclusion": "Les deux parents sont hétérozygotes et portent l'allèle récessif O."
+        "conclusion": "Corrigé de l'exercice 1 : les groupes sanguins révélés sont O, AB, A et B."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Lire un arbre",
-          "stepTheme": "Lire un arbre",
-          "stepBadge": "Lire un arbre",
-          "paragraphText": "Dans un arbre généalogique, les ronds sont des femmes, les carrés des hommes ; un trait horizontal relie un couple, les enfants sont placés en dessous.",
+          "stepTitle": "Lire un arbre généalogique",
+          "stepTheme": "Lire un arbre généalogique",
+          "stepBadge": "Lire un arbre généalogique",
+          "paragraphText": "• Arbre généalogique : schéma où les ronds représentent les femmes et les carrés représentent les hommes.\nLes individus reliés horizontalement forment un couple, et ceux placés au-dessous sont leurs enfants ou descendants.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q1",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q1",
             "type": "mcq",
-            "prompt": "Dans un arbre généalogique, que représente un carré ?",
+            "prompt": "Dans un arbre généalogique, les femmes sont représentées par :",
             "options": [
-              "Une femme",
-              "Un homme",
-              "Un couple",
-              "Un enfant mort"
+              "Des carrés",
+              "Des ronds",
+              "Des triangles",
+              "Des lettres uniquement"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Les ronds représentent les femmes."
+            "explanation": "C'est la convention rappelée sous le résultat de l'enquête de la leçon."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "exemple",
-          "stepTitle": "Les quatre groupes",
-          "stepTheme": "Les quatre groupes",
-          "stepBadge": "Les quatre groupes",
-          "paragraphText": "Dans la famille étudiée (mère A, père B ; enfants AB, O, A, B), on observe les 4 groupes du système ABO.",
+          "stepKind": "propriete",
+          "stepTitle": "Quatre groupes dans une famille",
+          "stepTheme": "Quatre groupes dans une famille",
+          "stepBadge": "Quatre groupes dans une famille",
+          "paragraphText": "La famille étudiée présente les 4 groupes sanguins du système ABO.\nCe sont les groupes A, B, AB et O, répartis entre parents et enfants.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q2",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q2",
             "type": "mcq",
-            "prompt": "Une mère du groupe A et un père du groupe B ont quatre enfants des groupes AB, O, A et B. Combien de groupes sanguins différents observe-t-on dans cette famille ?",
+            "prompt": "Les quatre groupes sanguins du système ABO sont :",
             "options": [
-              "2",
-              "3",
-              "4",
-              "6"
+              "A, B, C et O",
+              "A, B, AB et O",
+              "A, AB, BA et O",
+              "Rhésus positif et négatif uniquement"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "A, B, AB et O : tous les groupes du système ABO."
+            "correctAnswerIndex": 1,
+            "explanation": "L'analyse de l'enquête liste : groupe A, groupe B, groupe AB, groupe O."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "propriete",
-          "stepTitle": "Un gène autosomal",
-          "stepTheme": "Un gène autosomal",
-          "stepBadge": "Un gène autosomal",
-          "paragraphText": "Le groupe sanguin est transmis aux filles comme aux garçons, par les deux parents : son gène est porté par un autosome.",
+          "stepTitle": "Des enfants différents des parents",
+          "stepTheme": "Des enfants différents des parents",
+          "stepBadge": "Des enfants différents des parents",
+          "paragraphText": "Les parents de la famille étudiée sont de groupes A et B.\nParmi leurs enfants, II1 et II2 ont des groupes sanguins différents de ceux des deux parents, tandis que II4 partage celui du père et II3 celui de la mère.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q3",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q3",
             "type": "mcq",
-            "prompt": "Dans la famille étudiée, la fille II4 a le groupe de son père (B) et le garçon II3 celui de sa mère (A). Que peut-on dire du chromosome qui porte le gène du groupe sanguin ?",
+            "prompt": "Dans la famille étudiée, les parents sont de groupes :",
             "options": [
-              "C'est le chromosome Y",
-              "C'est un autosome (chromosome non sexuel)",
-              "C'est le chromosome X seulement",
-              "Il n'y a pas de chromosome en jeu"
+              "O et AB",
+              "A et B",
+              "A et A",
+              "B et O"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Il se transmet de la même façon aux deux sexes (chromosome 9)."
+            "explanation": "L'analyse précise : les parents sont de groupes A et B."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "definition",
-          "stepTitle": "L'allèle O récessif",
-          "stepTheme": "L'allèle O récessif",
-          "stepBadge": "L'allèle O récessif",
-          "paragraphText": "Un enfant O né de parents A et B montre que l'allèle O était présent mais masqué chez les parents : il est récessif.",
+          "stepKind": "methode",
+          "stepTitle": "Repérer qui ressemble à qui",
+          "stepTheme": "Repérer qui ressemble à qui",
+          "stepBadge": "Repérer qui ressemble à qui",
+          "paragraphText": "Méthode d'analyse de l'arbre : comparer le groupe de chaque enfant à ceux des parents.\nOn note les enfants de même groupe qu'un parent (II4 comme le père, II3 comme la mère) et ceux de groupe différent (II1 et II2).",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q4",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q4",
             "type": "mcq",
-            "prompt": "Des parents des groupes A et B ont un enfant du groupe O. Que montre l'apparition de ce groupe O ?",
+            "prompt": "Le garçon II3 a le même groupe sanguin que :",
             "options": [
-              "Que l'allèle O est dominant",
-              "Que l'allèle O était présent mais masqué chez les deux parents : il est récessif",
-              "Que l'enfant a été échangé à la maternité",
-              "Que le groupe O n'est pas héréditaire"
+              "Son père",
+              "Sa sœur II4",
+              "Sa mère",
+              "Aucun membre de la famille"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Un allèle récessif ne s'exprime que s'il est en double (O//O)."
+            "correctAnswerIndex": 2,
+            "explanation": "L'analyse indique que le garçon II3 a le même groupe sanguin que sa mère."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "definition",
-          "stepTitle": "A et B codominants",
-          "stepTheme": "A et B codominants",
-          "stepBadge": "A et B codominants",
-          "paragraphText": "Un enfant AB montre que les allèles A et B s'expriment en même temps : aucun ne domine l'autre, ils sont codominants.",
+          "stepKind": "piege",
+          "stepTitle": "Des enfants O chez des parents A et B",
+          "stepTheme": "Des enfants O chez des parents A et B",
+          "stepBadge": "Des enfants O chez des parents A et B",
+          "paragraphText": "Piège : croire impossible qu'un couple A et B ait des enfants de groupe O.\nC'est pourtant ce que montre l'arbre : des enfants II1 et II2 ont des groupes différents de ceux des parents, dont le groupe O.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q5",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q5",
             "type": "mcq",
-            "prompt": "Une fille du groupe AB est née d'une mère A et d'un père B. Que montre le phénotype AB ?",
+            "prompt": "Un couple de groupes A et B peut-il avoir un enfant de groupe O, selon la leçon ?",
             "options": [
-              "Que A domine B",
-              "Que B domine A",
-              "Que les allèles A et B s'expriment ensemble : ils sont codominants",
-              "Que A et B sont récessifs"
+              "Non, jamais",
+              "Oui, l'arbre généalogique étudié en présente",
+              "Seulement si un parent est O",
+              "Seulement pour les filles"
             ],
-            "correctAnswerIndex": 2,
-            "explanation": "Elle a reçu A de sa mère et B de son père, et exprime les deux."
+            "correctAnswerIndex": 1,
+            "explanation": "L'enquête familiale et l'exercice 1 montrent des enfants O nés de parents A et B."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "piege",
-          "stepTitle": "Un phénotype récessif réapparaît",
-          "stepTheme": "Un phénotype récessif réapparaît",
-          "stepBadge": "Un phénotype récessif réapparaît",
-          "paragraphText": "Un phénotype récessif peut apparaître chez un enfant même si ses deux parents ne le montrent pas : c'est le cas du groupe O.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q6",
-            "type": "mcq",
-            "prompt": "Vrai ou faux : « Un phénotype récessif n'apparaît jamais dans la descendance. »",
-            "options": [
-              "Vrai",
-              "Faux : un enfant O peut naître de parents A et B qui portent l'allèle O masqué",
-              "Vrai, sauf chez les filles",
-              "Vrai, sauf chez les garçons"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Il apparaît quand l'enfant reçoit l'allèle récessif de ses deux parents."
-          }
-        },
-        {
-          "stepNumber": 7,
           "stepKind": "exemple",
-          "stepTitle": "Différent de ses parents",
-          "stepTheme": "Différent de ses parents",
-          "stepBadge": "Différent de ses parents",
-          "paragraphText": "Un enfant peut avoir un groupe sanguin différent de celui de ses deux parents (AB ou O nés de parents A et B).",
+          "stepTitle": "La fille II4 comme son père",
+          "stepTheme": "La fille II4 comme son père",
+          "stepBadge": "La fille II4 comme son père",
+          "paragraphText": "La fille II4 et son père ont le même groupe sanguin dans la famille étudiée.\nPour la leçon, ce fait signifie que ce caractère est transmis par un chromosome autosomal, porté indifféremment par les deux sexes.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q7",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q6",
             "type": "mcq",
-            "prompt": "Un père du groupe B s'étonne que ses filles aient des groupes sanguins différents du sien (AB, O, A). La mère est du groupe A. Est-ce anormal ?",
+            "prompt": "Que signifie, pour la leçon, le fait que la fille II4 ait le même groupe que son père ?",
             "options": [
-              "Oui, les filles doivent avoir le groupe du père",
-              "Non : chaque enfant reçoit un allèle de chaque parent, ce qui peut donner A, B, AB ou O",
-              "Oui, cela prouve que ce ne sont pas ses filles",
-              "Non, car le groupe sanguin vient uniquement de la mère"
+              "Que le caractère est porté par le chromosome Y",
+              "Que ce caractère est transmis par un chromosome autosomal",
+              "Que le groupe sanguin ne se transmet pas",
+              "Que seuls les pères transmettent les groupes"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Avec des parents A//O et B//O, les quatre groupes sont possibles."
+            "explanation": "C'est la première phrase de l'interprétation de l'enquête."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q1",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q1",
           "type": "mcq",
-          "prompt": "Dans un arbre généalogique, que représente un carré ?",
+          "prompt": "Dans un arbre généalogique, les femmes sont représentées par :",
           "options": [
-            "Une femme",
-            "Un homme",
-            "Un couple",
-            "Un enfant mort"
+            "Des carrés",
+            "Des ronds",
+            "Des triangles",
+            "Des lettres uniquement"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Les ronds représentent les femmes."
+          "explanation": "C'est la convention rappelée sous le résultat de l'enquête de la leçon."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q2",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q2",
           "type": "mcq",
-          "prompt": "Une mère du groupe A et un père du groupe B ont quatre enfants des groupes AB, O, A et B. Combien de groupes sanguins différents observe-t-on dans cette famille ?",
+          "prompt": "Les quatre groupes sanguins du système ABO sont :",
           "options": [
-            "2",
-            "3",
-            "4",
-            "6"
+            "A, B, C et O",
+            "A, B, AB et O",
+            "A, AB, BA et O",
+            "Rhésus positif et négatif uniquement"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'analyse de l'enquête liste : groupe A, groupe B, groupe AB, groupe O."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q3",
+          "type": "mcq",
+          "prompt": "Dans la famille étudiée, les parents sont de groupes :",
+          "options": [
+            "O et AB",
+            "A et B",
+            "A et A",
+            "B et O"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'analyse précise : les parents sont de groupes A et B."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q4",
+          "type": "mcq",
+          "prompt": "Le garçon II3 a le même groupe sanguin que :",
+          "options": [
+            "Son père",
+            "Sa sœur II4",
+            "Sa mère",
+            "Aucun membre de la famille"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "A, B, AB et O : tous les groupes du système ABO."
+          "explanation": "L'analyse indique que le garçon II3 a le même groupe sanguin que sa mère."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q3",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q5",
           "type": "mcq",
-          "prompt": "Dans la famille étudiée, la fille II4 a le groupe de son père (B) et le garçon II3 celui de sa mère (A). Que peut-on dire du chromosome qui porte le gène du groupe sanguin ?",
+          "prompt": "Un couple de groupes A et B peut-il avoir un enfant de groupe O, selon la leçon ?",
           "options": [
-            "C'est le chromosome Y",
-            "C'est un autosome (chromosome non sexuel)",
-            "C'est le chromosome X seulement",
-            "Il n'y a pas de chromosome en jeu"
+            "Non, jamais",
+            "Oui, l'arbre généalogique étudié en présente",
+            "Seulement si un parent est O",
+            "Seulement pour les filles"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Il se transmet de la même façon aux deux sexes (chromosome 9)."
+          "explanation": "L'enquête familiale et l'exercice 1 montrent des enfants O nés de parents A et B."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q4",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p01_q6",
           "type": "mcq",
-          "prompt": "Des parents des groupes A et B ont un enfant du groupe O. Que montre l'apparition de ce groupe O ?",
+          "prompt": "Que signifie, pour la leçon, le fait que la fille II4 ait le même groupe que son père ?",
           "options": [
-            "Que l'allèle O est dominant",
-            "Que l'allèle O était présent mais masqué chez les deux parents : il est récessif",
-            "Que l'enfant a été échangé à la maternité",
-            "Que le groupe O n'est pas héréditaire"
+            "Que le caractère est porté par le chromosome Y",
+            "Que ce caractère est transmis par un chromosome autosomal",
+            "Que le groupe sanguin ne se transmet pas",
+            "Que seuls les pères transmettent les groupes"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Un allèle récessif ne s'exprime que s'il est en double (O//O)."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q5",
-          "type": "mcq",
-          "prompt": "Une fille du groupe AB est née d'une mère A et d'un père B. Que montre le phénotype AB ?",
-          "options": [
-            "Que A domine B",
-            "Que B domine A",
-            "Que les allèles A et B s'expriment ensemble : ils sont codominants",
-            "Que A et B sont récessifs"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "Elle a reçu A de sa mère et B de son père, et exprime les deux."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q6",
-          "type": "mcq",
-          "prompt": "Vrai ou faux : « Un phénotype récessif n'apparaît jamais dans la descendance. »",
-          "options": [
-            "Vrai",
-            "Faux : un enfant O peut naître de parents A et B qui portent l'allèle O masqué",
-            "Vrai, sauf chez les filles",
-            "Vrai, sauf chez les garçons"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Il apparaît quand l'enfant reçoit l'allèle récessif de ses deux parents."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p01_q7",
-          "type": "mcq",
-          "prompt": "Un père du groupe B s'étonne que ses filles aient des groupes sanguins différents du sien (AB, O, A). La mère est du groupe A. Est-ce anormal ?",
-          "options": [
-            "Oui, les filles doivent avoir le groupe du père",
-            "Non : chaque enfant reçoit un allèle de chaque parent, ce qui peut donner A, B, AB ou O",
-            "Oui, cela prouve que ce ne sont pas ses filles",
-            "Non, car le groupe sanguin vient uniquement de la mère"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Avec des parents A//O et B//O, les quatre groupes sont possibles."
+          "explanation": "C'est la première phrase de l'interprétation de l'enquête."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02",
+      "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02",
       "order": 2,
-      "title": "Génotypes et échiquier du système ABO",
-      "summary": "Trois allèles, quatre phénotypes, et un échiquier A//O × B//O.",
-      "conceptExplanation": "Vocabulaire :\n- allèle : une forme d'un gène ;\n- génotype : les deux allèles d'un individu, écrits A//O par exemple ;\n- phénotype : le caractère visible, écrit entre crochets : [A], [B], [AB], [O] ;\n- homozygote : deux allèles identiques (A//A) ; hétérozygote : deux allèles différents (A//O, A//B).\n\nLe gène du système ABO est POLYALLÉLIQUE : il a trois allèles, A, B et O.\n- A et B sont dominants sur O ; A et B sont codominants entre eux ; O est récessif.\n\nCorrespondance génotypes → phénotypes :\n- A//A ou A//O → [A] ;\n- B//B ou B//O → [B] ;\n- A//B → [AB] (forcément hétérozygote) ;\n- O//O → [O].\n\nVérification chromosomique : la mère [A] a eu un enfant O, elle est donc A//O ; le père [B] est B//O.\n- Gamètes de la mère : 50 % A, 50 % O. Gamètes du père : 50 % B, 50 % O.\n- Échiquier de croisement :\n  A × B → A//B [AB] (25 %) ;\n  A × O → A//O [A] (25 %) ;\n  O × B → B//O [B] (25 %) ;\n  O × O → O//O [O] (25 %).\nBilan : 25 % [A], 25 % [B], 25 % [AB], 25 % [O]. Les résultats théoriques sont conformes aux résultats observés.",
-      "keyRule": "Système ABO : 3 allèles (polyallélique). A et B dominants sur O, codominants entre eux. A//O × B//O donne 1/4 [A], 1/4 [B], 1/4 [AB], 1/4 [O].",
+      "title": "Récessivité de O et codominance de A et B",
+      "summary": "Expliquer l'apparition des phénotypes O et AB dans la descendance d'un couple A et B.",
+      "conceptExplanation": "L'apparition du phénotype O dans la descendance montre que l'allèle O est présent chez les parents, mais qu'il ne s'exprime pas devant les allèles A et B : il est dit allèle récessif, ou masqué.\nL'apparition du phénotype AB dans la descendance montre que les allèles A et B s'expriment simultanément : l'un ne domine pas l'autre. Ce sont des allèles codominants.\nL'enfant du groupe AB est forcément hétérozygote : il reçoit du père l'allèle B et de la mère l'allèle A, dans l'exemple de la leçon.\nL'activité d'application confirme : dans le système ABO, un individu de groupe sanguin AB est hétérozygote, et un gène polyallélique est un gène qui a plusieurs formes alléliques.",
+      "keyRule": "O est récessif et masqué par A et B ; A et B sont codominants et s'expriment ensemble dans le groupe AB, toujours hétérozygote.",
       "formulas": [],
       "workedExample": {
-        "title": "Trouver les génotypes",
-        "statement": "Une mère [A] et un père [B] ont des enfants [AB], [B], [O] et [O]. Écris le génotype de chacun.",
+        "title": "Expliquer les groupes des enfants (exercice 1, question 3)",
+        "statement": "Explique l'apparition des groupes AB, B et O chez les enfants d'une mère A et d'un père B.",
         "methodSteps": [
-          "Les enfants [O] sont O//O : chacun a reçu un O de chaque parent.",
-          "Donc la mère est A//O et le père B//O.",
-          "L'enfant [AB] est A//B ; l'enfant [B] a reçu B du père et O de la mère : B//O."
+          "La fille du groupe AB a reçu l'allèle A de sa mère et l'allèle B de son père : les deux s'expriment, ils sont codominants.",
+          "Le garçon du groupe B a reçu l'allèle B de son père et l'allèle O de sa mère : O est masqué par B.",
+          "Les filles du groupe O ont reçu l'allèle O de chaque parent : seul cas où l'allèle récessif s'exprime."
         ],
-        "conclusion": "Mère A//O, père B//O, enfants A//B, B//O, O//O, O//O."
+        "conclusion": "Corrigé de l'exercice 1 : chaque groupe d'enfant s'explique par un allèle reçu de chaque parent."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Un gène polyallélique",
-          "stepTheme": "Un gène polyallélique",
-          "stepBadge": "Un gène polyallélique",
-          "paragraphText": "Le gène du système ABO est polyallélique : il possède trois allèles différents, A, B et O.",
+          "stepTitle": "Un allèle récessif",
+          "stepTheme": "Un allèle récessif",
+          "stepBadge": "Un allèle récessif",
+          "paragraphText": "• Allèle récessif : allèle présent chez un individu mais qui ne s'exprime pas devant un autre allèle.\nDans le système ABO, l'allèle O est récessif, ou masqué, devant les allèles A et B.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q1",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q1",
             "type": "mcq",
-            "prompt": "Le gène du système ABO possède trois allèles (A, B et O). Comment qualifie-t-on un tel gène ?",
+            "prompt": "L'allèle O est dit récessif parce qu'il :",
             "options": [
-              "Monoallélique",
-              "Polyallélique",
-              "Lié au sexe",
-              "Récessif"
+              "S'exprime toujours",
+              "Ne s'exprime pas devant les allèles A et B",
+              "A disparu chez les parents",
+              "Domine l'allèle A"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Un gène polyallélique a plusieurs formes alléliques dans la population."
+            "explanation": "C'est l'interprétation tirée de l'apparition du phénotype O dans la descendance."
           }
         },
         {
           "stepNumber": 2,
           "stepKind": "definition",
-          "stepTitle": "Génotype et phénotype",
-          "stepTheme": "Génotype et phénotype",
-          "stepBadge": "Génotype et phénotype",
-          "paragraphText": "Le génotype est la paire d'allèles (A//O) ; le phénotype est le caractère exprimé, écrit entre crochets ([A]).",
+          "stepTitle": "Des allèles codominants",
+          "stepTheme": "Des allèles codominants",
+          "stepBadge": "Des allèles codominants",
+          "paragraphText": "• Allèles codominants : allèles qui s'expriment simultanément, sans que l'un domine l'autre.\nDans le système ABO, les allèles A et B sont codominants, d'où le phénotype AB.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q2",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q2",
             "type": "mcq",
-            "prompt": "Un individu a le génotype A//O. Quel est son phénotype (son groupe sanguin) ?",
+            "prompt": "Les allèles A et B sont codominants parce qu'ils :",
             "options": [
-              "[O]",
-              "[A]",
-              "[AB]",
-              "[B]"
+              "Se masquent l'un l'autre",
+              "S'expriment simultanément, sans domination de l'un sur l'autre",
+              "Sont toujours récessifs",
+              "Ne se transmettent jamais ensemble"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "A est dominant sur O : seul A s'exprime."
+            "explanation": "L'apparition du phénotype AB montre cette expression simultanée."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "propriete",
-          "stepTitle": "Le groupe AB",
-          "stepTheme": "Le groupe AB",
-          "stepBadge": "Le groupe AB",
-          "paragraphText": "Un individu du groupe AB a forcément le génotype A//B : il est hétérozygote.",
+          "stepTitle": "L'individu AB est hétérozygote",
+          "stepTheme": "L'individu AB est hétérozygote",
+          "stepBadge": "L'individu AB est hétérozygote",
+          "paragraphText": "L'enfant du groupe AB est forcément hétérozygote.\nIl porte deux allèles différents, l'un reçu de son père et l'autre de sa mère.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q3",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q3",
             "type": "mcq",
-            "prompt": "Vrai ou faux : « Dans le système ABO, un individu du groupe sanguin AB est hétérozygote. »",
+            "prompt": "Un individu de groupe sanguin AB est :",
             "options": [
-              "Vrai : son génotype est forcément A//B",
-              "Faux : il est A//A",
-              "Faux : il est O//O",
-              "Faux : il est B//B"
+              "Homozygote AA",
+              "Homozygote OO",
+              "Forcément hétérozygote",
+              "Sans allèle du système ABO"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Il a reçu A d'un parent et B de l'autre."
+            "correctAnswerIndex": 2,
+            "explanation": "Affirmation 4 de l'activité d'application, retenue juste dans le corrigé (affirmations justes : 2, 3 et 4)."
           }
         },
         {
@@ -364,956 +331,1052 @@ export const SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN: CurriculumChapter = {
           "stepTitle": "O n'est pas dominant",
           "stepTheme": "O n'est pas dominant",
           "stepBadge": "O n'est pas dominant",
-          "paragraphText": "Dans le système ABO, l'allèle O est récessif : un individu [O] est toujours O//O.",
+          "paragraphText": "Piège de l'activité d'application : affirmer que, dans le système ABO, l'allèle O est un allèle dominant est faux.\nDe même, un phénotype récessif peut apparaître dans la descendance, contrairement à une autre affirmation proposée.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q4",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q4",
             "type": "mcq",
-            "prompt": "Vrai ou faux : « Dans le système ABO, l'allèle O est un allèle dominant. »",
+            "prompt": "Selon le corrigé de l'activité d'application, les affirmations justes sont :",
             "options": [
-              "Vrai",
-              "Faux : l'allèle O est récessif",
-              "Vrai, mais seulement chez l'homme",
-              "Vrai, mais seulement chez la femme"
+              "1, 2 et 5",
+              "2, 3 et 4",
+              "1, 3 et 5",
+              "Toutes les affirmations"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "O ne s'exprime qu'en double : O//O."
+            "explanation": "Corrigé de la leçon : affirmations justes 2 (A et B codominants dans l'esprit de l'exercice), 3 (gène polyallélique) et 4 (AB hétérozygote)."
           }
         },
         {
           "stepNumber": 5,
-          "stepKind": "methode",
-          "stepTitle": "Les gamètes",
-          "stepTheme": "Les gamètes",
-          "stepBadge": "Les gamètes",
-          "paragraphText": "Une mère A//O produit 50 % de gamètes A et 50 % de gamètes O ; un père B//O produit 50 % de gamètes B et 50 % de gamètes O.",
+          "stepKind": "exemple",
+          "stepTitle": "Les filles O de l'exercice 1",
+          "stepTheme": "Les filles O de l'exercice 1",
+          "stepBadge": "Les filles O de l'exercice 1",
+          "paragraphText": "Les deux sœurs de groupe O, dans l'exercice 1, illustrent l'expression de l'allèle récessif.\nElles ont reçu l'allèle O de chaque parent, bien que ni la mère (A) ni le père (B) ne soit de groupe O.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q5",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q5",
             "type": "mcq",
-            "prompt": "Une mère de génotype A//O forme ses gamètes (ovules) par la méiose. Quels gamètes produit-elle, et en quelles proportions ?",
+            "prompt": "Les filles de groupe O de l'exercice 1 ont reçu :",
             "options": [
-              "100 % A",
-              "50 % A et 50 % O",
-              "100 % O",
-              "75 % A et 25 % O"
+              "L'allèle O d'un seul parent",
+              "L'allèle A des deux parents",
+              "L'allèle O de chaque parent",
+              "L'allèle B de chaque parent"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Chaque gamète reçoit un seul des deux allèles."
+            "correctAnswerIndex": 2,
+            "explanation": "Corrigé de l'exercice 1 : elles ont reçu l'allèle O de chaque parent."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "methode",
-          "stepTitle": "L'échiquier",
-          "stepTheme": "L'échiquier",
-          "stepBadge": "L'échiquier",
-          "paragraphText": "A//O × B//O : 25 % [AB], 25 % [A], 25 % [B], 25 % [O].",
+          "stepTitle": "Expliquer un phénotype par les allèles reçus",
+          "stepTheme": "Expliquer un phénotype par les allèles reçus",
+          "stepBadge": "Expliquer un phénotype par les allèles reçus",
+          "paragraphText": "Méthode : pour chaque enfant, nommer l'allèle reçu du père et celui reçu de la mère.\nOn applique ensuite les règles : O masqué par A ou B, A et B exprimés ensemble en AB, O exprimé seulement en double exemplaire.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q6",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q6",
             "type": "mcq",
-            "prompt": "Une mère A//O et un père B//O ont un enfant. D'après l'échiquier de croisement, quelle est la probabilité que cet enfant soit du groupe O ?",
+            "prompt": "Pour expliquer le groupe d'un enfant, il faut d'abord :",
             "options": [
-              "0 %",
-              "25 %",
-              "50 %",
-              "100 %"
+              "Regarder uniquement son sexe",
+              "Identifier l'allèle reçu de chaque parent",
+              "Ignorer le groupe de la mère",
+              "Supposer qu'il copie toujours le père"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Il faut un gamète O de chaque parent : 1/2 × 1/2 = 1/4."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "exemple",
-          "stepTitle": "Retrouver les génotypes",
-          "stepTheme": "Retrouver les génotypes",
-          "stepBadge": "Retrouver les génotypes",
-          "paragraphText": "Mère [A] et père [B] avec des enfants [AB], [B], [O], [O] : mère A//O, père B//O ; l'enfant [B] est B//O.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q7",
-            "type": "mcq",
-            "prompt": "Une mère [A] et un père [B] ont deux filles du groupe O, une fille AB et un garçon B. Quel est le génotype du garçon du groupe B ?",
-            "options": [
-              "B//B",
-              "B//O : il a reçu B de son père et O de sa mère",
-              "A//B",
-              "O//O"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "La mère est A//O (elle a des enfants O) : elle n'a pas d'allèle B à donner."
+            "explanation": "C'est la démarche suivie dans tout le corrigé de l'exercice 1."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q1",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q1",
           "type": "mcq",
-          "prompt": "Le gène du système ABO possède trois allèles (A, B et O). Comment qualifie-t-on un tel gène ?",
+          "prompt": "L'allèle O est dit récessif parce qu'il :",
           "options": [
-            "Monoallélique",
-            "Polyallélique",
-            "Lié au sexe",
-            "Récessif"
+            "S'exprime toujours",
+            "Ne s'exprime pas devant les allèles A et B",
+            "A disparu chez les parents",
+            "Domine l'allèle A"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Un gène polyallélique a plusieurs formes alléliques dans la population."
+          "explanation": "C'est l'interprétation tirée de l'apparition du phénotype O dans la descendance."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q2",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q2",
           "type": "mcq",
-          "prompt": "Un individu a le génotype A//O. Quel est son phénotype (son groupe sanguin) ?",
+          "prompt": "Les allèles A et B sont codominants parce qu'ils :",
           "options": [
-            "[O]",
-            "[A]",
-            "[AB]",
-            "[B]"
+            "Se masquent l'un l'autre",
+            "S'expriment simultanément, sans domination de l'un sur l'autre",
+            "Sont toujours récessifs",
+            "Ne se transmettent jamais ensemble"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "A est dominant sur O : seul A s'exprime."
+          "explanation": "L'apparition du phénotype AB montre cette expression simultanée."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q3",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q3",
           "type": "mcq",
-          "prompt": "Vrai ou faux : « Dans le système ABO, un individu du groupe sanguin AB est hétérozygote. »",
+          "prompt": "Un individu de groupe sanguin AB est :",
           "options": [
-            "Vrai : son génotype est forcément A//B",
-            "Faux : il est A//A",
-            "Faux : il est O//O",
-            "Faux : il est B//B"
+            "Homozygote AA",
+            "Homozygote OO",
+            "Forcément hétérozygote",
+            "Sans allèle du système ABO"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Il a reçu A d'un parent et B de l'autre."
+          "correctAnswerIndex": 2,
+          "explanation": "Affirmation 4 de l'activité d'application, retenue juste dans le corrigé (affirmations justes : 2, 3 et 4)."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q4",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q4",
           "type": "mcq",
-          "prompt": "Vrai ou faux : « Dans le système ABO, l'allèle O est un allèle dominant. »",
+          "prompt": "Selon le corrigé de l'activité d'application, les affirmations justes sont :",
           "options": [
-            "Vrai",
-            "Faux : l'allèle O est récessif",
-            "Vrai, mais seulement chez l'homme",
-            "Vrai, mais seulement chez la femme"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "O ne s'exprime qu'en double : O//O."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q5",
-          "type": "mcq",
-          "prompt": "Une mère de génotype A//O forme ses gamètes (ovules) par la méiose. Quels gamètes produit-elle, et en quelles proportions ?",
-          "options": [
-            "100 % A",
-            "50 % A et 50 % O",
-            "100 % O",
-            "75 % A et 25 % O"
+            "1, 2 et 5",
+            "2, 3 et 4",
+            "1, 3 et 5",
+            "Toutes les affirmations"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Chaque gamète reçoit un seul des deux allèles."
+          "explanation": "Corrigé de la leçon : affirmations justes 2 (A et B codominants dans l'esprit de l'exercice), 3 (gène polyallélique) et 4 (AB hétérozygote)."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q6",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q5",
           "type": "mcq",
-          "prompt": "Une mère A//O et un père B//O ont un enfant. D'après l'échiquier de croisement, quelle est la probabilité que cet enfant soit du groupe O ?",
+          "prompt": "Les filles de groupe O de l'exercice 1 ont reçu :",
           "options": [
-            "0 %",
-            "25 %",
-            "50 %",
-            "100 %"
+            "L'allèle O d'un seul parent",
+            "L'allèle A des deux parents",
+            "L'allèle O de chaque parent",
+            "L'allèle B de chaque parent"
           ],
-          "correctAnswerIndex": 1,
-          "explanation": "Il faut un gamète O de chaque parent : 1/2 × 1/2 = 1/4."
+          "correctAnswerIndex": 2,
+          "explanation": "Corrigé de l'exercice 1 : elles ont reçu l'allèle O de chaque parent."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p02_q7",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p02_q6",
           "type": "mcq",
-          "prompt": "Une mère [A] et un père [B] ont deux filles du groupe O, une fille AB et un garçon B. Quel est le génotype du garçon du groupe B ?",
+          "prompt": "Pour expliquer le groupe d'un enfant, il faut d'abord :",
           "options": [
-            "B//B",
-            "B//O : il a reçu B de son père et O de sa mère",
-            "A//B",
-            "O//O"
+            "Regarder uniquement son sexe",
+            "Identifier l'allèle reçu de chaque parent",
+            "Ignorer le groupe de la mère",
+            "Supposer qu'il copie toujours le père"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La mère est A//O (elle a des enfants O) : elle n'a pas d'allèle B à donner."
+          "explanation": "C'est la démarche suivie dans tout le corrigé de l'exercice 1."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03",
+      "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03",
       "order": 3,
-      "title": "Les chromosomes sexuels",
-      "summary": "La femme est XX, l'homme est XY.",
-      "conceptExplanation": "Document 1 : les chromosomes sexuels (hétérochromosomes, ou gonosomes).\n- La femme possède deux chromosomes sexuels identiques : XX.\n- L'homme possède deux chromosomes sexuels différents : X et Y.\n- Le chromosome Y est beaucoup plus petit que le X. Les chromosomes X et Y ont un petit segment homologue (commun), mais une grande partie du X n'existe pas sur le Y.\n\nLes autres chromosomes, identiques chez l'homme et la femme, sont les AUTOSOMES. L'espèce humaine possède 46 chromosomes : 22 paires d'autosomes et 1 paire de chromosomes sexuels.\n\nLa méiose (formation des gamètes) sépare les deux chromosomes de chaque paire :\n- chez la femme (XX), tous les ovules contiennent un chromosome X : une seule catégorie de gamètes ;\n- chez l'homme (XY), la moitié des spermatozoïdes contient un X, l'autre moitié un Y : deux catégories de gamètes, en proportions égales.\n\nVocabulaire : un allèle porté par un autosome est dit autosomal ; un allèle porté par un chromosome sexuel est dit hétérosomal (ou gonosomal).",
-      "keyRule": "Femme XX → ovules tous X. Homme XY → 50 % de spermatozoïdes X et 50 % Y. Le Y est plus petit que le X.",
+      "title": "Un gène autosomal polyallélique et ses symboles",
+      "summary": "Retenir que le gène du système ABO est porté par un autosome, avec trois allèles et quatre phénotypes notés entre crochets.",
+      "conceptExplanation": "Le gène responsable du système ABO est polyallélique, car il est constitué de 3 allèles différents : A, B et O.\nLa transmission des groupes sanguins chez l'Homme se fait par les deux parents, grâce à un gène porté par un autosome, c'est-à-dire un chromosome non sexuel.\nChoix des symboles de la leçon : le groupe A a pour phénotype [A], le groupe B a pour phénotype [B], le groupe AB a pour phénotype [AB] et le groupe O a pour phénotype [O].\nConclusion générale : les groupes sanguins A, B et O sont déterminés par un gène autosomal à trois allèles A, B et O (la conclusion cite A, B, O ; le groupe AB résulte de la combinaison des allèles A et B). La connaissance du groupe sanguin permet de transfuser du sang à un individu sans risque de danger et la reconnaissance de la paternité, mais la recherche de parenté a des limites, car des parents de groupe A ou B, ou l'un A et l'autre B, ont parfois des enfants de groupes différents.",
+      "keyRule": "Un seul gène, porté par un autosome, trois allèles (A, B, O), quatre phénotypes notés [A], [B], [AB] et [O].",
       "formulas": [],
       "workedExample": {
-        "title": "Compter les gamètes",
-        "statement": "Combien de catégories de gamètes (pour les chromosomes sexuels) produit une femme ? Et un homme ?",
+        "title": "Vérification chromosomique du système ABO (fin de la partie I)",
+        "statement": "Que vérifie la fin de la première partie sur le gène du groupe sanguin ?",
         "methodSteps": [
-          "La femme est XX : la méiose donne toujours un X.",
-          "L'homme est XY : la méiose donne soit un X, soit un Y."
+          "Le caractère se transmet indifféremment par le père et par la mère, comme le montrent II4 (groupe du père) et II3 (groupe de la mère).",
+          "Le gène n'est donc pas porté par un chromosome sexuel, mais par un autosome.",
+          "Ce gène possède trois allèles différents : il est polyallélique."
         ],
-        "conclusion": "Femme : une catégorie (X). Homme : deux catégories (X et Y), en proportions égales."
+        "conclusion": "Conclusion de la partie I : la transmission se fait par les deux parents grâce à un gène porté par un autosome."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "XX et XY",
-          "stepTheme": "XX et XY",
-          "stepBadge": "XX et XY",
-          "paragraphText": "La femme possède deux chromosomes sexuels identiques (XX) ; l'homme deux chromosomes sexuels différents (XY).",
+          "stepTitle": "Un gène polyallélique",
+          "stepTheme": "Un gène polyallélique",
+          "stepBadge": "Un gène polyallélique",
+          "paragraphText": "• Gène polyallélique : gène qui a plusieurs formes alléliques.\nLe gène du système ABO en possède trois : A, B et O.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q1",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q1",
             "type": "mcq",
-            "prompt": "Quels sont les chromosomes sexuels de l'homme (sexe masculin) ?",
+            "prompt": "Le gène du système ABO est polyallélique car il est constitué de :",
+            "options": [
+              "Un seul allèle",
+              "2 allèles identiques",
+              "3 allèles différents",
+              "46 chromosomes"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Ce sont les trois allèles A, B et O, affirmation 3 de l'activité d'application."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepTitle": "Un autosome",
+          "stepTheme": "Un autosome",
+          "stepBadge": "Un autosome",
+          "paragraphText": "La transmission des groupes sanguins se fait grâce à un gène porté par un autosome.\nUn autosome s'oppose ici aux chromosomes sexuels X et Y, étudiés dans la seconde partie de la leçon.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q2",
+            "type": "mcq",
+            "prompt": "Le gène du système ABO est porté par :",
+            "options": [
+              "Le chromosome X",
+              "Le chromosome Y",
+              "Un autosome",
+              "Aucun chromosome"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Conclusion de la partie I de la leçon."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "La notation des phénotypes",
+          "stepTheme": "La notation des phénotypes",
+          "stepBadge": "La notation des phénotypes",
+          "paragraphText": "La leçon note les phénotypes entre crochets.\nLe groupe AB a ainsi pour phénotype [AB], à distinguer du génotype qui décrit les allèles portés.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q3",
+            "type": "mcq",
+            "prompt": "Le phénotype du groupe AB se note :",
+            "options": [
+              "(AB) sans crochets, selon la leçon",
+              "[AB]",
+              "AB en exposant",
+              "Uniquement par la lettre O"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Choix des symboles de la leçon : [A], [B], [AB] et [O]."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Une transmission par les deux parents",
+          "stepTheme": "Une transmission par les deux parents",
+          "stepBadge": "Une transmission par les deux parents",
+          "paragraphText": "Chaque enfant reçoit un allèle du système ABO de son père et un de sa mère.\nC'est pourquoi un groupe peut venir du père (cas de II4) ou de la mère (cas de II3).",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q4",
+            "type": "mcq",
+            "prompt": "La transmission des groupes sanguins se fait :",
+            "options": [
+              "Par le père uniquement",
+              "Par la mère uniquement",
+              "Par les deux parents",
+              "Par aucun des parents"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Conclusion de la partie I : transmission par les deux parents."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Les limites de la recherche de parenté",
+          "stepTheme": "Les limites de la recherche de parenté",
+          "stepBadge": "Les limites de la recherche de parenté",
+          "paragraphText": "Piège : croire que le groupe sanguin prouve toujours une filiation de façon absolue.\nLa leçon prévient que la recherche de parenté a des limites, car des parents A ou B ont parfois des enfants de groupes différents des leurs.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q5",
+            "type": "mcq",
+            "prompt": "Selon la conclusion générale, la recherche de parenté par les groupes sanguins :",
+            "options": [
+              "Est toujours définitive",
+              "Permet la reconnaissance de la paternité mais a des limites",
+              "Est impossible dans tous les cas",
+              "Ne sert qu'aux transfusions"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "La conclusion générale cite l'utilité (transfusion sans danger, reconnaissance de paternité) et aussitôt ses limites."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Transfuser sans risque de danger",
+          "stepTheme": "Transfuser sans risque de danger",
+          "stepBadge": "Transfuser sans risque de danger",
+          "paragraphText": "La connaissance du groupe sanguin permet de transfuser du sang à un individu sans risque de danger.\nC'est l'une des deux applications pratiques citées dans la conclusion générale.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q6",
+            "type": "mcq",
+            "prompt": "La connaissance du groupe sanguin permet notamment :",
+            "options": [
+              "De choisir le sexe d'un enfant",
+              "De transfuser du sang sans risque de danger",
+              "De guérir toutes les maladies",
+              "De supprimer les allèles récessifs"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Première application citée dans la conclusion générale de la leçon."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q1",
+          "type": "mcq",
+          "prompt": "Le gène du système ABO est polyallélique car il est constitué de :",
+          "options": [
+            "Un seul allèle",
+            "2 allèles identiques",
+            "3 allèles différents",
+            "46 chromosomes"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Ce sont les trois allèles A, B et O, affirmation 3 de l'activité d'application."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q2",
+          "type": "mcq",
+          "prompt": "Le gène du système ABO est porté par :",
+          "options": [
+            "Le chromosome X",
+            "Le chromosome Y",
+            "Un autosome",
+            "Aucun chromosome"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Conclusion de la partie I de la leçon."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q3",
+          "type": "mcq",
+          "prompt": "Le phénotype du groupe AB se note :",
+          "options": [
+            "(AB) sans crochets, selon la leçon",
+            "[AB]",
+            "AB en exposant",
+            "Uniquement par la lettre O"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Choix des symboles de la leçon : [A], [B], [AB] et [O]."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q4",
+          "type": "mcq",
+          "prompt": "La transmission des groupes sanguins se fait :",
+          "options": [
+            "Par le père uniquement",
+            "Par la mère uniquement",
+            "Par les deux parents",
+            "Par aucun des parents"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Conclusion de la partie I : transmission par les deux parents."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q5",
+          "type": "mcq",
+          "prompt": "Selon la conclusion générale, la recherche de parenté par les groupes sanguins :",
+          "options": [
+            "Est toujours définitive",
+            "Permet la reconnaissance de la paternité mais a des limites",
+            "Est impossible dans tous les cas",
+            "Ne sert qu'aux transfusions"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La conclusion générale cite l'utilité (transfusion sans danger, reconnaissance de paternité) et aussitôt ses limites."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p03_q6",
+          "type": "mcq",
+          "prompt": "La connaissance du groupe sanguin permet notamment :",
+          "options": [
+            "De choisir le sexe d'un enfant",
+            "De transfuser du sang sans risque de danger",
+            "De guérir toutes les maladies",
+            "De supprimer les allèles récessifs"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Première application citée dans la conclusion générale de la leçon."
+        }
+      ]
+    },
+    {
+      "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04",
+      "order": 4,
+      "title": "Les chromosomes sexuels XX et XY",
+      "summary": "Décrire les chromosomes sexuels de la femme et de l'Homme et leur segment homologue.",
+      "conceptExplanation": "Le document 1 est relatif aux chromosomes sexuels.\nLa femme possède deux chromosomes sexuels identiques, X et X. Chez l'Homme, au contraire, les deux chromosomes sexuels sont différents : X et Y.\nLes chromosomes X et Y présentent un segment homologue, mais une partie du chromosome X est inexistante sur le chromosome Y, très petit.\nC'est cette différence entre les deux parents qui fonde le déterminisme du sexe étudié ensuite.",
+      "keyRule": "Femme XX avec deux chromosomes identiques, Homme XY avec deux chromosomes différents : toute la suite découle de cette différence.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Observer les chromosomes sexuels (document 1)",
+        "statement": "Que montre le document 1 sur les chromosomes sexuels des deux parents ?",
+        "methodSteps": [
+          "Chez la femme, les deux chromosomes sexuels sont identiques : X et X.",
+          "Chez l'Homme, les deux chromosomes sexuels sont différents : X et Y.",
+          "X et Y ont un segment homologue, mais une partie de X est inexistante sur le petit chromosome Y."
+        ],
+        "conclusion": "Résultat du document 1 : XX chez la femme, XY chez l'Homme."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Les chromosomes sexuels de la femme",
+          "stepTheme": "Les chromosomes sexuels de la femme",
+          "stepBadge": "Les chromosomes sexuels de la femme",
+          "paragraphText": "La femme possède deux chromosomes sexuels identiques.\nSa formule est XX, ce qui explique qu'elle ne produise qu'un seul type d'ovule.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q1",
+            "type": "mcq",
+            "prompt": "Les chromosomes sexuels de la femme sont :",
+            "options": [
+              "X et Y",
+              "X et X, identiques",
+              "Y et Y",
+              "Un seul chromosome X"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Résultat du document 1 pour la femme."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepTitle": "Les chromosomes sexuels de l'Homme",
+          "stepTheme": "Les chromosomes sexuels de l'Homme",
+          "stepBadge": "Les chromosomes sexuels de l'Homme",
+          "paragraphText": "L'Homme possède deux chromosomes sexuels non identiques.\nSa formule est XY : un chromosome X et un chromosome Y, beaucoup plus petit.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q2",
+            "type": "mcq",
+            "prompt": "Les chromosomes sexuels de l'Homme sont :",
+            "options": [
+              "X et X",
+              "Y et Y",
+              "X et Y, non identiques",
+              "Uniquement Y"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Résultat du document 1 pour l'Homme."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "propriete",
+          "stepTitle": "Le segment homologue de X et Y",
+          "stepTheme": "Le segment homologue de X et Y",
+          "stepBadge": "Le segment homologue de X et Y",
+          "paragraphText": "Les chromosomes X et Y présentent un segment homologue, commun aux deux.\nMais une partie du chromosome X est inexistante sur le chromosome Y, qui est très petit.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q3",
+            "type": "mcq",
+            "prompt": "Entre X et Y, la leçon précise que :",
+            "options": [
+              "Ils sont totalement identiques",
+              "Ils présentent un segment homologue, mais une partie de X est inexistante sur Y",
+              "Y est plus grand que X",
+              "Ils n'ont aucun point commun"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est l'analyse du document 1."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "piege",
+          "stepTitle": "Y n'est pas un second X",
+          "stepTheme": "Y n'est pas un second X",
+          "stepBadge": "Y n'est pas un second X",
+          "paragraphText": "Piège : traiter XY comme deux chromosomes identiques parce qu'ils forment une paire.\nLa leçon insiste : chez l'Homme, les deux chromosomes sexuels sont différents, X et Y, alors qu'ils sont identiques chez la femme.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q4",
+            "type": "mcq",
+            "prompt": "Chez l'Homme, les deux chromosomes sexuels sont :",
+            "options": [
+              "Identiques",
+              "Différents : X et Y",
+              "Tous deux très grands",
+              "Absents chez le garçon"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Analyse du document 1 : différents chez l'Homme, identiques chez la femme."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "exemple",
+          "stepTitle": "Le garçon XY et la fille XX",
+          "stepTheme": "Le garçon XY et la fille XX",
+          "stepBadge": "Le garçon XY et la fille XX",
+          "paragraphText": "Un enfant qui reçoit X de sa mère et Y de son père est un garçon (XY).\nUn enfant qui reçoit X de sa mère et X de son père est une fille (XX) : les formules XX et XY servent tout au long de la partie II.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q5",
+            "type": "mcq",
+            "prompt": "La formule chromosomique d'un garçon est :",
             "options": [
               "XX",
               "XY",
               "YY",
-              "X seul"
+              "XO uniquement selon la leçon"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La femme est XX."
-          }
-        },
-        {
-          "stepNumber": 2,
-          "stepKind": "propriete",
-          "stepTitle": "Un Y plus petit",
-          "stepTheme": "Un Y plus petit",
-          "stepBadge": "Un Y plus petit",
-          "paragraphText": "Le chromosome Y est beaucoup plus petit que le X ; ils n'ont qu'un petit segment homologue en commun.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q2",
-            "type": "mcq",
-            "prompt": "Le document 1 compare les chromosomes X et Y. Que montre-t-il ?",
-            "options": [
-              "X et Y sont identiques",
-              "Le Y est beaucoup plus petit ; une grande partie du X n'existe pas sur le Y",
-              "Le Y est plus grand que le X",
-              "Le X n'existe que chez l'homme"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "C'est pourquoi un gène porté par le X n'a pas d'équivalent sur le Y."
-          }
-        },
-        {
-          "stepNumber": 3,
-          "stepKind": "definition",
-          "stepTitle": "Autosomes",
-          "stepTheme": "Autosomes",
-          "stepBadge": "Autosomes",
-          "paragraphText": "L'espèce humaine a 46 chromosomes : 22 paires d'autosomes, identiques dans les deux sexes, et une paire de chromosomes sexuels.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q3",
-            "type": "mcq",
-            "prompt": "Une cellule humaine contient 46 chromosomes, dont une paire de chromosomes sexuels. Combien de paires d'autosomes contient-elle ?",
-            "options": [
-              "23",
-              "22",
-              "46",
-              "1"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "46 chromosomes = 23 paires ; 23 − 1 paire sexuelle = 22 paires d'autosomes."
-          }
-        },
-        {
-          "stepNumber": 4,
-          "stepKind": "propriete",
-          "stepTitle": "Les ovules",
-          "stepTheme": "Les ovules",
-          "stepBadge": "Les ovules",
-          "paragraphText": "La femme (XX) produit une seule catégorie d'ovules : tous portent un chromosome X.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q4",
-            "type": "mcq",
-            "prompt": "Une femme a les chromosomes sexuels XX. Quel chromosome sexuel contiennent ses ovules ?",
-            "options": [
-              "Tous un chromosome X",
-              "La moitié X, la moitié Y",
-              "Tous un chromosome Y",
-              "Aucun chromosome sexuel"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Elle n'a pas de chromosome Y à transmettre."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "propriete",
-          "stepTitle": "Les spermatozoïdes",
-          "stepTheme": "Les spermatozoïdes",
-          "stepBadge": "Les spermatozoïdes",
-          "paragraphText": "L'homme (XY) produit deux catégories de spermatozoïdes en proportions égales : 50 % portent un X, 50 % un Y.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q5",
-            "type": "mcq",
-            "prompt": "Un homme a les chromosomes sexuels XY. Quels spermatozoïdes produit-il, et en quelles proportions ?",
-            "options": [
-              "100 % X",
-              "100 % Y",
-              "50 % portant un X et 50 % portant un Y",
-              "75 % X et 25 % Y"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "La méiose sépare X et Y dans des gamètes différents."
+            "explanation": "Interprétation de la partie II : ovule X fécondé par un spermatozoïde Y donne un garçon (XY)."
           }
         },
         {
           "stepNumber": 6,
-          "stepKind": "definition",
-          "stepTitle": "Hétérosomal",
-          "stepTheme": "Hétérosomal",
-          "stepBadge": "Hétérosomal",
-          "paragraphText": "Un allèle porté par un autosome est autosomal ; un allèle porté par un chromosome sexuel est hétérosomal (gonosomal).",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q6",
-            "type": "mcq",
-            "prompt": "Vrai ou faux : « Un allèle est dit hétérosomal lorsqu'il est porté par un autosome. »",
-            "options": [
-              "Vrai",
-              "Faux : un allèle hétérosomal est porté par un chromosome sexuel (X ou Y)",
-              "Vrai, chez la femme seulement",
-              "Faux : un allèle hétérosomal n'existe pas"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Porté par un autosome, il est dit autosomal."
-          }
-        },
-        {
-          "stepNumber": 7,
           "stepKind": "methode",
-          "stepTitle": "Relier chromosomes et enfants",
-          "stepTheme": "Relier chromosomes et enfants",
-          "stepBadge": "Relier chromosomes et enfants",
-          "paragraphText": "Le X du père va à une fille, le Y du père à un garçon ; le X de la mère va aux filles comme aux garçons.",
+          "stepTitle": "Comparer les deux parents sur le document",
+          "stepTheme": "Comparer les deux parents sur le document",
+          "stepBadge": "Comparer les deux parents sur le document",
+          "paragraphText": "Méthode : lire le document 1 parent par parent.\nOn constate d'abord l'identité des deux X de la femme, puis la différence entre le X et le Y de l'Homme, avant de passer aux gamètes du document 2.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q7",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q6",
             "type": "mcq",
-            "prompt": "Le père a les chromosomes X et Y, la mère les chromosomes X et X. Relie chaque chromosome du père à l'enfant auquel il est destiné.",
+            "prompt": "La première différence à relever sur le document 1 est :",
             "options": [
-              "Le X du père va à un garçon, le Y à une fille",
-              "Le X du père va à une fille, le Y à un garçon",
-              "Le X et le Y du père vont tous les deux aux filles",
-              "Le père ne transmet aucun chromosome sexuel"
+              "La taille des gamètes",
+              "L'identité des chromosomes chez la femme contre leur différence chez l'Homme",
+              "Le nombre d'enfants par famille",
+              "Les groupes sanguins des parents"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Une fille reçoit X + X ; un garçon reçoit Y (du père) + X (de la mère)."
+            "explanation": "C'est l'analyse du document 1 dans la leçon."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q1",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q1",
           "type": "mcq",
-          "prompt": "Quels sont les chromosomes sexuels de l'homme (sexe masculin) ?",
+          "prompt": "Les chromosomes sexuels de la femme sont :",
+          "options": [
+            "X et Y",
+            "X et X, identiques",
+            "Y et Y",
+            "Un seul chromosome X"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Résultat du document 1 pour la femme."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q2",
+          "type": "mcq",
+          "prompt": "Les chromosomes sexuels de l'Homme sont :",
+          "options": [
+            "X et X",
+            "Y et Y",
+            "X et Y, non identiques",
+            "Uniquement Y"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Résultat du document 1 pour l'Homme."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q3",
+          "type": "mcq",
+          "prompt": "Entre X et Y, la leçon précise que :",
+          "options": [
+            "Ils sont totalement identiques",
+            "Ils présentent un segment homologue, mais une partie de X est inexistante sur Y",
+            "Y est plus grand que X",
+            "Ils n'ont aucun point commun"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est l'analyse du document 1."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q4",
+          "type": "mcq",
+          "prompt": "Chez l'Homme, les deux chromosomes sexuels sont :",
+          "options": [
+            "Identiques",
+            "Différents : X et Y",
+            "Tous deux très grands",
+            "Absents chez le garçon"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Analyse du document 1 : différents chez l'Homme, identiques chez la femme."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q5",
+          "type": "mcq",
+          "prompt": "La formule chromosomique d'un garçon est :",
           "options": [
             "XX",
             "XY",
             "YY",
-            "X seul"
+            "XO uniquement selon la leçon"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La femme est XX."
+          "explanation": "Interprétation de la partie II : ovule X fécondé par un spermatozoïde Y donne un garçon (XY)."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q2",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p04_q6",
           "type": "mcq",
-          "prompt": "Le document 1 compare les chromosomes X et Y. Que montre-t-il ?",
+          "prompt": "La première différence à relever sur le document 1 est :",
           "options": [
-            "X et Y sont identiques",
-            "Le Y est beaucoup plus petit ; une grande partie du X n'existe pas sur le Y",
-            "Le Y est plus grand que le X",
-            "Le X n'existe que chez l'homme"
+            "La taille des gamètes",
+            "L'identité des chromosomes chez la femme contre leur différence chez l'Homme",
+            "Le nombre d'enfants par famille",
+            "Les groupes sanguins des parents"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est pourquoi un gène porté par le X n'a pas d'équivalent sur le Y."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q3",
-          "type": "mcq",
-          "prompt": "Une cellule humaine contient 46 chromosomes, dont une paire de chromosomes sexuels. Combien de paires d'autosomes contient-elle ?",
-          "options": [
-            "23",
-            "22",
-            "46",
-            "1"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "46 chromosomes = 23 paires ; 23 − 1 paire sexuelle = 22 paires d'autosomes."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q4",
-          "type": "mcq",
-          "prompt": "Une femme a les chromosomes sexuels XX. Quel chromosome sexuel contiennent ses ovules ?",
-          "options": [
-            "Tous un chromosome X",
-            "La moitié X, la moitié Y",
-            "Tous un chromosome Y",
-            "Aucun chromosome sexuel"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Elle n'a pas de chromosome Y à transmettre."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q5",
-          "type": "mcq",
-          "prompt": "Un homme a les chromosomes sexuels XY. Quels spermatozoïdes produit-il, et en quelles proportions ?",
-          "options": [
-            "100 % X",
-            "100 % Y",
-            "50 % portant un X et 50 % portant un Y",
-            "75 % X et 25 % Y"
-          ],
-          "correctAnswerIndex": 2,
-          "explanation": "La méiose sépare X et Y dans des gamètes différents."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q6",
-          "type": "mcq",
-          "prompt": "Vrai ou faux : « Un allèle est dit hétérosomal lorsqu'il est porté par un autosome. »",
-          "options": [
-            "Vrai",
-            "Faux : un allèle hétérosomal est porté par un chromosome sexuel (X ou Y)",
-            "Vrai, chez la femme seulement",
-            "Faux : un allèle hétérosomal n'existe pas"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Porté par un autosome, il est dit autosomal."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p03_q7",
-          "type": "mcq",
-          "prompt": "Le père a les chromosomes X et Y, la mère les chromosomes X et X. Relie chaque chromosome du père à l'enfant auquel il est destiné.",
-          "options": [
-            "Le X du père va à un garçon, le Y à une fille",
-            "Le X du père va à une fille, le Y à un garçon",
-            "Le X et le Y du père vont tous les deux aux filles",
-            "Le père ne transmet aucun chromosome sexuel"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Une fille reçoit X + X ; un garçon reçoit Y (du père) + X (de la mère)."
+          "explanation": "C'est l'analyse du document 1 dans la leçon."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04",
-      "order": 4,
-      "title": "Qui détermine le sexe de l'enfant ?",
-      "summary": "C'est le spermatozoïde, donc le père, qui détermine le sexe.",
-      "conceptExplanation": "Document 2 : échiquier de croisement (rencontre des gamètes).\n- Ovule X × spermatozoïde X → XX : fille.\n- Ovule X × spermatozoïde Y → XY : garçon.\n\nBilan : 50 % de filles et 50 % de garçons.\n\nInterprétation :\n- l'ovule porte toujours un X : il ne décide pas du sexe ;\n- c'est le spermatozoïde (X ou Y) qui détermine le sexe de l'enfant à naître ;\n- c'est donc au père qu'incombe le sexe du futur enfant (même s'il ne le choisit pas : c'est le hasard de la fécondation) ;\n- l'union des gamètes se fait au hasard : à chaque naissance, la probabilité d'avoir une fille est de 1/2, comme celle d'avoir un garçon.\n\nConséquence pour la situation de départ : le père qui reproche à sa femme de n'avoir eu que des filles se trompe. C'est le spermatozoïde (du père) qui porte le X ou le Y ; et de toute façon, il s'agit du hasard.\n\nPiège : avoir eu trois filles ne rend pas plus probable un garçon à la naissance suivante : chaque naissance reste 50 % / 50 %.",
-      "keyRule": "Ovule X + spermatozoïde X → fille (XX) ; ovule X + spermatozoïde Y → garçon (XY). Le spermatozoïde (le père) détermine le sexe ; chaque naissance : 1/2 fille, 1/2 garçon.",
+      "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05",
+      "order": 5,
+      "title": "Les gamètes et l'échiquier de croisement",
+      "summary": "Montrer que l'Homme produit deux types de spermatozoïdes, la femme un seul type d'ovule, et que le bilan est de moitié filles, moitié garçons.",
+      "conceptExplanation": "Chez le garçon et l'Homme, l'existence de deux chromosomes sexuels (X et Y) conduit, en raison de la méiose, à la production de deux catégories de spermatozoïdes : les uns contenant le chromosome X, les autres contenant le chromosome Y, en proportion égale.\nChez la femme, l'existence de deux chromosomes sexuels identiques (X et X) conduit, en raison de la méiose, à la production d'une seule catégorie d'ovule, portant le chromosome X.\nLe document 2 est un échiquier de croisement : il présente les rencontres possibles des gamètes. On obtient autant de filles que de garçons.\nLa situation d'évaluation confirme le bilan des rencontres : 50 pour cent de filles et 50 pour cent de garçons. L'union des gamètes se fait au hasard, ce qui explique l'égale probabilité des deux sexes dans la population.",
+      "keyRule": "Un seul type d'ovule (X) contre deux types de spermatozoïdes (X et Y) en proportion égale : l'échiquier donne moitié filles, moitié garçons.",
       "formulas": [],
       "workedExample": {
-        "title": "Une quatrième naissance",
-        "statement": "Un couple a déjà trois filles. Quelle est la probabilité que le quatrième enfant soit un garçon ?",
+        "title": "Exploiter l'échiquier de croisement (situation d'évaluation)",
+        "statement": "À partir du document de la situation d'évaluation, relève les types de gamètes de chaque parent et fais le bilan des rencontres.",
         "methodSteps": [
-          "À chaque fécondation, le spermatozoïde porte X ou Y avec la même probabilité.",
-          "Les naissances précédentes n'influencent pas la suivante."
+          "Le document est un échiquier de croisement.",
+          "L'Homme produit deux types de gamètes : l'un porteur du chromosome X, l'autre porteur du chromosome Y.",
+          "La femme produit un seul type d'ovule, porteur du chromosome X.",
+          "Le bilan des rencontres est de 50 pour cent de filles et 50 pour cent de garçons."
         ],
-        "conclusion": "La probabilité reste 1/2, soit 50 %."
+        "conclusion": "Corrigé de la situation d'évaluation : deux types de spermatozoïdes, un seul type d'ovule, bilan moitié-moitié."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
-          "stepKind": "methode",
-          "stepTitle": "Une fille",
-          "stepTheme": "Une fille",
-          "stepBadge": "Une fille",
-          "paragraphText": "Un ovule X fécondé par un spermatozoïde X donne un enfant XX : une fille.",
+          "stepKind": "definition",
+          "stepTitle": "Deux catégories de spermatozoïdes",
+          "stepTheme": "Deux catégories de spermatozoïdes",
+          "stepBadge": "Deux catégories de spermatozoïdes",
+          "paragraphText": "En raison de la méiose, l'Homme XY produit deux catégories de spermatozoïdes en proportion égale.\nLes uns contiennent le chromosome X, les autres le chromosome Y.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q1",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q1",
             "type": "mcq",
-            "prompt": "Un ovule (qui porte un chromosome X) est fécondé par un spermatozoïde porteur d'un chromosome X. Quel est le sexe de l'enfant ?",
+            "prompt": "L'Homme produit :",
             "options": [
-              "Un garçon (XY)",
-              "Une fille (XX)",
-              "On ne peut pas savoir",
-              "Un garçon (XX)"
+              "Un seul type de spermatozoïde",
+              "Deux types de spermatozoïdes, X et Y, en proportion égale",
+              "Trois types de spermatozoïdes",
+              "Uniquement des spermatozoïdes Y"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "X + X = XX : fille."
+            "explanation": "Résultat du document 2 et corrigé de la situation d'évaluation."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "methode",
-          "stepTitle": "Un garçon",
-          "stepTheme": "Un garçon",
-          "stepBadge": "Un garçon",
-          "paragraphText": "Un ovule X fécondé par un spermatozoïde Y donne un enfant XY : un garçon.",
+          "stepKind": "definition",
+          "stepTitle": "Une seule catégorie d'ovule",
+          "stepTheme": "Une seule catégorie d'ovule",
+          "stepBadge": "Une seule catégorie d'ovule",
+          "paragraphText": "La femme XX ne produit, en raison de la méiose, qu'une seule catégorie d'ovule.\nTous ses ovules portent le chromosome X.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q2",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q2",
             "type": "mcq",
-            "prompt": "Un ovule (qui porte un chromosome X) est fécondé par un spermatozoïde porteur d'un chromosome Y. Quel est le sexe de l'enfant ?",
+            "prompt": "La femme produit :",
             "options": [
-              "Une fille (XX)",
-              "Un garçon (XY)",
-              "Une fille (XY)",
-              "Aucun enfant"
+              "Deux types d'ovules, X et Y",
+              "Un seul type d'ovule, porteur du chromosome X",
+              "Uniquement des ovules sans chromosome sexuel",
+              "Des ovules Y chez les mères de garçons"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "X + Y = XY : garçon."
+            "explanation": "Résultat du document 2 : une seule catégorie d'ovule chez la femme."
           }
         },
         {
           "stepNumber": 3,
           "stepKind": "propriete",
-          "stepTitle": "Le spermatozoïde décide",
-          "stepTheme": "Le spermatozoïde décide",
-          "stepBadge": "Le spermatozoïde décide",
-          "paragraphText": "L'ovule porte toujours X ; c'est le spermatozoïde (X ou Y) qui détermine le sexe de l'enfant.",
+          "stepTitle": "Le bilan moitié filles, moitié garçons",
+          "stepTheme": "Le bilan moitié filles, moitié garçons",
+          "stepBadge": "Le bilan moitié filles, moitié garçons",
+          "paragraphText": "L'échiquier de croisement croise un type d'ovule avec deux types de spermatozoïdes équiprobables.\nLe bilan des rencontres est de 50 pour cent de filles et 50 pour cent de garçons.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q3",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q3",
             "type": "mcq",
-            "prompt": "Les ovules portent tous un chromosome X ; les spermatozoïdes portent soit un X, soit un Y. Lequel des deux gamètes détermine le sexe de l'enfant ?",
+            "prompt": "Le bilan des rencontres des gamètes est de :",
             "options": [
-              "L'ovule (la mère)",
-              "Le spermatozoïde (le père)",
-              "Les deux à égalité",
-              "Ni l'un ni l'autre"
+              "75 pour cent de filles et 25 pour cent de garçons",
+              "25 pour cent de filles et 75 pour cent de garçons",
+              "50 pour cent de filles et 50 pour cent de garçons",
+              "100 pour cent de filles"
             ],
-            "correctAnswerIndex": 1,
-            "explanation": "Seul le spermatozoïde peut apporter un Y."
+            "correctAnswerIndex": 2,
+            "explanation": "Corrigé de la situation d'évaluation, question 3."
           }
         },
         {
           "stepNumber": 4,
-          "stepKind": "propriete",
+          "stepKind": "methode",
+          "stepTitle": "Le rôle de la méiose",
+          "stepTheme": "Le rôle de la méiose",
+          "stepBadge": "Le rôle de la méiose",
+          "paragraphText": "Méthode : partir des chromosomes sexuels, puis appliquer la méiose pour obtenir les gamètes.\nXX ne peut donner que des ovules X ; XY donne des spermatozoïdes X et des spermatozoïdes Y en proportion égale.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q4",
+            "type": "mcq",
+            "prompt": "La production des gamètes différents chez l'Homme s'explique, selon la leçon, par :",
+            "options": [
+              "La fécondation",
+              "La méiose appliquée à ses deux chromosomes sexuels différents",
+              "Les groupes sanguins",
+              "Le hasard seul sans méiose"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'interprétation répète : en raison de la méiose."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Relier chaque chromosome au bon descendant",
+          "stepTheme": "Relier chaque chromosome au bon descendant",
+          "stepBadge": "Relier chaque chromosome au bon descendant",
+          "paragraphText": "Piège de l'activité d'application : inverser les flèches entre chromosomes du père et descendants.\nLe spermatozoïde X du père donne une fille, le spermatozoïde Y donne un garçon ; la mère transmet toujours un X, à la fille comme au garçon.",
+          "exercise": {
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q5",
+            "type": "mcq",
+            "prompt": "Un spermatozoïde porteur du chromosome Y donne naissance à :",
+            "options": [
+              "Une fille (XX)",
+              "Un garçon (XY)",
+              "Un enfant sans sexe déterminé",
+              "Uniquement des jumeaux"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Interprétation de la partie II : ovule X fécondé par un spermatozoïde Y donne un garçon."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
           "stepTitle": "Autant de filles que de garçons",
           "stepTheme": "Autant de filles que de garçons",
           "stepBadge": "Autant de filles que de garçons",
-          "paragraphText": "L'union des gamètes se fait au hasard : on obtient en moyenne 50 % de filles et 50 % de garçons.",
+          "paragraphText": "Le résultat du document 2 se résume en une phrase de la leçon.\nOn obtient autant de filles que de garçons à l'issue des rencontres des gamètes.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q4",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q6",
             "type": "mcq",
-            "prompt": "D'après l'échiquier de croisement (ovules X ; spermatozoïdes 50 % X et 50 % Y), quel est le bilan des naissances ?",
+            "prompt": "Selon le document 2, on obtient :",
             "options": [
-              "100 % de filles",
-              "75 % de garçons et 25 % de filles",
-              "50 % de filles et 50 % de garçons",
-              "100 % de garçons"
+              "Plus de filles que de garçons",
+              "Plus de garçons que de filles",
+              "Autant de filles que de garçons",
+              "Uniquement des filles chez les couples XY"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "C'est pourquoi il y a à peu près autant d'hommes que de femmes."
-          }
-        },
-        {
-          "stepNumber": 5,
-          "stepKind": "exemple",
-          "stepTitle": "Le père qui accuse",
-          "stepTheme": "Le père qui accuse",
-          "stepBadge": "Le père qui accuse",
-          "paragraphText": "Un père qui reproche à sa femme de n'avoir eu que des filles se trompe : c'est le spermatozoïde qui détermine le sexe, et c'est le hasard.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q5",
-            "type": "mcq",
-            "prompt": "Un père menace de divorcer parce que sa femme « ne lui donne que des filles ». Que lui expliquer, ?",
-            "options": [
-              "Il a raison : la mère choisit le sexe",
-              "C'est le spermatozoïde qui porte X ou Y : le sexe dépend du gamète du père, et du hasard de la fécondation",
-              "C'est la nourriture de la mère qui décide",
-              "Il faut changer de groupe sanguin"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "La mère donne toujours un X ; elle n'est pas responsable du sexe."
-          }
-        },
-        {
-          "stepNumber": 6,
-          "stepKind": "piege",
-          "stepTitle": "Le hasard n'a pas de mémoire",
-          "stepTheme": "Le hasard n'a pas de mémoire",
-          "stepBadge": "Le hasard n'a pas de mémoire",
-          "paragraphText": "Après trois filles, la probabilité d'avoir un garçon reste 1/2 : chaque fécondation est indépendante.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q6",
-            "type": "mcq",
-            "prompt": "Un couple a déjà eu trois filles. Quelle est la probabilité que leur quatrième enfant soit un garçon ?",
-            "options": [
-              "100 %, c'est forcément son tour",
-              "50 %",
-              "25 %",
-              "0 %"
-            ],
-            "correctAnswerIndex": 1,
-            "explanation": "Les naissances précédentes ne changent rien à la suivante."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "methode",
-          "stepTitle": "Lire l'échiquier",
-          "stepTheme": "Lire l'échiquier",
-          "stepBadge": "Lire l'échiquier",
-          "paragraphText": "Dans l'échiquier, les gamètes de la mère sont en lignes (X, X) et ceux du père en colonnes (X, Y) : 2 cases XX et 2 cases XY.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q7",
-            "type": "mcq",
-            "prompt": "Dans un échiquier de croisement à 4 cases, les gamètes de la mère sont X et X, ceux du père X et Y. Combien de cases donnent un garçon (XY) ?",
-            "options": [
-              "0",
-              "1",
-              "2",
-              "4"
-            ],
-            "correctAnswerIndex": 2,
-            "explanation": "2 cases sur 4, soit 50 %."
+            "explanation": "Résultat du document 2, troisième point."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q1",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q1",
           "type": "mcq",
-          "prompt": "Un ovule (qui porte un chromosome X) est fécondé par un spermatozoïde porteur d'un chromosome X. Quel est le sexe de l'enfant ?",
+          "prompt": "L'Homme produit :",
           "options": [
-            "Un garçon (XY)",
-            "Une fille (XX)",
-            "On ne peut pas savoir",
-            "Un garçon (XX)"
+            "Un seul type de spermatozoïde",
+            "Deux types de spermatozoïdes, X et Y, en proportion égale",
+            "Trois types de spermatozoïdes",
+            "Uniquement des spermatozoïdes Y"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "X + X = XX : fille."
+          "explanation": "Résultat du document 2 et corrigé de la situation d'évaluation."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q2",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q2",
           "type": "mcq",
-          "prompt": "Un ovule (qui porte un chromosome X) est fécondé par un spermatozoïde porteur d'un chromosome Y. Quel est le sexe de l'enfant ?",
+          "prompt": "La femme produit :",
           "options": [
-            "Une fille (XX)",
-            "Un garçon (XY)",
-            "Une fille (XY)",
-            "Aucun enfant"
+            "Deux types d'ovules, X et Y",
+            "Un seul type d'ovule, porteur du chromosome X",
+            "Uniquement des ovules sans chromosome sexuel",
+            "Des ovules Y chez les mères de garçons"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "X + Y = XY : garçon."
+          "explanation": "Résultat du document 2 : une seule catégorie d'ovule chez la femme."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q3",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q3",
           "type": "mcq",
-          "prompt": "Les ovules portent tous un chromosome X ; les spermatozoïdes portent soit un X, soit un Y. Lequel des deux gamètes détermine le sexe de l'enfant ?",
+          "prompt": "Le bilan des rencontres des gamètes est de :",
           "options": [
-            "L'ovule (la mère)",
-            "Le spermatozoïde (le père)",
-            "Les deux à égalité",
-            "Ni l'un ni l'autre"
-          ],
-          "correctAnswerIndex": 1,
-          "explanation": "Seul le spermatozoïde peut apporter un Y."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q4",
-          "type": "mcq",
-          "prompt": "D'après l'échiquier de croisement (ovules X ; spermatozoïdes 50 % X et 50 % Y), quel est le bilan des naissances ?",
-          "options": [
-            "100 % de filles",
-            "75 % de garçons et 25 % de filles",
-            "50 % de filles et 50 % de garçons",
-            "100 % de garçons"
+            "75 pour cent de filles et 25 pour cent de garçons",
+            "25 pour cent de filles et 75 pour cent de garçons",
+            "50 pour cent de filles et 50 pour cent de garçons",
+            "100 pour cent de filles"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "C'est pourquoi il y a à peu près autant d'hommes que de femmes."
+          "explanation": "Corrigé de la situation d'évaluation, question 3."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q5",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q4",
           "type": "mcq",
-          "prompt": "Un père menace de divorcer parce que sa femme « ne lui donne que des filles ». Que lui expliquer, ?",
+          "prompt": "La production des gamètes différents chez l'Homme s'explique, selon la leçon, par :",
           "options": [
-            "Il a raison : la mère choisit le sexe",
-            "C'est le spermatozoïde qui porte X ou Y : le sexe dépend du gamète du père, et du hasard de la fécondation",
-            "C'est la nourriture de la mère qui décide",
-            "Il faut changer de groupe sanguin"
+            "La fécondation",
+            "La méiose appliquée à ses deux chromosomes sexuels différents",
+            "Les groupes sanguins",
+            "Le hasard seul sans méiose"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La mère donne toujours un X ; elle n'est pas responsable du sexe."
+          "explanation": "L'interprétation répète : en raison de la méiose."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q6",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q5",
           "type": "mcq",
-          "prompt": "Un couple a déjà eu trois filles. Quelle est la probabilité que leur quatrième enfant soit un garçon ?",
+          "prompt": "Un spermatozoïde porteur du chromosome Y donne naissance à :",
           "options": [
-            "100 %, c'est forcément son tour",
-            "50 %",
-            "25 %",
-            "0 %"
+            "Une fille (XX)",
+            "Un garçon (XY)",
+            "Un enfant sans sexe déterminé",
+            "Uniquement des jumeaux"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Les naissances précédentes ne changent rien à la suivante."
+          "explanation": "Interprétation de la partie II : ovule X fécondé par un spermatozoïde Y donne un garçon."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p04_q7",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p05_q6",
           "type": "mcq",
-          "prompt": "Dans un échiquier de croisement à 4 cases, les gamètes de la mère sont X et X, ceux du père X et Y. Combien de cases donnent un garçon (XY) ?",
+          "prompt": "Selon le document 2, on obtient :",
           "options": [
-            "0",
-            "1",
-            "2",
-            "4"
+            "Plus de filles que de garçons",
+            "Plus de garçons que de filles",
+            "Autant de filles que de garçons",
+            "Uniquement des filles chez les couples XY"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "2 cases sur 4, soit 50 %."
+          "explanation": "Résultat du document 2, troisième point."
         }
       ]
     },
     {
-      "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05",
-      "order": 5,
-      "title": "Utiliser le groupe sanguin : transfusion et paternité",
-      "summary": "Transfuser sans danger ; le groupe sanguin peut exclure, pas prouver, une paternité.",
-      "conceptExplanation": "Connaître le groupe sanguin sert à :\n1. TRANSFUSER du sang sans danger. Dans le système ABO :\n- le groupe O peut donner à tous les groupes : on dit « donneur universel » ;\n- le groupe AB peut recevoir de tous les groupes : « receveur universel » ;\n- un individu A peut recevoir du sang A ou O ; un individu B, du sang B ou O.\n(En pratique, on tient aussi compte du facteur Rhésus et on donne de préférence le même groupe.)\n\n2. RECHERCHER UNE PATERNITÉ, mais avec des limites :\n- le groupe sanguin peut EXCLURE un homme : par exemple, un homme du groupe AB ne peut pas être le père d'un enfant du groupe O (il n'a pas d'allèle O à transmettre) ;\n- mais il ne peut pas PROUVER une paternité : des parents de groupes A et B, ou deux parents de groupe A, peuvent avoir des enfants de groupes différents, et beaucoup d'hommes ont le même groupe. Aujourd'hui, on utilise les tests ADN.\n\nConclusion générale : les groupes sanguins A, B, O sont déterminés par un gène autosomal à trois allèles (A, B, O). Le sexe est déterminé par les chromosomes sexuels, et c'est le spermatozoïde (le père) qui détermine le sexe de l'enfant.",
-      "keyRule": "O : donneur universel ; AB : receveur universel. Le groupe sanguin peut exclure une paternité, jamais la prouver à lui seul.",
+      "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06",
+      "order": 6,
+      "title": "C'est le père qui détermine le sexe de l'enfant",
+      "summary": "Conclure que le spermatozoïde détermine le sexe et que le hasard de la fécondation explique l'égale probabilité des deux sexes.",
+      "conceptExplanation": "Au moment de la fécondation, lorsqu'un ovule est fécondé par un spermatozoïde X, l'enfant qui naîtra sera une fille (XX) ; au contraire, si l'ovule est fécondé par un spermatozoïde Y, on aura un garçon (XY).\nC'est donc le spermatozoïde qui détermine le sexe de l'enfant à naître. C'est donc au père qu'incombe la responsabilité du sexe du futur enfant.\nL'homme produit deux types de gamètes qui ont la même chance de féconder l'unique type d'ovule : la rencontre entre le gamète mâle X et l'ovule X donne naissance à une fille, la fusion du gamète mâle Y avec l'ovule X donne un garçon.\nL'union des gamètes se fait au hasard, ce qui explique l'égale probabilité des deux sexes dans la population.\nConclusion : la transmission du sexe chez l'Homme se fait par l'un des parents, mais c'est le père qui détermine le sexe de l'enfant à naître. C'est la réponse à la situation d'apprentissage, où un père reprochait à sa femme de ne donner naissance qu'à des filles.",
+      "keyRule": "L'ovule apporte toujours X : fille si le spermatozoïde apporte X, garçon s'il apporte Y ; le père détermine donc le sexe, au hasard de la fécondation.",
       "formulas": [],
       "workedExample": {
-        "title": "Exclure un père",
-        "statement": "Un enfant est du groupe O, sa mère du groupe A. Un homme du groupe AB peut-il être son père ?",
+        "title": "Répondre au père de la situation d'apprentissage",
+        "statement": "Un père menace de divorcer car sa femme ne donne naissance qu'à des filles. Que lui explique la leçon ?",
         "methodSteps": [
-          "Un enfant O est O//O : il reçoit un O de chacun de ses parents.",
-          "Un homme AB est A//B : il n'a pas d'allèle O."
+          "La mère ne produit qu'un seul type d'ovule, toujours porteur du chromosome X : elle ne peut pas déterminer le sexe.",
+          "Le père produit deux types de spermatozoïdes, X et Y, avec la même chance de féconder l'ovule.",
+          "Si des filles naissent, c'est que des spermatozoïdes X ont fécondé les ovules : le sexe dépend du gamète du père.",
+          "L'union des gamètes se faisant au hasard, aucune faute ne peut être imputée à la mère."
         ],
-        "conclusion": "Non : cet homme est exclu comme père."
+        "conclusion": "Conclusion de la partie II : c'est au père qu'incombe la responsabilité du sexe de l'enfant à naître."
       },
       "structuredSteps": [
         {
           "stepNumber": 1,
           "stepKind": "definition",
-          "stepTitle": "Donneur universel",
-          "stepTheme": "Donneur universel",
-          "stepBadge": "Donneur universel",
-          "paragraphText": "Dans le système ABO, le groupe O peut donner son sang à tous les groupes : c'est le donneur universel.",
+          "stepTitle": "Le gamète qui détermine le sexe",
+          "stepTheme": "Le gamète qui détermine le sexe",
+          "stepBadge": "Le gamète qui détermine le sexe",
+          "paragraphText": "Le sexe de l'enfant dépend du spermatozoïde qui féconde l'ovule.\nX donne une fille (XX), Y donne un garçon (XY) : l'ovule, toujours X, ne tranche pas.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q1",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q1",
             "type": "mcq",
-            "prompt": "Dans le système ABO, quel groupe sanguin est appelé « donneur universel » ?",
+            "prompt": "Le sexe de l'enfant à naître est déterminé par :",
             "options": [
-              "Le groupe A",
-              "Le groupe B",
-              "Le groupe AB",
-              "Le groupe O"
+              "L'ovule",
+              "Le spermatozoïde",
+              "Le groupe sanguin de la mère",
+              "L'âge des parents"
             ],
-            "correctAnswerIndex": 3,
-            "explanation": "Le groupe AB est, lui, le receveur universel."
+            "correctAnswerIndex": 1,
+            "explanation": "Phrase clé de l'interprétation : c'est le spermatozoïde qui détermine le sexe."
           }
         },
         {
           "stepNumber": 2,
-          "stepKind": "definition",
-          "stepTitle": "Receveur universel",
-          "stepTheme": "Receveur universel",
-          "stepBadge": "Receveur universel",
-          "paragraphText": "Le groupe AB peut recevoir du sang de tous les groupes du système ABO : c'est le receveur universel.",
+          "stepKind": "propriete",
+          "stepTitle": "La responsabilité du père",
+          "stepTheme": "La responsabilité du père",
+          "stepBadge": "La responsabilité du père",
+          "paragraphText": "Puisque seul le père fournit deux types de gamètes, X et Y, c'est à lui que revient la détermination du sexe.\nLa leçon le formule sans détour : c'est au père qu'incombe la responsabilité du sexe du futur enfant.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q2",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q2",
             "type": "mcq",
-            "prompt": "Dans le système ABO, quel groupe sanguin peut recevoir du sang des groupes A, B, AB et O ?",
+            "prompt": "Selon la conclusion de la partie II, la responsabilité du sexe de l'enfant incombe :",
             "options": [
-              "Le groupe O",
-              "Le groupe AB",
-              "Le groupe A",
-              "Le groupe B"
+              "À la mère",
+              "Au père",
+              "Au hasard seul, sans rôle des gamètes",
+              "Aux deux parents également pour le sexe"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est le receveur universel."
+            "explanation": "Conclusion de la partie II : transmission par l'un des parents, le père."
           }
         },
         {
           "stepNumber": 3,
-          "stepKind": "exemple",
-          "stepTitle": "Une transfusion",
-          "stepTheme": "Une transfusion",
-          "stepBadge": "Une transfusion",
-          "paragraphText": "Un individu du groupe A peut recevoir du sang A ou O ; un individu du groupe B, du sang B ou O.",
+          "stepKind": "propriete",
+          "stepTitle": "L'union des gamètes se fait au hasard",
+          "stepTheme": "L'union des gamètes se fait au hasard",
+          "stepBadge": "L'union des gamètes se fait au hasard",
+          "paragraphText": "Les deux types de spermatozoïdes ont la même chance de féconder l'ovule unique en type.\nCette union au hasard explique l'égale probabilité des deux sexes dans la population.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q3",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q3",
             "type": "mcq",
-            "prompt": "Un blessé du groupe A a besoin d'une transfusion. Dans le système ABO, de quels groupes peut-il recevoir du sang ?",
+            "prompt": "L'égale probabilité des deux sexes dans la population s'explique par :",
             "options": [
-              "A ou O",
-              "B ou AB",
-              "AB seulement",
-              "Tous les groupes"
+              "Le choix de la mère",
+              "L'union des gamètes au hasard, entre deux types de spermatozoïdes équiprobables et un seul type d'ovule",
+              "Les groupes sanguins des parents",
+              "La présence de deux ovules"
             ],
-            "correctAnswerIndex": 0,
-            "explanation": "Il ne doit pas recevoir de sang B ou AB."
+            "correctAnswerIndex": 1,
+            "explanation": "Dernière phrase de l'interprétation de la partie II."
           }
         },
         {
           "stepNumber": 4,
           "stepKind": "methode",
-          "stepTitle": "Exclure un père",
-          "stepTheme": "Exclure un père",
-          "stepBadge": "Exclure un père",
-          "paragraphText": "Un enfant O (O//O) reçoit un O de chaque parent : un homme AB (A//B) ne peut pas être son père.",
+          "stepTitle": "Prévoir le sexe à partir de la fécondation",
+          "stepTheme": "Prévoir le sexe à partir de la fécondation",
+          "stepBadge": "Prévoir le sexe à partir de la fécondation",
+          "paragraphText": "Méthode : identifier le chromosome apporté par le spermatozoïde fécondant.\nSpermatozoïde X plus ovule X donne XX (fille) ; spermatozoïde Y plus ovule X donne XY (garçon).",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q4",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q4",
             "type": "mcq",
-            "prompt": "Un enfant est du groupe O ; sa mère est du groupe A. Un homme du groupe AB peut-il être son père ?",
+            "prompt": "Un ovule fécondé par un spermatozoïde X donne :",
             "options": [
-              "Oui, c'est certain",
-              "Non : un homme AB (A//B) n'a pas d'allèle O à transmettre",
-              "Oui, si la mère est A//A",
-              "On ne peut jamais rien dire"
+              "Un garçon (XY)",
+              "Une fille (XX)",
+              "Un enfant YY",
+              "Un enfant sans chromosome X"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Le groupe sanguin permet ici d'exclure cet homme."
+            "explanation": "Interprétation de la partie II : ovule X et spermatozoïde X donnent une fille (XX)."
           }
         },
         {
           "stepNumber": 5,
           "stepKind": "piege",
-          "stepTitle": "Pas une preuve",
-          "stepTheme": "Pas une preuve",
-          "stepBadge": "Pas une preuve",
-          "paragraphText": "Avoir un groupe compatible ne prouve pas la paternité : beaucoup d'hommes ont le même groupe. Le groupe sanguin peut exclure, pas prouver.",
+          "stepTitle": "Une série de filles n'est pas une faute de la mère",
+          "stepTheme": "Une série de filles n'est pas une faute de la mère",
+          "stepBadge": "Une série de filles n'est pas une faute de la mère",
+          "paragraphText": "Piège de la situation d'apprentissage : attribuer à la mère la naissance répétée de filles.\nLa mère ne transmet que X ; ce sont les spermatozoïdes X du père qui, au hasard, ont fécondé les ovules.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q5",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q5",
             "type": "mcq",
-            "prompt": "Un enfant est du groupe B et un homme du groupe B affirme : « J'ai le même groupe, c'est donc la preuve que je suis son père. » A-t-il raison ?",
+            "prompt": "Si un couple n'a que des filles, la leçon explique que :",
             "options": [
-              "Oui, c'est une preuve certaine",
-              "Non : un groupe compatible ne prouve pas la paternité, il peut seulement ne pas l'exclure",
-              "Oui, si la mère est du groupe O",
-              "Non, car le groupe sanguin n'est pas héréditaire"
+              "La mère produit des ovules Y",
+              "Des spermatozoïdes X ont fécondé les ovules, au hasard des rencontres",
+              "Le père produit uniquement des spermatozoïdes Y",
+              "Les groupes sanguins ont déterminé le sexe"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Des millions d'hommes sont du groupe B : on utilise aujourd'hui les tests ADN."
+            "explanation": "C'est l'application directe du mécanisme : même chance pour les deux types de gamètes mâles."
           }
         },
         {
           "stepNumber": 6,
           "stepKind": "exemple",
-          "stepTitle": "Deux parents A",
-          "stepTheme": "Deux parents A",
-          "stepBadge": "Deux parents A",
-          "paragraphText": "Deux parents du groupe A peuvent avoir un enfant du groupe O s'ils sont tous les deux A//O.",
+          "stepTitle": "Fille XX, garçon XY",
+          "stepTheme": "Fille XX, garçon XY",
+          "stepBadge": "Fille XX, garçon XY",
+          "paragraphText": "Exemple de synthèse de la partie II : les deux issues possibles de la fécondation.\nGamète mâle X avec ovule X : une fille ; gamète mâle Y avec ovule X : un garçon, selon le corrigé de la situation d'évaluation.",
           "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q6",
+            "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q6",
             "type": "mcq",
-            "prompt": "Deux parents du groupe A ont un enfant du groupe O. Quels sont forcément leurs génotypes ?",
+            "prompt": "La fusion du gamète mâle Y avec l'ovule X donne naissance à :",
             "options": [
-              "A//A et A//A",
-              "A//O et A//O",
-              "A//B et A//O",
-              "O//O et O//O"
+              "Une fille",
+              "Un garçon",
+              "Un enfant XX",
+              "Un enfant de groupe O"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "L'enfant O//O a reçu un O de chaque parent."
-          }
-        },
-        {
-          "stepNumber": 7,
-          "stepKind": "definition",
-          "stepTitle": "La conclusion générale",
-          "stepTheme": "La conclusion générale",
-          "stepBadge": "La conclusion générale",
-          "paragraphText": "Les groupes A, B, O sont déterminés par un gène autosomal à trois allèles ; le sexe est déterminé par les chromosomes sexuels, et c'est le père qui en est responsable.",
-          "exercise": {
-            "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q7",
-            "type": "mcq",
-            "prompt": "Selon la conclusion générale de la leçon, comment sont déterminés le groupe sanguin ABO et le sexe ?",
-            "options": [
-              "Le groupe par un gène autosomal à 3 allèles (A, B, O) ; le sexe par les chromosomes sexuels apportés par le spermatozoïde",
-              "Les deux par la mère seule",
-              "Le groupe par le chromosome Y ; le sexe par un autosome",
-              "Les deux par la nourriture"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Groupe : autosome ; sexe : X ou Y du spermatozoïde."
+            "explanation": "Corrigé de la situation d'évaluation, question 4."
           }
         }
       ],
       "exercises": [
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q1",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q1",
           "type": "mcq",
-          "prompt": "Dans le système ABO, quel groupe sanguin est appelé « donneur universel » ?",
+          "prompt": "Le sexe de l'enfant à naître est déterminé par :",
           "options": [
-            "Le groupe A",
-            "Le groupe B",
-            "Le groupe AB",
-            "Le groupe O"
-          ],
-          "correctAnswerIndex": 3,
-          "explanation": "Le groupe AB est, lui, le receveur universel."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q2",
-          "type": "mcq",
-          "prompt": "Dans le système ABO, quel groupe sanguin peut recevoir du sang des groupes A, B, AB et O ?",
-          "options": [
-            "Le groupe O",
-            "Le groupe AB",
-            "Le groupe A",
-            "Le groupe B"
+            "L'ovule",
+            "Le spermatozoïde",
+            "Le groupe sanguin de la mère",
+            "L'âge des parents"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est le receveur universel."
+          "explanation": "Phrase clé de l'interprétation : c'est le spermatozoïde qui détermine le sexe."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q3",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q2",
           "type": "mcq",
-          "prompt": "Un blessé du groupe A a besoin d'une transfusion. Dans le système ABO, de quels groupes peut-il recevoir du sang ?",
+          "prompt": "Selon la conclusion de la partie II, la responsabilité du sexe de l'enfant incombe :",
           "options": [
-            "A ou O",
-            "B ou AB",
-            "AB seulement",
-            "Tous les groupes"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Il ne doit pas recevoir de sang B ou AB."
-        },
-        {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q4",
-          "type": "mcq",
-          "prompt": "Un enfant est du groupe O ; sa mère est du groupe A. Un homme du groupe AB peut-il être son père ?",
-          "options": [
-            "Oui, c'est certain",
-            "Non : un homme AB (A//B) n'a pas d'allèle O à transmettre",
-            "Oui, si la mère est A//A",
-            "On ne peut jamais rien dire"
+            "À la mère",
+            "Au père",
+            "Au hasard seul, sans rôle des gamètes",
+            "Aux deux parents également pour le sexe"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Le groupe sanguin permet ici d'exclure cet homme."
+          "explanation": "Conclusion de la partie II : transmission par l'un des parents, le père."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q5",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q3",
           "type": "mcq",
-          "prompt": "Un enfant est du groupe B et un homme du groupe B affirme : « J'ai le même groupe, c'est donc la preuve que je suis son père. » A-t-il raison ?",
+          "prompt": "L'égale probabilité des deux sexes dans la population s'explique par :",
           "options": [
-            "Oui, c'est une preuve certaine",
-            "Non : un groupe compatible ne prouve pas la paternité, il peut seulement ne pas l'exclure",
-            "Oui, si la mère est du groupe O",
-            "Non, car le groupe sanguin n'est pas héréditaire"
+            "Le choix de la mère",
+            "L'union des gamètes au hasard, entre deux types de spermatozoïdes équiprobables et un seul type d'ovule",
+            "Les groupes sanguins des parents",
+            "La présence de deux ovules"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Des millions d'hommes sont du groupe B : on utilise aujourd'hui les tests ADN."
+          "explanation": "Dernière phrase de l'interprétation de la partie II."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q6",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q4",
           "type": "mcq",
-          "prompt": "Deux parents du groupe A ont un enfant du groupe O. Quels sont forcément leurs génotypes ?",
+          "prompt": "Un ovule fécondé par un spermatozoïde X donne :",
           "options": [
-            "A//A et A//A",
-            "A//O et A//O",
-            "A//B et A//O",
-            "O//O et O//O"
+            "Un garçon (XY)",
+            "Une fille (XX)",
+            "Un enfant YY",
+            "Un enfant sans chromosome X"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "L'enfant O//O a reçu un O de chaque parent."
+          "explanation": "Interprétation de la partie II : ovule X et spermatozoïde X donnent une fille (XX)."
         },
         {
-          "id": "terminale_a_svt_l05_heredite_sexe_groupe_sanguin_p05_q7",
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q5",
           "type": "mcq",
-          "prompt": "Selon la conclusion générale de la leçon, comment sont déterminés le groupe sanguin ABO et le sexe ?",
+          "prompt": "Si un couple n'a que des filles, la leçon explique que :",
           "options": [
-            "Le groupe par un gène autosomal à 3 allèles (A, B, O) ; le sexe par les chromosomes sexuels apportés par le spermatozoïde",
-            "Les deux par la mère seule",
-            "Le groupe par le chromosome Y ; le sexe par un autosome",
-            "Les deux par la nourriture"
+            "La mère produit des ovules Y",
+            "Des spermatozoïdes X ont fécondé les ovules, au hasard des rencontres",
+            "Le père produit uniquement des spermatozoïdes Y",
+            "Les groupes sanguins ont déterminé le sexe"
           ],
-          "correctAnswerIndex": 0,
-          "explanation": "Groupe : autosome ; sexe : X ou Y du spermatozoïde."
+          "correctAnswerIndex": 1,
+          "explanation": "C'est l'application directe du mécanisme : même chance pour les deux types de gamètes mâles."
+        },
+        {
+          "id": "terminale_a1_svt_l05_heredite_sexe_groupe_sanguin_p06_q6",
+          "type": "mcq",
+          "prompt": "La fusion du gamète mâle Y avec l'ovule X donne naissance à :",
+          "options": [
+            "Une fille",
+            "Un garçon",
+            "Un enfant XX",
+            "Un enfant de groupe O"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Corrigé de la situation d'évaluation, question 4."
         }
       ]
     }

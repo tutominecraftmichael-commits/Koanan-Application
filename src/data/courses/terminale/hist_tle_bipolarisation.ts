@@ -1,1153 +1,1625 @@
-import type { CurriculumChapter, StructuredLessonStep } from '../../../lib/curriculum/types';
+import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « Tle_H2-_Lère_de_la_bipolarisation_de_1947_à_1991.pdf » (format v2 : mini-leçons de 6 étapes).
-
-const p01Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Concept central',
-    stepTheme: 'blue',
-    stepTitle: 'Qu’est-ce que la bipolarisation et la guerre froide ?',
-    paragraphText:
-      '• Bipolarisation (1947-1991) : division durable du monde en deux blocs idéologiques, politiques, économiques et militaires rivaux dirigés par deux superpuissances : les États-Unis (bloc capitaliste et libéral) et l’URSS (bloc communiste).\n• Guerre froide : état de tension permanente et de compétition globale entre les deux Grands, sans affrontement militaire direct entre armées américaine et soviétique à cause de la dissuasion nucléaire.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q1',
-      type: 'mcq',
-      prompt: 'Comment définit-on la « guerre froide » entre 1947 et 1991 ?',
-      options: [
-        'Une guerre nucléaire totale entre Washington et Moscou',
-        'Une tension aiguë et une rivalité planétaire sans affrontement militaire direct entre les deux superpuissances',
-        'Une alliance économique permanente entre les États-Unis et l’URSS',
-        'Un conflit limité uniquement à l’Afrique australe',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les États-Unis et l’URSS s’affrontent indirectement (propagande, course aux armements, conflits périphériques) sans jamais entrer en guerre directe l’un contre l’autre.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Origines (1945-1946)',
-    stepTheme: 'violet',
-    stepTitle: 'La rupture de la Grande Alliance : Pologne, Allemagne et « rideau de fer »',
-    paragraphText:
-      'Dès 1945, la méfiance remplace l’alliance contre le nazisme :\n• Question polonaise (frontière Oder-Neisse et gouvernement pro-soviétique) et sort de l’Allemagne divisée en 4 zones d’occupation.\n• Mise en place de « démocraties populaires » sous contrôle soviétique en Europe centrale et orientale (1947-1949 : Pologne, Hongrie, Roumanie, Bulgarie, Tchécoslovaquie en février 1948, puis RDA).\n• Le 5 mars 1946 à Fulton (États-Unis), Winston Churchill dénonce un « rideau de fer » tombé à travers l’Europe de Stettin à Trieste.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q2',
-      type: 'mcq',
-      prompt: 'Qui a prononcé l’expression célèbre de « rideau de fer » lors de son discours de Fulton le 5 mars 1946 ?',
-      options: [
-        'Harry Truman',
-        'Winston Churchill',
-        'Andreï Jdanov',
-        'Charles de Gaulle',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’ancien Premier ministre britannique Winston Churchill alerte dès mars 1946 sur la coupure de l’Europe en deux par un « rideau de fer ».',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Rupture de 1947',
-    stepTheme: 'violet',
-    stepTitle: 'Doctrine Truman et plan Marshall du côté américain',
-    paragraphText:
-      '• Doctrine Truman (12 mars 1947) : le président américain Harry Truman propose une aide financière et militaire à la Grèce et à la Turquie pour stopper l’avancée communiste. C’est la stratégie de l’endiguement (« containment »).\n• Plan Marshall (5 juin 1947 à Harvard) : programme d’aide économique massive (environ 13 milliards de dollars) pour reconstruire l’Europe. 16 pays d’Europe occidentale l’acceptent et créent l’OECE (16 avril 1948), tandis que l’URSS le refuse et l’interdit à ses satellites.',
-    keyRule: '1947 est l’année charnière de la rupture : Doctrine Truman (mars), Plan Marshall (juin), Doctrine Jdanov (septembre).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q3',
-      type: 'mcq',
-      prompt: 'Quel nom porte la stratégie formulée par la doctrine Truman en mars 1947 pour bloquer l’expansion du communisme ?',
-      options: [
-        'L’endiguement (containment)',
-        'La perestroïka',
-        'Le non-alignement',
-        'La vietnamisation',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’endiguement (containment) vise à contenir l’influence soviétique dans ses limites de 1945-1947 sans déclencher de guerre mondiale.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'propriete',
-    stepBadge: 'Riposte soviétique',
-    stepTheme: 'violet',
-    stepTitle: 'Doctrine Jdanov et création du Kominform (1947)',
-    paragraphText:
-      'En réponse au plan Marshall, le dirigeant soviétique Andreï Jdanov théorise en septembre 1947 (conférence de Szklarska Poreba en Pologne) la division du monde en deux camps inconciliables :\n• le camp « impérialiste et antidémocratique » mené par les États-Unis ;\n• le camp « anti-impérialiste et démocratique » dirigé par l’URSS.\nDans la foulée est créé le Kominform (5 octobre 1947), bureau d’information et de coordination des partis communistes.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q4',
-      type: 'mcq',
-      prompt: 'Quelle structure est créée en octobre 1947 pour coordonner les partis communistes européens sous l’autorité de Moscou ?',
-      options: [
-        'L’OECE',
-        'Le Kominform',
-        'L’OTAN',
-        'Le Conseil de tutelle',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le Kominform (Bureau d’information communiste) est institué en octobre 1947 dans le sillage de la doctrine Jdanov.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Piège d’orthographe & dates',
-    stepTheme: 'orange',
-    stepTitle: 'Bien distinguer Churchill, Truman, Marshall et Jdanov',
-    paragraphText:
-      '• Attention au prénom : Winston Churchill (Premier ministre britannique, discours de Fulton 1946).\n• Attention à la chronologie de 1947 : Truman (12 mars, politique/militaire) précède Marshall (5 juin, économie), qui provoque Jdanov (septembre, idéologie).',
-    konanTip: 'Truman = bouclier politique (mars 1947) ; Marshall = dollar économique (juin 1947) ; Jdanov = riposte idéologique (sept. 1947).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q5',
-      type: 'mcq',
-      prompt: 'Quelle a été la réaction de l’URSS et des pays d’Europe de l’Est face à la proposition du plan Marshall en 1947 ?',
-      options: [
-        'Ils ont accepté les crédits américains pour fonder l’OECE',
-        'Ils l’ont refusé, y voyant un instrument d’ingérence et de domination capitaliste américaine',
-        'Ils ont dissous les partis communistes nationaux',
-        'Ils ont adhéré au Pacte atlantique dès 1948',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’URSS rejette le plan Marshall (dénoncé comme un « plan d’asservissement ») et contraint la Tchécoslovaquie et la Pologne à le refuser.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'Cas européen',
-    stepTheme: 'slate',
-    stepTitle: 'Le coup de Prague (février 1948) : achèvement du bloc de l’Est',
-    paragraphText:
-      'En février 1948, le parti communiste tchécoslovaque prend seul le pouvoir à Prague après la démission des ministres démocrates (« coup de Prague »). Ce basculement convainc les Occidentaux qu’une alliance militaire collective est indispensable face à Moscou.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q6',
-      type: 'mcq',
-      prompt: 'Quel événement de février 1948 achève la mise en place des démocraties populaires pro-soviétiques en Europe centrale ?',
-      options: [
-        'La signature des accords de Paris',
-        'Le coup de Prague en Tchécoslovaquie',
-        'La chute du Mur de Berlin',
-        'Le sommet de Camp David',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le coup de Prague (février 1948) aligne la Tchécoslovaquie sur le camp soviétique et accélère l’alliance atlantique occidentale.',
-    },
-  },
-];
-
-const p02Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Blocs structurés',
-    stepTheme: 'blue',
-    stepTitle: 'Deux blocs dotés chacun d’alliances militaires et économiques',
-    paragraphText:
-      'Entre 1948 et 1955, la division idéologique se transforme en deux blocs rigides organisés sur le plan économique et militaire autour des États-Unis et de l’URSS.',
-    visualSchema: {
-      type: 'custom_svg',
-      title: 'Architecture comparée des deux blocs (1948-1955)',
-      caption: 'Chaque camp associe une organisation économique et une alliance militaire intégrée.',
-      tableData: {
-        headers: ['Domaine', 'Bloc occidental (États-Unis)', 'Bloc oriental / soviétique (URSS)'],
-        rows: [
-          ['Idéologie', 'Démocratie libérale et capitalisme', 'Communisme (parti unique) et économie planifiée'],
-          ['Organisation économique', 'Plan Marshall (1947), OECE (1948) puis OCDE (1961)', 'CAEM / COMECON (25 janvier 1949)'],
-          ['Alliance militaire principale', 'OTAN (4 avril 1949, traité de Washington)', 'Pacte de Varsovie (14 mai 1955)'],
-          ['Pactes périphériques', 'ANZUS (1951), OTASE (1954), Pacte de Bagdad / CENTO (1955)', 'Traités bilatéraux (dont URSS-Chine en 1950)'],
-        ],
-      },
-    },
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02_q1',
-      type: 'mcq',
-      prompt: 'À quelle date a été signé le traité de Washington créant l’Organisation du traité de l’Atlantique Nord (OTAN) ?',
-      options: [
-        'Le 14 mai 1955',
-        'Le 4 avril 1949',
-        'Le 25 janvier 1949',
-        'Le 12 mai 1949',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’OTAN est fondée le 4 avril 1949 par 12 pays occidentaux pour assurer une défense collective face à l’URSS.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Bloc occidental',
-    stepTheme: 'violet',
-    stepTitle: 'L’OTAN, le parapluie nucléaire et la pactomanie américaine',
-    paragraphText:
-      '• L’article 5 du traité de l’OTAN stipule qu’une attaque armée contre un membre est considérée comme une attaque contre tous.\n• Les États-Unis garantissent la protection par leur dissuasion nucléaire (Strategic Air Command) et étendent ce réseau d’alliances dans le monde (« pactomanie ») : ANZUS (1951), OTASE en Asie du Sud-Est (1954), Pacte de Bagdad / CENTO au Moyen-Orient (1955).\n• Sur le plan économique, l’OECE (1948) devient l’OCDE en 1961 et repose sur les accords de Bretton Woods (dollar).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02_q2',
-      type: 'mcq',
-      prompt: 'Quel principe fondamental repose au cœur de l’article 5 du traité de l’OTAN ?',
-      options: [
-        'Le désarmement unilatéral des États-Unis',
-        'La défense collective : une agression contre un allié engage tous les autres',
-        'L’adoption du rouble transférable dans le commerce atlantique',
-        'L’interdiction d’admettre des pays européens',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’article 5 institue la solidarité militaire automatique en cas d’attaque armée contre un État membre.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Bloc soviétique',
-    stepTheme: 'violet',
-    stepTitle: 'CAEM / COMECON (1949) et Pacte de Varsovie (1955)',
-    paragraphText:
-      '• CAEM / COMECON (25 janvier 1949) : Conseil d’assistance économique mutuelle regroupant l’URSS et ses alliés européens (puis Cuba, Mongolie, Viêtnam) ; il organise une spécialisation économique et des échanges fondés sur le rouble transférable.\n• Pacte de Varsovie (14 mai 1955) : alliance militaire placée sous commandement soviétique, créée en réplique à l’intégration de la RFA dans l’OTAN. Il sera dissous en 1991.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02_q3',
-      type: 'mcq',
-      prompt: 'Quel événement immédiat déclenche la signature du Pacte de Varsovie par l’URSS et ses alliés le 14 mai 1955 ?',
-      options: [
-        'Le déclenchement du plan Marshall en 1947',
-        'L’entrée et le réarmement de la République fédérale d’Allemagne (RFA) au sein de l’OTAN',
-        'La mort de Staline en mars 1953',
-        'La création de la CEI en décembre 1991',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’adhésion de la RFA à l’OTAN en mai 1955 provoque immédiatement la création du Pacte de Varsovie par l’URSS.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Décalage chronologique',
-    stepTheme: 'orange',
-    stepTitle: 'Attention : l’OTAN précède le Pacte de Varsovie de six ans',
-    paragraphText:
-      'Beaucoup d’élèves pensent que l’OTAN et le Pacte de Varsovie ont été créés la même année. C’est faux :\n• OTAN = 1949 ;\n• Pacte de Varsovie = 1955.\nEn revanche, sur le plan économique, l’OECE (avril 1948) et le CAEM/COMECON (janvier 1949) sont quasi simultanés.',
-    konanTip: 'Ne mets jamais 1949 pour le Pacte de Varsovie : 1949 c’est l’OTAN et le COMECON ; 1955 c’est le Pacte de Varsovie.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02_q4',
-      type: 'mcq',
-      prompt: 'Quelle organisation du bloc soviétique est créée dès janvier 1949, six ans avant le Pacte de Varsovie ?',
-      options: [
-        'Le CAEM / COMECON',
-        'Le traité INF de Washington',
-        'L’OCDE',
-        'L’OTASE',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le CAEM (COMECON) naît le 25 janvier 1949 pour intégrer économiquement le bloc de l’Est.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Asymétrie',
-    stepTheme: 'slate',
-    stepTitle: 'Comment l’URSS impose sa domination au sein de son bloc',
-    paragraphText:
-      'Alors que l’OTAN reste une alliance d’États souverains où la France (en 1966) peut quitter le commandement intégré sans être envahie, le Pacte de Varsovie sert aussi à maintenir par la force la discipline interne du bloc de l’Est (interventions en Hongrie en 1956 et en Tchécoslovaquie en 1968).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02_q5',
-      type: 'mcq',
-      prompt: 'Quelle différence politique distingue le fonctionnement du Pacte de Varsovie de celui de l’OTAN pendant la guerre froide ?',
-      options: [
-        'Le Pacte de Varsovie est utilisé par l’URSS pour réprimer militairement les dissidences internes du bloc (Hongrie 1956, Tchécoslovaquie 1968)',
-        'L’OTAN interdit toute élection démocratique chez ses membres européens',
-        'Le Pacte de Varsovie n’a jamais disposé d’un commandement militaire soviétique',
-        'L’OTAN a envahi la France lorsqu’elle a quitté le commandement intégré en 1966',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’URSS mobilise les forces du Pacte de Varsovie pour écraser le Printemps de Prague en août 1968 (« souveraineté limitée »).',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Synthèse',
-    stepTheme: 'green',
-    stepTitle: 'Savoir présenter un tableau comparatif des blocs au BAC',
-    paragraphText:
-      'Pour tout sujet sur « La formation des deux blocs », structure toujours ta réponse sur 3 axes :\n1. Idéologie (libéralisme vs communisme).\n2. Économie (Plan Marshall/OECE vs CAEM/COMECON).\n3. Sécurité militaire (OTAN et pactes régionaux vs Pacte de Varsovie).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02_q6',
-      type: 'mcq',
-      prompt: 'Quelle institution créée en 1961 prolonge et élargit l’OECE issue du plan Marshall ?',
-      options: [
-        'Le Kominform',
-        'L’OCDE (Organisation de coopération et de développement économiques)',
-        'La CEI',
-        'Le Pacte de Bagdad',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’OECE (1948) se transforme en OCDE en 1961 en incluant les États-Unis et le Canada.',
-    },
-  },
-];
-
-const p03Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Berlin divisée',
-    stepTheme: 'blue',
-    stepTitle: 'Pourquoi Berlin est-elle le symbole de la guerre froide ?',
-    paragraphText:
-      'En 1945, l’Allemagne est divisée en 4 zones d’occupation (américaine, britannique, française à l’ouest ; soviétique à l’est). Située au cœur de la zone soviétique, l’ancienne capitale Berlin est elle aussi partagée en 4 secteurs. Berlin-Ouest forme donc une enclave occidentale au milieu du territoire contrôlé par Moscou.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03_q1',
-      type: 'mcq',
-      prompt: 'Quelle particularité géographique explique que Berlin soit devenue le point le plus sensible de la guerre froide en Europe ?',
-      options: [
-        'Berlin-Ouest était une enclave occidentale isolée à l’intérieur de la zone d’occupation soviétique',
-        'Berlin se trouvait à la frontière entre la France et l’Espagne',
-        'Berlin était entièrement contrôlée par les États-Unis dès 1945',
-        'Berlin abritait le siège permanent de l’ONU',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Enclavée en zone soviétique, Berlin-Ouest dépendait de corridors terrestres et aériens traversant la zone est-allemande.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: '1re crise (1948-1949)',
-    stepTheme: 'violet',
-    stepTitle: 'Le blocus de Berlin, le pont aérien et la naissance des deux Allemagnes',
-    paragraphText:
-      '• Cause : à la conférence de Londres (février-juin 1948), les Occidentaux décident d’unifier leurs zones et d’y introduire le Deutschemark.\n• Crise (juin 1948 - 12 mai 1949) : Staline coupe toutes les voies terrestres et fluviales vers Berlin-Ouest. Les États-Unis et leurs alliés ripostent par un immense pont aérien (318 jours, plus de 275 000 vols) et Staline lève le blocus le 12 mai 1949.\n• Conséquence : partition officielle de l’Allemagne en deux États : la RFA (23 mai 1949, capitale Bonn, chancelier Konrad Adenauer) et la RDA (7 octobre 1949, capitale Berlin-Est / Pankow, dirigée par les communistes Grotewohl et Ulbricht).',
-    keyRule: 'Blocus de Berlin (1948-1949) -> Pont aérien américain -> Naissance de la RFA (mai 1949) et de la RDA (octobre 1949).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03_q2',
-      type: 'mcq',
-      prompt: 'Comment les Occidentaux ont-ils brisé le blocus terrestre de Berlin-Ouest imposé par Staline en 1948-1949 ?',
-      options: [
-        'En déclenchant une guerre nucléaire contre Moscou',
-        'En organisant un pont aérien massif ravitaillant la ville pendant 318 jours',
-        'En cédant Berlin-Ouest à la RDA',
-        'En signant les accords de Paris dès 1948',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le pont aérien américain et britannique ravitaille Berlin-Ouest nuit et jour (plus de 275 000 vols), rendant le blocus inefficace.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: '2e crise (1958-1961)',
-    stepTheme: 'violet',
-    stepTitle: 'L’hémorragie est-allemande, l’ultimatum et la construction du Mur',
-    paragraphText:
-      '• Contexte : attirés par la prospérité et les libertés de l’Ouest, près de 2,245 millions d’Est-Allemands fuient vers l’Ouest entre 1952 et 1961 en passant par Berlin.\n• Escales diplomatiques : ultimatum de Khrouchtchev (novembre 1958) exigeant le retrait occidental ; détente brève à Camp David (1959), puis rupture brutale au sommet de Paris (16 mai 1960) après qu’un avion espion américain U2 a été abattu au-dessus de l’URSS (1er mai 1960).\n• Dénouement : dans la nuit du 12 au 13 août 1961, la RDA et l’URSS érigent le Mur de Berlin (« mur de la honte »), coupant physiquement la ville jusqu’en novembre 1989.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03_q3',
-      type: 'mcq',
-      prompt: 'Dans la nuit de quelle date le Mur de Berlin a-t-il été construit pour stopper la fuite des habitants de RDA vers l’Ouest ?',
-      options: [
-        'Du 23 au 24 mai 1949',
-        'Du 12 au 13 août 1961',
-        'Du 22 au 23 octobre 1962',
-        'Du 9 au 10 novembre 1989',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le Mur de Berlin est érigé dans la nuit du 12 au 13 août 1961 ; il tombera dans la nuit du 9 novembre 1989.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Piège chronologique',
-    stepTheme: 'orange',
-    stepTitle: 'Ne pas confondre la 1re crise (1948-1949) et le Mur (1961)',
-    paragraphText:
-      'Erreur classique de copie : situer le Mur de Berlin en 1948 ou confondre les dirigeants :\n• 1re crise (1948-1949) = Staline contre Truman -> résultat : naissance de la RFA et de la RDA.\n• 2e crise (1958-1961) = Khrouchtchev contre Eisenhower puis Kennedy -> résultat : construction du Mur de Berlin le 13 août 1961.',
-    konanTip: '1948-1949 = Blocus de Staline (RFA/RDA) ; 1961 = Mur de Khrouchtchev/Ulbricht.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03_q4',
-      type: 'mcq',
-      prompt: 'Quel est le bilan institutionnel direct de la première crise de Berlin en 1949 ?',
-      options: [
-        'La construction du Mur de Berlin',
-        'La naissance de deux États allemands : la RFA à l’ouest et la RDA à l’est',
-        'La réunification immédiate de l’Allemagne',
-        'L’entrée de la RDA dans l’OTAN',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La RFA naît le 23 mai 1949 et la RDA le 7 octobre 1949 dans le sillage immédiat de la levée du blocus.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Incident diplomatique',
-    stepTheme: 'slate',
-    stepTitle: 'L’affaire de l’avion espion U2 et l’échec de Paris (mai 1960)',
-    paragraphText:
-      'Le 1er mai 1960, un avion espion américain U2 piloté par Gary Powers est abattu en territoire soviétique. À l’ouverture de la conférence au sommet de Paris (16 mai 1960), Khrouchtchev exige des excuses d’Eisenhower, qui refuse. Le sommet avorte, ouvrant la voie à la construction du Mur un an plus tard.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03_q5',
-      type: 'mcq',
-      prompt: 'Quel incident provoque l’échec de la conférence au sommet de Paris en mai 1960 ?',
-      options: [
-        'Le lancement du satellite Spoutnik',
-        'La destruction d’un avion espion américain U2 au-dessus de l’URSS',
-        'Le débarquement de la Baie des Cochons',
-        'L’invasion de l’Afghanistan',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’affaire de l’avion espion U2 (1er mai 1960) entraîne la rupture immédiate du sommet de Paris.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Synthèse Berlin',
-    stepTheme: 'green',
-    stepTitle: 'Lire les symboles de Berlin de 1949 à 1989',
-    paragraphText:
-      '• 1949 : Berlin entérine la division politique de l’Europe (RFA / RDA).\n• 1961 : le Mur matérialise concrètement le « rideau de fer » en figeant le statu quo européen.\n• 1989 : la chute du Mur annoncera l’effondrement complet du bloc communiste.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03_q6',
-      type: 'mcq',
-      prompt: 'Qui devient en 1949 le premier chancelier de la République fédérale d’Allemagne (RFA), avec Bonn pour capitale ?',
-      options: [
-        'Konrad Adenauer',
-        'Otto Grotewohl',
-        'Willy Brandt',
-        'Mikhaïl Gorbatchev',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Konrad Adenauer dirige la RFA (capitale Bonn) à partir de 1949 et ancre l’Allemagne de l’Ouest dans le bloc occidental.',
-    },
-  },
-];
-
-const p04Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Cuba révolutionnaire',
-    stepTheme: 'blue',
-    stepTitle: 'De la victoire de Castro (1959) au rapprochement avec l’URSS',
-    paragraphText:
-      '• Le 1er janvier 1959, Fidel Castro renverse le dictateur pro-américain Batista à Cuba.\n• Les réformes agraires et nationalisations touchent les intérêts américains (dont la United Fruit Company). Washington répond par un embargo économique.\n• Cuba se rapproche alors de l’URSS (accord commercial du 13 février 1960), puis échappe au débarquement d’exilés anticastristes soutenus par la CIA à la Baie des Cochons (17 avril 1961).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q1',
-      type: 'mcq',
-      prompt: 'Quel événement d’avril 1961 pousse définitivement Fidel Castro à rechercher la protection militaire de l’URSS ?',
-      options: [
-        'L’échec du débarquement anticastriste de la Baie des Cochons soutenu par les États-Unis',
-        'La construction du Mur de Berlin',
-        'Les accords de Paris sur le Viêtnam',
-        'La guerre du Golfe',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le fiasco de la Baie des Cochons (17 avril 1961) convainc Castro de se placer sous le parapluie militaire soviétique.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Paroxysme (oct. 1962)',
-    stepTheme: 'violet',
-    stepTitle: 'Les 13 jours qui font trembler le monde (octobre 1962)',
-    paragraphText:
-      '• En octobre 1962, des avions espions américains U2 photographient à Cuba des rampes de missiles nucléaires soviétiques menaçant directement le territoire américain.\n• Le 22 octobre 1962, le président John F. Kennedy dénonce l’installation et décrète un blocus naval (« quarantaine ») autour de Cuba pour stopper les navires soviétiques.\n• Pendant plusieurs jours, les deux superpuissances sont au bord d’une guerre nucléaire mondiale.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q2',
-      type: 'mcq',
-      prompt: 'Quelle mesure immédiate le président John F. Kennedy annonce-t-il le 22 octobre 1962 face aux missiles soviétiques à Cuba ?',
-      options: [
-        'Un bombardement atomique immédiat de La Havane',
-        'Une « quarantaine » (blocus naval) autour de Cuba',
-        'Le retrait des États-Unis de l’ONU',
-        'La cession de la Floride à l’URSS',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Kennedy impose une « quarantaine » navale le 22 octobre 1962 afin d’empêcher l’arrivée de nouveaux missiles soviétiques tout en laissant place à la négociation.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Dénouement',
-    stepTheme: 'violet',
-    stepTitle: 'La médiation d’U Thant et le compromis Kennedy-Khrouchtchev',
-    paragraphText:
-      'Grâce à des canaux secrets et à la médiation du Secrétaire général de l’ONU U Thant, Nikita Khrouchtchev et John F. Kennedy trouvent un accord entre le 26 et le 28 octobre 1962 :\n• l’URSS démantèle et retire ses fusées nucléaires de Cuba ;\n• en échange, les États-Unis s’engagent à ne pas envahir Cuba et acceptent secrètement de retirer leurs missiles Jupiter installés en Turquie et en Italie.',
-    keyRule: 'Compromis de Cuba : retrait des fusées soviétiques contre non-invasion de Cuba + retrait des fusées US de Turquie/Italie.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q3',
-      type: 'mcq',
-      prompt: 'Quelle contrepartie secrète les États-Unis acceptent-ils pour obtenir le retrait des missiles soviétiques de Cuba ?',
-      options: [
-        'L’évacuation de Berlin-Ouest',
-        'Le retrait de leurs missiles Jupiter basés en Turquie et en Italie (en plus de ne pas envahir Cuba)',
-        'La dissolution de l’OTAN',
-        'L’annulation du plan Marshall',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'En plus de la promesse de non-agression contre Cuba, Washington accepte le retrait discret des missiles Jupiter en Turquie et en Italie.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'methode',
-    stepBadge: 'Conséquences majeures',
-    stepTheme: 'green',
-    stepTitle: 'Du bord du gouffre nucléaire au téléphone rouge (1963)',
-    paragraphText:
-      'La crise de Cuba marque un tournant décisif dans les relations internationales :\n1. Installation du « téléphone rouge » entre la Maison-Blanche et le Kremlin (juin 1963) pour communiquer directement en cas d’alerte.\n2. Relance des négociations nucléaires avec le Traité de Moscou (août 1963) sur l’arrêt partiel des essais nucléaires.\n3. Adoption par le ministre américain Robert McNamara de la doctrine de la « riposte graduée ».\n4. Perte de prestige de Khrouchtchev à Moscou (destitué en 1964) et critiques de la Chine maoïste.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q4',
-      type: 'mcq',
-      prompt: 'Quel outil symbolique et technique est mis en place en juin 1963 à la suite directe de la crise de Cuba ?',
-      options: [
-        'Le Mur de Berlin',
-        'Le « téléphone rouge » reliant directement Washington et Moscou',
-        'Le Pacte de Varsovie',
-        'Le traité de Maastricht',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le téléscripteur direct dit « téléphone rouge » (20 juin 1963) permet aux dirigeants américain et soviétique d’éviter toute erreur de calcul en cas de crise.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Piège d’examen',
-    stepTheme: 'orange',
-    stepTitle: 'Distinguer le rôle de Cuba et celui des deux Grands',
-    paragraphText:
-      'Attention : Fidel Castro n’est pas consulté dans le règlement final entre Kennedy et Khrouchtchev, ce qui suscite sa colère.\nLa crise montre que, face au péril atomique, les deux superpuissances préfèrent négocier directement au-dessus de leurs alliés pour éviter l’anéantissement mutuel.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q5',
-      type: 'mcq',
-      prompt: 'Pourquoi la crise des fusées de Cuba d’octobre 1962 est-elle considérée comme le point culminant mais aussi le point d’inflexion de la guerre froide ?',
-      options: [
-        'Parce qu’après avoir frôlé la guerre nucléaire, Washington et Moscou engagent le dialogue de la Détente',
-        'Parce qu’elle entraîne immédiatement la chute de l’URSS dès 1963',
-        'Parce que Cuba devient membre permanent du Conseil de sécurité',
-        'Parce que les États-Unis envahissent et annexent Cuba en 1962',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'La peur d’une guerre atomique totale pousse les deux Grands à passer d’une confrontation extrême à une gestion concertée du risque (Détente).',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'Acteur onusien',
-    stepTheme: 'slate',
-    stepTitle: 'Le rôle de médiation d’U Thant en octobre 1962',
-    paragraphText:
-      'Lors de la crise de Cuba, le Secrétaire général de l’ONU U Thant envoie des appels urgents à Kennedy et Khrouchtchev pour suspendre le face-à-face naval dans les Caraïbes, offrant une porte de sortie honorable aux deux dirigeants.\nC’est un exemple clé à réutiliser aussi pour illustrer les succès diplomatiques de l’ONU.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q6',
-      type: 'mcq',
-      prompt: 'Quel Secrétaire général de l’ONU joue un rôle de médiateur lors de la crise des fusées de Cuba en octobre 1962 ?',
-      options: [
-        'Trygve Lie',
-        'U Thant',
-        'Boutros Boutros-Ghali',
-        'Kofi Annan',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le Birman U Thant (Secrétaire général de 1961 à 1971) facilite la désescalade diplomatique entre Kennedy et Khrouchtchev.',
-    },
-  },
-];
-
-const p05Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Dégel et Détente',
-    stepTheme: 'blue',
-    stepTitle: 'De la coexistence pacifique (1956) à la Détente (1963-1979)',
-    paragraphText:
-      '• Après la mort de Staline (5 mars 1953) et la maîtrise de l’équilibre de la terreur (URSS lance le premier ICBM en août 1957 et Spoutnik en octobre 1957), Nikita Khrouchtchev proclame au XXe congrès du PCUS (février 1956) la « coexistence pacifique » : compétition économique et idéologique sans guerre générale.\n• Après Cuba, elle laisse place à la Détente : dialogue permanent et accords de limitation des armements stratégiques.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05_q1',
-      type: 'mcq',
-      prompt: 'À quelle date est mort Staline, événement qui ouvre la voie à la déstalinisation puis à la coexistence pacifique ?',
-      options: [
-        'Le 5 mars 1953',
-        'Le 5 mars 1955',
-        'Le 24 octobre 1945',
-        'Le 13 août 1961',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Joseph Staline est mort le 5 mars 1953 (à ne pas confondre avec l’année 1955 de la création du Pacte de Varsovie).',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Fissures des blocs',
-    stepTheme: 'violet',
-    stepTitle: 'Contestations internes : France de De Gaulle, Chine, Hongrie, Prague',
-    paragraphText:
-      'Pendant la coexistence pacifique et la Détente, les deux blocs se fissurent :\n• À l’Ouest : le général de Gaulle dote la France de l’arme nucléaire (1960), retire la France du commandement intégré de l’OTAN (1966) et critique la guerre américaine au Viêtnam (discours de Phnom-Penh).\n• À l’Est : rupture sino-soviétique (la Chine obtient sa bombe atomique en 1964), retrait de l’Albanie du Pacte de Varsovie (1968), autonomie de la Roumanie de Ceaușescu, mais répression armée en Hongrie (novembre 1956) et lors du Printemps de Prague (janvier-août 1968, expérience d’Alexandre Dubček écrasée par Moscou).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05_q2',
-      type: 'mcq',
-      prompt: 'Quelle décision majeure le président Charles de Gaulle prend-il en 1966 pour affirmer l’indépendance militaire de la France ?',
-      options: [
-        'L’adhésion de la France au Pacte de Varsovie',
-        'Le retrait de la France du commandement militaire intégré de l’OTAN',
-        'La fermeture des ambassades occidentales en Chine',
-        'L’envoi de troupes françaises au Viêtnam en 1966',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'En 1966, la France reste membre de l’Alliance atlantique mais quitte le commandement militaire intégré de l’OTAN.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Désarmement',
-    stepTheme: 'violet',
-    stepTitle: 'Les grands accords de désarmement et d’apaisement (1963-1991)',
-    paragraphText:
-      'Pour réduire le coût et le danger de la course aux armements, États-Unis et URSS signent plusieurs traités clés entre 1963 et 1991.',
-    visualSchema: {
-      type: 'custom_svg',
-      title: 'Principaux accords de maîtrise des armements (1963-1991)',
-      caption: 'De l’arrêt partiel des essais nucléaires aux réductions effectives des arsenaux.',
-      tableData: {
-        headers: ['Année', 'Traité / Accord', 'Contenu essentiel'],
-        rows: [
-          ['Août 1963', 'Traité de Moscou', 'Interdiction partielle des essais nucléaires (atmosphère, espace, sous l’eau)'],
-          ['Juillet 1968', 'TNP (Traité de non-prolifération)', 'Limitation du nombre d’États dotés de l’arme atomique'],
-          ['Mai 1972', 'SALT 1 (Moscou)', 'Premier plafonnement des missiles stratégiques offensifs et défensifs'],
-          ['Août 1975', 'Acte final d’Helsinki', 'Reconnaissance des frontières européennes et engagements sur les droits humains'],
-          ['Déc. 1987', 'Traité de Washington (INF)', 'Élimination des euromissiles de portée intermédiaire (SS-20 et Pershing II)'],
-          ['Juil. 1991', 'Traité START', 'Réduction importante des armes nucléaires stratégiques américaines et soviétiques'],
-        ],
-      },
-    },
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05_q3',
-      type: 'mcq',
-      prompt: 'Que prévoit le traité de Washington (INF) signé en décembre 1987 par Reagan et Gorbatchev ?',
-      options: [
-        'Le démantèlement des euromissiles à portée intermédiaire (SS-20 et Pershing II)',
-        'La création du Mur de Berlin',
-        'La partage du Viêtnam au 17e parallèle',
-        'La reprise des essais nucléaires atmosphériques',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le traité INF de Washington (1987) applique l’« option zéro » en supprimant toute une catégorie de missiles nucléaires en Europe.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Pièges d’examen',
-    stepTheme: 'orange',
-    stepTitle: 'Attention aux dates : Prague (1968) et SALT 2 (1979)',
-    paragraphText:
-      '• Le Printemps de Prague se déroule de janvier à août 1968 (et non 1958) ; il montre que l’URSS refuse toute libéralisation politique dans son bloc (« doctrine Brejnev »).\n• L’accord SALT 2 (signé le 18 juin 1979 à Vienne) n’est jamais ratifié par le Sénat américain en raison de l’invasion soviétique de l’Afghanistan en décembre 1979, qui ouvre une « guerre fraîche » jusqu’en 1985.',
-    konanTip: 'Printemps de Prague = 1968 ; Afghanistan & non-ratification de SALT 2 = 1979.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05_q4',
-      type: 'mcq',
-      prompt: 'Pourquoi le traité SALT 2 signé en juin 1979 n’a-t-il jamais été ratifié par le Sénat américain ?',
-      options: [
-        'À cause du déclenchement du blocus de Berlin',
-        'En réaction à l’invasion de l’Afghanistan par l’URSS en décembre 1979',
-        'Parce que la Chine a quitté l’ONU',
-        'Parce que l’Allemagne venait d’être réunifiée',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’intervention soviétique en Afghanistan (décembre 1979) met fin à la Détente des années 1970 et bloque la ratification de SALT 2.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Diplomatie Nixon',
-    stepTheme: 'slate',
-    stepTitle: 'Le « linkage » et la diplomatie triangulaire en Asie (1971-1972)',
-    paragraphText:
-      'Pour sortir du bourbier vietnamien et isoler l’URSS, Richard Nixon et Henry Kissinger pratiquent le « linkage » (lier accords économiques/technologiques et concessions politiques) et une diplomatie triangulaire :\n• entrée de la République populaire de Chine à l’ONU en octobre 1971 ;\n• voyage historique de Nixon à Pékin en février 1972 pour rencontrer Mao Zedong.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05_q5',
-      type: 'mcq',
-      prompt: 'Quel est l’objectif stratégique du rapprochement de Richard Nixon avec la Chine maoïste en 1971-1972 ?',
-      options: [
-        'Exploiter le schisme sino-soviétique pour faire pression sur l’URSS et faciliter un retrait du Viêtnam',
-        'Rétablir le contrôle colonial européen en Asie',
-        'Admettre la Chine dans le Pacte de Varsovie',
-        'Supprimer l’embargo contre Cuba dès 1972',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'La « diplomatie triangulaire » de Nixon et Kissinger joue la carte chinoise pour équilibrer l’URSS et inciter Pékin et Moscou à peser sur Hanoï.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Crise des euromissiles',
-    stepTheme: 'green',
-    stepTitle: 'Comprendre la « guerre fraîche » (1979-1985) et le sursaut de 1987',
-    paragraphText:
-      'Entre 1979 et 1985, les tensions reprennent : déploiement de missiles soviétiques SS-20 face aux Pershing II américains en Europe, invasion de l’Afghanistan (1979), projet américain de « guerre des étoiles » (IDS) lancé par Ronald Reagan (1983).\nL’arrivée de Mikhaïl Gorbatchev en 1985 relance le dialogue : conférence de Stockholm (1986), traité de Washington (INF, 1987), CFE (novembre 1990) et START (juillet 1991).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05_q6',
-      type: 'mcq',
-      prompt: 'Comment désigne-t-on le projet de bouclier spatial antimissile lancé en 1983 par le président Ronald Reagan ?',
-      options: [
-        'Le plan Marshall',
-        'L’Initiative de défense stratégique (IDS), surnommée « guerre des étoiles »',
-        'La doctrine Jdanov',
-        'L’opération Restore Hope',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’IDS (« guerre des étoiles ») relance une course technologique que l’économie soviétique essoufflée ne peut plus suivre.',
-    },
-  },
-];
-
-const p06Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Héritage de 1954',
-    stepTheme: 'blue',
-    stepTitle: 'Des accords de Genève (1954) à la naissance du Viêt-Cong',
-    paragraphText:
-      '• Après la défaite française à Diên Biên Phu (7 mai 1954), les accords de Genève (21 juillet 1954) divisent provisoirement le Viêtnam le long du 17e parallèle : au nord, la République démocratique du Viêtnam (communiste, dirigée par Hô Chi Minh) ; au sud, un État soutenu par les Occidentaux.\n• Avec le soutien américain, le président sud-vietnamien Ngô Đình Diệm refuse les élections de réunification prévues en 1956. En décembre 1960 naît au Sud le Front national de libération (FNL), appelé « Viêt-Cong » par ses adversaires.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06_q1',
-      type: 'mcq',
-      prompt: 'Quelle ligne géographique divise provisoirement le Viêtnam lors des accords de Genève du 21 juillet 1954 ?',
-      options: [
-        'La ligne Oder-Neisse',
-        'Le 17e parallèle',
-        'Le 38e parallèle',
-        'L’équateur',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les accords de Genève fixent au 17e parallèle la ligne de démarcation provisoire entre le Nord-Viêtnam et le Sud-Viêtnam (le 38e parallèle concerne la Corée).',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Escalade US (1964-1968)',
-    stepTheme: 'violet',
-    stepTitle: 'Golfe du Tonkin (1964) et engagement massif américain',
-    paragraphText:
-      '• En août 1964, à la suite de l’incident du golfe du Tonkin, le Congrès américain vote une résolution donnant les pleins pouvoirs militaires au président Lyndon B. Johnson.\n• Pour éviter l’effet « domino » en Asie du Sud-Est, les États-Unis engagent jusqu’à 545 000 soldats au sol et mènent des bombardements massifs sur le Nord-Viêtnam et la piste Hô Chi Minh (napalm, défoliants comme l’agent orange), face à une guérilla soutenue par l’URSS et la Chine.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06_q2',
-      type: 'mcq',
-      prompt: 'Quel événement d’août 1964 sert de déclencheur à l’engagement militaire massif des États-Unis au Viêtnam ?',
-      options: [
-        'La chute de Saïgon',
-        'L’incident du golfe du Tonkin',
-        'Le blocus de Berlin',
-        'L’offensive du Têt',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’incident du golfe du Tonkin (août 1964) permet à Lyndon B. Johnson d’obtenir l’aval du Congrès pour intensifier l’intervention américaine.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Tournant (1968-1973)',
-    stepTheme: 'violet',
-    stepTitle: 'Offensive du Têt, vietnamisation et accords de Paris (27 janvier 1973)',
-    paragraphText:
-      '• Le 31 janvier 1968, l’offensive surprise du Têt lancée par le Nord et le FNL jusqu’à Saïgon provoque un choc immense dans l’opinion publique américaine, de plus en plus mobilisée contre la guerre.\n• Élu président, Richard Nixon lance en 1969 (doctrine de Guam) la « vietnamisation » : retrait progressif des troupes US compensé par le renforcement de l’armée sud-vietnamienne et l’extension des frappes au Laos et au Cambodge (1970).\n• Le 27 janvier 1973 sont signés les accords de Paris, actant le cessez-le-feu et le retrait américain.',
-    keyRule: 'Dates clés du Viêtnam : Genève (21 juil. 1954), Tonkin (août 1964), Têt (31 janv. 1968), accords de Paris (27 janv. 1973), chute de Saïgon (30 avr. 1975).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06_q3',
-      type: 'mcq',
-      prompt: 'À quelle date ont été signés les accords de Paris organisant le retrait militaire des États-Unis du Viêtnam ?',
-      options: [
-        'Le 21 juillet 1954',
-        'Le 31 janvier 1968',
-        'Le 27 janvier 1973',
-        'Le 30 avril 1975',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'Les accords de Paris sont signés le 27 janvier 1973 après de longues négociations entre Washington, Hanoï, Saïgon et le GRP.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'exemple',
-    stepBadge: 'Issue du conflit',
-    stepTheme: 'slate',
-    stepTitle: 'La chute de Saïgon (30 avril 1975) et ses conséquences',
-    paragraphText:
-      'Privé du soutien militaire direct des États-Unis, le régime sud-vietnamien s’effondre en 1975 : les troupes nord-vietnamiennes prennent Saïgon le 30 avril 1975 (rebaptisée Hô Chi Minh-Ville) et le Viêtnam est réunifié sous régime communiste en 1976.\nPour les États-Unis, c’est la première défaite militaire de leur histoire contemporaine (près de 58 000 soldats américains tués, plus de 2 millions de victimes vietnamiennes) : elle engendre le « syndrome vietnamien ».',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06_q4',
-      type: 'mcq',
-      prompt: 'Que désigne le « syndrome vietnamien » dans l’histoire politique américaine après 1975 ?',
-      options: [
-        'La volonté immédiate d’envahir la Chine',
-        'La réticence durable de l’opinion et des dirigeants américains à engager des troupes au sol dans des conflits lointains',
-        'L’adoption du système communiste aux États-Unis',
-        'L’abandon complet de l’arme nucléaire en 1975',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Traumatisés par la défaite de 1975 et le coût humain, les États-Unis hésitent pendant plus d’une décennie avant d’engager massivement leurs troupes à l’étranger.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Pièges du chapitre',
-    stepTheme: 'orange',
-    stepTitle: 'Ne pas confondre 1re et 2e guerre d’Indochine/Viêtnam',
-    paragraphText:
-      '• La 1re guerre (1946-1954) oppose la France coloniale au Viêt-Minh d’Hô Chi Minh et se termine à Diên Biên Phu / Genève (1954).\n• La 2e guerre (1964-1975) oppose les États-Unis et le Sud-Viêtnam au Nord-Viêtnam et au FNL/Viêt-Cong et s’achève par les accords de Paris (27 janvier 1973) puis la chute de Saïgon (30 avril 1975).',
-    konanTip: '1re guerre = France (fin 1954 à Genève) ; 2e guerre = États-Unis (accords de Paris 27 janvier 1973, chute de Saïgon 30 avril 1975).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06_q5',
-      type: 'mcq',
-      prompt: 'En quoi consiste la politique de « vietnamisation » mise en œuvre par Richard Nixon à partir de 1969 ?',
-      options: [
-        'Retirer progressivement les soldats américains tout en formant et équipant l’armée sud-vietnamienne pour assurer les combats au sol',
-        'Installer des missiles nucléaires américains à Hanoï',
-        'Reconnaître immédiatement le régime d’Hô Chi Minh dès 1969',
-        'Confier la défense du Sud-Viêtnam à l’armée française',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Nixon réduit la présence terrestre américaine (tout en maintenant la pression aérienne) pour transférer la charge des combats au Sud-Viêtnam.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Lien avec la Détente',
-    stepTheme: 'green',
-    stepTitle: 'Pourquoi la guerre du Viêtnam illustre-t-elle une « Détente contrariée » ?',
-    paragraphText:
-      'Au moment même où Washington et Moscou signent les traités TNP (1968) et SALT 1 (1972) en Europe, ils continuent de s’affronter indirectement en Asie du Sud-Est : l’URSS et la Chine arment Hanoï pendant que l’armée américaine combat sur le terrain.\nLa Détente n’a donc jamais supprimé la rivalité des blocs dans le Tiers-Monde.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06_q6',
-      type: 'mcq',
-      prompt: 'Pourquoi la guerre du Viêtnam contredit-elle l’image d’une paix mondiale parfaite pendant la période de Détente ?',
-      options: [
-        'Parce que les États-Unis et l’URSS ont rompu toute relation diplomatique entre 1963 et 1975',
-        'Parce qu’elle montre la poursuite d’affrontements armés indirects très meurtriers entre les deux blocs dans le Tiers-Monde',
-        'Parce qu’elle s’est déroulée en Europe centrale',
-        'Parce que l’ONU a mené directement la guerre contre le Nord-Viêtnam',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La Détente limite le risque de guerre nucléaire directe entre Moscou et Washington, mais les conflits périphériques persistent.',
-    },
-  },
-];
-
-const p07Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Crise de l’URSS',
-    stepTheme: 'blue',
-    stepTitle: 'Pourquoi Mikhaïl Gorbatchev lance-t-il des réformes en 1985 ?',
-    paragraphText:
-      'Au milieu des années 1980, l’URSS traverse une crise profonde : pénuries agricoles et industrielles, retard technologique, poids écrasant du budget militaire face à l’IDS américaine et enlisement militaire en Afghanistan.\nNommé Secrétaire général en mars 1985, Mikhaïl Gorbatchev lance au XXVIIe congrès du PCUS (février 1986) deux réformes complémentaires : la Perestroïka et la Glasnost.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q1',
-      type: 'mcq',
-      prompt: 'Quel dirigeant arrivé au pouvoir en 1985 entreprend de réformer en profondeur le système soviétique ?',
-      options: [
-        'Leonid Brejnev',
-        'Nikita Khrouchtchev',
-        'Mikhaïl Gorbatchev',
-        'Boris Eltsine',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'Mikhaïl Gorbatchev devient dirigeant de l’URSS en mars 1985 et engage la Perestroïka et la Glasnost.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Les réformes',
-    stepTheme: 'violet',
-    stepTitle: 'Perestroïka et Glasnost : deux notions clés à maîtriser',
-    paragraphText:
-      '• Perestroïka (« restructuration ») : réforme économique visant à moderniser l’appareil productif en introduisant une dose d’initiative privée et d’autonomie des entreprises.\n• Glasnost (« transparence ») : ouverture politique, liberté de parole et de presse permettant de critiquer les dysfonctionnements, la corruption et les pages sombres du passé soviétique.\n• Parallèlement, Gorbatchev renonce à la doctrine Brejnev d’intervention militaire chez les alliés et retire l’Armée rouge d’Afghanistan (1988-1989).',
-    keyRule: 'Perestroïka = restructuration économique ; Glasnost = transparence politique et liberté d’expression.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q2',
-      type: 'mcq',
-      prompt: 'Que signifie précisément le terme russe « Glasnost » dans la politique de Mikhaïl Gorbatchev ?',
-      options: [
-        'La fermeture totale des frontières de l’URSS',
-        'La transparence politique et la liberté d’expression et d’information',
-        'La collectivisation forcée des terres agricoles',
-        'Le déploiement de nouveaux missiles en Europe',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La Glasnost (« transparence ») autorise la critique ouverte et libère la presse, accélérant les revendications démocratiques et nationales.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: '1989-1990',
-    stepTheme: 'violet',
-    stepTitle: 'L’effondrement du bloc de l’Est et la chute du Mur de Berlin',
-    paragraphText:
-      'Privés du soutien militaire soviétique, les régimes communistes d’Europe de l’Est tombent les uns après les autres en 1989 (Pologne avec Solidarność de Lech Wałęsa, Hongrie, Tchécoslovaquie avec la « révolution de velours », Roumanie).\nLe 9 novembre 1989, le Mur de Berlin est ouvert puis détruit par les Berlinois, ouvrant la voie à la réunification allemande le 3 octobre 1990, puis à la dissolution du CAEM et du Pacte de Varsovie en 1991.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q3',
-      type: 'mcq',
-      prompt: 'À quelle date historique le Mur de Berlin est-il tombé, symbolisant l’effondrement du bloc de l’Est ?',
-      options: [
-        'Le 13 août 1961',
-        'Le 9 novembre 1989',
-        'Le 3 octobre 1990',
-        'Le 25 décembre 1991',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le Mur de Berlin tombe dans la soirée du 9 novembre 1989 ; la réunification officielle des deux Allemagnes intervient le 3 octobre 1990.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'propriete',
-    stepBadge: 'Implosion (1991)',
-    stepTheme: 'violet',
-    stepTitle: 'Réveil des nationalités, putsch d’août 1991 et fin de l’URSS',
-    paragraphText:
-      '• La Glasnost réveille les nationalismes dans les républiques fédérées (pays baltes, Caucase, Ukraine).\n• Du 18 au 23 août 1991, des conservateurs communistes tentent un putsch contre Gorbatchev, mais échouent face à la résistance populaire menée à Moscou par Boris Eltsine, président de la Russie.\n• Le PCUS est dissous ; en décembre 1991 (accords de Minsk puis d’Alma-Ata le 21 décembre), 11 républiques créent la Communauté des États indépendants (CEI).\n• Le 25 décembre 1991, Mikhaïl Gorbatchev démissionne : le drapeau rouge est abaissé au Kremlin, l’URSS cesse d’exister et le monde devient unipolaire.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q4',
-      type: 'mcq',
-      prompt: 'Quelle nouvelle structure souple remplace l’URSS en décembre 1991 entre onze anciennes républiques soviétiques ?',
-      options: [
-        'L’Union européenne (UE)',
-        'La Communauté des États indépendants (CEI)',
-        'Le Pacte de Varsovie rénové',
-        'L’OCDE',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La CEI (Communauté des États indépendants) est créée en décembre 1991, actant la dissolution définitive de l’Union soviétique.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Piège chronologique',
-    stepTheme: 'orange',
-    stepTitle: 'Distinguer 1989 (bloc de l’Est) et décembre 1991 (URSS)',
-    paragraphText:
-      '• Ne pas confondre la chute du Mur de Berlin (9 novembre 1989) et la disparition de l’URSS (25 décembre 1991).\n• Entre novembre 1989 et décembre 1991, l’URSS existe encore deux ans mais perd ses satellites européens, son économie s’effondre et ses républiques proclament leur indépendance jusqu’à la démission de Gorbatchev le 25 décembre 1991.',
-    konanTip: '9 nov. 1989 = chute du Mur ; 3 oct. 1990 = réunification allemande ; 25 déc. 1991 = démission de Gorbatchev et fin de l’URSS.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q5',
-      type: 'mcq',
-      prompt: 'À quelle date Mikhaïl Gorbatchev démissionne-t-il de la présidence, marquant la disparition juridique de l’URSS ?',
-      options: [
-        'Le 9 novembre 1989',
-        'Le 25 décembre 1991',
-        'Le 11 septembre 2001',
-        'Le 23 mai 1986',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Mikhaïl Gorbatchev annonce sa démission le 25 décembre 1991, mettant fin à l’URSS et à l’ère de la bipolarisation.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'Bilan 1947-1991',
-    stepTheme: 'slate',
-    stepTitle: 'Quel nouveau monde surgit au lendemain de 1991 ?',
-    paragraphText:
-      'Avec l’effondrement de l’URSS, la bipolarisation de 1947-1991 s’achève sans guerre mondiale.\nLes États-Unis demeurent la seule superpuissance globale : le système international bascule alors, pour une décennie, dans un monde unipolaire (leçon 3).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q6',
-      type: 'mcq',
-      prompt: 'Quelle configuration géopolitique succède immédiatement à la disparition de l’URSS en décembre 1991 ?',
-      options: [
-        'Un monde unipolaire dominé par l’hyperpuissance des États-Unis',
-        'Une nouvelle bipolarisation entre la France et le Royaume-Uni',
-        'La dissolution de l’ONU au profit du Kominform',
-        'Le retour au système colonial de 1919',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Sans rival soviétique, les États-Unis s’imposent durant les années 1990 comme la seule superpuissance mondiale (unipolarité).',
-    },
-  },
-];
-
-export const HIST_TLE_T1_L02_ERE_BIPOLARISATION: CurriculumChapter = {
-  id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation',
-  subjectId: 'histoire_geo',
-  gradeLevel: 'terminale_c',
-  alsoForGrades: ['terminale_d', 'terminale_a1', 'terminale_a2'],
-  order: 2,
-  title: "Thème 1, leçon 2 : L'ère de la bipolarisation de 1947 à 1991",
-  summary:
-    "Rupture de la Grande Alliance et formation des blocs (1947-1955), crises de Berlin et de Cuba, coexistence pacifique, guerre du Viêtnam et effondrement de l'URSS.",
-  officialVolumeHours: 6,
-  contentVersion: 2,
-  source: 'Tle_H2-_Lère_de_la_bipolarisation_de_1947_à_1991.pdf',
-  points: [
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p01',
-      order: 1,
-      title: 'De la Grande Alliance à la rupture de 1947',
-      summary: 'Comprendre les désaccords d’après-guerre, le « rideau de fer » et le basculement idéologique de 1947.',
-      conceptExplanation:
-        'Dès 1945-1946, l’alliance antifasciste se fissure sur la question polonaise et allemande. Après le discours de Winston Churchill sur le « rideau de fer » (mars 1946), l’année 1947 scelle la rupture : doctrine Truman d’endiguement (mars), plan Marshall (juin) et doctrine Jdanov accompagnée du Kominform (septembre-octobre).',
-      keyRule: '1947 = année de la rupture : Truman (mars), Marshall (juin), Jdanov et Kominform (sept.-oct.).',
-      formulas: [],
-      workedExample: {
-        title: 'Expliquer l’enchaînement des événements de 1947',
-        statement: 'Pourquoi le plan Marshall accélère-t-il la formation du bloc soviétique ?',
-        methodSteps: [
-          'Proposé à toute l’Europe en juin 1947, il exige un contrôle économique multilatéral que l’URSS juge incompatible avec son système.',
-          'Staline interdit aux pays d’Europe de l’Est d’y participer et réplique par la doctrine Jdanov et le Kominform.',
-        ],
-        conclusion: 'Le plan Marshall scinde économiquement et politiquement le continent européen en deux camps.',
-      },
-      structuredSteps: p01Steps,
-      exercises: p01Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p02',
-      order: 2,
-      title: 'La structuration économique et militaire des deux blocs',
-      summary: 'Comparer les alliances militaires (OTAN, Pacte de Varsovie) et économiques (OECE, COMECON) des deux camps.',
-      conceptExplanation:
-        'Entre 1948 et 1955, chaque camp se dote de structures durables : à l’Ouest, OECE (1948) puis OCDE (1961) et OTAN (4 avril 1949) complétée par ANZUS, OTASE et CENTO ; à l’Est, CAEM/COMECON (25 janvier 1949) et Pacte de Varsovie (14 mai 1955) en réponse à l’entrée de la RFA dans l’OTAN.',
-      keyRule: 'OTAN = 4 avril 1949 ; COMECON = 25 janvier 1949 ; Pacte de Varsovie = 14 mai 1955.',
-      formulas: [],
-      workedExample: {
-        title: 'Éviter la symétrie mécanique entre 1949 et 1955',
-        statement: 'Un élève écrit que le Pacte de Varsovie a été créé en 1949 en même temps que l’OTAN. Corrigez cette erreur.',
-        methodSteps: [
-          'En 1949, l’URSS crée le CAEM (COMECON) sur le plan économique, tandis que l’Ouest crée l’OTAN sur le plan militaire.',
-          'Le Pacte de Varsovie n’apparaît que le 14 mai 1955, après le réarmement de la RFA.',
-        ],
-        conclusion: 'Six années séparent la création de l’OTAN (1949) de celle du Pacte de Varsovie (1955).',
-      },
-      structuredSteps: p02Steps,
-      exercises: p02Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p03',
-      order: 3,
-      title: 'Les deux crises de Berlin (1948-1949 et 1958-1961)',
-      summary: 'Analyser le blocus de Berlin, la naissance de la RFA et de la RDA, puis l’édification du Mur de Berlin.',
-      conceptExplanation:
-        'Berlin, ancienne capitale divisée en quatre secteurs au cœur de la zone soviétique, concentre les tensions européennes. Le blocus de 1948-1949 échoue grâce au pont aérien américain et aboutit à la création de la RFA (mai 1949) et de la RDA (octobre 1949). Face à l’exode massif de plus de 2 millions d’Est-Allemands, Moscou et Berlin-Est érigent le Mur de Berlin dans la nuit du 12 au 13 août 1961.',
-      keyRule: 'Blocus 1948-1949 -> deux Allemagnes ; fuite vers l’Ouest et échec de Paris (1960) -> Mur du 13 août 1961.',
-      formulas: [],
-      workedExample: {
-        title: 'Relier causes et effets dans les crises berlinoises',
-        statement: 'Pourquoi les dirigeants de la RDA construisent-ils le Mur en août 1961 plutôt qu’un nouveau blocus ?',
-        methodSteps: [
-          'Le blocus de 1948-1949 avait échoué devant le pont aérien occidental.',
-          'En 1961, l’objectif de la RDA est d’enfermer sa propre population pour stopper l’hémorragie de main-d’œuvre qualifiée.',
-        ],
-        conclusion: 'Le Mur ferme hermétiquement Berlin-Ouest sans couper ses voies d’approvisionnement avec l’Ouest.',
-      },
-      structuredSteps: p03Steps,
-      exercises: p03Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p04',
-      order: 4,
-      title: 'La crise des fusées de Cuba (octobre 1962)',
-      summary: 'Retracer l’origine castriste de la crise, le face-à-face Kennedy-Khrouchtchev et le compromis d’octobre 1962.',
-      conceptExplanation:
-        'Rapproché de Moscou après la révolution de 1959 et l’échec de la Baie des Cochons (avril 1961), Cuba accueille en 1962 des missiles nucléaires soviétiques. John F. Kennedy impose le 22 octobre 1962 une quarantaine navale. Sous l’impulsion de négociations directes et de la médiation d’U Thant, Moscou retire ses fusées contre la promesse américaine de ne pas envahir Cuba et le retrait des fusées Jupiter de Turquie et d’Italie, ouvrant l’ère du téléphone rouge (1963).',
-      keyRule: 'Octobre 1962 : apogée du péril atomique débouchant sur la négociation directe et le téléphone rouge (1963).',
-      formulas: [],
-      workedExample: {
-        title: 'Montrer pourquoi Cuba est un tournant vers la Détente',
-        statement: 'En quoi la crise de Cuba change-t-elle l’attitude de Washington et de Moscou après octobre 1962 ?',
-        methodSteps: [
-          'Les deux dirigeants prennent conscience qu’un malentendu peut déclencher l’apocalypse nucléaire.',
-          'Ils installent le téléphone rouge (juin 1963) et signent le traité de Moscou (août 1963).',
-        ],
-        conclusion: 'Cuba transforme la guerre froide aiguë en coexistence encadrée et dialoguée.',
-      },
-      structuredSteps: p04Steps,
-      exercises: p04Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p05',
-      order: 5,
-      title: 'Coexistence pacifique, fissures des blocs et Détente',
-      summary: 'Étudier le dégel après 1953, les contestations internes des blocs et les grands traités de désarmement.',
-      conceptExplanation:
-        'Amorcée après la mort de Staline (5 mars 1953) et formulée au XXe congrès du PCUS (1956), la coexistence pacifique repose sur l’équilibre de la terreur. Elle s’accompagne de contestations internes (De Gaulle en France, schisme sino-soviétique, Hongrie 1956, Printemps de Prague 1968) et d’une série de traités majeurs : Moscou (1963), TNP (1968), SALT 1 (1972), Helsinki (1975), puis INF (1987) et START (1991) après la « guerre fraîche » (1979-1985).',
-      keyRule: 'Retenir les traités clés : Moscou (1963), TNP (1968), SALT 1 (1972), Helsinki (1975), Washington INF (1987), START (1991).',
-      formulas: [],
-      workedExample: {
-        title: 'Nuancer l’unité des deux blocs durant la Détente',
-        statement: 'Les blocs étaient-ils parfaitement obéissants dans les années 1960 ?',
-        methodSteps: [
-          'À l’Ouest, de Gaulle quitte le commandement intégré de l’OTAN en 1966.',
-          'À l’Est, la Chine rompt avec Moscou et le Printemps de Prague (1968) doit être écrasé par les chars du Pacte de Varsovie.',
-        ],
-        conclusion: 'La Détente libère des aspirations d’autonomie qui fragilisent la discipline des deux camps.',
-      },
-      structuredSteps: p05Steps,
-      exercises: p05Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p06',
-      order: 6,
-      title: 'Une Détente contrariée : la deuxième guerre du Viêtnam (1964-1975)',
-      summary: 'Comprendre l’engrenage vietnamien de Genève (1954) aux accords de Paris (1973) et à la chute de Saïgon (1975).',
-      conceptExplanation:
-        'Héritée de la partition au 17e parallèle décidée à Genève (21 juillet 1954), la guerre du Viêtnam oppose dès 1964 les États-Unis (incident du golfe du Tonkin) au Nord-Viêtnam et au Viêt-Cong soutenus par Moscou et Pékin. Malgré 545 000 soldats américains, l’offensive du Têt (janvier 1968) impose la vietnamisation de Nixon, les accords de Paris (27 janvier 1973), puis la chute de Saïgon (30 avril 1975).',
-      keyRule: 'Le Viêtnam prouve que la Détente en Europe n’empêche pas des guerres périphériques acharnées dans le Tiers-Monde.',
-      formulas: [],
-      workedExample: {
-        title: 'Expliquer l’échec militaire et politique américain au Viêtnam',
-        statement: 'Comment la première puissance militaire mondiale a-t-elle pu perdre au Viêtnam ?',
-        methodSteps: [
-          'La guérilla du FNL s’appuie sur la connaissance du terrain et le soutien logistique sino-soviétique.',
-          'L’enlisement humain et l’offensive du Têt retournent l’opinion publique américaine contre le conflit.',
-        ],
-        conclusion: 'Sans soutien intérieur ni solution militaire sur le terrain, Washington doit signer le retrait à Paris en 1973.',
-      },
-      structuredSteps: p06Steps,
-      exercises: p06Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l02_ere_bipolarisation_p07',
-      order: 7,
-      title: 'Désagrégation du bloc soviétique et fin de la guerre froide (1985-1991)',
-      summary: 'Analyser la Perestroïka et la Glasnost de Gorbatchev, la chute du Mur (1989) et la disparition de l’URSS (1991).',
-      conceptExplanation:
-        'Confronté à une crise économique et militaire aiguë, Mikhaïl Gorbatchev lance à partir de 1985-1986 la Perestroïka et la Glasnost et renonce à la doctrine Brejnev. Ce tournant déclenche l’effondrement pacifique des démocraties populaires, la chute du Mur de Berlin (9 novembre 1989), la réunification allemande (3 octobre 1990), puis, après le putsch raté d’août 1991, la création de la CEI et la démission de Gorbatchev le 25 décembre 1991.',
-      keyRule: '9 novembre 1989 : chute du Mur de Berlin ; 25 décembre 1991 : démission de Gorbatchev et fin de l’URSS.',
-      formulas: [],
-      workedExample: {
-        title: 'Expliquer comment les réformes de Gorbatchev ont précipité la fin de l’URSS',
-        statement: 'Gorbatchev voulait-il détruire l’URSS en lançant la Perestroïka et la Glasnost ?',
-        methodSteps: [
-          'Son intention initiale était de moderniser et de sauver le socialisme soviétique.',
-          'Mais la Glasnost libère les revendications nationales et démocratiques, et le refus d’intervenir militairement libère l’Europe de l’Est.',
-        ],
-        conclusion: 'En voulant réformer un système figé de l’intérieur, Gorbatchev libère des forces qui provoquent sa dissolution en 1991.',
-      },
-      structuredSteps: p07Steps,
-      exercises: p07Steps.map((s) => s.exercise),
-    },
+// Leçon reprise de ecole-ci.org — « L'ère de la bipolarisation de 1947 à 1991 » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=2137
+export const HIST_TLE_T1_L02_BIPOLARISATION: CurriculumChapter = {
+  "id": "terminale_hg_histoire_t1_l02_bipolarisation",
+  "subjectId": "histoire_geo",
+  "gradeLevel": "terminale_c",
+  "alsoForGrades": [
+    "terminale_d",
+    "terminale_a1",
+    "terminale_a2"
   ],
+  "order": 2,
+  "title": "Thème 1, leçon 2 : L'ère de la bipolarisation de 1947 à 1991",
+  "summary": "Comprendre la rupture de 1947, la structuration des deux blocs, les crises de la guerre froide, la coexistence pacifique et la détente, puis l'effondrement du bloc de l'Est et la naissance d'un monde unipolaire.",
+  "contentVersion": 2,
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=2137",
+  "points": [
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01",
+      "order": 1,
+      "title": "La rupture de 1947",
+      "summary": "Les causes de la rupture entre l'URSS et les Occidentaux : doctrines Truman et Jdanov, plan Marshall.",
+      "conceptExplanation": "L'après-guerre consacre le partage du monde entre les États-Unis et l'URSS, seuls possesseurs de l'arme atomique. Unis contre l'Axe, les Alliés font œuvre commune jusqu'à la fin de la Seconde Guerre mondiale. Mais très vite, de nombreuses divergences apparaissent entre eux et se concrétisent en 1947 par la rupture entre l'URSS et les Occidentaux.\nLa rupture a plusieurs causes entremêlées : la question polonaise et allemande, la formation des démocraties populaires en Europe orientale, la politique du « containment » (doctrine Truman et plan Marshall) et la riposte soviétique (doctrine Jdanov).\nÀ la fin de l'année 1947, l'Europe est définitivement coupée en deux : les deux blocs antagonistes sont constitués. La bipolarisation est la division du monde en deux blocs opposés idéologiquement, politiquement, économiquement et militairement : le bloc capitaliste (occidental) et le bloc socialiste (oriental), au lendemain de la Seconde Guerre mondiale (1947).",
+      "keyRule": "1947 : doctrine Truman (12 mars), plan Marshall (5 juin), doctrine Jdanov (septembre) — le monde devient bipolaire.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Associer les doctrines aux blocs et aux leaders",
+        "statement": "Associe chaque doctrine à son bloc et à son leader : la doctrine Truman et la doctrine Jdanov.",
+        "methodSteps": [
+          "La doctrine Truman est une initiative américaine : elle appartient au bloc occidental, dirigé par les États-Unis.",
+          "La doctrine Jdanov est une initiative soviétique : elle appartient au bloc oriental, dirigé par l'URSS.",
+          "Les deux doctrines s'opposent : l'une veut endiguer le communisme, l'autre mobilise les pays anti-impérialistes derrière l'URSS."
+        ],
+        "conclusion": "Doctrine Truman = bloc occidental (Ouest), leader : les États-Unis ; doctrine Jdanov = bloc oriental (Est), leader : l'URSS."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La bipolarisation : définition",
+          "stepTheme": "La bipolarisation : définition",
+          "stepBadge": "La bipolarisation : définition",
+          "paragraphText": "• La bipolarisation est la division du monde en deux blocs opposés idéologiquement, politiquement, économiquement et militairement.\n• Les deux blocs sont le bloc capitaliste (occidental) et le bloc socialiste (oriental).\n• Cette division se met en place au lendemain de la Seconde Guerre mondiale, en 1947.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q1",
+            "type": "mcq",
+            "prompt": "La bipolarisation désigne :",
+            "options": [
+              "Une guerre opposant l'URSS aux États-Unis",
+              "La division du monde en deux blocs antagonistes au lendemain de la Seconde Guerre mondiale",
+              "L'opposition entre l'Europe et les États-Unis",
+              "La division de l'Allemagne en quatre zones d'occupation"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "C'est la définition du cours : la division du monde en deux blocs antagonistes au lendemain de la Seconde Guerre mondiale."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "La question polonaise et allemande",
+          "stepTheme": "La question polonaise et allemande",
+          "stepBadge": "La question polonaise et allemande",
+          "paragraphText": "• Les frontières de la Pologne et son régime posent problème : le glissement de la frontière polonaise vers l'ouest (la ligne Oder-Neisse) désigne la Pologne comme cible d'une Allemagne qui voudrait reconquérir ses territoires.\n• À la suite d'irrégularités pendant les élections, le pouvoir passe aux mains des prosoviétiques qui ont évincé les modérés.\n• En Allemagne, les Occidentaux mettent fin au démantèlement des industries et à la dénazification, tandis que les Soviétiques déménagent les usines de leur zone et instaurent un début de collectivisation : la coupure de l'Allemagne est déjà un fait accompli.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q2",
+            "type": "mcq",
+            "prompt": "Quelle question divise les vainqueurs à propos de la Pologne ?",
+            "options": [
+              "La frontière polonaise (ligne Oder-Neisse) et son régime",
+              "La langue officielle de la Pologne",
+              "La monnaie polonaise",
+              "La religion des Polonais"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite la question polonaise : la frontière (ligne Oder-Neisse) et le régime, les prosoviétiques ayant pris le pouvoir après des élections irrégulières."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Les démocraties populaires",
+          "stepTheme": "Les démocraties populaires",
+          "stepBadge": "Les démocraties populaires",
+          "paragraphText": "• Le terme de démocratie populaire désigne les nouveaux pays communistes après la Deuxième Guerre mondiale en Europe puis en Asie.\n• En Europe orientale et balkanique, dans les pays libérés et contrôlés par l'Armée rouge, l'URSS installe des régimes totalement à sa solde : les communistes accaparent les ministères clés, noyautent l'armée et l'administration, absorbent les partis socialistes et éliminent les autres partis.\n• C'est ainsi que la Bulgarie, la Tchécoslovaquie, la Roumanie, la Pologne, la Hongrie et l'Allemagne de l'Est deviennent entre 1947 et 1949 des démocraties populaires alignées sur l'URSS.\n• C'est donc à juste titre que Winston Churchill dénonce dans son discours de Fulton (États-Unis) la naissance du « rideau de fer descendu à travers le continent ».",
+          "konanTip": "Le cours écrit « Wilson Churchill » : il s'agit de Winston Churchill, Premier ministre britannique.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q3",
+            "type": "mcq",
+            "prompt": "Que désigne le terme « démocratie populaire » ?",
+            "options": [
+              "Les nouveaux pays communistes après la Deuxième Guerre mondiale en Europe puis en Asie",
+              "Les pays d'Europe occidentale aidés par le plan Marshall",
+              "Les pays neutres qui refusent les deux blocs",
+              "Les pays africains devenus indépendants en 1960"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours définit la démocratie populaire comme les nouveaux pays communistes après la Deuxième Guerre mondiale en Europe puis en Asie."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "La doctrine Truman (12 mars 1947)",
+          "stepTheme": "La doctrine Truman (12 mars 1947)",
+          "stepBadge": "La doctrine Truman (12 mars 1947)",
+          "paragraphText": "• Harry Truman, président des États-Unis depuis 1945, veut aider les peuples « libres » pour arrêter l'expansion du communisme.\n• La doctrine Truman est énoncée le 12 mars 1947 : par une politique de fermeté, empêcher les Soviétiques de s'étendre au-delà de la zone déjà contrôlée par eux en 1947, en accordant une aide économique, financière et militaire à tout peuple qui résiste à des tentatives d'asservissement.\n• Elle est appliquée à la Grèce et à la Turquie, confrontées à une guerre civile entre monarchistes et communistes, qui se solde par l'écrasement des communistes.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q4",
+            "type": "mcq",
+            "prompt": "Quand la doctrine Truman est-elle énoncée ?",
+            "options": [
+              "Le 12 mars 1947",
+              "Le 5 juin 1947",
+              "Le 4 avril 1949",
+              "Le 14 mai 1955"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La doctrine Truman est énoncée le 12 mars 1947 (le 5 juin 1947 est la date du plan Marshall)."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le plan Marshall (5 juin 1947)",
+          "stepTheme": "Le plan Marshall (5 juin 1947)",
+          "stepBadge": "Le plan Marshall (5 juin 1947)",
+          "paragraphText": "• Le 5 juin 1947, dans un discours prononcé à l'université Harvard de Cambridge (Massachusetts), le secrétaire d'État George C. Marshall propose un plan d'aide économique et financière à tous les pays d'Europe et à l'URSS, conditionné par une coopération européenne plus étroite.\n• Son but est d'« endiguer » l'essor du communisme, estimé lié aux problèmes économiques et à la pauvreté.\n• Staline refuse le plan Marshall et oblige les pays occupés par l'Armée rouge à le suivre. Mais 16 pays acceptent l'aide américaine, et l'Organisation européenne de coopération économique (OECE), créée le 16 avril 1948 pour répartir cette aide, marque la naissance de l'Europe occidentale.\n• Piège d'examen : ne pas confondre la doctrine Truman (12 mars 1947, aide aux peuples libres) et le plan Marshall (5 juin 1947, aide économique à l'Europe).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q5",
+            "type": "mcq",
+            "prompt": "Qui propose le plan Marshall et quand ?",
+            "options": [
+              "George C. Marshall, le 5 juin 1947, à l'université Harvard",
+              "Harry Truman, le 12 mars 1947, devant le Congrès",
+              "Andreï Jdanov, en septembre 1947, à Szklarska Poreba",
+              "Winston Churchill, en 1946, à Fulton"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le plan Marshall est proposé le 5 juin 1947 par le secrétaire d'État George C. Marshall, dans un discours à l'université Harvard."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La doctrine Jdanov (septembre 1947)",
+          "stepTheme": "La doctrine Jdanov (septembre 1947)",
+          "stepBadge": "La doctrine Jdanov (septembre 1947)",
+          "paragraphText": "• Andreï Jdanov est l'idéologue et le troisième secrétaire du Parti communiste de l'Union soviétique (PCUS), le bras droit de Staline.\n• La doctrine Jdanov est présentée par Andreï Jdanov aux délégués de 9 partis communistes réunis du 22 au 27 septembre 1947 à Szklarska Poreba (Pologne).\n• Selon lui, la division du monde en deux camps est un fait irréversible : il préconise la mobilisation de tous les pays anti-impérialistes derrière l'URSS et invite tous les partis communistes frères d'Europe à s'emparer du pouvoir dans leur pays.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q6",
+            "type": "mcq",
+            "prompt": "Quelle doctrine est une initiative soviétique ?",
+            "options": [
+              "La doctrine Truman",
+              "Le plan Marshall",
+              "La doctrine Jdanov",
+              "La doctrine de la coexistence pacifique"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "La doctrine Jdanov, présentée en septembre 1947 à Szklarska Poreba, est la riposte soviétique à la doctrine Truman et au plan Marshall."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q1",
+          "type": "mcq",
+          "prompt": "La bipolarisation désigne :",
+          "options": [
+            "Une guerre opposant l'URSS aux États-Unis",
+            "La division du monde en deux blocs antagonistes au lendemain de la Seconde Guerre mondiale",
+            "L'opposition entre l'Europe et les États-Unis",
+            "La division de l'Allemagne en quatre zones d'occupation"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "C'est la définition du cours : la division du monde en deux blocs antagonistes au lendemain de la Seconde Guerre mondiale."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q2",
+          "type": "mcq",
+          "prompt": "Quelle question divise les vainqueurs à propos de la Pologne ?",
+          "options": [
+            "La frontière polonaise (ligne Oder-Neisse) et son régime",
+            "La langue officielle de la Pologne",
+            "La monnaie polonaise",
+            "La religion des Polonais"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite la question polonaise : la frontière (ligne Oder-Neisse) et le régime, les prosoviétiques ayant pris le pouvoir après des élections irrégulières."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q3",
+          "type": "mcq",
+          "prompt": "Que désigne le terme « démocratie populaire » ?",
+          "options": [
+            "Les nouveaux pays communistes après la Deuxième Guerre mondiale en Europe puis en Asie",
+            "Les pays d'Europe occidentale aidés par le plan Marshall",
+            "Les pays neutres qui refusent les deux blocs",
+            "Les pays africains devenus indépendants en 1960"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours définit la démocratie populaire comme les nouveaux pays communistes après la Deuxième Guerre mondiale en Europe puis en Asie."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q4",
+          "type": "mcq",
+          "prompt": "Quand la doctrine Truman est-elle énoncée ?",
+          "options": [
+            "Le 12 mars 1947",
+            "Le 5 juin 1947",
+            "Le 4 avril 1949",
+            "Le 14 mai 1955"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La doctrine Truman est énoncée le 12 mars 1947 (le 5 juin 1947 est la date du plan Marshall)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q5",
+          "type": "mcq",
+          "prompt": "Qui propose le plan Marshall et quand ?",
+          "options": [
+            "George C. Marshall, le 5 juin 1947, à l'université Harvard",
+            "Harry Truman, le 12 mars 1947, devant le Congrès",
+            "Andreï Jdanov, en septembre 1947, à Szklarska Poreba",
+            "Winston Churchill, en 1946, à Fulton"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le plan Marshall est proposé le 5 juin 1947 par le secrétaire d'État George C. Marshall, dans un discours à l'université Harvard."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p01_q6",
+          "type": "mcq",
+          "prompt": "Quelle doctrine est une initiative soviétique ?",
+          "options": [
+            "La doctrine Truman",
+            "Le plan Marshall",
+            "La doctrine Jdanov",
+            "La doctrine de la coexistence pacifique"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La doctrine Jdanov, présentée en septembre 1947 à Szklarska Poreba, est la riposte soviétique à la doctrine Truman et au plan Marshall."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02",
+      "order": 2,
+      "title": "La structuration des deux blocs",
+      "summary": "OTAN et OCDE à l'Ouest, Pacte de Varsovie et CAEM à l'Est : chaque bloc se dote d'organisations militaires et économiques.",
+      "conceptExplanation": "La structuration des blocs se fait par la création d'organisations politiques, militaires et économiques.\nDans le bloc occidental, la principale organisation militaire est l'OTAN : le traité de l'Atlantique Nord, ou traité de Washington, est signé le 4 avril 1949 pour souder militairement le bloc occidental de part et d'autre de l'Atlantique Nord. Il place l'Europe et l'Amérique du Nord sous le parapluie nucléaire des États-Unis. L'article 5 de la charte de l'OTAN précise qu'une attaque armée contre l'une des parties sera considérée comme une attaque dirigée contre toutes les parties. Sur le plan économique, l'Organisation de coopération et de développement économiques (OCDE) est créée en 1961, à Paris, en remplacement de l'OECE.\nDans le bloc oriental, la principale organisation politico-militaire est le Pacte de Varsovie, conclu le 14 mai 1955 à Varsovie : un traité d'amitié, de coopération et d'assistance mutuelle sur le plan militaire, dont le commandement est confié à l'URSS. L'organisation économique est le Conseil d'Aide Économique Mutuelle (CAEM, ou COMECON), créé le 25 janvier 1949 à Moscou, en réaction au plan Marshall.",
+      "keyRule": "Ouest : OTAN (4 avril 1949) et OCDE (1961) ; Est : Pacte de Varsovie (14 mai 1955) et CAEM (25 janvier 1949).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer les organisations par bloc",
+        "statement": "Classe chaque organisation selon son bloc : OTAN, OCDE, Pacte de Varsovie, CAEM.",
+        "methodSteps": [
+          "L'OTAN est la principale organisation militaire du bloc occidental.",
+          "L'OCDE est l'organisation économique du bloc occidental (créée en 1961, en remplacement de l'OECE).",
+          "Le Pacte de Varsovie est l'organisation militaire du bloc de l'Est.",
+          "Le CAEM (COMECON) est l'organisation économique du bloc de l'Est."
+        ],
+        "conclusion": "Ouest : OTAN (militaire) et OCDE (économique) ; Est : Pacte de Varsovie (militaire) et CAEM (économique)."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "L'OTAN (4 avril 1949)",
+          "stepTheme": "L'OTAN (4 avril 1949)",
+          "stepBadge": "L'OTAN (4 avril 1949)",
+          "paragraphText": "• L'OTAN est la principale organisation militaire du bloc de l'Ouest.\n• Le traité de l'Atlantique Nord, ou traité de Washington, est signé le 4 avril 1949 pour souder militairement le bloc occidental de part et d'autre de l'Atlantique Nord.\n• Il place l'Europe et l'Amérique du Nord sous le parapluie nucléaire des États-Unis.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q1",
+            "type": "mcq",
+            "prompt": "Quand le traité de l'Atlantique Nord est-il signé ?",
+            "options": [
+              "Le 4 avril 1949",
+              "Le 14 mai 1955",
+              "Le 25 janvier 1949",
+              "Le 5 juin 1947"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le traité de Washington, qui crée l'OTAN, est signé le 4 avril 1949."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les membres de l'OTAN",
+          "stepTheme": "Les membres de l'OTAN",
+          "stepBadge": "Les membres de l'OTAN",
+          "paragraphText": "• Le cours annonce 13 pays occidentaux fondateurs et en nomme neuf : les États-Unis, le Canada, la France, le Royaume-Uni, le Luxembourg, l'Islande, l'Italie, la Norvège et le Portugal.\n• D'autres pays se joignent ensuite à l'alliance : la Grèce et la Turquie en 1952, l'Allemagne de l'Ouest en 1955 et l'Espagne en 1982.\n• En plus de l'OTAN, les États-Unis suscitent la création d'autres organisations politico-militaires dans le monde (OTASE, CENTO, ANZUS) et une série de bases militaires destinées à encercler le bloc oriental.",
+          "konanTip": "Le cours annonce 13 pays fondateurs de l'OTAN mais n'en nomme que neuf : coquille du cours, reproduite telle quelle.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q2",
+            "type": "mcq",
+            "prompt": "Quels pays rejoignent l'OTAN en 1952 ?",
+            "options": [
+              "La Grèce et la Turquie",
+              "L'Allemagne de l'Ouest et l'Espagne",
+              "La Pologne et la Hongrie",
+              "Le Canada et l'Islande"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne la Grèce et la Turquie en 1952, l'Allemagne de l'Ouest en 1955 et l'Espagne en 1982."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "L'OCDE (1961)",
+          "stepTheme": "L'OCDE (1961)",
+          "stepBadge": "L'OCDE (1961)",
+          "paragraphText": "• L'Organisation de coopération et de développement économiques (OCDE) est créée en 1961, à Paris, en remplacement de l'OECE.\n• Sa mission est de soutenir la croissance économique, développer l'emploi, élever le niveau de vie, maintenir la stabilité financière, aider les autres pays à développer leur économie et contribuer à la croissance du commerce mondial.\n• L'OCDE n'a pas de pouvoir décisionnel : c'est un laboratoire d'idées, favorable au libéralisme et au libre-échange.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q3",
+            "type": "mcq",
+            "prompt": "Que remplace l'OCDE, créée en 1961 ?",
+            "options": [
+              "L'OECE",
+              "L'OTAN",
+              "Le CAEM",
+              "Le Pacte de Varsovie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'OCDE est créée en 1961, à Paris, en remplacement de l'OECE."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "propriete",
+          "stepTitle": "Le Pacte de Varsovie (14 mai 1955)",
+          "stepTheme": "Le Pacte de Varsovie (14 mai 1955)",
+          "stepBadge": "Le Pacte de Varsovie (14 mai 1955)",
+          "paragraphText": "• Le Pacte de Varsovie est conclu le 14 mai 1955, à Varsovie (Pologne).\n• Il est signé par l'URSS, l'Albanie (jusqu'en 1968), la Bulgarie, la Roumanie, la Pologne, la Hongrie, la RDA et la République tchécoslovaque. La RDA n'était pas présente lors de la signature mais rejoint le pacte en 1956.\n• C'est un traité d'amitié, de coopération et d'assistance mutuelle sur le plan militaire, signé initialement pour vingt ans. Il répond aux accords de Paris qui ont permis l'adhésion de la RFA à l'OTAN. Le commandement du Pacte de Varsovie est confié à l'URSS.\n• Le 25 février 1991, l'alliance militaire issue du Pacte de Varsovie est officiellement dissoute, avant son démantèlement politique le 1er juillet de la même année.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q4",
+            "type": "mcq",
+            "prompt": "Quand le Pacte de Varsovie est-il conclu ?",
+            "options": [
+              "Le 14 mai 1955",
+              "Le 4 avril 1949",
+              "Le 25 janvier 1949",
+              "Le 5 juin 1947"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Pacte de Varsovie est conclu le 14 mai 1955, en réponse à l'adhésion de la RFA à l'OTAN."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le CAEM / COMECON (25 janvier 1949)",
+          "stepTheme": "Le CAEM / COMECON (25 janvier 1949)",
+          "stepBadge": "Le CAEM / COMECON (25 janvier 1949)",
+          "paragraphText": "• Le Conseil d'Aide Économique Mutuelle (CAEM), plus connu sous sa désignation anglaise de COMECON, est créé le 25 janvier 1949, à la suite d'une conférence économique tenue à Moscou entre des représentants de l'URSS, de la Pologne, de la Hongrie, de la Tchécoslovaquie, de la Bulgarie et de la Roumanie.\n• Sa création peut être vue comme une réaction au plan Marshall : elle provoque une dépendance économique accrue des pays satellites d'Europe de l'Est envers l'Union soviétique, entre autres par l'obligation de l'usage du « rouble transférable » dans les transactions inter-États.\n• Piège d'examen : ne pas confondre le CAEM (organisation économique du bloc de l'Est) et l'OTAN (organisation militaire du bloc de l'Ouest).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q5",
+            "type": "mcq",
+            "prompt": "Quelle est l'organisation économique du bloc de l'Est ?",
+            "options": [
+              "Le CAEM (COMECON)",
+              "L'OTAN",
+              "L'OCDE",
+              "L'OECE"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le CAEM (COMECON), créé le 25 janvier 1949 à Moscou, est l'organisation économique du bloc de l'Est."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Associer chaque organisation à son bloc",
+          "stepTheme": "Associer chaque organisation à son bloc",
+          "stepBadge": "Associer chaque organisation à son bloc",
+          "paragraphText": "• Principale organisation militaire du bloc occidental : l'OTAN.\n• Organisation militaire du bloc de l'Est : le Pacte de Varsovie.\n• Organisation économique du bloc de l'Est : le CAEM.\n• Organisation économique du bloc de l'Ouest : l'OECE, remplacée en 1961 par l'OCDE.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q6",
+            "type": "mcq",
+            "prompt": "Quelle organisation est la principale organisation militaire du bloc occidental ?",
+            "options": [
+              "Le Pacte de Varsovie",
+              "Le CAEM",
+              "L'OTAN",
+              "L'OECE"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "L'OTAN est la principale organisation militaire du bloc occidental (le Pacte de Varsovie est celle du bloc de l'Est)."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q1",
+          "type": "mcq",
+          "prompt": "Quand le traité de l'Atlantique Nord est-il signé ?",
+          "options": [
+            "Le 4 avril 1949",
+            "Le 14 mai 1955",
+            "Le 25 janvier 1949",
+            "Le 5 juin 1947"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le traité de Washington, qui crée l'OTAN, est signé le 4 avril 1949."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q2",
+          "type": "mcq",
+          "prompt": "Quels pays rejoignent l'OTAN en 1952 ?",
+          "options": [
+            "La Grèce et la Turquie",
+            "L'Allemagne de l'Ouest et l'Espagne",
+            "La Pologne et la Hongrie",
+            "Le Canada et l'Islande"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne la Grèce et la Turquie en 1952, l'Allemagne de l'Ouest en 1955 et l'Espagne en 1982."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q3",
+          "type": "mcq",
+          "prompt": "Que remplace l'OCDE, créée en 1961 ?",
+          "options": [
+            "L'OECE",
+            "L'OTAN",
+            "Le CAEM",
+            "Le Pacte de Varsovie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'OCDE est créée en 1961, à Paris, en remplacement de l'OECE."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q4",
+          "type": "mcq",
+          "prompt": "Quand le Pacte de Varsovie est-il conclu ?",
+          "options": [
+            "Le 14 mai 1955",
+            "Le 4 avril 1949",
+            "Le 25 janvier 1949",
+            "Le 5 juin 1947"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Pacte de Varsovie est conclu le 14 mai 1955, en réponse à l'adhésion de la RFA à l'OTAN."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q5",
+          "type": "mcq",
+          "prompt": "Quelle est l'organisation économique du bloc de l'Est ?",
+          "options": [
+            "Le CAEM (COMECON)",
+            "L'OTAN",
+            "L'OCDE",
+            "L'OECE"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le CAEM (COMECON), créé le 25 janvier 1949 à Moscou, est l'organisation économique du bloc de l'Est."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p02_q6",
+          "type": "mcq",
+          "prompt": "Quelle organisation est la principale organisation militaire du bloc occidental ?",
+          "options": [
+            "Le Pacte de Varsovie",
+            "Le CAEM",
+            "L'OTAN",
+            "L'OECE"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "L'OTAN est la principale organisation militaire du bloc occidental (le Pacte de Varsovie est celle du bloc de l'Est)."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03",
+      "order": 3,
+      "title": "Les crises de la guerre froide : Berlin et Cuba",
+      "summary": "Le blocus de Berlin et le pont aérien, le mur de 1961, puis la crise des fusées à Cuba, paroxysme de la guerre froide.",
+      "conceptExplanation": "L'Allemagne vaincue est divisée, ainsi que sa capitale Berlin, en quatre zones occupées par les États-Unis, la Grande-Bretagne, la France à l'Ouest et l'URSS à l'Est. Elle est le premier terrain de la guerre froide.\nLa première crise de Berlin (juin 1948 - mai 1949) naît de la conférence de Londres (février 1948) : les trois Occidentaux décident de fusionner leurs zones et de les doter d'une nouvelle monnaie, le Deutschemark. Staline riposte par le blocus de Berlin, contourné par un gigantesque pont aérien. La crise accélère la division de l'Allemagne : la RFA naît le 23 mai 1949, la RDA le 7 octobre 1949.\nLa deuxième crise de Berlin (1958-1961) est provoquée par la forte émigration des Allemands de l'Est (2 245 000 réfugiés de 1952 à 1961) et par la volonté de Khrouchtchev de changer le statut de Berlin-Ouest. Après l'échec de la conférence de Paris (16 mai 1960), le mur de Berlin est construit dans la nuit du 12 au 13 août 1961.\nLa crise des fusées à Cuba (1962) est le paroxysme de la guerre froide : après la prise du pouvoir par Fidel Castro (1er janvier 1959) et le fiasco de la Baie des Cochons (17 avril 1961), l'URSS installe des missiles à Cuba. Le 22 octobre 1962, Kennedy décrète le blocus de l'île. Le 28 octobre, Khrouchtchev ordonne le démantèlement des 42 rampes de lancement. Le secrétaire général de l'ONU, U Thant, joue un rôle efficace de médiateur.",
+      "keyRule": "Berlin 1948-1949 (blocus et pont aérien), Berlin 1958-1961 (mur du 13 août 1961), Cuba 1962 (blocus du 22 octobre, règlement du 28 octobre).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer les causes et les conséquences de la crise de Cuba",
+        "statement": "Classe chaque élément en cause ou en conséquence de la crise de Cuba : le rapprochement de Fidel Castro de l'URSS ; l'affaire de la Baie des Cochons ; la baisse du prestige international de l'URSS ; la signature d'accords militaires ; le « téléphone rouge » entre le Kremlin et la Maison blanche.",
+        "methodSteps": [
+          "Causes : le rapprochement de Fidel Castro de l'URSS et l'affaire de la Baie des Cochons (17 avril 1961).",
+          "Conséquences : la baisse du prestige international de l'URSS.",
+          "Conséquences : la signature d'accords militaires et l'installation du « téléphone rouge » entre le Kremlin et la Maison blanche (23 juin 1963)."
+        ],
+        "conclusion": "Causes : rapprochement Castro-URSS et Baie des Cochons ; conséquences : baisse du prestige de l'URSS, accords militaires et téléphone rouge."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La première crise de Berlin (1948-1949)",
+          "stepTheme": "La première crise de Berlin (1948-1949)",
+          "stepBadge": "La première crise de Berlin (1948-1949)",
+          "paragraphText": "• L'Allemagne vaincue est divisée, ainsi que sa capitale Berlin, en quatre zones occupées par les États-Unis, la Grande-Bretagne, la France à l'Ouest et l'URSS à l'Est.\n• Les trois Occidentaux se réunissent à Londres en février 1948 et décident de fusionner leurs zones et de les doter d'une nouvelle monnaie commune, le Deutschemark.\n• Pour Staline, ces résolutions sont une provocation et une violation des accords de Yalta et de Potsdam : les Soviétiques ripostent par le blocus de Berlin.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q1",
+            "type": "mcq",
+            "prompt": "Qu'est-ce que le pont aérien ?",
+            "options": [
+              "Le ravitaillement de Berlin-Ouest par avion pendant le blocus soviétique",
+              "Le bombardement de Berlin par l'aviation américaine",
+              "Le transport des troupes soviétiques vers Berlin",
+              "La ligne aérienne entre Paris et Moscou"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Pendant le blocus de Berlin, les États-Unis ravitaillent Berlin-Ouest grâce à un gigantesque pont aérien."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Le blocus de Berlin et le pont aérien",
+          "stepTheme": "Le blocus de Berlin et le pont aérien",
+          "stepBadge": "Le blocus de Berlin et le pont aérien",
+          "paragraphText": "• Le 23 juin 1948, Staline fait couper toutes les communications routières et ferroviaires reliant les trois secteurs occidentaux de Berlin-Ouest et interrompt l'approvisionnement en électricité : c'est le blocus de Berlin.\n• Les États-Unis relèvent le défi en ravitaillant la ville grâce à un gigantesque pont aérien : 2 323 000 tonnes de vivres et de non-vivres sont transportées par une centaine d'avions en 275 000 vols pendant 318 jours.\n• Le 12 mai 1949, Staline prend acte de son échec et lève le blocus.",
+          "konanTip": "Le titre du cours date le blocus « du 25 juin au 12 mai 1949 » alors que le texte dit que Staline coupe les communications le 23 juin 1948 : les deux dates sont reproduites telles qu'écrites.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q2",
+            "type": "mcq",
+            "prompt": "Combien de tonnes le pont aérien a-t-il transportées pendant le blocus de Berlin ?",
+            "options": [
+              "2 323 000 tonnes",
+              "275 000 tonnes",
+              "318 000 tonnes",
+              "12 000 tonnes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le pont aérien transporte 2 323 000 tonnes en 275 000 vols pendant 318 jours (275 000 est le nombre de vols, 318 le nombre de jours)."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Deux États allemands",
+          "stepTheme": "Deux États allemands",
+          "stepBadge": "Deux États allemands",
+          "paragraphText": "• Le 23 mai 1949 naît la République fédérale d'Allemagne (RFA), regroupant les trois anciennes zones d'occupation occidentales, avec Konrad Adenauer comme premier chancelier. Sa capitale est Bonn.\n• Le 7 octobre 1949, les Soviétiques créent à leur tour la République démocratique allemande (RDA), avec Otto Grotewohl comme président du conseil des ministres. Sa capitale est Pankow (Berlin-Est) et sa monnaie est l'Ostmark.\n• Cette crise installe définitivement la rupture entre les alliés d'hier et accentue la rivalité Est-Ouest.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q3",
+            "type": "mcq",
+            "prompt": "Quand naît la République fédérale d'Allemagne (RFA) ?",
+            "options": [
+              "Le 23 mai 1949",
+              "Le 7 octobre 1949",
+              "Le 4 avril 1949",
+              "Le 13 août 1961"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La RFA naît le 23 mai 1949 (la RDA est créée le 7 octobre 1949)."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "La deuxième crise de Berlin (1958-1961)",
+          "stepTheme": "La deuxième crise de Berlin (1958-1961)",
+          "stepBadge": "La deuxième crise de Berlin (1958-1961)",
+          "paragraphText": "• Cette deuxième crise prend ses racines dans le statut de Berlin-Ouest et dans l'émigration des Allemands de la RDA vers la RFA : de 1952 à 1961 inclus, 2 245 000 réfugiés en âge de travailler quittent la RDA.\n• Le 10 novembre 1958, à Moscou, Khrouchtchev prend position pour la thèse est-allemande : il est temps de mettre fin au système d'occupation de Berlin.\n• Le 27 novembre 1959, Khrouchtchev précise ses intentions en proposant la transformation de Berlin-Ouest en une « unité politique indépendante », démilitarisée et neutralisée, placée sous le contrôle de l'ONU.",
+          "konanTip": "Le cours date l'ultimatum de Khrouchtchev du 27 novembre 1959, alors que les événements qui l'entourent sont datés de 1958 : coquille probable du cours, reproduite telle quelle.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q4",
+            "type": "mcq",
+            "prompt": "Pourquoi Khrouchtchev veut-il changer le statut de Berlin-Ouest ?",
+            "options": [
+              "À cause de la forte émigration des Allemands de l'Est vers l'Ouest (2 245 000 réfugiés de 1952 à 1961)",
+              "À cause de la construction du mur de Berlin",
+              "À cause de la création de la RFA",
+              "À cause de la crise des fusées à Cuba"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La saignée démographique (2 245 000 réfugiés de 1952 à 1961) prive l'industrie est-allemande de main-d'œuvre et pousse Khrouchtchev à vouloir changer le statut de Berlin-Ouest."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "L'incident de l'U-2 et le mur de Berlin",
+          "stepTheme": "L'incident de l'U-2 et le mur de Berlin",
+          "stepBadge": "L'incident de l'U-2 et le mur de Berlin",
+          "paragraphText": "• La conférence de Paris est prévue pour le 16 mai 1960, mais un incident intervient le 1er mai 1960 : un avion espion américain U-2 est abattu dans l'espace aérien soviétique et son pilote est retenu prisonnier. Khrouchtchev exige des excuses publiques et les quatre Grands se séparent sans accord.\n• Dans la nuit du 12 au 13 août 1961, un mur est construit en plein Berlin, séparant physiquement la ville en Berlin-Est et Berlin-Ouest pendant plus de vingt-huit ans.\n• « Mur de la honte » pour les Allemands de l'Ouest et officiellement appelé par le gouvernement est-allemand « mur de protection antifasciste », son objectif est de mettre fin à l'exode des habitants de la RDA vers la RFA.\n• Piège d'examen : le mur de Berlin n'est pas la conséquence de la première crise de Berlin, mais de la deuxième.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q5",
+            "type": "mcq",
+            "prompt": "De quelle crise la construction du mur de Berlin est-elle la conséquence ?",
+            "options": [
+              "De la première crise de Berlin",
+              "De la deuxième crise de Berlin",
+              "De la crise des fusées à Cuba",
+              "De la guerre du Vietnam"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le mur de Berlin, construit dans la nuit du 12 au 13 août 1961, est la conséquence de la deuxième crise de Berlin, pas de la première."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La crise des fusées à Cuba (1962)",
+          "stepTheme": "La crise des fusées à Cuba (1962)",
+          "stepBadge": "La crise des fusées à Cuba (1962)",
+          "paragraphText": "• Après avoir renversé la dictature du colonel Fulgencio Batista, Fidel Castro prend le pouvoir le 1er janvier 1959. Il entreprend une réforme agraire et nationalise les entreprises, puis se rapproche de l'URSS.\n• Le 17 avril 1961, le débarquement de 1 500 exilés cubains anti-castristes, soutenus par les États-Unis via la CIA, dans la Baie des Cochons est un fiasco total.\n• Le 22 octobre 1962, après avoir fourni les preuves de l'installation de missiles offensifs sur l'île de Cuba, le président Kennedy décrète un embargo rigoureux sur tout équipement militaire offensif acheminé vers Cuba : c'est le blocus américain de Cuba.\n• Le 28 octobre, Khrouchtchev ordonne le démantèlement des 42 rampes de lancement de fusées déjà construites à Cuba. Dans cette crise, le secrétaire général de l'ONU, U Thant, a joué un rôle efficace en tant que médiateur.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q6",
+            "type": "mcq",
+            "prompt": "Qui joue le rôle de médiateur dans la crise des fusées à Cuba ?",
+            "options": [
+              "U Thant, secrétaire général de l'ONU",
+              "Fidel Castro, président de Cuba",
+              "Nikita Khrouchtchev, dirigeant de l'URSS",
+              "John Fitzgerald Kennedy, président des États-Unis"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours indique que le secrétaire général de l'ONU, U Thant, a joué un rôle efficace de médiateur dans la crise de Cuba."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q1",
+          "type": "mcq",
+          "prompt": "Qu'est-ce que le pont aérien ?",
+          "options": [
+            "Le ravitaillement de Berlin-Ouest par avion pendant le blocus soviétique",
+            "Le bombardement de Berlin par l'aviation américaine",
+            "Le transport des troupes soviétiques vers Berlin",
+            "La ligne aérienne entre Paris et Moscou"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pendant le blocus de Berlin, les États-Unis ravitaillent Berlin-Ouest grâce à un gigantesque pont aérien."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q2",
+          "type": "mcq",
+          "prompt": "Combien de tonnes le pont aérien a-t-il transportées pendant le blocus de Berlin ?",
+          "options": [
+            "2 323 000 tonnes",
+            "275 000 tonnes",
+            "318 000 tonnes",
+            "12 000 tonnes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le pont aérien transporte 2 323 000 tonnes en 275 000 vols pendant 318 jours (275 000 est le nombre de vols, 318 le nombre de jours)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q3",
+          "type": "mcq",
+          "prompt": "Quand naît la République fédérale d'Allemagne (RFA) ?",
+          "options": [
+            "Le 23 mai 1949",
+            "Le 7 octobre 1949",
+            "Le 4 avril 1949",
+            "Le 13 août 1961"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La RFA naît le 23 mai 1949 (la RDA est créée le 7 octobre 1949)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q4",
+          "type": "mcq",
+          "prompt": "Pourquoi Khrouchtchev veut-il changer le statut de Berlin-Ouest ?",
+          "options": [
+            "À cause de la forte émigration des Allemands de l'Est vers l'Ouest (2 245 000 réfugiés de 1952 à 1961)",
+            "À cause de la construction du mur de Berlin",
+            "À cause de la création de la RFA",
+            "À cause de la crise des fusées à Cuba"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La saignée démographique (2 245 000 réfugiés de 1952 à 1961) prive l'industrie est-allemande de main-d'œuvre et pousse Khrouchtchev à vouloir changer le statut de Berlin-Ouest."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q5",
+          "type": "mcq",
+          "prompt": "De quelle crise la construction du mur de Berlin est-elle la conséquence ?",
+          "options": [
+            "De la première crise de Berlin",
+            "De la deuxième crise de Berlin",
+            "De la crise des fusées à Cuba",
+            "De la guerre du Vietnam"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le mur de Berlin, construit dans la nuit du 12 au 13 août 1961, est la conséquence de la deuxième crise de Berlin, pas de la première."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p03_q6",
+          "type": "mcq",
+          "prompt": "Qui joue le rôle de médiateur dans la crise des fusées à Cuba ?",
+          "options": [
+            "U Thant, secrétaire général de l'ONU",
+            "Fidel Castro, président de Cuba",
+            "Nikita Khrouchtchev, dirigeant de l'URSS",
+            "John Fitzgerald Kennedy, président des États-Unis"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours indique que le secrétaire général de l'ONU, U Thant, a joué un rôle efficace de médiateur dans la crise de Cuba."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04",
+      "order": 4,
+      "title": "La coexistence pacifique et la détente",
+      "summary": "Les facteurs du dégel, la politique du désarmement et la détente en Asie : les deux Grands apprennent à négocier.",
+      "conceptExplanation": "La notion de « coexistence pacifique » (chacun des camps accepte l'existence de l'autre) est élaborée au XXe congrès du Parti communiste d'Union soviétique (PCUS) en février 1956. Elle intègre la détente, période d'apaisement des relations internationales s'étendant du début des années 1960 à la fin des années 1970.\nPlusieurs facteurs sont à l'origine de la coexistence pacifique : l'arrivée de nouveaux hommes à la tête des deux États (après la mort de Staline, Khrouchtchev, puis Brejnev, Carter et Gorbatchev d'un côté, Kennedy, Nixon et Reagan de l'autre) ; la crise des fusées de Cuba et l'équilibre de la terreur ; les fissures au sein des blocs (la France de De Gaulle conteste le leadership américain, la Chine conteste l'hégémonie soviétique, les modèles soviétiques sont contestés en Hongrie en 1956 et en Tchécoslovaquie en 1968) ; et la possibilité économique de la coexistence.\nLes manifestations de la coexistence pacifique sont la politique du désarmement (traité de Moscou d'août 1963, traité de non-prolifération de juillet 1968, accords SALT, traité de Washington de 1987, traité FCE de 1990, accords START de 1991), la détente en Asie (rapprochement avec la Chine, accords de Paris du 27 janvier 1973) et les autres accords entre les deux Grands (téléphone rouge, accords commerciaux).",
+      "keyRule": "Coexistence pacifique (XXe congrès du PCUS, février 1956) : les deux camps acceptent l'existence de l'autre et privilégient les solutions négociées.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer les causes et les manifestations du dégel",
+        "statement": "Classe chaque élément en cause ou en manifestation du dégel : l'équilibre de la terreur ; la contestation du leadership de l'URSS par la Chine ; l'installation du téléphone rouge ; les accords SALT 1.",
+        "methodSteps": [
+          "Causes du dégel : l'équilibre de la terreur (les deux Grands sont parvenus à un équilibre nucléaire).",
+          "Causes du dégel : la contestation du leadership de l'URSS par la Chine populaire de Mao Zedong.",
+          "Manifestations du dégel : l'installation du téléphone rouge le 23 juin 1963 entre le Kremlin et la Maison blanche.",
+          "Manifestations du dégel : les accords de désarmement SALT 1 conclus en mai 1972."
+        ],
+        "conclusion": "Causes : équilibre de la terreur et contestation du leadership soviétique par la Chine ; manifestations : téléphone rouge et accords SALT 1."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La coexistence pacifique",
+          "stepTheme": "La coexistence pacifique",
+          "stepBadge": "La coexistence pacifique",
+          "paragraphText": "• La notion de « coexistence pacifique » signifie que chacun des camps accepte l'existence de l'autre.\n• Elle est élaborée au XXe congrès du Parti communiste d'Union soviétique (PCUS) en février 1956.\n• Elle intègre la détente, une période d'apaisement des relations internationales s'étendant du début des années 1960 à la fin des années 1970.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q1",
+            "type": "mcq",
+            "prompt": "Où la notion de coexistence pacifique est-elle élaborée ?",
+            "options": [
+              "Au XXe congrès du PCUS, en février 1956",
+              "À la conférence de Yalta, en février 1945",
+              "À la conférence de San Francisco, en juin 1945",
+              "Au sommet de Moscou, en mai 1988"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La notion de coexistence pacifique est élaborée au XXe congrès du PCUS en février 1956."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les facteurs : hommes nouveaux et équilibre de la terreur",
+          "stepTheme": "Les facteurs : hommes nouveaux et équilibre de la terreur",
+          "stepBadge": "Les facteurs : hommes nouveaux et équilibre de la terreur",
+          "paragraphText": "• La mort de Staline permet un incontestable assouplissement des positions soviétiques sous l'impulsion de Nikita Khrouchtchev. (Le cours écrit que Staline est mort le 5 mars 1955.)\n• Khrouchtchev et Kennedy, puis Brejnev et Nixon, Carter, Gorbatchev et Reagan, continuent chacun à leur manière cette politique de coexistence pacifique.\n• Pendant la crise des fusées de Cuba, les deux Grands sont conscients d'avoir frôlé le pire. Le rapprochement est favorisé surtout par l'équilibre de la terreur, c'est-à-dire la course aux armements : le lancement du premier missile intercontinental soviétique en août 1957 puis du premier Spoutnik en octobre 1957 montrent que l'URSS a pris un avantage technologique sur les États-Unis.",
+          "konanTip": "Le cours date la mort de Staline du 5 mars 1955 ; la date habituellement retenue est le 5 mars 1953.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q2",
+            "type": "mcq",
+            "prompt": "Qu'est-ce que l'équilibre de la terreur ?",
+            "options": [
+              "La course aux armements qui conduit les deux Grands à un équilibre nucléaire",
+              "L'équilibre des forces conventionnelles en Europe",
+              "La parité des budgets militaires des deux blocs",
+              "L'interdiction totale des armes nucléaires"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'équilibre de la terreur, c'est la course aux armements : les deux Grands parviennent à un équilibre nucléaire et n'osent plus s'affronter directement."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Les fissures dans les blocs",
+          "stepTheme": "Les fissures dans les blocs",
+          "stepBadge": "Les fissures dans les blocs",
+          "paragraphText": "• Dans le camp occidental, c'est la volonté française d'« indépendance nationale » qui ébranle la cohésion de l'alliance atlantique : De Gaulle refuse l'adhésion du Royaume-Uni au Marché commun (qu'il considère comme le « cheval de Troie » des Américains), condamne l'intervention américaine au Vietnam à Phnom-Penh en septembre 1966, reconnaît la Chine populaire en 1964, voyage en URSS en été 1966, quitte l'OTAN et développe une « force de frappe » autonome.\n• Dans le camp socialiste, l'hégémonie de l'URSS est contestée : schisme sino-soviétique (la Chine obtient sa propre arme atomique en 1964), l'Albanie quitte le Pacte de Varsovie en 1968, révolte hongroise de 1956, crise tchécoslovaque de 1968 (Alexandre Dubček tente le « socialisme à visage humain », le Printemps de Prague, arrêté par l'intervention des troupes du Pacte de Varsovie en août 1968).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q3",
+            "type": "mcq",
+            "prompt": "Que tente Alexandre Dubček en Tchécoslovaquie en 1968 ?",
+            "options": [
+              "Un « socialisme à visage humain » (Printemps de Prague)",
+              "L'adhésion de la Tchécoslovaquie à l'OTAN",
+              "La sortie du Pacte de Varsovie",
+              "La réunification avec l'Allemagne"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Alexandre Dubček tente d'instaurer en Tchécoslovaquie un « socialisme à visage humain » : c'est le Printemps de Prague, arrêté par l'intervention des troupes du Pacte de Varsovie en août 1968."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "La politique du désarmement",
+          "stepTheme": "La politique du désarmement",
+          "stepBadge": "La politique du désarmement",
+          "paragraphText": "• Les raisons économiques : la course aux armements est budgétivore ; au début des années 1980, elle coûte un million de dollars toutes les secondes, au détriment du niveau de vie des populations.\n• Les raisons militaires et sécuritaires : chacun des deux Grands possède un arsenal nucléaire capable d'anéantir plusieurs fois toute la planète.\n• Les leçons de la crise des fusées de Cuba : sans un minimum d'accord sur l'armement nucléaire, le monde peut facilement basculer dans une guerre nucléaire irréparable.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q4",
+            "type": "mcq",
+            "prompt": "Pourquoi les deux Grands s'engagent-ils dans le désarmement ?",
+            "options": [
+              "Parce que la course aux armements est financièrement ruineuse et menace la survie de l'humanité",
+              "Parce qu'ils n'ont plus d'armes nucléaires",
+              "Parce que l'ONU l'exige depuis 1945",
+              "Parce que la guerre froide est terminée"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours donne des raisons économiques (la course aux armements coûte un million de dollars toutes les secondes) et sécuritaires (chaque Grand peut anéantir plusieurs fois la planète)."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "propriete",
+          "stepTitle": "Les accords de désarmement",
+          "stepTheme": "Les accords de désarmement",
+          "stepBadge": "Les accords de désarmement",
+          "paragraphText": "• Le traité de Moscou (août 1963), signé par les deux Grands et la Grande-Bretagne, interdit les essais nucléaires dans l'atmosphère et dans les fonds marins.\n• Le traité de non-prolifération nucléaire (juillet 1968) : 115 nations s'engagent à ne pas chercher à fabriquer et à acquérir la bombe atomique.\n• Les accords SALT 1 (1972) limitent les missiles intercontinentaux (ICBM), les missiles antimissiles (ABM) et les sous-marins nucléaires lanceurs d'engins. Les accords SALT 2 sont signés le 18 juin 1979 à Vienne entre Brejnev et Jimmy Carter, mais le Sénat américain refuse de les ratifier après l'invasion de l'Afghanistan par les Soviétiques.\n• Le traité de Washington (7 septembre 1987) entre Reagan et Gorbatchev porte pour la première fois sur la destruction de tous les missiles nucléaires de courte et moyenne portée installés en Europe. Le traité FCE est signé le 19 novembre 1990 et les accords START le 31 juillet 1991 entre Bush et Gorbatchev.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q5",
+            "type": "mcq",
+            "prompt": "Que prévoit le traité de Moscou d'août 1963 ?",
+            "options": [
+              "L'interdiction des essais nucléaires dans l'atmosphère et dans les fonds marins",
+              "La destruction de tous les missiles nucléaires de courte et moyenne portée",
+              "La limitation des missiles intercontinentaux et des sous-marins nucléaires",
+              "L'interdiction de fabriquer la bombe atomique pour les pays non dotés"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le traité de Moscou d'août 1963 est le premier accord militaire important entre les deux Grands : il interdit les essais nucléaires dans l'atmosphère et dans les fonds marins."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La détente en Asie",
+          "stepTheme": "La détente en Asie",
+          "stepBadge": "La détente en Asie",
+          "paragraphText": "• Les Américains cherchent à abandonner la guerre du Vietnam, ruineuse et très contestée. Le président Nixon inaugure une politique de concession réciproque et de « diplomatie triangulaire », jouant sur la rivalité entre Pékin et Moscou.\n• Les États-Unis favorisent l'admission de la Chine au Conseil de sécurité de l'ONU en octobre 1969 (tel qu'écrit dans le cours), puis Nixon se rend à Pékin en février 1972.\n• Inquiète du rapprochement américano-chinois, l'URSS accepte la signature des accords de Paris qui mettent fin à la guerre du Vietnam, le 27 janvier 1973.\n• Les autres accords entre les deux Grands : le téléphone rouge (installé entre la Maison blanche et le Kremlin après la crise de Cuba) et les accords commerciaux (visite du président Nixon à Moscou en 1969, tel qu'écrit dans le cours).",
+          "konanTip": "Le cours écrit que la Chine est admise au Conseil de sécurité de l'ONU en octobre 1969 et que Nixon est à Moscou en 1969 : les dates habituellement retenues sont octobre 1971 pour la Chine et mai 1972 pour la visite de Nixon à Moscou.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q6",
+            "type": "mcq",
+            "prompt": "Que fait Nixon en février 1972 ?",
+            "options": [
+              "Il se rend à Pékin",
+              "Il signe les accords SALT 1",
+              "Il se rend à Moscou",
+              "Il retire les troupes du Vietnam"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Nixon se rend à Pékin en février 1972, dans le cadre de sa « diplomatie triangulaire » entre Washington, Pékin et Moscou."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q1",
+          "type": "mcq",
+          "prompt": "Où la notion de coexistence pacifique est-elle élaborée ?",
+          "options": [
+            "Au XXe congrès du PCUS, en février 1956",
+            "À la conférence de Yalta, en février 1945",
+            "À la conférence de San Francisco, en juin 1945",
+            "Au sommet de Moscou, en mai 1988"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La notion de coexistence pacifique est élaborée au XXe congrès du PCUS en février 1956."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q2",
+          "type": "mcq",
+          "prompt": "Qu'est-ce que l'équilibre de la terreur ?",
+          "options": [
+            "La course aux armements qui conduit les deux Grands à un équilibre nucléaire",
+            "L'équilibre des forces conventionnelles en Europe",
+            "La parité des budgets militaires des deux blocs",
+            "L'interdiction totale des armes nucléaires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'équilibre de la terreur, c'est la course aux armements : les deux Grands parviennent à un équilibre nucléaire et n'osent plus s'affronter directement."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q3",
+          "type": "mcq",
+          "prompt": "Que tente Alexandre Dubček en Tchécoslovaquie en 1968 ?",
+          "options": [
+            "Un « socialisme à visage humain » (Printemps de Prague)",
+            "L'adhésion de la Tchécoslovaquie à l'OTAN",
+            "La sortie du Pacte de Varsovie",
+            "La réunification avec l'Allemagne"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Alexandre Dubček tente d'instaurer en Tchécoslovaquie un « socialisme à visage humain » : c'est le Printemps de Prague, arrêté par l'intervention des troupes du Pacte de Varsovie en août 1968."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q4",
+          "type": "mcq",
+          "prompt": "Pourquoi les deux Grands s'engagent-ils dans le désarmement ?",
+          "options": [
+            "Parce que la course aux armements est financièrement ruineuse et menace la survie de l'humanité",
+            "Parce qu'ils n'ont plus d'armes nucléaires",
+            "Parce que l'ONU l'exige depuis 1945",
+            "Parce que la guerre froide est terminée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours donne des raisons économiques (la course aux armements coûte un million de dollars toutes les secondes) et sécuritaires (chaque Grand peut anéantir plusieurs fois la planète)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q5",
+          "type": "mcq",
+          "prompt": "Que prévoit le traité de Moscou d'août 1963 ?",
+          "options": [
+            "L'interdiction des essais nucléaires dans l'atmosphère et dans les fonds marins",
+            "La destruction de tous les missiles nucléaires de courte et moyenne portée",
+            "La limitation des missiles intercontinentaux et des sous-marins nucléaires",
+            "L'interdiction de fabriquer la bombe atomique pour les pays non dotés"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le traité de Moscou d'août 1963 est le premier accord militaire important entre les deux Grands : il interdit les essais nucléaires dans l'atmosphère et dans les fonds marins."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p04_q6",
+          "type": "mcq",
+          "prompt": "Que fait Nixon en février 1972 ?",
+          "options": [
+            "Il se rend à Pékin",
+            "Il signe les accords SALT 1",
+            "Il se rend à Moscou",
+            "Il retire les troupes du Vietnam"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Nixon se rend à Pékin en février 1972, dans le cadre de sa « diplomatie triangulaire » entre Washington, Pékin et Moscou."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05",
+      "order": 5,
+      "title": "La deuxième guerre du Vietnam (détente contrariée)",
+      "summary": "De Genève 1954 à la chute de Saïgon en 1975 : origines, escalade américaine, vietnamisation et accords de Paris.",
+      "conceptExplanation": "La deuxième guerre du Vietnam est la détente contrariée : alors que les deux Grands se rapprochent, un conflit localisé oppose les États-Unis aux communistes vietnamiens.\nSes origines remontent aux accords de Genève du 21 juillet 1954, qui coupent provisoirement le pays en deux parties de part et d'autre du 17e parallèle : le Nord sous la tutelle du Viêtminh et le Sud sous celle de l'empereur Bao Daï, jusqu'à une réunification par des élections libres dans un délai de deux ans, en 1955 — élections qui n'auront jamais lieu.\nAu Sud, Ngô Dinh Diem dépose l'empereur Bao Daï en octobre 1955 et se proclame président. Il refuse d'organiser les élections prévues par les accords de Genève. Le Front National de Libération (FNL) est créé en décembre 1960. Après l'incident du golfe du Tonkin (août 1964), les États-Unis s'engagent massivement : les effectifs américains passent de 23 000 hommes en 1965 à 545 000 en 1969.\nNixon « vietnamise » la guerre (retrait progressif des soldats américains) et le conflit s'étend au Laos et au Cambodge. Les accords de Paris mettent fin à la guerre : le cessez-le-feu intervient le 28 janvier 1973. Le 30 avril 1975, les troupes nord-vietnamiennes s'emparent de Saïgon et le Vietnam est réunifié en 1976.",
+      "keyRule": "Genève 1954 (17e parallèle) → FNL 1960 → Tonkin 1964 → Têt 1968 → vietnamisation 1969 → Paris 1973 → Saïgon 1975.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Ordonner les étapes de la guerre du Vietnam",
+        "statement": "Remets dans l'ordre chronologique : les accords de Genève, la création du FNL, l'incident du golfe du Tonkin, l'offensive du Têt, la vietnamisation, les accords de Paris, la chute de Saïgon.",
+        "methodSteps": [
+          "Les accords de Genève (21 juillet 1954) coupent le Vietnam en deux au 17e parallèle.",
+          "Le Front National de Libération (FNL) est créé en décembre 1960.",
+          "L'incident du golfe du Tonkin (août 1964) déclenche l'engagement massif des États-Unis.",
+          "L'offensive du Têt (31 janvier 1968) frappe toutes les grandes villes du Sud Vietnam.",
+          "La vietnamisation de Nixon (1969) retire progressivement les soldats américains.",
+          "Les accords de Paris (1973) prévoient le retrait américain, puis Saïgon tombe le 30 avril 1975."
+        ],
+        "conclusion": "Genève 1954, FNL 1960, Tonkin 1964, Têt 1968, vietnamisation 1969, Paris 1973, Saïgon 1975."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Les origines : les accords de Genève (21 juillet 1954)",
+          "stepTheme": "Les origines : les accords de Genève (21 juillet 1954)",
+          "stepBadge": "Les origines : les accords de Genève (21 juillet 1954)",
+          "paragraphText": "• L'Indochine est composée du Laos, du Cambodge et du Vietnam (Tonkin, Annam, Cochinchine). Après 8 ans de guerre, l'armée française subit le désastre de Dien Bien Phu en 1954.\n• Le 21 juillet 1954, les accords de Genève mettent fin à la guerre : ils décident la reconnaissance de l'indépendance totale du Vietnam, la coupure provisoire du pays en deux parties de part et d'autre du 17e parallèle (le Nord sous la tutelle du Viêtminh, le Sud sous celle de l'empereur Bao Daï) jusqu'à une réunification par des élections libres dans un délai de 2 ans, soit en 1955 — élections qui n'auront jamais lieu.\n• Le Laos et le Cambodge obtiennent leur pleine indépendance.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q1",
+            "type": "mcq",
+            "prompt": "Que décident les accords de Genève du 21 juillet 1954 ?",
+            "options": [
+              "La coupure provisoire du Vietnam en deux parties de part et d'autre du 17e parallèle",
+              "La réunification immédiate du Vietnam",
+              "L'indépendance de l'Algérie",
+              "La création du FNL"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les accords de Genève coupent provisoirement le Vietnam en deux au 17e parallèle, en attendant des élections libres en 1955 qui n'auront jamais lieu."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Ngô Dinh Diem et la dégradation",
+          "stepTheme": "Ngô Dinh Diem et la dégradation",
+          "stepBadge": "Ngô Dinh Diem et la dégradation",
+          "paragraphText": "• Au Nord, Hô Chi Minh établit un régime communiste ; au Sud, les Américains amènent Bao Daï à nommer Ngô Dinh Diem, un catholique anticommuniste, Premier ministre.\n• En octobre 1955, Ngô Dinh Diem dépose l'empereur Bao Daï et se proclame président de la République.\n• En 1956, avec le soutien des Américains, il refuse d'organiser les élections prévues par les accords de Genève. Il instaure un régime dictatorial renforcé par la corruption et le népotisme. La dictature et la misère entraînent la constitution d'un mouvement d'opposition clandestin, le Front National de Libération (FNL), en décembre 1960.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q2",
+            "type": "mcq",
+            "prompt": "Quand le Front National de Libération (FNL) est-il créé ?",
+            "options": [
+              "En décembre 1960",
+              "En octobre 1955",
+              "En août 1964",
+              "En janvier 1968"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le FNL est créé en décembre 1960, face à la dictature de Ngô Dinh Diem et à son refus d'organiser les élections prévues par les accords de Genève."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "methode",
+          "stepTitle": "L'escalade américaine",
+          "stepTheme": "L'escalade américaine",
+          "stepBadge": "L'escalade américaine",
+          "paragraphText": "• Malgré l'augmentation du nombre de conseillers (de 1 500 en 1961 à 17 000 en 1963), le FNL gagne du terrain. Diem, devenu trop impopulaire, est renversé et assassiné en novembre 1963.\n• En août 1964, un incident se produit dans le golfe du Tonkin entre un destroyer américain et une vedette nord-vietnamienne : c'est le prétexte saisi par les États-Unis pour s'engager massivement.\n• Le Congrès autorise le président Lyndon Baines Johnson à intervenir directement. Les effectifs américains passent de 23 000 hommes en 1965 à 545 000 en 1969 et les raids aériens sur le Nord Vietnam se multiplient.\n• L'offensive du Têt (le 31 janvier 1968), attaque simultanée de toutes les grandes villes du Sud Vietnam, a un impact profond sur l'opinion publique américaine.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q3",
+            "type": "mcq",
+            "prompt": "Combien de soldats américains sont au Vietnam en 1969 ?",
+            "options": [
+              "545 000",
+              "23 000",
+              "69 000",
+              "17 000"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les effectifs américains passent de 23 000 hommes en 1965 à 545 000 en 1969."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepTitle": "La vietnamisation et l'extension du conflit",
+          "stepTheme": "La vietnamisation et l'extension du conflit",
+          "stepBadge": "La vietnamisation et l'extension du conflit",
+          "paragraphText": "• Conformément à sa promesse de campagne électorale (discours de Guam, juillet 1969) et face à l'enlisement du conflit, Richard Nixon permet les négociations qui l'amènent à « vietnamiser » la guerre : le retrait progressif des soldats américains, qui passent de 543 000 combattants en avril 1969 à 325 000 en mai 1971 et à 69 000 au 1er mai 1972.\n• Au Laos, à partir de 1963, le parti communiste (Pathet Lao) est en lutte contre le gouvernement de tendance pro-américaine ; l'aviation américaine y intervient pour bombarder la « piste Hô Chi Minh ».\n• Au Cambodge, Norodom Sihanouk accepte en 1966 que son pays devienne une voie d'approvisionnement des forces communistes ; en mai 1970, les troupes américaines interviennent au Cambodge, ce qui favorise le renversement de Sihanouk par le général Lon Nol et le déclenchement d'une guerre par les Khmers Rouges.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q4",
+            "type": "mcq",
+            "prompt": "Qu'est-ce que la « vietnamisation » ?",
+            "options": [
+              "La politique de désengagement américain de Nixon (retrait progressif des soldats)",
+              "L'envoi de 545 000 soldats américains au Vietnam",
+              "La réunification du Vietnam par les communistes",
+              "L'intervention américaine au Cambodge"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La vietnamisation est la politique de Nixon : retirer progressivement les soldats américains (de 543 000 en avril 1969 à 69 000 au 1er mai 1972) tout en poursuivant la guerre."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Les accords de Paris",
+          "stepTheme": "Les accords de Paris",
+          "stepBadge": "Les accords de Paris",
+          "paragraphText": "• Après 5 ans de négociation (1968-1973), les accords de Paris sont signés. Ils permettent aux États-Unis de se retirer dans « l'honneur », mais ce retrait est un aveu d'échec.\n• Les accords prévoient : l'évacuation de toutes les troupes américaines et le démantèlement des bases militaires dans les 60 jours après le cessez-le-feu devant intervenir le 28 janvier 1973 ; la libération de 200 000 détenus civils et prisonniers de guerre des deux camps ; la mise en place d'un Conseil National de Réconciliation ; des élections libres pour l'autodétermination au Sud-Vietnam ; le retour de la paix au Laos et au Cambodge.\n• Piège d'examen : le cours écrit la signature des accords de Paris « le 23 juin 1973 » à un endroit et « le 27 janvier 1973 » à un autre — la date retenue ici est le 27 janvier 1973, cohérente avec le cessez-le-feu du 28 janvier 1973.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q5",
+            "type": "mcq",
+            "prompt": "Que prévoient les accords de Paris ?",
+            "options": [
+              "L'évacuation des troupes américaines dans les 60 jours après le cessez-le-feu du 28 janvier 1973",
+              "L'envoi de 545 000 soldats américains au Vietnam",
+              "La division définitive du Vietnam en deux États",
+              "L'annexion du Vietnam par les États-Unis"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les accords de Paris prévoient l'évacuation des troupes américaines dans les 60 jours après le cessez-le-feu du 28 janvier 1973, la libération de 200 000 détenus et un Conseil National de Réconciliation."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Les conséquences de la guerre du Vietnam",
+          "stepTheme": "Les conséquences de la guerre du Vietnam",
+          "stepBadge": "Les conséquences de la guerre du Vietnam",
+          "paragraphText": "• La guerre s'est terminée par la victoire des communistes et la réunification du pays : le 30 avril 1975, les troupes nord-vietnamiennes s'emparent de Saïgon ; en 1976, une assemblée nationale unique adopte une nouvelle constitution et ratifie la réunification. Le communisme s'instaure aussi au Cambodge et au Laos.\n• Sur le plan humain, la guerre a été une hécatombe : 250 000 morts vietnamiens contre 56 000 morts du côté américain.\n• Sur le plan économique, le pays est ruiné : 7 millions de bombes larguées sur le Vietnam, sols et eaux minés, milieux naturels pollués par 75 millions de litres d'herbicide et de défoliant.\n• Pour les États-Unis, la guerre a été coûteuse (coût direct et indirect respectivement de 140 et 900 milliards de dollars) et a provoqué la crise morale la plus grave de son histoire.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q6",
+            "type": "mcq",
+            "prompt": "Quand Saïgon tombe-t-elle ?",
+            "options": [
+              "Le 30 avril 1975",
+              "Le 31 janvier 1968",
+              "Le 28 janvier 1973",
+              "Le 21 juillet 1954"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le 30 avril 1975, les troupes nord-vietnamiennes s'emparent de Saïgon ; la réunification est ratifiée en 1976."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q1",
+          "type": "mcq",
+          "prompt": "Que décident les accords de Genève du 21 juillet 1954 ?",
+          "options": [
+            "La coupure provisoire du Vietnam en deux parties de part et d'autre du 17e parallèle",
+            "La réunification immédiate du Vietnam",
+            "L'indépendance de l'Algérie",
+            "La création du FNL"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les accords de Genève coupent provisoirement le Vietnam en deux au 17e parallèle, en attendant des élections libres en 1955 qui n'auront jamais lieu."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q2",
+          "type": "mcq",
+          "prompt": "Quand le Front National de Libération (FNL) est-il créé ?",
+          "options": [
+            "En décembre 1960",
+            "En octobre 1955",
+            "En août 1964",
+            "En janvier 1968"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le FNL est créé en décembre 1960, face à la dictature de Ngô Dinh Diem et à son refus d'organiser les élections prévues par les accords de Genève."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q3",
+          "type": "mcq",
+          "prompt": "Combien de soldats américains sont au Vietnam en 1969 ?",
+          "options": [
+            "545 000",
+            "23 000",
+            "69 000",
+            "17 000"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les effectifs américains passent de 23 000 hommes en 1965 à 545 000 en 1969."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q4",
+          "type": "mcq",
+          "prompt": "Qu'est-ce que la « vietnamisation » ?",
+          "options": [
+            "La politique de désengagement américain de Nixon (retrait progressif des soldats)",
+            "L'envoi de 545 000 soldats américains au Vietnam",
+            "La réunification du Vietnam par les communistes",
+            "L'intervention américaine au Cambodge"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La vietnamisation est la politique de Nixon : retirer progressivement les soldats américains (de 543 000 en avril 1969 à 69 000 au 1er mai 1972) tout en poursuivant la guerre."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q5",
+          "type": "mcq",
+          "prompt": "Que prévoient les accords de Paris ?",
+          "options": [
+            "L'évacuation des troupes américaines dans les 60 jours après le cessez-le-feu du 28 janvier 1973",
+            "L'envoi de 545 000 soldats américains au Vietnam",
+            "La division définitive du Vietnam en deux États",
+            "L'annexion du Vietnam par les États-Unis"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les accords de Paris prévoient l'évacuation des troupes américaines dans les 60 jours après le cessez-le-feu du 28 janvier 1973, la libération de 200 000 détenus et un Conseil National de Réconciliation."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p05_q6",
+          "type": "mcq",
+          "prompt": "Quand Saïgon tombe-t-elle ?",
+          "options": [
+            "Le 30 avril 1975",
+            "Le 31 janvier 1968",
+            "Le 28 janvier 1973",
+            "Le 21 juillet 1954"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le 30 avril 1975, les troupes nord-vietnamiennes s'emparent de Saïgon ; la réunification est ratifiée en 1976."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06",
+      "order": 6,
+      "title": "La désagrégation de l'URSS",
+      "summary": "Perestroïka et glasnost, effondrement du rideau de fer, putsch manqué et fin de l'URSS en décembre 1991.",
+      "conceptExplanation": "Les facteurs de l'effondrement du rideau de fer prennent leurs racines dans le XXVIIe congrès du PCUS, en février 1986. Gorbatchev y dénonce les blocages de l'économie soviétique et engage une réforme radicale pour sauver le pays et vivifier le communisme : la perestroïka (restructuration économique) et la glasnost (transparence).\nDès 1987, Gorbatchev abandonne la doctrine de la souveraineté limitée énoncée en 1968 par Leonid Brejnev et souhaite l'installation dans les démocraties populaires de gouvernements réformateurs. L'Armée rouge assiste sans sortir de ses casernes aux bouleversements de l'Europe de l'Est : abandon du système économique du bloc de l'Est au profit du libéralisme, abolition du rôle dirigeant du Parti communiste, introduction du pluralisme politique. Le 9 novembre 1989, le mur de Berlin est démantelé et la réunification de la RDA et de la RFA est faite en octobre 1990.\nL'échec des réformes économiques, le mécontentement social et l'explosion des tensions nationalistes favorisent la fin de l'URSS : après le putsch manqué des conservateurs (18-23 août 1991), les républiques proclament leur indépendance les unes après les autres. Boris Eltsine crée la Communauté des États Indépendants (CEI) le 21 décembre 1991 et Gorbatchev démissionne le 25 décembre 1991.",
+      "keyRule": "Perestroïka (restructuration économique) + glasnost (transparence) : lancées pour sauver le communisme, elles provoquent la disparition du bloc soviétique et de l'URSS.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Remettre dans l'ordre l'effondrement du bloc de l'Est",
+        "statement": "Remets dans l'ordre chronologique : la perestroïka et la glasnost ; l'abandon de la doctrine Brejnev ; la chute du mur de Berlin ; la réunification allemande ; le putsch des conservateurs ; la création de la CEI ; la démission de Gorbatchev.",
+        "methodSteps": [
+          "1986 : Gorbatchev lance la perestroïka et la glasnost pour sauver le communisme soviétique.",
+          "1987 : Gorbatchev abandonne la doctrine de la souveraineté limitée de Brejnev.",
+          "9 novembre 1989 : le mur de Berlin est démantelé ; la réunification de la RDA et de la RFA est faite en octobre 1990.",
+          "18-23 août 1991 : le putsch des conservateurs échoue grâce à la mobilisation de la population sous Eltsine.",
+          "21 décembre 1991 : Eltsine crée la CEI ; Gorbatchev démissionne le 25 décembre 1991."
+        ],
+        "conclusion": "Réformes de 1986, abandon de la doctrine Brejnev en 1987, chute du mur en 1989, putsch manqué en 1991, CEI et démission de Gorbatchev en décembre 1991."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La perestroïka",
+          "stepTheme": "La perestroïka",
+          "stepBadge": "La perestroïka",
+          "paragraphText": "• La perestroïka est une politique de restructuration économique. Elle vise à ressusciter l'innovation et l'esprit d'entreprise.\n• Gorbatchev autorise le travail individuel dès 1986 et donne une plus grande autonomie aux entreprises d'État en juin 1986.\n• Il propose de louer la terre aux paysans pour 50 ans, encourage la création de sociétés mixtes avec l'étranger et libéralise le commerce extérieur en novembre 1988.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q1",
+            "type": "mcq",
+            "prompt": "La perestroïka instaurée par Gorbatchev favorise :",
+            "options": [
+              "La collectivisation des moyens de production",
+              "La distribution des terres aux paysans",
+              "Le libéralisme économique",
+              "Le retour du plan quinquennal"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "La perestroïka est une politique de restructuration économique qui favorise le libéralisme économique (autonomie des entreprises, sociétés mixtes, libéralisation du commerce extérieur)."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "La glasnost",
+          "stepTheme": "La glasnost",
+          "stepBadge": "La glasnost",
+          "paragraphText": "• La perestroïka s'accompagne de la glasnost, ou transparence.\n• La glasnost est destinée à lutter contre les blocages du système politique. Elle implique la suppression de la censure, le rétablissement de la vérité historique, la démocratisation de la vie politique et une réforme des institutions.\n• Cette politique appliquée à l'intérieur de l'URSS aura aussi une influence sur les pays communistes de l'Europe, qui connaîtront des bouleversements.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q2",
+            "type": "mcq",
+            "prompt": "Qu'est-ce que la glasnost ?",
+            "options": [
+              "La transparence : fin de la censure et démocratisation de la vie politique",
+              "La restructuration économique du système soviétique",
+              "La collectivisation des terres aux paysans",
+              "La création du Pacte de Varsovie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La glasnost (transparence) lutte contre les blocages du système politique : suppression de la censure, vérité historique, démocratisation de la vie politique."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "L'abandon de la doctrine Brejnev",
+          "stepTheme": "L'abandon de la doctrine Brejnev",
+          "stepBadge": "L'abandon de la doctrine Brejnev",
+          "paragraphText": "• Dès 1987, Gorbatchev abandonne la doctrine de la souveraineté limitée énoncée en 1968 par Leonid Brejnev.\n• Il souhaite l'installation dans les démocraties populaires de gouvernements réformateurs favorables à ses idées.\n• Il entend donner des gages à l'Occident, dont il attend une aide financière pour mettre en œuvre sa politique économique.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q3",
+            "type": "mcq",
+            "prompt": "Que fait Gorbatchev dès 1987 ?",
+            "options": [
+              "Il abandonne la doctrine de la souveraineté limitée de Brejnev",
+              "Il renforce le rôle dirigeant du Parti communiste",
+              "Il envoie l'Armée rouge en Europe de l'Est",
+              "Il crée le Pacte de Varsovie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Dès 1987, Gorbatchev abandonne la doctrine de la souveraineté limitée de Brejnev et autorise des gouvernements réformateurs dans les démocraties populaires."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "L'effondrement du rideau de fer",
+          "stepTheme": "L'effondrement du rideau de fer",
+          "stepBadge": "L'effondrement du rideau de fer",
+          "paragraphText": "• L'Armée rouge assiste sans sortir de ses casernes aux grands bouleversements socio-politiques de l'Europe de l'Est : abandon du système économique du bloc de l'Est au profit du libéralisme, abolition du rôle dirigeant du Parti communiste, introduction du pluralisme politique.\n• La Pologne, la Tchécoslovaquie, la Roumanie, la Hongrie et la République démocratique allemande cessent d'être, les unes après les autres, des démocraties populaires.\n• Le 9 novembre 1989, le mur de Berlin est démantelé et la réunification de la RDA et de la RFA est faite en octobre 1990. Ainsi, un demi-siècle après sa constitution, le rideau de fer s'effondre.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q4",
+            "type": "mcq",
+            "prompt": "Quand le mur de Berlin est-il démantelé ?",
+            "options": [
+              "Le 9 novembre 1989",
+              "Le 9 novembre 1991",
+              "Le 3 octobre 1990",
+              "Le 25 décembre 1991"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le mur de Berlin est démantelé le 9 novembre 1989 (le livre d'exercices écrit par erreur « le 9 novembre 1991 ») ; la réunification est faite en octobre 1990."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le putsch des conservateurs (18-23 août 1991)",
+          "stepTheme": "Le putsch des conservateurs (18-23 août 1991)",
+          "stepBadge": "Le putsch des conservateurs (18-23 août 1991)",
+          "paragraphText": "• Du 18 au 23 août 1991, pendant que Gorbatchev est en vacances en Crimée, les conservateurs tentent un putsch qui se solde par un échec grâce à la grande mobilisation de la population sous la houlette de Boris Eltsine, président de la Fédération de Russie.\n• Boris Eltsine profite de l'occasion pour interdire le PCUS et reconnaît l'indépendance des républiques baltes.\n• Piège d'examen : les réformes de Gorbatchev n'avaient pas pour objectif l'éclatement de l'URSS — elles visaient à sauver le pays et à vivifier le communisme.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q5",
+            "type": "mcq",
+            "prompt": "Quel est l'objectif des réformes de Gorbatchev ?",
+            "options": [
+              "Sauver le pays et vivifier le communisme",
+              "Éclater l'URSS",
+              "Restaurer le stalinisme",
+              "Créer le Pacte de Varsovie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Gorbatchev engage une réforme radicale pour sauver le pays et vivifier le communisme : l'éclatement de l'URSS est la conséquence imprévue de ses réformes, pas leur objectif."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La fin de l'URSS",
+          "stepTheme": "La fin de l'URSS",
+          "stepBadge": "La fin de l'URSS",
+          "paragraphText": "• Les États qui constituent l'URSS proclament leur indépendance les uns après les autres au cours de l'année 1991 : la Géorgie (9 août), la Lituanie et l'Estonie (20 août), la Lettonie, le Turkménistan, le Tadjikistan et le Kazakhstan (21 août), la Biélorussie (25 août), la Moldavie (25 août), l'Azerbaïdjan (30 août), l'Ouzbékistan et le Kirghizistan (31 août), l'Arménie (23 septembre 1991).\n• Boris Eltsine crée, au détriment de l'URSS, la Communauté des États Indépendants (CEI) regroupant 11 des anciennes républiques soviétiques, le 21 décembre 1991.\n• L'URSS ayant disparu, Gorbatchev démissionne le 25 décembre 1991.",
+          "konanTip": "Le cours écrit que Gorbatchev démissionne le « 25 août 1911 » : coquille du cours, la date retenue ici est le 25 décembre 1991, cohérente avec le reste de la leçon et avec le livre d'exercices.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q6",
+            "type": "mcq",
+            "prompt": "Quand la Communauté des États Indépendants (CEI) est-elle créée ?",
+            "options": [
+              "Le 21 décembre 1991",
+              "Le 9 novembre 1989",
+              "Le 25 août 1991",
+              "Le 3 octobre 1990"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Boris Eltsine crée la CEI le 21 décembre 1991, regroupant 11 des anciennes républiques soviétiques."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q1",
+          "type": "mcq",
+          "prompt": "La perestroïka instaurée par Gorbatchev favorise :",
+          "options": [
+            "La collectivisation des moyens de production",
+            "La distribution des terres aux paysans",
+            "Le libéralisme économique",
+            "Le retour du plan quinquennal"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La perestroïka est une politique de restructuration économique qui favorise le libéralisme économique (autonomie des entreprises, sociétés mixtes, libéralisation du commerce extérieur)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q2",
+          "type": "mcq",
+          "prompt": "Qu'est-ce que la glasnost ?",
+          "options": [
+            "La transparence : fin de la censure et démocratisation de la vie politique",
+            "La restructuration économique du système soviétique",
+            "La collectivisation des terres aux paysans",
+            "La création du Pacte de Varsovie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La glasnost (transparence) lutte contre les blocages du système politique : suppression de la censure, vérité historique, démocratisation de la vie politique."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q3",
+          "type": "mcq",
+          "prompt": "Que fait Gorbatchev dès 1987 ?",
+          "options": [
+            "Il abandonne la doctrine de la souveraineté limitée de Brejnev",
+            "Il renforce le rôle dirigeant du Parti communiste",
+            "Il envoie l'Armée rouge en Europe de l'Est",
+            "Il crée le Pacte de Varsovie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dès 1987, Gorbatchev abandonne la doctrine de la souveraineté limitée de Brejnev et autorise des gouvernements réformateurs dans les démocraties populaires."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q4",
+          "type": "mcq",
+          "prompt": "Quand le mur de Berlin est-il démantelé ?",
+          "options": [
+            "Le 9 novembre 1989",
+            "Le 9 novembre 1991",
+            "Le 3 octobre 1990",
+            "Le 25 décembre 1991"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le mur de Berlin est démantelé le 9 novembre 1989 (le livre d'exercices écrit par erreur « le 9 novembre 1991 ») ; la réunification est faite en octobre 1990."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q5",
+          "type": "mcq",
+          "prompt": "Quel est l'objectif des réformes de Gorbatchev ?",
+          "options": [
+            "Sauver le pays et vivifier le communisme",
+            "Éclater l'URSS",
+            "Restaurer le stalinisme",
+            "Créer le Pacte de Varsovie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Gorbatchev engage une réforme radicale pour sauver le pays et vivifier le communisme : l'éclatement de l'URSS est la conséquence imprévue de ses réformes, pas leur objectif."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p06_q6",
+          "type": "mcq",
+          "prompt": "Quand la Communauté des États Indépendants (CEI) est-elle créée ?",
+          "options": [
+            "Le 21 décembre 1991",
+            "Le 9 novembre 1989",
+            "Le 25 août 1991",
+            "Le 3 octobre 1990"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Boris Eltsine crée la CEI le 21 décembre 1991, regroupant 11 des anciennes républiques soviétiques."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07",
+      "order": 7,
+      "title": "Un monde unipolaire dominé par les États-Unis",
+      "summary": "La fin de la guerre froide en 1991 et l'avènement de l'hyperpuissance américaine, gendarme du monde.",
+      "conceptExplanation": "Après l'éclatement et la disparition de l'URSS, le monde devient unipolaire. La disparition de l'URSS consacre l'avènement d'une « hyperpuissance » : les États-Unis. Ces derniers se considèrent désormais comme les « gendarmes du monde » et tentent d'imposer leur paix au reste du monde.\nOn assiste donc à de nouvelles guerres, telles que les deux guerres du Golfe ou d'Irak en 1991 et en 2002 (tel qu'écrit dans le cours), les interventions des États-Unis en Somalie en 1992, en Haïti en 1994 et en Afghanistan en 2001.\nLa guerre froide, commencée en 1947, prend fin en 1991 avec l'effondrement du bloc oriental. La désagrégation de l'URSS marque la fin du monde bipolaire et consacre la naissance d'un monde unipolaire dominé par les États-Unis. Cependant, cette domination américaine est de plus en plus contestée moins de deux décennies après la dislocation du bloc de l'Est.",
+      "keyRule": "1991 : fin de la guerre froide (1947-1991) et naissance d'un monde unipolaire dominé par les États-Unis.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Vrai ou faux : le monde après 1991",
+        "statement": "Indique si chaque affirmation est vraie ou fausse : après l'éclatement de l'URSS, le monde devient unipolaire ; la guerre froide commencée en 1947 prend fin en 1991 ; la glasnost est une politique de restructuration économique.",
+        "methodSteps": [
+          "« Après l'éclatement et la disparition de l'URSS, le monde devient unipolaire » : vrai.",
+          "« La guerre froide commencée en 1947 prend fin en 1991 avec l'effondrement du bloc oriental » : vrai.",
+          "« La glasnost est une politique de restructuration économique » : faux — la restructuration économique, c'est la perestroïka ; la glasnost, c'est la transparence."
+        ],
+        "conclusion": "Deux affirmations vraies, une fausse : ne pas confondre perestroïka (économie) et glasnost (transparence)."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "L'hyperpuissance américaine",
+          "stepTheme": "L'hyperpuissance américaine",
+          "stepBadge": "L'hyperpuissance américaine",
+          "paragraphText": "• Après l'éclatement et la disparition de l'URSS, le monde devient unipolaire.\n• La disparition de l'URSS consacre l'avènement d'une « hyperpuissance » : les États-Unis.\n• Ces derniers se considèrent désormais comme les « gendarmes du monde » et tentent d'imposer leur paix au reste du monde.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q1",
+            "type": "mcq",
+            "prompt": "L'éclatement et la disparition de l'URSS consacrent la naissance d'un monde :",
+            "options": [
+              "Multipolaire dominé par plusieurs puissances",
+              "Unipolaire dominé par les États-Unis",
+              "Bipolaire dominé par la Chine et les États-Unis",
+              "Bipolaire dominé par l'URSS et les États-Unis"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Après la disparition de l'URSS, le monde devient unipolaire, dominé par les États-Unis, seule hyperpuissance."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les interventions américaines après 1991",
+          "stepTheme": "Les interventions américaines après 1991",
+          "stepBadge": "Les interventions américaines après 1991",
+          "paragraphText": "• On assiste à de nouvelles guerres, telles que les deux guerres du Golfe ou d'Irak en 1991 et en 2002 (tel qu'écrit dans le cours).\n• Les interventions des États-Unis en Somalie en 1992, en Haïti en 1994 et en Afghanistan en 2001 en font partie.\n• Leurs conséquences continuent d'ébranler le monde.",
+          "konanTip": "Le cours écrit les deux guerres du Golfe ou d'Irak « en 1991 et en 2002 » : la seconde guerre d'Irak est habituellement datée de 2003 (la leçon 3 du même lot écrit 2003).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q2",
+            "type": "mcq",
+            "prompt": "En quelle année les États-Unis interviennent-ils en Somalie, selon le cours ?",
+            "options": [
+              "En 1992",
+              "En 1991",
+              "En 1994",
+              "En 2001"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite les interventions américaines en Somalie en 1992, en Haïti en 1994 et en Afghanistan en 2001."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "La fin de la guerre froide",
+          "stepTheme": "La fin de la guerre froide",
+          "stepBadge": "La fin de la guerre froide",
+          "paragraphText": "• La guerre froide, commencée en 1947, prend fin en 1991 avec l'effondrement du bloc oriental.\n• La désagrégation de l'URSS marque la fin du monde bipolaire et consacre la naissance d'un monde unipolaire dominé par les États-Unis.\n• Cependant, cette domination américaine est de plus en plus contestée moins de deux décennies après la dislocation du bloc de l'Est.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q3",
+            "type": "mcq",
+            "prompt": "Quand la guerre froide prend-elle fin, selon le cours ?",
+            "options": [
+              "En 1991, avec l'effondrement du bloc oriental",
+              "En 1989, avec la chute du mur de Berlin",
+              "En 1947, avec la rupture entre les Alliés",
+              "En 1962, avec la crise de Cuba"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La guerre froide, commencée en 1947, prend fin en 1991 avec l'effondrement du bloc oriental."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Vérifier une affirmation : perestroïka et glasnost",
+          "stepTheme": "Vérifier une affirmation : perestroïka et glasnost",
+          "stepBadge": "Vérifier une affirmation : perestroïka et glasnost",
+          "paragraphText": "• L'activité d'application du cours demande d'entourer les affirmations justes : « Après l'éclatement et la disparition de l'URSS le monde devient unipolaire », « La guerre froide commencée en 1947 prend fin en 1991 avec l'effondrement du bloc oriental » et « Le 9 novembre 1989, le mur de Berlin est démantelé et la réunification de la RDA et de la RFA est faite en octobre 1990 » sont justes.\n• En revanche, « La glasnost est une politique de restructuration économique » est fausse : la restructuration économique, c'est la perestroïka.\n• De même, « La perestroïka ou transparence est destinée à lutter contre les blocages du système politique » est fausse : la transparence, c'est la glasnost ; la perestroïka lutte contre les blocages du système économique.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q4",
+            "type": "mcq",
+            "prompt": "Laquelle de ces affirmations du cours est fausse ?",
+            "options": [
+              "« Après l'éclatement de l'URSS le monde devient unipolaire »",
+              "« La guerre froide commencée en 1947 prend fin en 1991 »",
+              "« La glasnost est une politique de restructuration économique »",
+              "« Le 9 novembre 1989, le mur de Berlin est démantelé »"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "La glasnost est la transparence (lutte contre les blocages du système politique) ; la restructuration économique, c'est la perestroïka."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le « vent de l'Est »",
+          "stepTheme": "Le « vent de l'Est »",
+          "stepBadge": "Le « vent de l'Est »",
+          "paragraphText": "• Le livre d'exercices propose l'affirmation suivante : « Le vent de l'Est est l'ensemble des conséquences des changements climatiques qui ont perturbé l'Europe de l'Est. »\n• Cette affirmation est fausse : dans le cours, le « vent de l'Est » renvoie aux bouleversements politiques de l'Europe de l'Est — abandon du système économique du bloc de l'Est, abolition du rôle dirigeant du Parti communiste, pluralisme politique, effondrement du rideau de fer — et non au climat.\n• Piège d'examen : ne pas confondre un changement politique et un changement climatique.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q5",
+            "type": "mcq",
+            "prompt": "Que faut-il répondre à l'affirmation : « Le vent de l'Est est l'ensemble des conséquences des changements climatiques qui ont perturbé l'Europe de l'Est » ?",
+            "options": [
+              "Faux : le vent de l'Est désigne les bouleversements politiques de l'Europe de l'Est",
+              "Vrai : il s'agit bien du climat",
+              "Faux : le vent de l'Est désigne la guerre froide",
+              "Vrai : il s'agit des conséquences de la guerre du Vietnam"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le « vent de l'Est » désigne les changements politiques qui ont secoué l'Europe de l'Est à la fin des années 1980 (chute des démocraties populaires, effondrement du rideau de fer), pas le climat."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Les quatre États nucléaires de la CEI",
+          "stepTheme": "Les quatre États nucléaires de la CEI",
+          "stepBadge": "Les quatre États nucléaires de la CEI",
+          "paragraphText": "• Après la disparition de l'URSS, les quatre États de la CEI (Communauté des États Indépendants) détenant des armements nucléaires — la Russie, l'Ukraine, le Kazakhstan et le Belarus (Biélorussie) — adhèrent en mai 1992 au traité START.\n• Les accords START (Strategic Arms Reduction Talks), signés le 31 juillet 1991 entre Bush et Gorbatchev, réduisent d'un tiers les missiles stratégiques des deux Grands.\n• Avec toutes les armes que possèdent encore les États-Unis et la Russie, héritière de l'URSS, en dépit des accords sur le désarmement, la terre n'est pas plus en sécurité de nos jours qu'à l'époque de la guerre froide.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q6",
+            "type": "mcq",
+            "prompt": "Quels États de la CEI, dotés d'armes nucléaires, adhèrent en mai 1992 au traité START ?",
+            "options": [
+              "La Russie, l'Ukraine, le Kazakhstan et le Belarus (Biélorussie)",
+              "La Pologne, la Hongrie et la Roumanie",
+              "La France, le Royaume-Uni et l'Allemagne",
+              "La Chine, l'Inde et le Pakistan"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Après la disparition de l'URSS, la Russie, l'Ukraine, le Kazakhstan et le Belarus (Biélorussie), les quatre États de la CEI détenant des armes nucléaires, adhèrent en mai 1992 au traité START."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q1",
+          "type": "mcq",
+          "prompt": "L'éclatement et la disparition de l'URSS consacrent la naissance d'un monde :",
+          "options": [
+            "Multipolaire dominé par plusieurs puissances",
+            "Unipolaire dominé par les États-Unis",
+            "Bipolaire dominé par la Chine et les États-Unis",
+            "Bipolaire dominé par l'URSS et les États-Unis"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Après la disparition de l'URSS, le monde devient unipolaire, dominé par les États-Unis, seule hyperpuissance."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q2",
+          "type": "mcq",
+          "prompt": "En quelle année les États-Unis interviennent-ils en Somalie, selon le cours ?",
+          "options": [
+            "En 1992",
+            "En 1991",
+            "En 1994",
+            "En 2001"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite les interventions américaines en Somalie en 1992, en Haïti en 1994 et en Afghanistan en 2001."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q3",
+          "type": "mcq",
+          "prompt": "Quand la guerre froide prend-elle fin, selon le cours ?",
+          "options": [
+            "En 1991, avec l'effondrement du bloc oriental",
+            "En 1989, avec la chute du mur de Berlin",
+            "En 1947, avec la rupture entre les Alliés",
+            "En 1962, avec la crise de Cuba"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La guerre froide, commencée en 1947, prend fin en 1991 avec l'effondrement du bloc oriental."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q4",
+          "type": "mcq",
+          "prompt": "Laquelle de ces affirmations du cours est fausse ?",
+          "options": [
+            "« Après l'éclatement de l'URSS le monde devient unipolaire »",
+            "« La guerre froide commencée en 1947 prend fin en 1991 »",
+            "« La glasnost est une politique de restructuration économique »",
+            "« Le 9 novembre 1989, le mur de Berlin est démantelé »"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La glasnost est la transparence (lutte contre les blocages du système politique) ; la restructuration économique, c'est la perestroïka."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q5",
+          "type": "mcq",
+          "prompt": "Que faut-il répondre à l'affirmation : « Le vent de l'Est est l'ensemble des conséquences des changements climatiques qui ont perturbé l'Europe de l'Est » ?",
+          "options": [
+            "Faux : le vent de l'Est désigne les bouleversements politiques de l'Europe de l'Est",
+            "Vrai : il s'agit bien du climat",
+            "Faux : le vent de l'Est désigne la guerre froide",
+            "Vrai : il s'agit des conséquences de la guerre du Vietnam"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le « vent de l'Est » désigne les changements politiques qui ont secoué l'Europe de l'Est à la fin des années 1980 (chute des démocraties populaires, effondrement du rideau de fer), pas le climat."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l02_bipolarisation_p07_q6",
+          "type": "mcq",
+          "prompt": "Quels États de la CEI, dotés d'armes nucléaires, adhèrent en mai 1992 au traité START ?",
+          "options": [
+            "La Russie, l'Ukraine, le Kazakhstan et le Belarus (Biélorussie)",
+            "La Pologne, la Hongrie et la Roumanie",
+            "La France, le Royaume-Uni et l'Allemagne",
+            "La Chine, l'Inde et le Pakistan"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Après la disparition de l'URSS, la Russie, l'Ukraine, le Kazakhstan et le Belarus (Biélorussie), les quatre États de la CEI détenant des armes nucléaires, adhèrent en mai 1992 au traité START."
+        }
+      ]
+    }
+  ]
 };
-

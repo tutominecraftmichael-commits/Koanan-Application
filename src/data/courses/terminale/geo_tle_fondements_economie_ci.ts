@@ -100,7 +100,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
               "Classée parmi les pays pauvres, elle est l'un des plus prospères de la sous-région."
             ],
             "correctAnswerIndex": 3,
-            "explanation": "En pratique, le pays est classé parmi les pays pauvres, tout en restant l'un des plus prospères de la sous-région. Il n'est ni développé, ni le plus pauvre, et il possède de nombreuses ressources."
+            "explanation": "Le cours précise que le pays est classé parmi les pays pauvres, tout en restant l'un des plus prospères de la sous-région. Il n'est ni développé, ni le plus pauvre, et il possède de nombreuses ressources."
           }
         },
         {
@@ -228,7 +228,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
             "Classée parmi les pays pauvres, elle est l'un des plus prospères de la sous-région."
           ],
           "correctAnswerIndex": 3,
-          "explanation": "En pratique, le pays est classé parmi les pays pauvres, tout en restant l'un des plus prospères de la sous-région. Il n'est ni développé, ni le plus pauvre, et il possède de nombreuses ressources."
+          "explanation": "Le cours précise que le pays est classé parmi les pays pauvres, tout en restant l'un des plus prospères de la sous-région. Il n'est ni développé, ni le plus pauvre, et il possède de nombreuses ressources."
         },
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p01_q4",
@@ -673,7 +673,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
               "La Bia"
             ],
             "correctAnswerIndex": 3,
-            "explanation": "Ayamé 1 et 2 sont sur la Bia. Le Comoé, bien qu'à l'est lui aussi, ne porte aucun des 6 principaux barrages hydroélectriques ; le Sassandra porte Buyo et Soubré."
+            "explanation": "Ayamé 1 et 2 sont sur la Bia. Le Comoé, bien qu'à l'est lui aussi, ne porte aucun des 6 barrages du cours ; le Sassandra porte Buyo et Soubré."
           }
         },
         {
@@ -805,7 +805,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
             "La Bia"
           ],
           "correctAnswerIndex": 3,
-          "explanation": "Ayamé 1 et 2 sont sur la Bia. Le Comoé, bien qu'à l'est lui aussi, ne porte aucun des 6 principaux barrages hydroélectriques ; le Sassandra porte Buyo et Soubré."
+          "explanation": "Ayamé 1 et 2 sont sur la Bia. Le Comoé, bien qu'à l'est lui aussi, ne porte aucun des 6 barrages du cours ; le Sassandra porte Buyo et Soubré."
         },
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p03_q4",
@@ -877,7 +877,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "Je cite une ressource minière avec son lieu et un chiffre : l'or d'Ity, de Bonikro et de Tongon, avec 32,568 t produites en 2019.",
           "Je cite une ressource énergétique avec son lieu et son usage : le gaz exploité au large de Jacqueville alimente les centrales d'Azito et de Vridi.",
           "J'indique l'apport : revenus d'exportation, électricité pour les industries et les ménages, emplois.",
-          "J'ajoute une nuance essentielle : ces ressources sont encore insuffisamment exploitées."
+          "J'ajoute la nuance du cours : ces ressources sont encore insuffisamment exploitées."
         ],
         "conclusion": "Le sous-sol est bien un atout, car il fournit des revenus et de l'énergie au pays, même s'il reste encore insuffisamment mis en valeur."
       },
@@ -1044,7 +1044,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p04_q8",
             "type": "mcq",
-            "prompt": "Le sous-sol ivoirien contient…",
+            "prompt": "D'après le cours, le sous-sol ivoirien contient…",
             "options": [
               "très peu de richesses",
               "des richesses variées, minières et énergétiques",
@@ -1151,7 +1151,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p04_q8",
           "type": "mcq",
-          "prompt": "Le sous-sol ivoirien contient…",
+          "prompt": "D'après le cours, le sous-sol ivoirien contient…",
           "options": [
             "très peu de richesses",
             "des richesses variées, minières et énergétiques",
@@ -1216,7 +1216,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p05_q2",
             "type": "mcq",
-            "prompt": "D'après la carte des densités de population de la Côte d'Ivoire (recensement de 2014), quel district est le plus densément peuplé ?",
+            "prompt": "D'après la carte des densités de 2014, quel district est le plus densément peuplé ?",
             "options": [
               "Le district d'Abidjan",
               "Le district des Savanes",
@@ -1267,7 +1267,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
               "75 %"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "45 % des habitants ont moins de 15 ans, soit presque un sur deux. Le nombre 15 correspond à l'âge, et non au pourcentage."
+            "explanation": "D'après le cours, 45 % des habitants ont moins de 15 ans, soit presque un sur deux. Le nombre 15 correspond à l'âge, et non au pourcentage."
           }
         },
         {
@@ -1374,7 +1374,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p05_q2",
           "type": "mcq",
-          "prompt": "D'après la carte des densités de population de la Côte d'Ivoire (recensement de 2014), quel district est le plus densément peuplé ?",
+          "prompt": "D'après la carte des densités de 2014, quel district est le plus densément peuplé ?",
           "options": [
             "Le district d'Abidjan",
             "Le district des Savanes",
@@ -1408,7 +1408,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
             "75 %"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "45 % des habitants ont moins de 15 ans, soit presque un sur deux. Le nombre 15 correspond à l'âge, et non au pourcentage."
+          "explanation": "D'après le cours, 45 % des habitants ont moins de 15 ans, soit presque un sur deux. Le nombre 15 correspond à l'âge, et non au pourcentage."
         },
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p05_q5",
@@ -1824,7 +1824,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "stepTheme": "L'État devient arbitre",
           "stepBadge": "L'État devient arbitre",
           "paragraphText": "Désormais, l'État ne produit plus : il fixe les règles du jeu.\n• Il organise l'espace économique et garantit la libre concurrence.\n• Il mobilise des capitaux par le Trésor public (emprunt obligataire).\n• Il attire les investisseurs grâce au CEPICI (Centre de Promotion des Investissements en Côte d'Ivoire).",
-          "konanTip": "Attention à bien développer le sigle CEPICI. La bonne forme est : Centre de Promotion des Investissements en Côte d'Ivoire.",
+          "konanTip": "Le PDF développe mal le sigle. La bonne forme est : Centre de Promotion des Investissements en Côte d'Ivoire.",
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p07_q4",
             "type": "mcq",
@@ -2004,7 +2004,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
       "order": 8,
       "title": "Entraînement type BAC",
       "summary": "S'entraîner aux consignes de la situation d'évaluation et à la construction d'une courbe de population.",
-      "conceptExplanation": "Une situation d'évaluation se traite en trois consignes.\n« De quoi s'agit-il ? » : une phrase qui nomme le sujet.\n« Explique… » : des faits géographiques précis.\n« Partages-tu l'avis… ? Justifie » : une prise de position suivie d'arguments.\nPour une courbe, on applique l'échelle avec soin sur chaque axe.",
+      "conceptExplanation": "Une situation d'évaluation se traite en trois consignes.\n« De quoi s'agit-il ? » : une phrase qui nomme le sujet.\n« Explique… » : des faits précis tirés du cours.\n« Partages-tu l'avis… ? Justifie » : une prise de position suivie d'arguments.\nPour une courbe, on applique l'échelle avec soin sur chaque axe.",
       "keyRule": "Au BAC, chaque consigne a sa forme : nommer le sujet, expliquer avec des faits, puis prendre position et justifier.",
       "formulas": [],
       "workedExample": {
@@ -2045,7 +2045,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "stepTitle": "Consigne 2 : expliquer avec des faits",
           "stepTheme": "Consigne 2 : expliquer avec des faits",
           "stepBadge": "Consigne 2 : expliquer avec des faits",
-          "paragraphText": "« Explique… » demande des faits précis.\nPour expliquer « un milieu naturel riche et varié », on cite :\n• le relief plat ; les trois climats ;\n• l'eau abondante (fleuves, lagunes, lacs) ; le sous-sol riche.",
+          "paragraphText": "« Explique… » demande des faits précis du cours.\nPour expliquer « un milieu naturel riche et varié », on cite :\n• le relief plat ; les trois climats ;\n• l'eau abondante (fleuves, lagunes, lacs) ; le sous-sol riche.",
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p08_q2",
             "type": "mcq",
@@ -2078,7 +2078,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
               "Non, car le climat du sud est très humide."
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Une bonne réponse prend position et la justifie avec des faits précis. Un simple « non » ou un argument hors sujet ne rapporte pas de points."
+            "explanation": "Une bonne réponse prend position et la justifie avec des faits du cours. Un simple « non » ou un argument hors sujet ne rapporte pas de points."
           }
         },
         {
@@ -2134,7 +2134,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p08_q6",
             "type": "mcq",
-            "prompt": "Pour un graphique de la population ivoirienne, l'échelle est de 1 cm pour 2 000 000 d'habitants. En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
+            "prompt": "En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
             "options": [
               "Environ 26,5 cm",
               "Environ 13,2 cm",
@@ -2227,7 +2227,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
             "Non, car le climat du sud est très humide."
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Une bonne réponse prend position et la justifie avec des faits précis. Un simple « non » ou un argument hors sujet ne rapporte pas de points."
+          "explanation": "Une bonne réponse prend position et la justifie avec des faits du cours. Un simple « non » ou un argument hors sujet ne rapporte pas de points."
         },
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p08_q4",
@@ -2258,7 +2258,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p08_q6",
           "type": "mcq",
-          "prompt": "Pour un graphique de la population ivoirienne, l'échelle est de 1 cm pour 2 000 000 d'habitants. En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
+          "prompt": "En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
           "options": [
             "Environ 26,5 cm",
             "Environ 13,2 cm",

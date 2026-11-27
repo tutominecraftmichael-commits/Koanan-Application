@@ -289,7 +289,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
           "stepTitle": "Kant et l'éducation",
           "stepTheme": "Kant et l'éducation",
           "stepBadge": "Kant et l'éducation",
-          "paragraphText": "Kant : « L'homme ne peut devenir homme que par l'éducation. »\nL'éducation fait faire à la nature humaine un pas vers la perfection.\nPrécision : cette formule vient des Réflexions sur l'éducation (Traité de pédagogie), plutôt que de l'Anthropologie citée par une erreur fréquente.",
+          "paragraphText": "Kant : « L'homme ne peut devenir homme que par l'éducation. »\nL'éducation fait faire à la nature humaine un pas vers la perfection.\nPrécision : cette formule vient des Réflexions sur l'éducation (Traité de pédagogie), plutôt que de l'Anthropologie citée par le PDF.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p02_q2",
             "type": "mcq",
@@ -335,7 +335,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p02_q4",
             "type": "mcq",
-            "prompt": "Qu'est-ce qui éloigne l'homme de l'animalité ?",
+            "prompt": "Qu'est-ce qui éloigne l'homme de l'animalité selon le cours ?",
             "options": [
               "Le climat",
               "La couleur de peau",
@@ -432,7 +432,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p02_q4",
           "type": "mcq",
-          "prompt": "Qu'est-ce qui éloigne l'homme de l'animalité ?",
+          "prompt": "Qu'est-ce qui éloigne l'homme de l'animalité selon le cours ?",
           "options": [
             "Le climat",
             "La couleur de peau",
@@ -938,7 +938,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
           "Montesquieu les attribue aux esclavagistes pour montrer leur bêtise.",
           "C'est une ironie qui dénonce l'esclavage."
         ],
-        "conclusion": "Montesquieu condamne l'esclavage (y voir une justification est un contresens sur son ironie)."
+        "conclusion": "Montesquieu condamne l'esclavage ; le PDF commet un contresens en disant qu'il le justifie."
       },
       "structuredSteps": [
         {
@@ -986,10 +986,10 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
         {
           "stepNumber": 3,
           "stepKind": "piege",
-          "stepTitle": "Point de vigilance : Montesquieu",
-          "stepTheme": "Point de vigilance : Montesquieu",
-          "stepBadge": "Point de vigilance : Montesquieu",
-          "paragraphText": "Attention à un contresens célèbre : certains lecteurs croient que Montesquieu, dans De l'esprit des lois, justifie l'esclavage des Noirs.\nC'est un contresens : au livre XV, chapitre 5, Montesquieu énumère ironiquement les « arguments » des esclavagistes pour en montrer l'absurdité.\nIl dénonce l'esclavage.",
+          "stepTitle": "Erreur dans le PDF : Montesquieu",
+          "stepTheme": "Erreur dans le PDF : Montesquieu",
+          "stepBadge": "Erreur dans le PDF : Montesquieu",
+          "paragraphText": "Le PDF affirme que Montesquieu, dans De l'esprit des lois, justifie l'esclavage des Noirs.\nC'est un contresens : au livre XV, chapitre 5, Montesquieu énumère ironiquement les « arguments » des esclavagistes pour en montrer l'absurdité.\nIl dénonce l'esclavage.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p05_q3",
             "type": "mcq",
@@ -1052,7 +1052,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
           "stepTitle": "La diversité, une richesse",
           "stepTheme": "La diversité, une richesse",
           "stepBadge": "La diversité, une richesse",
-          "paragraphText": "L'humanité se construit dans la diversité des peuples et des cultures.\nSaint-Exupéry : « Si tu diffères de moi, mon frère, loin de me léser, tu m'enrichis ».\nAuguste Comte : « notre harmonie morale repose exclusivement sur l'altruisme ».\nSenghor prône la « civilisation de l'universel » ; Nelson Mandela a lutté contre toutes les formes de domination.",
+          "paragraphText": "L'humanité se construit dans la diversité des peuples et des cultures.\nSaint-Exupéry : « Si tu diffères de moi, mon frère, loin de me léser, tu m'enrichis » (Lettre à un otage ; le PDF écrit Terre des hommes).\nAuguste Comte : « notre harmonie morale repose exclusivement sur l'altruisme ».\nSenghor prône la « civilisation de l'universel » ; Nelson Mandela a lutté contre toutes les formes de domination.",
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p05_q6",
             "type": "mcq",
@@ -1177,7 +1177,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p06_q1",
             "type": "mcq",
-            "prompt": "Dans L'existentialisme est un humanisme, Sartre se demande si l'homme a une emprise sur son devenir. Quelle est sa thèse ?",
+            "prompt": "Quelle est la thèse de Sartre dans ce texte ?",
             "options": [
               "L'homme est entièrement responsable de son devenir",
               "L'homme est soumis au destin",
@@ -1277,7 +1277,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p06_q1",
           "type": "mcq",
-          "prompt": "Dans L'existentialisme est un humanisme, Sartre se demande si l'homme a une emprise sur son devenir. Quelle est sa thèse ?",
+          "prompt": "Quelle est la thèse de Sartre dans ce texte ?",
           "options": [
             "L'homme est entièrement responsable de son devenir",
             "L'homme est soumis au destin",

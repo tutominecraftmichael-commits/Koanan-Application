@@ -273,7 +273,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p02_q1",
             "type": "mcq",
-            "prompt": "Quelle distinction faut-il faire ?",
+            "prompt": "Quelle distinction faut-il faire selon le cours ?",
             "options": [
               "Entre l'idée de Dieu et l'existence de Dieu",
               "Entre Dieu et la nature",
@@ -394,7 +394,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p02_q1",
           "type": "mcq",
-          "prompt": "Quelle distinction faut-il faire ?",
+          "prompt": "Quelle distinction faut-il faire selon le cours ?",
           "options": [
             "Entre l'idée de Dieu et l'existence de Dieu",
             "Entre Dieu et la nature",
@@ -562,7 +562,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p03_q4",
             "type": "mcq",
-            "prompt": "À quelles questions la religion répond-elle ?",
+            "prompt": "À quelles questions la religion répond-elle selon le cours ?",
             "options": [
               "« Combien coûte la vie ? »",
               "« Qui gagnera le match ? »",
@@ -659,7 +659,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p03_q4",
           "type": "mcq",
-          "prompt": "À quelles questions la religion répond-elle ?",
+          "prompt": "À quelles questions la religion répond-elle selon le cours ?",
           "options": [
             "« Combien coûte la vie ? »",
             "« Qui gagnera le match ? »",
@@ -802,10 +802,10 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "stepNumber": 5,
           "stepKind": "piege",
-          "stepTitle": "Point de vigilance : Kant et la crainte",
-          "stepTheme": "Point de vigilance : Kant et la crainte",
-          "stepBadge": "Point de vigilance : Kant et la crainte",
-          "paragraphText": "Attention à un contresens fréquent : on affirme parfois que, chez Kant, le devoir suppose l'autorité de Dieu et que c'est « la crainte du châtiment » qui pousse à obéir.\nC'est un contresens : pour Kant, le devoir vient de la raison de chacun (autonomie).\nAgir par peur de la punition n'est pas agir moralement : c'est de l'hétéronomie.",
+          "stepTitle": "Erreur dans le PDF : Kant et la crainte",
+          "stepTheme": "Erreur dans le PDF : Kant et la crainte",
+          "stepBadge": "Erreur dans le PDF : Kant et la crainte",
+          "paragraphText": "Le PDF écrit que, chez Kant, le devoir suppose l'autorité de Dieu et que c'est « la crainte du châtiment » qui pousse à obéir.\nC'est un contresens : pour Kant, le devoir vient de la raison de chacun (autonomie).\nAgir par peur de la punition n'est pas agir moralement : c'est de l'hétéronomie.",
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p04_q5",
             "type": "mcq",
@@ -952,7 +952,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q1",
             "type": "mcq",
-            "prompt": "Dans le sujet « Doit-on redouter la croyance religieuse ? », que signifie le verbe « redouter » ?",
+            "prompt": "Que signifie « redouter » dans le sujet ?",
             "options": [
               "Aimer profondément",
               "Ignorer",
@@ -1032,11 +1032,11 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
           "stepTitle": "Le texte de Rousseau : attention au contresens",
           "stepTheme": "Le texte de Rousseau : attention au contresens",
           "stepBadge": "Le texte de Rousseau : attention au contresens",
-          "paragraphText": "Texte : Du contrat social, livre IV, chapitre 8, « De la religion civile » (attention : chapitre 8 et non chapitre 7).\nThèse réelle de Rousseau : la religion de l'Évangile est « sainte, sublime, véritable », mais elle détache les citoyens de l'État ; elle est contraire à l'esprit social.\nLe corrigé y voit une invitation à pratiquer l'Évangile : c'est un contresens.",
+          "paragraphText": "Texte : Du contrat social, livre IV, chapitre 8, « De la religion civile » (le PDF écrit chapitre 7).\nThèse réelle de Rousseau : la religion de l'Évangile est « sainte, sublime, véritable », mais elle détache les citoyens de l'État ; elle est contraire à l'esprit social.\nLe corrigé du PDF y voit une invitation à pratiquer l'Évangile : c'est un contresens.",
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q5",
             "type": "mcq",
-            "prompt": "Dans Du contrat social (livre IV, chapitre 8, « De la religion civile »), Rousseau juge la religion de l'Évangile « sainte, sublime, véritable ». Que lui reproche-t-il pourtant ?",
+            "prompt": "Que reproche Rousseau à la religion de l'Évangile dans ce texte ?",
             "options": [
               "Elle est fausse et méchante",
               "Elle détache les citoyens de l'État, elle est contraire à l'esprit social",
@@ -1073,7 +1073,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q1",
           "type": "mcq",
-          "prompt": "Dans le sujet « Doit-on redouter la croyance religieuse ? », que signifie le verbe « redouter » ?",
+          "prompt": "Que signifie « redouter » dans le sujet ?",
           "options": [
             "Aimer profondément",
             "Ignorer",
@@ -1125,7 +1125,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q5",
           "type": "mcq",
-          "prompt": "Dans Du contrat social (livre IV, chapitre 8, « De la religion civile »), Rousseau juge la religion de l'Évangile « sainte, sublime, véritable ». Que lui reproche-t-il pourtant ?",
+          "prompt": "Que reproche Rousseau à la religion de l'Évangile dans ce texte ?",
           "options": [
             "Elle est fausse et méchante",
             "Elle détache les citoyens de l'État, elle est contraire à l'esprit social",

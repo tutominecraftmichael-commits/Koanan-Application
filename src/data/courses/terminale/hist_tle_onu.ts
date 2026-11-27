@@ -1,1001 +1,1622 @@
-import type { CurriculumChapter, StructuredLessonStep } from '../../../lib/curriculum/types';
+import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « Tle_H1-LOrganisation_des_Nations_Unies(ONU).pdf » (format v2 : mini-leçons de 6 étapes).
-
-const p01Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Origines de l’ONU',
-    stepTheme: 'blue',
-    stepTitle: 'L’échec de la SDN et le choc de 1945',
-    paragraphText:
-      '• Société des Nations (SDN) : organisation créée en 1919 après la Première Guerre mondiale pour préserver la paix, mais paralysée dans les années 1930 face aux agressions des régimes totalitaires.\nLe bilan traumatisant de la Seconde Guerre mondiale (plus de 50 millions de morts, génocides, armes nucléaires) convainc les Alliés de bâtir une organisation internationale plus efficace et dotée de moyens d’action.',
-    konanTip: 'L’ONU est née d’une double leçon : l’impuissance de la SDN et le traumatisme de 1939-1945.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01_q1',
-      type: 'mcq',
-      prompt: 'Quelle organisation internationale créée en 1919 a échoué à empêcher la Seconde Guerre mondiale ?',
-      options: [
-        'L’Organisation mondiale du commerce (OMC)',
-        'La Société des Nations (SDN)',
-        'Le Pacte de Varsovie',
-        'L’Union africaine (UA)',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La SDN (1919) n’a pas su empêcher les agressions de l’entre-deux-guerres ni le déclenchement de la Seconde Guerre mondiale.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Chronologie clé',
-    stepTheme: 'violet',
-    stepTitle: 'Les grandes conférences préparatoires (1941-1945)',
-    paragraphText:
-      'La naissance de l’ONU résulte d’une série de sept conférences diplomatiques tenues entre 1941 et 1945 par les Alliés, depuis les principes énoncés par Roosevelt et Churchill jusqu’à l’adoption définitive de la Charte à San Francisco.',
-    visualSchema: {
-      type: 'custom_svg',
-      title: 'Étapes diplomatiques de la création de l’ONU (1941-1945)',
-      caption: 'Chaque conférence pose une pierre institutionnelle précise de l’ONU.',
-      tableData: {
-        headers: ['Date et lieu', 'Conférence / Acte', 'Décision majeure'],
-        rows: [
-          ['14 août 1941 (Terre-Neuve)', 'Charte de l’Atlantique', 'Roosevelt et Churchill posent les grands principes de liberté et de sécurité collective'],
-          ['1er janv. 1942 (Washington)', 'Déclaration des Nations Unies', '26 États antifascistes adoptent l’expression « Nations Unies »'],
-          ['Oct.-déc. 1943', 'Moscou et Téhéran', 'Accord des Grands pour créer une organisation générale internationale après la guerre'],
-          ['Sept.-oct. 1944 (États-Unis)', 'Dumbarton Oaks', 'Définition des principaux organes et du fonctionnement futur'],
-          ['4-11 fév. 1945 (Crimée)', 'Conférence de Yalta', 'Adoption du principe du droit de veto des grands vainqueurs'],
-          ['26 avr.-26 juin 1945', 'Conférence de San Francisco', 'Rédaction et signature de la Charte de l’ONU par 50 États'],
-        ],
-      },
-    },
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01_q2',
-      type: 'mcq',
-      prompt: 'À quelle conférence le principe du droit de veto au futur Conseil de sécurité a-t-il été décidé ?',
-      options: [
-        'La conférence de Yalta (février 1945)',
-        'La conférence de Bandung (avril 1955)',
-        'Les accords de Genève (juillet 1954)',
-        'Le traité de Maastricht (février 1992)',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'C’est à Yalta (4-11 février 1945) que Roosevelt, Churchill et Staline actent le principe du droit de veto pour les futurs membres permanents.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'methode',
-    stepBadge: 'Acte de naissance',
-    stepTheme: 'green',
-    stepTitle: 'De San Francisco (26 juin) au 24 octobre 1945',
-    paragraphText:
-      '• Le 26 juin 1945, à San Francisco, 50 États signent la Charte des Nations Unies (rejoints peu après par la Pologne pour former 51 membres fondateurs), dont seulement 4 pays africains : l’Afrique du Sud, l’Égypte, l’Éthiopie et le Libéria.\n• Après ratification par la majorité des signataires et les cinq grands, l’ONU entre officiellement en vigueur le 24 octobre 1945 (Journée des Nations Unies).',
-    keyRule: 'Retenir les deux dates : 26 juin 1945 (signature de la Charte) et 24 octobre 1945 (entrée en vigueur officielle).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01_q3',
-      type: 'mcq',
-      prompt: 'Combien de pays africains figuraient parmi les 50 États signataires de la Charte de San Francisco le 26 juin 1945 ?',
-      options: [
-        '15 pays africains',
-        'Aucun pays africain',
-        '4 pays : Afrique du Sud, Égypte, Éthiopie et Libéria',
-        '54 pays africains',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'En 1945, la quasi-totalité de l’Afrique est colonisée ; seuls quatre États africains participent à la signature à San Francisco.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Piège chronologique',
-    stepTheme: 'orange',
-    stepTitle: 'Attention aux dates voisines de 1941-1945',
-    paragraphText:
-      'En devoir ou au BAC, deux confusions sont très fréquentes :\n1. La Charte de l’Atlantique date du 14 août 1941 (et non 1942 ni 1945).\n2. Potsdam (juillet-août 1945) règle surtout le sort de l’Allemagne vaincue après la signature déjà acquise de la Charte de San Francisco (26 juin 1945), avant l’entrée en vigueur le 24 octobre 1945.',
-    konanTip: 'Charte de l’Atlantique = 14 août 1941 ; Déclaration des Nations Unies = 1er janvier 1942 ; Charte de l’ONU = 26 juin 1945.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01_q4',
-      type: 'mcq',
-      prompt: 'Quelle date correspond à la signature de la Charte de l’Atlantique entre Roosevelt et Churchill ?',
-      options: [
-        'Le 14 août 1942',
-        'Le 24 octobre 1945',
-        'Le 1er janvier 1942',
-        'Le 14 août 1941',
-      ],
-      correctAnswerIndex: 3,
-      explanation: 'La Charte de l’Atlantique est signée le 14 août 1941 au large de Terre-Neuve (à ne pas confondre avec l’année 1942).',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Cas d’étude',
-    stepTheme: 'slate',
-    stepTitle: 'Associer chaque conférence à son apport',
-    paragraphText:
-      'Lors de la conférence de Dumbarton Oaks (septembre-octobre 1944), les États-Unis, le Royaume-Uni, l’URSS et la Chine esquissent l’architecture pratique de l’ONU : Assemblée générale, Conseil de sécurité, Secrétariat et Cour internationale.\nWashington en 1942 avait donné le nom ; San Francisco en 1945 transforme le projet en traité juridique contraignant.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01_q5',
-      type: 'mcq',
-      prompt: 'Quel apport revient spécifiquement à la conférence de Dumbarton Oaks (septembre-octobre 1944) ?',
-      options: [
-        'La création de l’Union européenne',
-        'La définition des organes et du fonctionnement futur de l’ONU',
-        'La signature finale de la Charte par 50 pays',
-        'La dissolution de l’URSS',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Dumbarton Oaks élabore les grandes lignes institutionnelles (organes et fonctionnement) reprises ensuite à Yalta puis à San Francisco.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Réflexe BAC',
-    stepTheme: 'green',
-    stepTitle: 'Situer le siège et l’entrée en vigueur',
-    paragraphText:
-      '• Dès le 24 octobre 1945, l’ONU remplace juridiquement la SDN.\n• Son siège permanent est installé à New York (États-Unis), symbole du basculement du centre diplomatique mondial de l’Europe (Genève pour la SDN) vers les États-Unis.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01_q6',
-      type: 'mcq',
-      prompt: 'Dans quelle ville se trouve le siège principal de l’ONU ?',
-      options: [
-        'New York',
-        'Genève',
-        'Bruxelles',
-        'La Haye',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le siège principal de l’ONU est à New York (États-Unis), tandis que certains organes ou agences siègent en Europe (La Haye, Genève, Paris, Rome, Vienne).',
-    },
-  },
-];
-
-const p02Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'La Charte',
-    stepTheme: 'blue',
-    stepTitle: 'Qu’est-ce que la Charte des Nations Unies ?',
-    paragraphText:
-      '• Charte des Nations Unies : traité fondateur composé d’un préambule (« Nous, peuples des Nations Unies... ») et de 111 articles répartis en 19 chapitres.\nElle fixe à la fois les buts poursuivis par l’organisation (article 1) et les règles juridiques de conduite que s’engagent à respecter les États membres (article 2).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02_q1',
-      type: 'mcq',
-      prompt: 'Quel texte constitue la loi fondamentale et le traité fondateur de l’ONU ?',
-      options: [
-        'Le traité de Versailles',
-        'La Charte des Nations Unies',
-        'Les accords de Dayton',
-        'Le traité de Rome',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La Charte des Nations Unies (signée le 26 juin 1945 à San Francisco) est le texte constitutif qui régit l’ONU.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Article 1',
-    stepTheme: 'violet',
-    stepTitle: 'Les quatre grands objectifs de l’ONU',
-    paragraphText:
-      'Selon l’article 1 de la Charte, l’ONU poursuit quatre objectifs essentiels :\n1. Maintenir la paix et la sécurité internationales par des mesures collectives.\n2. Développer des relations amicales entre nations fondées sur le respect de l’égalité des droits et du droit des peuples à disposer d’eux-mêmes.\n3. Réaliser la coopération internationale (économique, sociale, culturelle, humanitaire) et encourager le respect des droits de l’homme et des libertés fondamentales.\n4. Être un centre où s’harmonisent les efforts des nations vers ces fins communes.',
-    keyRule: 'Retenir les 4 piliers de l’article 1 : paix, autodétermination des peuples, coopération et droits de l’homme, harmonisation.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02_q2',
-      type: 'mcq',
-      prompt: 'Lequel de ces éléments figure parmi les quatre objectifs officiels de l’article 1 de la Charte ?',
-      options: [
-        'Instaurer une monnaie unique mondiale',
-        'Maintenir la paix, respecter l’autodétermination et promouvoir les droits de l’homme',
-        'Remplacer tous les gouvernements nationaux par un parlement unique',
-        'Réserver le commerce international aux cinq membres permanents',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’article 1 place au cœur de l’ONU la paix, le droit des peuples à disposer d’eux-mêmes, la coopération et les droits humains.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Article 2',
-    stepTheme: 'violet',
-    stepTitle: 'Les cinq principes directeurs d’action',
-    paragraphText:
-      'Pour atteindre ces objectifs, l’article 2 impose cinq principes majeurs aux États membres :\n1. L’égalité souveraine de tous les membres.\n2. Le respect de bonne foi des obligations de la Charte.\n3. Le règlement pacifique des différends internationaux.\n4. L’abstention de recourir à la menace ou à l’emploi de la force contre l’intégrité territoriale d’un État.\n5. La non-ingérence de l’ONU dans les affaires relevant essentiellement de la compétence nationale d’un État (sauf action coercitive du chapitre VII).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02_q3',
-      type: 'mcq',
-      prompt: 'Que signifie le principe de « non-ingérence » inscrit à l’article 2 de la Charte ?',
-      options: [
-        'L’ONU n’intervient pas dans les affaires purement intérieures d’un État souverain',
-        'Aucun État n’a le droit de signer un traité commercial',
-        'Les membres permanents perdent leur droit de vote en cas de conflit',
-        'Tout État peut envahir son voisin sans justification',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Sauf menace avérée contre la paix internationale relevant du chapitre VII, l’ONU respecte la souveraineté intérieure des États.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Piège d’examen',
-    stepTheme: 'orange',
-    stepTitle: 'Ne pas confondre objectif et principe',
-    paragraphText:
-      '• Un objectif (article 1) indique le but à atteindre : par exemple, maintenir la paix ou promouvoir les droits humains.\n• Un principe (article 2) fixe la règle de comportement à respecter : par exemple, l’égalité souveraine, la bonne foi, le règlement pacifique ou la non-ingérence.\nMélanger les deux rubriques dans un devoir fait perdre des points de rigueur conceptuelle.',
-    konanTip: 'Objectif = ce qu’on veut obtenir (Article 1) ; Principe = comment on doit agir (Article 2).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02_q4',
-      type: 'mcq',
-      prompt: 'Parmi ces propositions, laquelle relève directement d’un principe de conduite (article 2) plutôt que d’un objectif général ?',
-      options: [
-        'Favoriser le développement culturel mondial',
-        'Promouvoir le respect des libertés fondamentales',
-        'Régler les différends par des moyens pacifiques et sans menace de force',
-        'Organiser l’aide humanitaire en cas de famine',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'Le règlement pacifique des différends et le non-recours à la force sont des règles de conduite prescrites par l’article 2.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Application',
-    stepTheme: 'slate',
-    stepTitle: 'Appliquer les principes à un conflit frontalier',
-    paragraphText:
-      'Deux États voisins s’opposent sur le tracé d’une frontière maritime riche en hydrocarbures. Conformément à la Charte (article 2), ils doivent renoncer à l’attaque armée et soumettre le litige à la négociation, à la médiation ou à la Cour internationale de justice.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02_q5',
-      type: 'mcq',
-      prompt: 'Lorsqu’un État saisit la médiation diplomatique au lieu d’envoyer son armée sur une zone disputée, quel principe de l’ONU applique-t-il ?',
-      options: [
-        'Le droit de veto',
-        'Le règlement pacifique des différends',
-        'La politique d’endiguement',
-        'Le régime de tutelle',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les États membres s’engagent à privilégier le règlement pacifique et à proscrire l’usage unilatéral de la force.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Savoir rédiger',
-    stepTheme: 'green',
-    stepTitle: 'Utiliser l’égalité des droits et la souveraineté dans une copie',
-    paragraphText:
-      'En dissertation, montrer la tension permanente entre deux exigences de la Charte :\n• d’un côté, l’égalité souveraine et la non-ingérence protègent les petits États face aux grandes puissances ;\n• de l’autre, l’exigence des droits humains et du maintien de la paix peut conduire le Conseil de sécurité à autoriser une intervention sous mandat onusien.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02_q6',
-      type: 'mcq',
-      prompt: 'Quel principe affirme que tous les États membres de l’ONU disposent juridiquement du même statut d’État, qu’ils soient grands ou petits ?',
-      options: [
-        'La bipolarisation',
-        'L’égalité souveraine des États',
-        'Le droit de veto',
-        'La solidarité atlantique',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’article 2 paragraphe 1 proclame l’égalité souveraine de tous les membres (exprimée notamment par « 1 État = 1 voix » à l’Assemblée générale).',
-    },
-  },
-];
-
-const p03Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Organe délibératif',
-    stepTheme: 'blue',
-    stepTitle: 'L’Assemblée générale (AG) : le parlement des nations',
-    paragraphText:
-      '• Assemblée générale : organe plénier réunissant les 193 États membres (depuis l’admission du Soudan du Sud le 9 juillet 2011). Chaque État dispose d’une voix.\n• Rôle : elle débat de toutes les questions internationales, approuve le budget, élit les membres non permanents du Conseil de sécurité et nomme le Secrétaire général sur recommandation de ce dernier.\n• Limite : ses résolutions sont des recommandations non contraignantes.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03_q1',
-      type: 'mcq',
-      prompt: 'Combien d’États membres l’ONU compte-t-elle depuis l’admission du Soudan du Sud en juillet 2011 ?',
-      options: [
-        '51 États',
-        '120 États',
-        '193 États',
-        '215 États',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'Le Soudan du Sud est devenu le 193e État membre de l’ONU le 9 juillet 2011.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Organe exécutif',
-    stepTheme: 'violet',
-    stepTitle: 'Le Conseil de sécurité (CS) et le droit de veto',
-    paragraphText:
-      '• Composition (15 membres) : 5 membres permanents disposant du droit de veto (États-Unis, France, Royaume-Uni, Russie, Chine) + 10 membres non permanents élus par l’AG pour 2 ans.\n• Pouvoir : seul organe dont les résolutions s’imposent aux États. Il agit de manière graduelle : 1. recommandations et cessez-le-feu ; 2. sanctions diplomatiques et embargo économique ; 3. intervention militaire des Casques bleus (chapitre VII).',
-    keyRule: 'Les 5 membres permanents du Conseil de sécurité (P5) : États-Unis, France, Royaume-Uni, Russie, Chine.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03_q2',
-      type: 'mcq',
-      prompt: 'Quels sont les cinq membres permanents du Conseil de sécurité disposant du droit de veto ?',
-      options: [
-        'États-Unis, Allemagne, Japon, Brésil, Inde',
-        'États-Unis, France, Royaume-Uni, Russie, Chine',
-        'France, Canada, Italie, Russie, Chine',
-        'États-Unis, Royaume-Uni, Nigeria, Inde, Russie',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les 5 permanents sont les grandes puissances victorieuses de 1945 (États-Unis, France, Royaume-Uni, URSS/Russie, Chine).',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Administration',
-    stepTheme: 'violet',
-    stepTitle: 'Le Secrétariat général et ses titulaires',
-    paragraphText:
-      'Dirigé par le Secrétaire général, élu pour un mandat de 5 ans renouvelable par l’Assemblée générale sur recommandation du Conseil de sécurité, le Secrétariat assure le fonctionnement administratif quotidien et une mission diplomatique de médiation.',
-    visualSchema: {
-      type: 'custom_svg',
-      title: 'Les neuf Secrétaires généraux de l’ONU depuis 1946',
-      caption: 'Mandat de 5 ans renouvelable ; deux personnalités africaines (Boutros-Ghali et Kofi Annan) ont dirigé l’ONU.',
-      tableData: {
-        headers: ['Secrétaire général', 'Nationalité', 'Mandat'],
-        rows: [
-          ['Trygve Lie', 'Norvège', '1946 - 1952'],
-          ['Dag Hammarskjöld', 'Suède', '1953 - 1961'],
-          ['U Thant', 'Birmanie (Myanmar)', '1961 - 1971'],
-          ['Kurt Waldheim', 'Autriche', '1972 - 1981'],
-          ['Javier Pérez de Cuéllar', 'Pérou', '1982 - 1991'],
-          ['Boutros Boutros-Ghali', 'Égypte', '1992 - 1996'],
-          ['Kofi Annan', 'Ghana', '1997 - 2006'],
-          ['Ban Ki-moon', 'Corée du Sud', '2007 - 2016'],
-          ['António Guterres', 'Portugal', 'Depuis janvier 2017'],
-        ],
-      },
-    },
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03_q3',
-      type: 'mcq',
-      prompt: 'Qui a été le premier Africain originaire d’Afrique subsaharienne à exercer la fonction de Secrétaire général de l’ONU (1997-2006) ?',
-      options: [
-        'Kofi Annan (Ghana)',
-        'Boutros Boutros-Ghali (Égypte)',
-        'U Thant (Birmanie)',
-        'António Guterres (Portugal)',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’Égyptien Boutros Boutros-Ghali (1992-1996) a été le premier Africain, suivi par le Ghanéen Kofi Annan (1997-2006).',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'definition',
-    stepBadge: 'Autres organes',
-    stepTheme: 'blue',
-    stepTitle: 'ECOSOC, Cour internationale de justice et Conseil de tutelle',
-    paragraphText:
-      '• Conseil économique et social (ECOSOC) : 54 membres élus pour 3 ans ; coordonne le travail économique, social et humanitaire des agences spécialisées.\n• Cour internationale de justice (CIJ) : siège à La Haye (Pays-Bas) ; 15 juges élus pour 9 ans, chargés de trancher les différends juridiques entre États.\n• Conseil de tutelle : chargé de conduire vers l’autonomie les anciens territoires sous mandat (mission suspendue depuis l’indépendance des Palaos en 1994, même si l’ONU a assuré des administrations transitoires au Kosovo en 1999 et au Timor-Oriental jusqu’en 2002).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03_q4',
-      type: 'mcq',
-      prompt: 'Où siège la Cour internationale de justice (CIJ), organe judiciaire principal de l’ONU ?',
-      options: [
-        'À New York (États-Unis)',
-        'À Genève (Suisse)',
-        'À La Haye (Pays-Bas)',
-        'À Vienne (Autriche)',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'La CIJ siège au Palais de la Paix à La Haye (Pays-Bas) avec 15 juges élus pour 9 ans.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'piege',
-    stepBadge: 'Confusion fréquente',
-    stepTheme: 'orange',
-    stepTitle: 'Ne pas confondre CIJ et CPI',
-    paragraphText:
-      '• La Cour internationale de justice (CIJ), organe principal de l’ONU à La Haye, ne juge que des litiges entre États (frontières, traités).\n• La Cour pénale internationale (CPI), également à La Haye mais indépendante de l’ONU (Statut de Rome, 1998/2002), juge des individus accusés de génocide, crimes de guerre ou crimes contre l’humanité.',
-    konanTip: 'CIJ = litiges entre États (organe ONU) ; CPI = responsabilité pénale des individus.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03_q5',
-      type: 'mcq',
-      prompt: 'Quelle différence fondamentale distingue la CIJ de la CPI ?',
-      options: [
-        'La CIJ juge les litiges entre États tandis que la CPI juge des individus',
-        'La CIJ est à Paris et la CPI est à New York',
-        'La CIJ dispose d’une armée permanente contrairement à la CPI',
-        'La CIJ ne s’occupe que des budgets des institutions spécialisées',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'La CIJ tranche les différends interétatiques ; la CPI poursuit des personnes physiques pour crimes internationaux graves.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'exemple',
-    stepBadge: 'Analyse de crise',
-    stepTheme: 'slate',
-    stepTitle: 'Pourquoi une résolution majoritaire peut-elle être bloquée ?',
-    paragraphText:
-      'Même si 14 membres sur 15 du Conseil de sécurité approuvent un texte sur une crise majeure, il suffit qu’un seul des 5 membres permanents vote contre pour que la résolution soit rejetée : c’est le droit de veto.\nEn revanche, l’abstention d’un membre permanent n’empêche pas l’adoption d’une résolution.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03_q6',
-      type: 'mcq',
-      prompt: 'Que se passe-t-il au Conseil de sécurité si 14 membres votent pour une résolution et qu’un seul membre permanent vote contre ?',
-      options: [
-        'La résolution est adoptée à la majorité des deux tiers',
-        'La résolution est rejetée en raison du droit de veto',
-        'Le Secrétaire général tranche par un vote double',
-        'L’affaire est automatiquement transférée à l’ECOSOC',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le vote négatif d’un seul des 5 membres permanents bloque toute décision de fond au Conseil de sécurité.',
-    },
-  },
-];
-
-const p04Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'definition',
-    stepBadge: 'Système onusien',
-    stepTheme: 'blue',
-    stepTitle: 'Rôle des organismes spécialisés et programmes',
-    paragraphText:
-      '• Organismes spécialisés, fonds et programmes : structures autonomes sur le plan budgétaire et administratif mais rattachées à l’ONU (coordonnées par l’ECOSOC) pour traiter des domaines précis : santé, éducation, agriculture, réfugiés, finance ou énergie nucléaire civile.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04_q1',
-      type: 'mcq',
-      prompt: 'Quel organe principal de l’ONU assure la coordination des institutions spécialisées dans les domaines économique, social et humanitaire ?',
-      options: [
-        'Le Conseil de tutelle',
-        'Le Conseil économique et social (ECOSOC)',
-        'La Cour internationale de justice',
-        'Le Comité des cinq permanents',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’ECOSOC (54 membres élus pour 3 ans) coordonne les activités des agences et institutions spécialisées.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Volet social',
-    stepTheme: 'violet',
-    stepTitle: 'Organismes sociaux, culturels et humanitaires',
-    paragraphText:
-      '• UNESCO (Paris, 1946) : éducation, science, culture et patrimoine mondial.\n• OMS (Genève, 1948) : santé publique mondiale et lutte contre les épidémies.\n• FAO (Rome, 1945) et PAM (Rome, 1961) : agriculture, lutte contre la faim, aide alimentaire et cantines scolaires.\n• OIT (Genève, 1919/1946) : normes internationales du travail.\n• UNICEF (1946) : protection et droits de l’enfant.\n• HCR (Genève, 1950) et HCDH (Genève, 1993) : protection des réfugiés et défense des droits de l’homme.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04_q2',
-      type: 'mcq',
-      prompt: 'Quel organisme onusien basé à Paris s’occupe de l’éducation, de la science et de la culture ?',
-      options: [
-        'La FAO',
-        'L’OMS',
-        'L’UNESCO',
-        'Le HCR',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'L’UNESCO (Organisation des Nations Unies pour l’éducation, la science et la culture) a son siège à Paris depuis 1946.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'propriete',
-    stepBadge: 'Volet économique',
-    stepTheme: 'violet',
-    stepTitle: 'Organismes techniques, financiers et commerciaux',
-    paragraphText:
-      '• Volet technique : AIEA (Vienne, 1957 : contrôle du nucléaire civil et non-prolifération), OACI (Montréal, 1947 : aviation civile), UPU (Berne, 1874 : union postale).\n• Volet économique et financier : FMI et Banque mondiale / BIRD (créés à Bretton Woods en 1944, sièges à Washington : stabilité financière et prêts de développement), CNUCED (Genève, 1964 : commerce et développement), GATT (1947) puis OMC (1995 : commerce international).',
-    keyRule: 'Washington abrite les institutions financières de Bretton Woods (FMI, Banque mondiale) ; Vienne abrite l’AIEA.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04_q3',
-      type: 'mcq',
-      prompt: 'Quelle agence spécialisée veille à l’utilisation pacifique de l’énergie atomique et lutte contre la prolifération nucléaire ?',
-      options: [
-        'L’AIEA (siège à Vienne)',
-        'La FAO (siège à Rome)',
-        'L’UPU (siège à Berne)',
-        'L’OIT (siège à Genève)',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'L’Agence internationale de l’énergie atomique (AIEA), créée en 1957 à Vienne, contrôle l’usage civil du nucléaire.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Piège des sigles',
-    stepTheme: 'orange',
-    stepTitle: 'Bien distinguer HCR, HCDH, OMS et FAO',
-    paragraphText:
-      '• HCR = Haut-Commissariat des Nations Unies pour les réfugiés (Genève, 1950).\n• HCDH = Haut-Commissariat des Nations Unies aux droits de l’homme (Genève, 1993).\n• FAO = Organisation pour l’alimentation et l’agriculture (Rome), différente de l’OMS = Organisation mondiale de la santé (Genève).',
-    konanTip: 'Ne confonds pas Genève (OMS, OIT, HCR, HCDH, CNUCED) et Rome (FAO, PAM).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04_q4',
-      type: 'mcq',
-      prompt: 'À quelle mission précise correspond l’acronyme HCR ?',
-      options: [
-        'La régulation du transport aérien international',
-        'La protection et l’assistance aux réfugiés',
-        'La fixation des taux de change monétaires',
-        'Le contrôle des centrales nucléaires',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le HCR (Haut-Commissariat pour les réfugiés), basé à Genève depuis 1950, protège les populations déplacées et réfugiées.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Terrain concret',
-    stepTheme: 'slate',
-    stepTitle: 'L’action des agences onusiennes en Côte d’Ivoire',
-    paragraphText:
-      'En Côte d’Ivoire comme dans d’autres pays en développement, l’ONU est concrètement présente sur le terrain grâce à ses agences :\n• le PAM appuie les cantines scolaires en zone rurale ;\n• l’UNICEF soutient la vaccination et la scolarisation des enfants ;\n• l’OMS a accompagné la riposte sanitaire face aux épidémies comme Ebola ou la COVID-19.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04_q5',
-      type: 'mcq',
-      prompt: 'Quel programme onusien appuie directement les cantines scolaires et la lutte contre l’insécurité alimentaire d’urgence ?',
-      options: [
-        'L’OACI',
-        'Le Programme alimentaire mondial (PAM)',
-        'Le Fonds monétaire international (FMI)',
-        'L’Union postale universelle (UPU)',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Le PAM (basé à Rome, Prix Nobel de la paix 2020) apporte une aide alimentaire d’urgence et soutient les cantines scolaires.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Classement rapide',
-    stepTheme: 'green',
-    stepTitle: 'Classer les organismes en 3 familles au BAC',
-    paragraphText:
-      'Pour ne jamais énumérer en désordre dans une copie, regroupe toujours les organismes en trois catégories :\n1. Social, culture et humanitaire (UNESCO, OMS, OIT, FAO, PAM, UNICEF, HCR, HCDH).\n2. Technique et régulation (AIEA, OACI, UPU).\n3. Économie, finance et commerce (FMI, Banque mondiale, CNUCED, OMC).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04_q6',
-      type: 'mcq',
-      prompt: 'Quelles institutions sont issues des accords de Bretton Woods de 1944 pour stabiliser l’économie mondiale et financer le développement ?',
-      options: [
-        'Le FMI et la Banque mondiale',
-        'L’UNESCO et l’UNICEF',
-        'L’OMS et le HCR',
-        'L’AIEA et l’OACI',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le Fonds monétaire international (FMI) et la Banque mondiale ont été créés en 1944 à Bretton Woods.',
-    },
-  },
-];
-
-const p05Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'propriete',
-    stepBadge: 'Succès politiques',
-    stepTheme: 'violet',
-    stepTitle: 'Maintien de la paix et règlement de crises',
-    paragraphText:
-      '• Prévention d’une troisième guerre mondiale : malgré la guerre froide, l’ONU offre un forum permanent de dialogue (ex. crise de Cuba en 1962 avec U Thant) et contrôle le nucléaire civil via l’AIEA.\n• Interventions de paix : Corée (1950), Suez/Égypte (1956, naissance des Casques bleus), Congo (1961), Libération du Koweït (1990-1991), Libéria (2001), Côte d’Ivoire (ONUCI, 2002-2017). Les Casques bleus ont reçu le Prix Nobel de la paix en 1988.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05_q1',
-      type: 'mcq',
-      prompt: 'À quelle occasion les Casques bleus de l’ONU ont-ils reçu une distinction internationale majeure en 1988 ?',
-      options: [
-        'Le prix UNESCO de l’éducation',
-        'Le Prix Nobel de la paix',
-        'Le traité de non-prolifération',
-        'La création du Conseil de tutelle',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les forces de maintien de la paix de l’ONU (Casques bleus) ont reçu le Prix Nobel de la paix en 1988.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'propriete',
-    stepBadge: 'Succès sociaux & droit',
-    stepTheme: 'violet',
-    stepTitle: 'Décolonisation, droits humains, santé et environnement',
-    paragraphText:
-      '• Droits humains et justice : Déclaration universelle des droits de l’homme (10 décembre 1948), tribunaux pénaux internationaux (ex-Yougoslavie, Rwanda), appui à la CPI.\n• Décolonisation : tribune anticoloniale et accompagnement de dizaines de pays vers l’indépendance.\n• Progrès socio-sanitaires et écologiques : éradication de la variole (OMS), baisse de la mortalité infantile, sommets de la Terre (Rio 1992, COP21 de Paris 2015).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05_q2',
-      type: 'mcq',
-      prompt: 'À quelle date l’Assemblée générale de l’ONU a-t-elle adopté la Déclaration universelle des droits de l’homme ?',
-      options: [
-        'Le 24 octobre 1945',
-        'Le 10 décembre 1948',
-        'Le 9 novembre 1989',
-        'Le 11 septembre 2001',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'La Déclaration universelle des droits de l’homme (DUDH) a été adoptée à Paris (Palais de Chaillot) le 10 décembre 1948.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'piege',
-    stepBadge: 'Limites et échecs',
-    stepTheme: 'orange',
-    stepTitle: 'Paralysie du veto, conflits non résolus et manque de moyens',
-    paragraphText:
-      '• Blocage politique : usage abusif du droit de veto (279 vetos entre 1946 et 2016), qui paralyse l’ONU lorsque les intérêts des 5 permanents s’opposent (guerre froide, Syrie, Ukraine, conflit israélo-palestinien).\n• Échecs tragiques et limites opérationnelles : impuissance en Somalie (1993), incapacité à empêcher le génocide des Tutsis au Rwanda (1994) ou le massacre de Srebrenica (1995) ; retards de cotisations des États ; contournement de l’ONU (Irak 2003).\n• Défis mondiaux persistants : pauvreté, inégalités et crise sanitaire mondiale (COVID-19).',
-    konanTip: 'Au BAC, cite toujours des faits datés : Rwanda (1994), Somalie (1993), Irak (2003), vetos au Conseil de sécurité.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05_q3',
-      type: 'mcq',
-      prompt: 'Quelle limite majeure explique fréquemment l’inaction du Conseil de sécurité face à certaines guerres civiles ou régionales ?',
-      options: [
-        'L’absence de siège permanent pour les États-Unis',
-        'L’usage du droit de veto par l’un des cinq membres permanents',
-        'L’interdiction faite à l’ONU de tenir des assemblées annuelles',
-        'Le refus des pays d’Afrique d’adhérer à l’organisation',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les divergences entre membres permanents entraînent le recours au droit de veto, bloquant toute résolution contraignante.',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'methode',
-    stepBadge: 'Réformes souhaitées',
-    stepTheme: 'green',
-    stepTitle: 'Comment réformer l’ONU pour le XXIe siècle ?',
-    paragraphText:
-      'L’architecture de 1945 ne reflète plus les équilibres actuels. Trois axes de réforme sont régulièrement proposés :\n1. Élargir le Conseil de sécurité à de nouveaux membres permanents représentatifs (Afrique : ex. Nigeria, Afrique du Sud ou Égypte ; Amérique latine : Brésil, Mexique ; Asie : Inde, Japon ; Europe : Allemagne).\n2. Encadrer ou limiter le droit de veto en cas de génocide ou de crimes de masse.\n3. Renforcer l’autorité démocratique de l’Assemblée générale et la régularité des financements.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05_q4',
-      type: 'mcq',
-      prompt: 'Pourquoi la réforme du Conseil de sécurité est-elle fortement réclamée par les pays du Sud et l’Union africaine ?',
-      options: [
-        'Parce que l’Afrique et l’Amérique latine ne disposent d’aucun siège permanent avec droit de veto',
-        'Parce que l’Assemblée générale refuse d’admettre de nouveaux États depuis 1960',
-        'Parce que l’ONU souhaite supprimer la Cour internationale de justice',
-        'Parce que le Secrétaire général est toujours de nationalité américaine',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Le Conseil de sécurité reste figé sur les vainqueurs de 1945 : aucun État africain ni latino-américain n’y détient de siège permanent.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Plan de devoir',
-    stepTheme: 'slate',
-    stepTitle: 'Construire un bilan nuancé dans une dissertation',
-    paragraphText:
-      'Pour répondre à la question « L’ONU a-t-elle rempli sa mission depuis 1945 ? » :\n• Partie I : Un bilan positif sur le plan humanitaire, juridique, environnemental et dans la gestion de plusieurs crises.\n• Partie II : Des limites structurelles graves (veto, contournement par les grandes puissances, échecs au Rwanda ou en Irak).\n• Ouverture : Nécessité d’une réforme du Conseil de sécurité sans renoncer au multilatéralisme.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05_q5',
-      type: 'mcq',
-      prompt: 'Quelle approche donne la meilleure copie sur le bilan de l’ONU au Baccalauréat ?',
-      options: [
-        'Affirmer que l’ONU n’a obtenu aucun résultat depuis 1945',
-        'Se limiter uniquement à la liste des dates des Secrétaires généraux',
-        'Montrer de façon nuancée les acquis humanitaires et de paix face aux blocages politiques du veto',
-        'Affirmer que l’ONU possède une armée supérieure à toutes les armées nationales',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'L’approche nuancée s’appuie sur des faits précis pour peser à la fois les réussites réelles et les insuffisances institutionnelles.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Vérification finale',
-    stepTheme: 'green',
-    stepTitle: 'Relier cotisations et autonomie d’action',
-    paragraphText:
-      'Le budget de l’ONU dépend des contributions obligatoires et volontaires des États membres (calculées selon la richesse nationale).\nLorsque de grands contributeurs retardent ou suspendent leurs paiements, les opérations de maintien de la paix et les programmes humanitaires sont fragilisés.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05_q6',
-      type: 'mcq',
-      prompt: 'De quoi dépend principalement le financement du budget régulier et des opérations de l’ONU ?',
-      options: [
-        'D’un impôt mondial prélevé directement sur chaque citoyen',
-        'Des contributions et cotisations des États membres',
-        'Des recettes des compagnies aériennes de l’OACI',
-        'De prêts obligatoires du Conseil de tutelle',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'L’ONU est financée par les cotisations des États membres ; les retards de paiement limitent sa capacité d’intervention.',
-    },
-  },
-];
-
-const p06Steps: StructuredLessonStep[] = [
-  {
-    stepNumber: 1,
-    stepKind: 'methode',
-    stepBadge: 'Épreuve BAC 1',
-    stepTheme: 'green',
-    stepTitle: 'Déjouer un QCM « Vrai ou Faux » sur l’ONU',
-    paragraphText:
-      'Repérons les erreurs typiques glissées dans les sujets d’entraînement :\n• « La Charte de l’Atlantique est signée le 14 août 1942 » -> FAUX (14 août 1941).\n• « Tous les États de l’AG ont le droit de veto » -> FAUX (seuls les 5 permanents du Conseil de sécurité).\n• « L’ONU compte 4 pays africains dès San Francisco » -> VRAI (Afrique du Sud, Égypte, Éthiopie, Libéria).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06_q1',
-      type: 'mcq',
-      prompt: 'Parmi ces quatre affirmations, laquelle est rigoureusement EXACTE ?',
-      options: [
-        'La Charte de l’Atlantique a été signée le 14 août 1942',
-        'Les résolutions de l’Assemblée générale sont toujours militairement contraignantes',
-        'Le Conseil de sécurité compte 15 membres dont 5 permanents dotés du droit de veto',
-        'La Cour internationale de justice siège à New York',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'Le Conseil de sécurité comprend 5 membres permanents avec droit de veto et 10 membres non permanents élus pour 2 ans.',
-    },
-  },
-  {
-    stepNumber: 2,
-    stepKind: 'exemple',
-    stepBadge: 'Commentaire',
-    stepTheme: 'slate',
-    stepTitle: 'Commenter un extrait sur la réforme de l’ONU',
-    paragraphText:
-      'Face à un discours critiquant le fonctionnement actuel de l’ONU (par exemple lors d’un sommet de l’Union africaine) :\n1. Présenter le document (auteur, contexte de monde multipolaire, nature).\n2. Expliquer l’argument principal (sous-représentation du Sud au Conseil de sécurité depuis 1945).\n3. Évaluer la portée du texte en rappelant la difficulté d’amender la Charte (ratification requise des 2/3 des membres, dont les 5 permanents).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06_q2',
-      type: 'mcq',
-      prompt: 'Pourquoi est-il juridiquement si difficile de modifier la Charte de l’ONU pour supprimer ou modifier le droit de veto ?',
-      options: [
-        'Parce que toute révision exige aussi la ratification des cinq membres permanents actuels',
-        'Parce que le texte de la Charte interdit toute modification pendant 100 ans',
-        'Parce que la Cour internationale de justice s’y oppose systématiquement',
-        'Parce que seul le PAM peut proposer une révision',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'En vertu de l’article 108 de la Charte, un amendement doit être ratifié par les deux tiers des membres, y compris tous les membres permanents du Conseil de sécurité.',
-    },
-  },
-  {
-    stepNumber: 3,
-    stepKind: 'methode',
-    stepBadge: 'Comparatif',
-    stepTheme: 'green',
-    stepTitle: 'Comparer l’Assemblée générale et le Conseil de sécurité',
-    paragraphText:
-      '• Assemblée générale : 193 États, « 1 État = 1 voix », rôle consultatif et budgétaire, décisions non contraignantes (recommandations).\n• Conseil de sécurité : 15 membres (5 permanents + 10 élus pour 2 ans), droit de veto des 5 permanents, décisions contraignantes pour maintenir ou rétablir la paix.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06_q3',
-      type: 'mcq',
-      prompt: 'Quelle durée de mandat exercent les 10 membres non permanents du Conseil de sécurité ?',
-      options: [
-        '1 an',
-        '2 ans',
-        '5 ans',
-        '9 ans',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les 10 membres non permanents sont élus par l’Assemblée générale pour un mandat de 2 ans (renouvelable par moitié chaque année).',
-    },
-  },
-  {
-    stepNumber: 4,
-    stepKind: 'piege',
-    stepBadge: 'Nuance obligatoire',
-    stepTheme: 'orange',
-    stepTitle: 'Éviter les jugements caricaturaux',
-    paragraphText:
-      'Écrire « L’ONU ne sert à rien car il y a encore des guerres » est une erreur méthodologique : c’est oublier l’action quotidienne vitale de l’UNICEF, du PAM, du HCR, de l’OMS et de l’UNESCO pour des centaines de millions de personnes, ainsi que le rôle d’amortisseur diplomatique de l’Assemblée générale.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06_q4',
-      type: 'mcq',
-      prompt: 'Dans quel domaine l’ONU obtient-elle ses résultats les plus consensuels et les plus durables ?',
-      options: [
-        'La suppression de toutes les armées nationales',
-        'L’action humanitaire, sanitaire, éducative et normative (UNICEF, OMS, UNESCO, PAM)',
-        'Le remplacement des États par un gouvernement mondial unique',
-        'L’abolition du droit de veto dès 1950',
-      ],
-      correctAnswerIndex: 1,
-      explanation: 'Les agences spécialisées et programmes humanitaires de l’ONU obtiennent des résultats concrets reconnus mondialement.',
-    },
-  },
-  {
-    stepNumber: 5,
-    stepKind: 'exemple',
-    stepBadge: 'Situation d’évaluation',
-    stepTheme: 'slate',
-    stepTitle: 'Résoudre un débat sur l’intervention onusienne en Afrique',
-    paragraphText:
-      'Situation : Lors d’un débat au lycée sur les crises africaines, Yao affirme que l’ONU a été utile en Côte d’Ivoire (ONUCI), tandis qu’Awa rappelle le drame du Rwanda en 1994.\nRéponse argumentée : les deux constats sont historiquement exacts et illustrent le bilan contrasté de l’ONU — capable d’accompagner une sortie de crise quand le Conseil de sécurité est uni (Côte d’Ivoire), mais impuissante quand la volonté politique des grandes puissances fait défaut (Rwanda, 1994).',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06_q5',
-      type: 'mcq',
-      prompt: 'Que révèle la comparaison entre l’intervention en Côte d’Ivoire (ONUCI) et l’inaction face au génocide au Rwanda en 1994 ?',
-      options: [
-        'L’efficacité de l’ONU dépend étroitement de l’accord et de la volonté politique du Conseil de sécurité',
-        'L’ONU n’intervient jamais sur le continent africain',
-        'Le Rwanda n’était pas membre de l’ONU en 1994',
-        'La Côte d’Ivoire possède un siège permanent au Conseil de sécurité',
-      ],
-      correctAnswerIndex: 0,
-      explanation: 'Lorsque le Conseil de sécurité donne un mandat clair et des moyens suffisants, l’ONU agit efficacement ; lorsque les grandes puissances hésitent ou se divisent, elle échoue.',
-    },
-  },
-  {
-    stepNumber: 6,
-    stepKind: 'methode',
-    stepBadge: 'Synthèse finale',
-    stepTheme: 'green',
-    stepTitle: 'Les 5 repères incontournables de la leçon 1',
-    paragraphText:
-      '1. Charte signée le 26 juin 1945 (San Francisco), entrée en vigueur le 24 octobre 1945.\n2. 4 objectifs (article 1) et 5 principes (article 2).\n3. 6 organes principaux : AG, CS (5 permanents + 10 élus), Secrétariat, ECOSOC, CIJ, Conseil de tutelle.\n4. Réseau spécialisé : UNESCO, OMS, FAO, PAM, UNICEF, HCR, OIT, FMI, Banque mondiale, AIEA.\n5. Bilan contrasté appelant une réforme démocratique du Conseil de sécurité.',
-    exercise: {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06_q6',
-      type: 'mcq',
-      prompt: 'À quelle date commémore-t-on chaque année la « Journée des Nations Unies », anniversaire de l’entrée en vigueur de la Charte en 1945 ?',
-      options: [
-        'Le 14 août',
-        'Le 26 juin',
-        'Le 24 octobre',
-        'Le 10 décembre',
-      ],
-      correctAnswerIndex: 2,
-      explanation: 'Le 24 octobre 1945 marque l’entrée en vigueur officielle de la Charte des Nations Unies.',
-    },
-  },
-];
-
+// Leçon reprise de ecole-ci.org — « L'Organisation des Nations Unies (ONU) » (format v2 : mini-leçons de 5 à 8 étapes).
+// Source : https://lyc.ecole-ci.org/course/view.php?id=2136
 export const HIST_TLE_T1_L01_ONU: CurriculumChapter = {
-  id: 'terminale_hg_histoire_t1_l01_onu',
-  subjectId: 'histoire_geo',
-  gradeLevel: 'terminale_c',
-  alsoForGrades: ['terminale_d', 'terminale_a1', 'terminale_a2'],
-  order: 1,
-  title: "Thème 1, leçon 1 : L'Organisation des Nations Unies (ONU)",
-  summary:
-    "Origines et conférences fondatrices (1941-1945), objectifs et principes de la Charte, organes principaux et institutions spécialisées, bilan contrasté et réformes souhaitées.",
-  officialVolumeHours: 4,
-  contentVersion: 2,
-  source: 'Tle_H1-LOrganisation_des_Nations_Unies(ONU).pdf',
-  points: [
-    {
-      id: 'terminale_hg_histoire_t1_l01_onu_p01',
-      order: 1,
-      title: "Origines et conférences fondatrices de l'ONU (1941-1945)",
-      summary: "Comprendre pourquoi la SDN a échoué et comment sept conférences alliées ont abouti à la Charte de San Francisco.",
-      conceptExplanation:
-        "Créée après l'échec de la Société des Nations (1919) et le choc humain de la Seconde Guerre mondiale, l'ONU est préparée par une série de conférences alliées entre 1941 (Charte de l'Atlantique) et 1945 (Yalta et San Francisco). Signée le 26 juin 1945 par 50 États (dont 4 africains), la Charte entre officiellement en vigueur le 24 octobre 1945.",
-      keyRule: "26 juin 1945 : signature à San Francisco ; 24 octobre 1945 : entrée en vigueur officielle de l'ONU.",
-      formulas: [],
-      workedExample: {
-        title: 'Distinguer Washington (1942), Dumbarton Oaks (1944) et Yalta (1945)',
-        statement: 'Un élève affirme que le droit de veto a été inventé dès 1941 lors de la Charte de l’Atlantique. Est-ce exact ?',
-        methodSteps: [
-          'La Charte de l’Atlantique (14 août 1941) pose les principes généraux d’après-guerre, sans encore créer l’organisation.',
-          'Dumbarton Oaks (1944) dessine les organes, et Yalta (février 1945) adopte le principe du droit de veto.',
-        ],
-        conclusion: "Non : le droit de veto a été arrêté à Yalta en février 1945 et inscrit dans la Charte de San Francisco.",
-      },
-      structuredSteps: p01Steps,
-      exercises: p01Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l01_onu_p02',
-      order: 2,
-      title: "Objectifs et principes fondamentaux de la Charte",
-      summary: "Maîtriser les quatre buts de l'article 1 et les cinq principes de conduite de l'article 2.",
-      conceptExplanation:
-        "La Charte des Nations Unies (préambule et 111 articles) fixe quatre objectifs majeurs (article 1) : paix et sécurité, autodétermination des peuples, coopération internationale et droits de l'homme, harmonisation. Elle impose cinq principes (article 2) : égalité souveraine, bonne foi, règlement pacifique des différends, non-recours à la force et non-ingérence.",
-      keyRule: "Article 1 = les objectifs de l'ONU ; Article 2 = les règles imposées aux États membres.",
-      formulas: [],
-      workedExample: {
-        title: 'Différencier objectif et principe dans un sujet du BAC',
-        statement: "Où classer le « règlement pacifique des différends » et le « maintien de la paix » ?",
-        methodSteps: [
-          'Le maintien de la paix est le but premier fixé à l’article 1 (objectif).',
-          'Le règlement pacifique des différends est une règle d’action imposée aux États à l’article 2 (principe).',
-        ],
-        conclusion: 'Maintien de la paix = objectif (art. 1) ; règlement pacifique = principe (art. 2).',
-      },
-      structuredSteps: p02Steps,
-      exercises: p02Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l01_onu_p03',
-      order: 3,
-      title: "Les six organes principaux de l'ONU",
-      summary: "Connaître le rôle, la composition et les pouvoirs de l'AG, du Conseil de sécurité, du Secrétariat, de l'ECOSOC, de la CIJ et du Conseil de tutelle.",
-      conceptExplanation:
-        "L'ONU repose sur six organes principaux. L'Assemblée générale réunit les 193 États sur le principe « 1 État = 1 voix » mais n'émet que des recommandations. Le Conseil de sécurité (5 permanents avec droit de veto + 10 non permanents élus pour 2 ans) prend seul des décisions contraignantes. Le Secrétariat (dirigé par le Secrétaire général pour 5 ans), l'ECOSOC (54 membres), la CIJ (15 juges à La Haye) et le Conseil de tutelle complètent l'architecture.",
-      keyRule: "Seul le Conseil de sécurité prend des résolutions contraignantes ; les 5 permanents y disposent du droit de veto.",
-      formulas: [],
-      workedExample: {
-        title: 'Comprendre le blocage au Conseil de sécurité',
-        statement: 'Pourquoi une résolution soutenue par 14 membres sur 15 peut-elle échouer ?',
-        methodSteps: [
-          'Vérifier si le vote négatif provient d’un membre non permanent ou d’un des 5 membres permanents.',
-          'Tout vote contre d’un membre permanent (États-Unis, France, Royaume-Uni, Russie ou Chine) constitue un veto.',
-        ],
-        conclusion: 'Le droit de veto d’un seul membre permanent bloque l’adoption de la résolution.',
-      },
-      structuredSteps: p03Steps,
-      exercises: p03Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l01_onu_p04',
-      order: 4,
-      title: "Les organismes spécialisés et programmes de l'ONU",
-      summary: "Identifier les principales institutions sociales, techniques et financières du système onusien et leur siège.",
-      conceptExplanation:
-        "Autour des organes centraux gravitent de nombreuses agences coordonnées par l'ECOSOC : volet social et humanitaire (UNESCO à Paris, OMS, OIT, HCR et HCDH à Genève, FAO et PAM à Rome, UNICEF), volet technique (AIEA à Vienne, OACI à Montréal, UPU à Berne) et volet économique et financier (FMI et Banque mondiale à Washington, CNUCED, OMC).",
-      keyRule: "Retenir les sièges majeurs : UNESCO (Paris), OMS/OIT/HCR (Genève), FAO/PAM (Rome), FMI/BM (Washington), AIEA (Vienne).",
-      formulas: [],
-      workedExample: {
-        title: 'Identifier le rôle des agences en Afrique',
-        statement: 'Quelles agences interviennent lors d’une crise alimentaire et sanitaire touchant les enfants ?',
-        methodSteps: [
-          'Pour l’alimentation et les cantines scolaires : PAM et FAO.',
-          'Pour la santé, les vaccins et l’enfance : OMS et UNICEF.',
-        ],
-        conclusion: 'L’ONU agit sur le terrain par la complémentarité de ses agences spécialisées.',
-      },
-      structuredSteps: p04Steps,
-      exercises: p04Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l01_onu_p05',
-      order: 5,
-      title: "Bilan contrasté de l'ONU et réformes souhaitées",
-      summary: "Évaluer les réussites politiques et humanitaires face aux limites du veto et aux projets d'élargissement.",
-      conceptExplanation:
-        "Depuis 1945, l'ONU a évité une troisième guerre mondiale, accompagné la décolonisation, proclamé la DUDH (10 décembre 1948), conduit de nombreuses missions de paix (Prix Nobel 1988) et sauvé des millions de vies via ses agences. Toutefois, elle reste affaiblie par l'abus du droit de veto, les retards de cotisations et de graves échecs (Rwanda 1994, Somalie 1993, Irak 2003), rendant urgente la réforme du Conseil de sécurité.",
-      keyRule: "Un bilan équilibré associe toujours acquis humanitaires/diplomatiques et blocages liés au droit de veto.",
-      formulas: [],
-      workedExample: {
-        title: 'Argumenter en faveur de la réforme du Conseil de sécurité',
-        statement: 'Pourquoi l’Afrique demande-t-elle deux sièges permanents avec droit de veto ?',
-        methodSteps: [
-          'En 1945, presque toute l’Afrique était colonisée et n’a obtenu aucun siège permanent.',
-          'Aujourd’hui, les pays africains représentent plus d’un quart des membres de l’ONU et accueillent la majorité des opérations de paix.',
-        ],
-        conclusion: 'Élargir le Conseil de sécurité à l’Afrique, à l’Amérique latine et aux puissances d’Asie/Europe renforcerait la légitimité de l’ONU.',
-      },
-      structuredSteps: p05Steps,
-      exercises: p05Steps.map((s) => s.exercise),
-    },
-    {
-      id: 'terminale_hg_histoire_t1_l01_onu_p06',
-      order: 6,
-      title: "Méthodologie BAC et situations d'évaluation sur l'ONU",
-      summary: "Maîtriser les pièges d'examen, le commentaire de texte et les situations d'évaluation sur les Nations Unies.",
-      conceptExplanation:
-        "Au Baccalauréat, les sujets sur l'ONU testent la précision chronologique (1941-1945), la distinction entre Assemblée générale et Conseil de sécurité, la maîtrise des sigles spécialisés et la capacité à dresser un bilan argumenté et nuancé de l'action onusienne en Afrique et dans le monde.",
-      keyRule: "Toujours justifier une appréciation de l'ONU par des exemples précis et datés (Corée 1950, Suez 1956, Rwanda 1994, Côte d'Ivoire 2002-2017).",
-      formulas: [],
-      workedExample: {
-        title: 'Traiter une situation d’évaluation sur les Casques bleus',
-        statement: 'Comment expliquer qu’une opération onusienne réussisse dans un pays et échoue dans un autre ?',
-        methodSteps: [
-          'Comparer la clarté du mandat du Conseil de sécurité et les moyens fournis.',
-          'Évaluer la coopération ou l’hostilité des parties locales et des grandes puissances.',
-        ],
-        conclusion: 'L’ONU n’est pas un État souverain au-dessus des nations : elle vaut surtout par la volonté collective de ses membres.',
-      },
-      structuredSteps: p06Steps,
-      exercises: p06Steps.map((s) => s.exercise),
-    },
+  "id": "terminale_hg_histoire_t1_l01_onu",
+  "subjectId": "histoire_geo",
+  "gradeLevel": "terminale_c",
+  "alsoForGrades": [
+    "terminale_d",
+    "terminale_a1",
+    "terminale_a2"
   ],
+  "order": 1,
+  "title": "Thème 1, leçon 1 : L'Organisation des Nations Unies (ONU)",
+  "summary": "À partir de la crise post-électorale ivoirienne de 2010, décrire les étapes de la création de l'ONU, expliquer le fonctionnement de ses organes et apprécier le bilan de ses actions.",
+  "contentVersion": 2,
+  "source": "https://lyc.ecole-ci.org/course/view.php?id=2136",
+  "points": [
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p01",
+      "order": 1,
+      "title": "La création de l'ONU : une construction progressive",
+      "summary": "De la Charte de l'Atlantique à la conférence de San Francisco, sept rencontres entre 1941 et 1945 préparent la naissance de l'ONU.",
+      "conceptExplanation": "La Seconde Guerre mondiale consacre l'échec de la Société des Nations (SDN) : elle n'a pas su empêcher la guerre. Dès lors, les Alliés jettent les bases d'une nouvelle organisation en vue du maintien de la paix et de la sécurité internationale : l'ONU (Organisation des Nations Unies).\nL'ONU est l'aboutissement d'une série de rencontres et de grandes conférences entre les Alliés entre 1941 et 1945. L'organisation commence à fonctionner officiellement le 24 octobre 1945. Les conclusions de chaque rencontre constituent un pas vers la création de l'ONU.\nLes plus importantes de ces rencontres sont : Terre-Neuve (14 août 1941, Charte de l'Atlantique), Washington (1er janvier 1942, Déclaration des Nations Unies), Moscou (19 au 30 octobre 1943) et Téhéran (novembre-décembre 1943), Dumbarton Oaks (septembre-octobre 1944), Yalta (4 au 11 février 1945) et Potsdam (juillet-août 1945), puis San Francisco (26 avril au 26 juin 1945, Charte de l'ONU, 50 États dont 4 pays africains : Afrique du Sud, Égypte, Liberia, Éthiopie).",
+      "keyRule": "1941 Terre-Neuve, 1942 Washington, 1943 Moscou et Téhéran, 1944 Dumbarton Oaks, 1945 Yalta, Potsdam puis San Francisco : l'ONU naît par étapes et fonctionne officiellement le 24 octobre 1945.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Remettre dans l'ordre les étapes de la création de l'ONU",
+        "statement": "Remets dans l'ordre chronologique : Conférence de Yalta, Conférence de San Francisco, Conférence de Dumbarton Oaks, Conférences de Moscou et de Téhéran.",
+        "methodSteps": [
+          "Conférences de Moscou et de Téhéran (octobre-décembre 1943) : l'idée de créer l'ONU est réaffirmée, avec le principe d'égalité souveraine et l'objectif de sécurité.",
+          "Conférence de Dumbarton Oaks (septembre-octobre 1944) : on y définit les organes et le fonctionnement de l'ONU.",
+          "Conférence de Yalta (4 au 11 février 1945) : on y résout la question du droit de véto.",
+          "Conférence de San Francisco (26 avril au 26 juin 1945) : 50 États signent la Charte de l'ONU."
+        ],
+        "conclusion": "Moscou et Téhéran, Dumbarton Oaks, Yalta, San Francisco : chaque conférence prépare la suivante, jusqu'à la Charte de l'ONU."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "L'échec de la SDN",
+          "stepTheme": "L'échec de la SDN",
+          "stepBadge": "L'échec de la SDN",
+          "paragraphText": "• La SDN : la Société des Nations, créée après la Première Guerre mondiale pour maintenir la paix.\n• La Seconde Guerre mondiale consacre son échec : elle n'a pas empêché la guerre.\n• Les Alliés décident donc de créer une nouvelle organisation, plus solide, pour le maintien de la paix et de la sécurité internationale : l'ONU.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p01_q1",
+            "type": "mcq",
+            "prompt": "Pourquoi les Alliés créent-ils l'ONU après la Seconde Guerre mondiale ?",
+            "options": [
+              "Parce que la SDN a échoué à maintenir la paix",
+              "Parce que la SDN a été dissoute par l'URSS",
+              "Pour remplacer la Cour internationale de justice",
+              "Pour créer une armée mondiale unique"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La Seconde Guerre mondiale consacre l'échec de la SDN, qui n'a pas su empêcher la guerre : les Alliés créent l'ONU pour maintenir la paix et la sécurité internationale."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Terre-Neuve, 14 août 1941",
+          "stepTheme": "Terre-Neuve, 14 août 1941",
+          "stepBadge": "Terre-Neuve, 14 août 1941",
+          "paragraphText": "• Première rencontre : le 14 août 1941, à Terre-Neuve.\n• Signataires : F. D. Roosevelt (États-Unis) et W. Churchill (Royaume-Uni).\n• Décision importante : la Charte de l'Atlantique — l'idée de créer l'ONU, l'évocation des principes de démocratie, de liberté et de l'objectif de sécurité.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p01_q2",
+            "type": "mcq",
+            "prompt": "Quelle rencontre marque la première étape de la création de l'ONU ?",
+            "options": [
+              "La conférence de San Francisco",
+              "La conférence de Yalta",
+              "La rencontre de Terre-Neuve du 14 août 1941",
+              "La conférence de Potsdam"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Le 14 août 1941, à Terre-Neuve, Roosevelt et Churchill signent la Charte de l'Atlantique, qui évoque l'idée de créer l'ONU : c'est la première étape du processus."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Washington, 1er janvier 1942",
+          "stepTheme": "Washington, 1er janvier 1942",
+          "stepBadge": "Washington, 1er janvier 1942",
+          "paragraphText": "• Deuxième rencontre : le 1er janvier 1942, à Washington.\n• Signataires : F. D. Roosevelt, W. Churchill et 26 nations antifascistes.\n• Décision importante : la Déclaration des Nations Unies, qui donne son nom à la future organisation.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p01_q3",
+            "type": "mcq",
+            "prompt": "Que se passe-t-il le 1er janvier 1942 à Washington ?",
+            "options": [
+              "La signature de la Charte de l'ONU",
+              "La Déclaration des Nations Unies par 26 nations antifascistes",
+              "La création du Conseil de sécurité",
+              "L'élection du premier secrétaire général"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le 1er janvier 1942, à Washington, Roosevelt, Churchill et 26 nations antifascistes adoptent la Déclaration des Nations Unies."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Moscou, Téhéran et Dumbarton Oaks",
+          "stepTheme": "Moscou, Téhéran et Dumbarton Oaks",
+          "stepBadge": "Moscou, Téhéran et Dumbarton Oaks",
+          "paragraphText": "• Moscou (19 au 30 octobre 1943) et Téhéran (novembre-décembre 1943) : l'idée de créer l'ONU est réaffirmée ; le principe d'égalité souveraine et l'objectif de sécurité sont évoqués.\n• Dumbarton Oaks (septembre-octobre 1944) : on y définit les organes et le fonctionnement de l'ONU.\n• Signataires de ces rencontres : Roosevelt, Churchill, Staline et, pour Moscou et Téhéran, Mao Zedong (Chine).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p01_q4",
+            "type": "mcq",
+            "prompt": "Que définit la conférence de Dumbarton Oaks (septembre-octobre 1944) ?",
+            "options": [
+              "La date de création de l'ONU",
+              "La liste des États membres fondateurs",
+              "Le droit de véto",
+              "Les organes et le fonctionnement de l'ONU"
+            ],
+            "correctAnswerIndex": 3,
+            "explanation": "À Dumbarton Oaks, en septembre-octobre 1944, les Alliés définissent les organes et le fonctionnement de la future ONU."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Yalta, Potsdam et le droit de véto",
+          "stepTheme": "Yalta, Potsdam et le droit de véto",
+          "stepBadge": "Yalta, Potsdam et le droit de véto",
+          "paragraphText": "• Yalta (4 au 11 février 1945) et Potsdam (juillet-août 1945) : on y résout la question du droit de véto et on prend des décisions concernant l'Allemagne.\n• Piège d'examen : ne pas confondre les deux dates de 1945 — la Charte de l'ONU est signée le 26 juin 1945 à San Francisco, mais l'ONU ne commence à fonctionner officiellement que le 24 octobre 1945.\n• Les signataires de Yalta et de Potsdam sont Truman (qui remplace Roosevelt, mort en avril 1945), Churchill et Staline.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p01_q5",
+            "type": "mcq",
+            "prompt": "Quelle affirmation est exacte ?",
+            "options": [
+              "L'ONU commence à fonctionner le 26 juin 1945",
+              "L'ONU commence à fonctionner officiellement le 24 octobre 1945",
+              "La Charte de l'ONU est signée le 24 octobre 1945",
+              "L'ONU est créée à Yalta en février 1945"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "La Charte est signée le 26 juin 1945 à San Francisco, mais l'ONU ne commence à fonctionner officiellement que le 24 octobre 1945. Yalta ne crée pas l'ONU : on y règle la question du véto."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "San Francisco et les 50 États fondateurs",
+          "stepTheme": "San Francisco et les 50 États fondateurs",
+          "stepBadge": "San Francisco et les 50 États fondateurs",
+          "paragraphText": "• Dernière rencontre : du 26 avril au 26 juin 1945, à San Francisco (États-Unis).\n• 50 États y participent, dont 4 pays africains : l'Afrique du Sud, l'Égypte, le Liberia et l'Éthiopie.\n• La Charte de l'ONU y est adoptée, puis ratifiée par les États-Unis, la Grande-Bretagne, l'URSS, la Chine et la France.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p01_q6",
+            "type": "mcq",
+            "prompt": "Combien d'États participent à la conférence de San Francisco, et combien de pays africains parmi eux ?",
+            "options": [
+              "50 États dont 4 pays africains",
+              "26 États dont 2 pays africains",
+              "193 États dont 54 pays africains",
+              "15 États dont 5 pays africains"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "À San Francisco, 50 États adoptent la Charte de l'ONU, dont 4 pays africains : l'Afrique du Sud, l'Égypte, le Liberia et l'Éthiopie."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p01_q1",
+          "type": "mcq",
+          "prompt": "Pourquoi les Alliés créent-ils l'ONU après la Seconde Guerre mondiale ?",
+          "options": [
+            "Parce que la SDN a échoué à maintenir la paix",
+            "Parce que la SDN a été dissoute par l'URSS",
+            "Pour remplacer la Cour internationale de justice",
+            "Pour créer une armée mondiale unique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Seconde Guerre mondiale consacre l'échec de la SDN, qui n'a pas su empêcher la guerre : les Alliés créent l'ONU pour maintenir la paix et la sécurité internationale."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p01_q2",
+          "type": "mcq",
+          "prompt": "Quelle rencontre marque la première étape de la création de l'ONU ?",
+          "options": [
+            "La conférence de San Francisco",
+            "La conférence de Yalta",
+            "La rencontre de Terre-Neuve du 14 août 1941",
+            "La conférence de Potsdam"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le 14 août 1941, à Terre-Neuve, Roosevelt et Churchill signent la Charte de l'Atlantique, qui évoque l'idée de créer l'ONU : c'est la première étape du processus."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p01_q3",
+          "type": "mcq",
+          "prompt": "Que se passe-t-il le 1er janvier 1942 à Washington ?",
+          "options": [
+            "La signature de la Charte de l'ONU",
+            "La Déclaration des Nations Unies par 26 nations antifascistes",
+            "La création du Conseil de sécurité",
+            "L'élection du premier secrétaire général"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le 1er janvier 1942, à Washington, Roosevelt, Churchill et 26 nations antifascistes adoptent la Déclaration des Nations Unies."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p01_q4",
+          "type": "mcq",
+          "prompt": "Que définit la conférence de Dumbarton Oaks (septembre-octobre 1944) ?",
+          "options": [
+            "La date de création de l'ONU",
+            "La liste des États membres fondateurs",
+            "Le droit de véto",
+            "Les organes et le fonctionnement de l'ONU"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "À Dumbarton Oaks, en septembre-octobre 1944, les Alliés définissent les organes et le fonctionnement de la future ONU."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p01_q5",
+          "type": "mcq",
+          "prompt": "Quelle affirmation est exacte ?",
+          "options": [
+            "L'ONU commence à fonctionner le 26 juin 1945",
+            "L'ONU commence à fonctionner officiellement le 24 octobre 1945",
+            "La Charte de l'ONU est signée le 24 octobre 1945",
+            "L'ONU est créée à Yalta en février 1945"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La Charte est signée le 26 juin 1945 à San Francisco, mais l'ONU ne commence à fonctionner officiellement que le 24 octobre 1945. Yalta ne crée pas l'ONU : on y règle la question du véto."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p01_q6",
+          "type": "mcq",
+          "prompt": "Combien d'États participent à la conférence de San Francisco, et combien de pays africains parmi eux ?",
+          "options": [
+            "50 États dont 4 pays africains",
+            "26 États dont 2 pays africains",
+            "193 États dont 54 pays africains",
+            "15 États dont 5 pays africains"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À San Francisco, 50 États adoptent la Charte de l'ONU, dont 4 pays africains : l'Afrique du Sud, l'Égypte, le Liberia et l'Éthiopie."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p02",
+      "order": 2,
+      "title": "Les objectifs et les principes de l'ONU",
+      "summary": "Quatre objectifs, dont le maintien de la paix, et cinq principes, dont l'égalité souveraine et la non-ingérence.",
+      "conceptExplanation": "La Charte de l'ONU fixe à l'organisation quatre objectifs.\n• Maintenir la paix et la sécurité internationale.\n• Promouvoir la souveraineté et l'auto-détermination des peuples.\n• Promouvoir les droits de l'homme, des peuples et les libertés fondamentales.\n• Promouvoir la coopération internationale dans tous les domaines et l'harmonisation des efforts vers des fins communes.\nLa Charte fixe aussi cinq principes que les États membres doivent respecter.\n• Égalité souveraine de tous les États membres.\n• Remplir de bonne foi ses obligations vis-à-vis de l'ONU.\n• Règlement des différends internationaux par des moyens pacifiques.\n• S'abstenir de recourir dans les relations internationales à la menace ou à la force.\n• La non-ingérence dans les affaires intérieures des États membres.\nLe principal objectif est de maintenir la paix et la sécurité internationale : c'est la raison d'être de l'ONU, créée après l'échec de la SDN.",
+      "keyRule": "Objectifs : paix, souveraineté des peuples, droits de l'homme, coopération. Principes : égalité souveraine, bonne foi, règlement pacifique, pas de menace ni de force, non-ingérence.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Vrai ou faux : objectifs et principes",
+        "statement": "Dis si chaque affirmation est vraie ou fausse : 1. L'ONU est une initiative française. 2. La Déclaration des Nations Unies a été adoptée le 1er janvier 1942. 3. Le principal objectif de l'ONU est de maintenir la paix et la sécurité internationale. 4. L'égalité souveraine de tous les États membres est un objectif de l'ONU. 5. La non-ingérence dans les affaires intérieures des États membres est un principe de l'ONU.",
+        "methodSteps": [
+          "1. Faux : l'ONU est une initiative des Alliés, lancée par Roosevelt et Churchill à Terre-Neuve en 1941.",
+          "2. Vrai : la Déclaration des Nations Unies est adoptée le 1er janvier 1942 à Washington.",
+          "3. Vrai : maintenir la paix et la sécurité internationale est le principal objectif de l'ONU.",
+          "4. Faux : l'égalité souveraine est un principe de l'ONU, pas un objectif.",
+          "5. Vrai : la non-ingérence dans les affaires intérieures des États membres est bien un principe de l'ONU."
+        ],
+        "conclusion": "Objectifs et principes ne se confondent pas : la paix, la souveraineté des peuples, les droits de l'homme et la coopération sont des objectifs ; l'égalité souveraine, la bonne foi, le règlement pacifique, l'abstention de la force et la non-ingérence sont des principes."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Le principal objectif : la paix",
+          "stepTheme": "Le principal objectif : la paix",
+          "stepBadge": "Le principal objectif : la paix",
+          "paragraphText": "• Le principal objectif de l'ONU est de maintenir la paix et la sécurité internationale.\n• C'est la raison d'être de l'organisation, créée après l'échec de la SDN face à la Seconde Guerre mondiale.\n• Tous les autres objectifs servent ce but premier : éviter une nouvelle guerre mondiale.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p02_q1",
+            "type": "mcq",
+            "prompt": "Quel est le principal objectif de l'ONU ?",
+            "options": [
+              "Promouvoir la coopération culturelle",
+              "Maintenir la paix et la sécurité internationale",
+              "Créer une monnaie unique",
+              "Contrôler les frontières des États"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le principal objectif de l'ONU, fixé par sa Charte, est de maintenir la paix et la sécurité internationale."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les quatre objectifs",
+          "stepTheme": "Les quatre objectifs",
+          "stepBadge": "Les quatre objectifs",
+          "paragraphText": "• Maintenir la paix et la sécurité internationale.\n• Promouvoir la souveraineté et l'auto-détermination des peuples.\n• Promouvoir les droits de l'homme, des peuples et les libertés fondamentales.\n• Promouvoir la coopération internationale dans tous les domaines et l'harmonisation des efforts vers des fins communes.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p02_q2",
+            "type": "mcq",
+            "prompt": "Lequel des éléments suivants est un objectif de l'ONU ?",
+            "options": [
+              "La non-ingérence dans les affaires intérieures des États",
+              "Promouvoir la souveraineté et l'auto-détermination des peuples",
+              "Le règlement pacifique des différends",
+              "Remplir de bonne foi ses obligations"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Promouvoir la souveraineté et l'auto-détermination des peuples est l'un des quatre objectifs de l'ONU. Les trois autres propositions sont des principes, pas des objectifs."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "L'égalité souveraine",
+          "stepTheme": "L'égalité souveraine",
+          "stepBadge": "L'égalité souveraine",
+          "paragraphText": "• Premier principe de la Charte : l'égalité souveraine de tous les États membres.\n• Tous les États membres sont égaux en droits, qu'ils soient grands ou petits, riches ou pauvres.\n• C'est ce principe qui donne à chaque État une voix à l'Assemblée générale.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p02_q3",
+            "type": "mcq",
+            "prompt": "Que signifie le principe d'égalité souveraine ?",
+            "options": [
+              "Tous les États membres sont égaux en droits",
+              "Seuls les membres permanents du Conseil de sécurité sont égaux",
+              "Les États les plus riches ont plus de voix",
+              "L'Assemblée générale décide à la place des États"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'égalité souveraine signifie que tous les États membres sont égaux en droits, quelle que soit leur taille ou leur richesse."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Les cinq principes",
+          "stepTheme": "Les cinq principes",
+          "stepBadge": "Les cinq principes",
+          "paragraphText": "• Égalité souveraine de tous les États membres.\n• Remplir de bonne foi ses obligations vis-à-vis de l'ONU.\n• Règlement des différends internationaux par des moyens pacifiques.\n• S'abstenir de recourir dans les relations internationales à la menace ou à la force.\n• La non-ingérence dans les affaires intérieures des États membres.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p02_q4",
+            "type": "mcq",
+            "prompt": "Lequel des éléments suivants est un principe de l'ONU ?",
+            "options": [
+              "Promouvoir les droits de l'homme",
+              "La non-ingérence dans les affaires intérieures des États membres",
+              "Promouvoir la coopération internationale",
+              "Maintenir la paix et la sécurité internationale"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "La non-ingérence dans les affaires intérieures des États membres est l'un des cinq principes de la Charte. Les trois autres propositions sont des objectifs."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Ne pas confondre objectifs et principes",
+          "stepTheme": "Ne pas confondre objectifs et principes",
+          "stepBadge": "Ne pas confondre objectifs et principes",
+          "paragraphText": "• Piège classique à l'examen : l'égalité souveraine et la non-ingérence sont des principes, pas des objectifs.\n• Autre piège : le règlement pacifique des différends est un principe, alors que la promotion de la coopération internationale est un objectif.\n• Astuce : un objectif dit ce que l'ONU veut atteindre (la paix, les droits de l'homme, la coopération) ; un principe dit comment les États doivent se comporter (égalité, bonne foi, non-ingérence).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p02_q5",
+            "type": "mcq",
+            "prompt": "« L'égalité souveraine de tous les États membres est un objectif de l'ONU. » Cette affirmation est-elle vraie ou fausse ?",
+            "options": [
+              "Vraie, c'est un objectif",
+              "Fausse, c'est un principe",
+              "Vraie, c'est le principal objectif",
+              "Fausse, l'égalité souveraine n'existe pas à l'ONU"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Fausse : l'égalité souveraine de tous les États membres est un principe de la Charte, pas un objectif. Les objectifs sont la paix, la souveraineté des peuples, les droits de l'homme et la coopération."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "La Côte d'Ivoire et l'ONU en 2010",
+          "stepTheme": "La Côte d'Ivoire et l'ONU en 2010",
+          "stepBadge": "La Côte d'Ivoire et l'ONU en 2010",
+          "paragraphText": "• En 2010, la Côte d'Ivoire traverse une crise post-électorale après les élections présidentielles.\n• Le pays sollicite l'ONU pour superviser les élections présidentielles et certifier les résultats du scrutin.\n• Malgré la présence de l'ONU, la crise n'a pas été évitée : c'est le point de départ de la leçon, qui invite à dresser le bilan de l'organisation.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p02_q6",
+            "type": "mcq",
+            "prompt": "En 2010, pourquoi la Côte d'Ivoire sollicite-t-elle l'ONU ?",
+            "options": [
+              "Pour superviser les élections présidentielles et certifier les résultats",
+              "Pour obtenir un prêt du FMI",
+              "Pour adhérer au Conseil de sécurité",
+              "Pour organiser une conférence internationale"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "En 2010, la Côte d'Ivoire sollicite l'ONU pour superviser les élections présidentielles et certifier les résultats du scrutin, dans le cadre de la crise post-électorale."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p02_q1",
+          "type": "mcq",
+          "prompt": "Quel est le principal objectif de l'ONU ?",
+          "options": [
+            "Promouvoir la coopération culturelle",
+            "Maintenir la paix et la sécurité internationale",
+            "Créer une monnaie unique",
+            "Contrôler les frontières des États"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le principal objectif de l'ONU, fixé par sa Charte, est de maintenir la paix et la sécurité internationale."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p02_q2",
+          "type": "mcq",
+          "prompt": "Lequel des éléments suivants est un objectif de l'ONU ?",
+          "options": [
+            "La non-ingérence dans les affaires intérieures des États",
+            "Promouvoir la souveraineté et l'auto-détermination des peuples",
+            "Le règlement pacifique des différends",
+            "Remplir de bonne foi ses obligations"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Promouvoir la souveraineté et l'auto-détermination des peuples est l'un des quatre objectifs de l'ONU. Les trois autres propositions sont des principes, pas des objectifs."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p02_q3",
+          "type": "mcq",
+          "prompt": "Que signifie le principe d'égalité souveraine ?",
+          "options": [
+            "Tous les États membres sont égaux en droits",
+            "Seuls les membres permanents du Conseil de sécurité sont égaux",
+            "Les États les plus riches ont plus de voix",
+            "L'Assemblée générale décide à la place des États"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'égalité souveraine signifie que tous les États membres sont égaux en droits, quelle que soit leur taille ou leur richesse."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p02_q4",
+          "type": "mcq",
+          "prompt": "Lequel des éléments suivants est un principe de l'ONU ?",
+          "options": [
+            "Promouvoir les droits de l'homme",
+            "La non-ingérence dans les affaires intérieures des États membres",
+            "Promouvoir la coopération internationale",
+            "Maintenir la paix et la sécurité internationale"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La non-ingérence dans les affaires intérieures des États membres est l'un des cinq principes de la Charte. Les trois autres propositions sont des objectifs."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p02_q5",
+          "type": "mcq",
+          "prompt": "« L'égalité souveraine de tous les États membres est un objectif de l'ONU. » Cette affirmation est-elle vraie ou fausse ?",
+          "options": [
+            "Vraie, c'est un objectif",
+            "Fausse, c'est un principe",
+            "Vraie, c'est le principal objectif",
+            "Fausse, l'égalité souveraine n'existe pas à l'ONU"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Fausse : l'égalité souveraine de tous les États membres est un principe de la Charte, pas un objectif. Les objectifs sont la paix, la souveraineté des peuples, les droits de l'homme et la coopération."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p02_q6",
+          "type": "mcq",
+          "prompt": "En 2010, pourquoi la Côte d'Ivoire sollicite-t-elle l'ONU ?",
+          "options": [
+            "Pour superviser les élections présidentielles et certifier les résultats",
+            "Pour obtenir un prêt du FMI",
+            "Pour adhérer au Conseil de sécurité",
+            "Pour organiser une conférence internationale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En 2010, la Côte d'Ivoire sollicite l'ONU pour superviser les élections présidentielles et certifier les résultats du scrutin, dans le cadre de la crise post-électorale."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p03",
+      "order": 3,
+      "title": "L'Assemblée générale, le Conseil de sécurité et le Secrétariat général",
+      "summary": "Trois organes principaux : l'Assemblée générale délibère, le Conseil de sécurité exécute, le Secrétariat général administre.",
+      "conceptExplanation": "L'ONU fonctionne grâce à six organes principaux. Les trois premiers sont l'Assemblée générale, le Conseil de sécurité et le Secrétariat général.\n• L'Assemblée générale est l'organe de délibération de l'ONU. Elle regroupe les pays membres, aujourd'hui au nombre de 193 (le Sud-Soudan, 193e État membre, devenu indépendant le 09 juillet 2011). Elle se réunit une fois par an en session ordinaire et peut se réunir en session extraordinaire à la demande du Conseil de sécurité, du secrétariat ou des membres. Chaque État membre dispose d'une voix pendant les délibérations. Les décisions prises n'ont aucun caractère contraignant. Elle vote le budget, élit le secrétaire général, les membres et dirigeants des autres organes et institutions spécialisées, et se prononce sur l'adhésion de nouveaux membres.\n• Le Conseil de sécurité est l'organe exécutif des Nations Unies. Il se compose de cinq membres permanents (États-Unis, France, Grande-Bretagne, Russie, Chine) qui disposent d'un droit de véto, et de dix membres non permanents élus pour deux ans. Il peut se réunir à tout moment. Les décisions sont prises à la majorité simple en l'absence du droit de véto. Il intervient pour les questions de maintien de la paix et de la sécurité internationale. Lorsque la paix est menacée, sa réaction est graduelle : d'abord des résolutions pour un règlement pacifique du conflit, puis, en cas d'échec, des sanctions économiques ou militaires (embargo), et en dernier recours l'intervention armée (les casques bleus).\n• Le Secrétariat général est l'organe administratif de l'ONU. Il est dirigé par un secrétaire général élu par l'Assemblée générale sur recommandation du Conseil de sécurité. Son mandat dure cinq ans, renouvelable. Le secrétaire général assure l'administration générale de l'ONU, convoque les Assemblées générales et attire l'attention de l'Assemblée générale et du Conseil de sécurité sur toutes les situations qui nécessitent l'intervention de l'ONU.\nLes secrétaires généraux depuis la création : Trygve Lie (Norvège, 1946-1952), Dag Hammarskjöld (Suède, 1953-1961), Sithu U Than (Birmanie, 1961-1971), Kurt Waldheim (Autriche, 1972-1981), Javier Perez De Cuellar (Pérou, 1982-1991), Boutros Boutros-Ghali (Égypte, 1992-1996), Kofi Annan (Ghana, 1997-2006), Ban Ki-moon (Corée du Sud, janvier 2007-décembre 2016), Antonio Guterres (Portugal, depuis janvier 2017).",
+      "keyRule": "Assemblée générale : elle délibère (193 États, une voix chacun, décisions non contraignantes). Conseil de sécurité : il exécute (5 permanents avec véto + 10 non permanents). Secrétariat général : il administre (mandat de 5 ans).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Relier chaque organe à son rôle",
+        "statement": "Relie chaque organe de l'ONU au rôle qui lui est assigné : Assemblée générale, Conseil de sécurité, Secrétariat général, OMS, FAO. Rôles proposés : vote du budget de l'ONU ; vote de résolutions et sanctions pour la paix ; assure l'administration de l'ONU ; lutte contre les épidémies et les pandémies ; lutte contre la faim et la malnutrition.",
+        "methodSteps": [
+          "Assemblée générale → vote du budget de l'ONU : c'est elle qui vote le budget.",
+          "Conseil de sécurité → vote de résolutions et sanctions pour la paix : c'est l'organe exécutif, chargé du maintien de la paix.",
+          "Secrétariat général → assure l'administration de l'ONU : c'est l'organe administratif.",
+          "OMS → lutte contre les épidémies et les pandémies : c'est l'Organisation mondiale de la santé.",
+          "FAO → lutte contre la faim et la malnutrition : c'est l'organisation pour l'alimentation et l'agriculture."
+        ],
+        "conclusion": "Chaque organe a son rôle : délibérer pour l'Assemblée générale, exécuter pour le Conseil de sécurité, administrer pour le Secrétariat général, et des missions spécialisées pour l'OMS et la FAO."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "L'Assemblée générale, organe de délibération",
+          "stepTheme": "L'Assemblée générale, organe de délibération",
+          "stepBadge": "L'Assemblée générale, organe de délibération",
+          "paragraphText": "• L'Assemblée générale est l'organe de délibération de l'ONU.\n• Elle regroupe les pays membres, aujourd'hui au nombre de 193 (le Sud-Soudan, 193e État membre, devenu indépendant le 09 juillet 2011).\n• Elle se réunit une fois par an en session ordinaire et peut se réunir en session extraordinaire à la demande du Conseil de sécurité, du secrétariat ou des membres.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p03_q1",
+            "type": "mcq",
+            "prompt": "Quel est le rôle de l'Assemblée générale ?",
+            "options": [
+              "Exécuter les décisions de l'ONU",
+              "Délibérer : elle est l'organe de délibération de l'ONU",
+              "Administrer le Secrétariat général",
+              "Juger les différends entre États"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'Assemblée générale est l'organe de délibération de l'ONU : elle discute et vote, mais ses décisions n'ont aucun caractère contraignant."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "193 États, une voix chacun",
+          "stepTheme": "193 États, une voix chacun",
+          "stepBadge": "193 États, une voix chacun",
+          "paragraphText": "• Chaque État membre dispose d'une voix pendant les délibérations : l'égalité souveraine s'applique aussi dans le vote.\n• Les décisions prises par l'Assemblée générale n'ont aucun caractère contraignant.\n• Elle vote le budget, élit le secrétaire général, les membres et dirigeants des autres organes et institutions spécialisées, et se prononce sur l'adhésion de nouveaux membres.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p03_q2",
+            "type": "mcq",
+            "prompt": "Combien d'États membres l'Assemblée générale regroupe-t-elle, et combien de voix chaque État a-t-il ?",
+            "options": [
+              "54 États, une voix chacun",
+              "193 États, une voix chacun",
+              "15 États, une voix chacun",
+              "50 États, deux voix chacun"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'Assemblée générale regroupe 193 États membres et chaque État dispose d'une voix pendant les délibérations."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Le Conseil de sécurité, organe exécutif",
+          "stepTheme": "Le Conseil de sécurité, organe exécutif",
+          "stepBadge": "Le Conseil de sécurité, organe exécutif",
+          "paragraphText": "• Le Conseil de sécurité est l'organe exécutif des Nations Unies.\n• Il se compose de cinq membres permanents (États-Unis, France, Grande-Bretagne, Russie, Chine) qui disposent d'un droit de véto, et de dix membres non permanents élus pour deux ans.\n• Il peut se réunir à tout moment et intervient pour les questions de maintien de la paix et de la sécurité internationale.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p03_q3",
+            "type": "mcq",
+            "prompt": "Qui compose le Conseil de sécurité ?",
+            "options": [
+              "15 juges élus pour 9 ans",
+              "5 membres permanents avec droit de véto et 10 membres non permanents élus pour 2 ans",
+              "54 États élus pour 3 ans",
+              "193 États membres"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le Conseil de sécurité compte 5 membres permanents (États-Unis, France, Grande-Bretagne, Russie, Chine) avec droit de véto, et 10 membres non permanents élus pour deux ans."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "La réaction graduelle du Conseil de sécurité",
+          "stepTheme": "La réaction graduelle du Conseil de sécurité",
+          "stepBadge": "La réaction graduelle du Conseil de sécurité",
+          "paragraphText": "• Lorsque la paix est menacée, la réaction du Conseil de sécurité est graduelle.\n• D'abord, des résolutions pour un règlement pacifique du conflit.\n• En cas d'échec, des sanctions économiques ou militaires (embargo) sont prises.\n• Le dernier recours est l'intervention armée (les casques bleus).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p03_q4",
+            "type": "mcq",
+            "prompt": "Quand la paix est menacée, comment le Conseil de sécurité réagit-il ?",
+            "options": [
+              "Il intervient immédiatement par la force armée",
+              "Il exclut l'État fautif de l'ONU",
+              "Il réagit graduellement : résolutions, puis sanctions, puis intervention armée en dernier recours",
+              "Il attend la décision de l'Assemblée générale"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "La réaction du Conseil de sécurité est graduelle : d'abord des résolutions pour un règlement pacifique, puis des sanctions économiques ou militaires, et en dernier recours l'intervention armée (les casques bleus)."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Le droit de véto",
+          "stepTheme": "Le droit de véto",
+          "stepBadge": "Le droit de véto",
+          "paragraphText": "• Les cinq membres permanents disposent d'un droit de véto.\n• Les décisions du Conseil de sécurité sont prises à la majorité simple en l'absence du droit de véto.\n• Piège : un seul véto suffit à bloquer une décision, même si tous les autres membres sont d'accord. C'est l'une des limites majeures de l'ONU, étudiée dans le point 6.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p03_q5",
+            "type": "mcq",
+            "prompt": "Que se passe-t-il si un membre permanent du Conseil de sécurité oppose son véto ?",
+            "options": [
+              "La décision est quand même adoptée à la majorité simple",
+              "La décision est bloquée",
+              "Le membre permanent est exclu du Conseil",
+              "L'Assemblée générale annule le véto"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Les décisions sont prises à la majorité simple en l'absence du droit de véto : un véto d'un membre permanent bloque donc la décision."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le Secrétariat général et ses secrétaires",
+          "stepTheme": "Le Secrétariat général et ses secrétaires",
+          "stepBadge": "Le Secrétariat général et ses secrétaires",
+          "paragraphText": "• Le Secrétariat général est l'organe administratif de l'ONU.\n• Il est dirigé par un secrétaire général élu par l'Assemblée générale sur recommandation du Conseil de sécurité, pour un mandat de cinq ans renouvelable.\n• Il assure l'administration générale de l'ONU, convoque les Assemblées générales et attire l'attention de l'Assemblée générale et du Conseil de sécurité sur les situations qui nécessitent l'intervention de l'ONU.\n• Exemples de secrétaires généraux : Kofi Annan (Ghana, 1997-2006), Ban Ki-moon (Corée du Sud, 2007-2016), Antonio Guterres (Portugal, depuis janvier 2017).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p03_q6",
+            "type": "mcq",
+            "prompt": "Qui dirige le Secrétariat général, et pour quelle durée de mandat ?",
+            "options": [
+              "Le président de l'Assemblée générale, pour 1 an",
+              "Le secrétaire général, élu pour 5 ans renouvelables",
+              "Le président du Conseil de sécurité, pour 2 ans",
+              "Le directeur de l'UNESCO, pour 9 ans"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le Secrétariat général est dirigé par un secrétaire général élu par l'Assemblée générale sur recommandation du Conseil de sécurité, pour un mandat de cinq ans renouvelable."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p03_q1",
+          "type": "mcq",
+          "prompt": "Quel est le rôle de l'Assemblée générale ?",
+          "options": [
+            "Exécuter les décisions de l'ONU",
+            "Délibérer : elle est l'organe de délibération de l'ONU",
+            "Administrer le Secrétariat général",
+            "Juger les différends entre États"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'Assemblée générale est l'organe de délibération de l'ONU : elle discute et vote, mais ses décisions n'ont aucun caractère contraignant."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p03_q2",
+          "type": "mcq",
+          "prompt": "Combien d'États membres l'Assemblée générale regroupe-t-elle, et combien de voix chaque État a-t-il ?",
+          "options": [
+            "54 États, une voix chacun",
+            "193 États, une voix chacun",
+            "15 États, une voix chacun",
+            "50 États, deux voix chacun"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'Assemblée générale regroupe 193 États membres et chaque État dispose d'une voix pendant les délibérations."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p03_q3",
+          "type": "mcq",
+          "prompt": "Qui compose le Conseil de sécurité ?",
+          "options": [
+            "15 juges élus pour 9 ans",
+            "5 membres permanents avec droit de véto et 10 membres non permanents élus pour 2 ans",
+            "54 États élus pour 3 ans",
+            "193 États membres"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le Conseil de sécurité compte 5 membres permanents (États-Unis, France, Grande-Bretagne, Russie, Chine) avec droit de véto, et 10 membres non permanents élus pour deux ans."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p03_q4",
+          "type": "mcq",
+          "prompt": "Quand la paix est menacée, comment le Conseil de sécurité réagit-il ?",
+          "options": [
+            "Il intervient immédiatement par la force armée",
+            "Il exclut l'État fautif de l'ONU",
+            "Il réagit graduellement : résolutions, puis sanctions, puis intervention armée en dernier recours",
+            "Il attend la décision de l'Assemblée générale"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "La réaction du Conseil de sécurité est graduelle : d'abord des résolutions pour un règlement pacifique, puis des sanctions économiques ou militaires, et en dernier recours l'intervention armée (les casques bleus)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p03_q5",
+          "type": "mcq",
+          "prompt": "Que se passe-t-il si un membre permanent du Conseil de sécurité oppose son véto ?",
+          "options": [
+            "La décision est quand même adoptée à la majorité simple",
+            "La décision est bloquée",
+            "Le membre permanent est exclu du Conseil",
+            "L'Assemblée générale annule le véto"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Les décisions sont prises à la majorité simple en l'absence du droit de véto : un véto d'un membre permanent bloque donc la décision."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p03_q6",
+          "type": "mcq",
+          "prompt": "Qui dirige le Secrétariat général, et pour quelle durée de mandat ?",
+          "options": [
+            "Le président de l'Assemblée générale, pour 1 an",
+            "Le secrétaire général, élu pour 5 ans renouvelables",
+            "Le président du Conseil de sécurité, pour 2 ans",
+            "Le directeur de l'UNESCO, pour 9 ans"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le Secrétariat général est dirigé par un secrétaire général élu par l'Assemblée générale sur recommandation du Conseil de sécurité, pour un mandat de cinq ans renouvelable."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p04",
+      "order": 4,
+      "title": "Les autres organes et les institutions spécialisées",
+      "summary": "Le Conseil économique et social, la Cour internationale de justice, le Conseil de tutelle et les organismes spécialisés complètent le système des Nations Unies.",
+      "conceptExplanation": "Outre l'Assemblée générale, le Conseil de sécurité et le Secrétariat général, l'ONU compte trois autres organes principaux et de nombreux organismes spécialisés. Ensemble, ils forment le système des Nations Unies.\n• Le Conseil économique et social est l'organe de coordination de toutes les activités ayant trait à la démocratie sociale et aux questions économiques. Il est composé de cinquante-quatre États élus par l'Assemblée générale pour trois ans et renouvelé par tiers tous les ans. Il est divisé en plusieurs commissions (droits de l'homme, lutte contre la drogue, établissement de statistiques, etc.).\n• La Cour internationale de justice est l'organe judiciaire de l'ONU. Elle se compose de quinze juges élus par l'Assemblée générale pour un mandat de neuf ans et renouvelée par tiers tous les trois ans. Elle règle les questions d'ordre juridique entre les États. Son siège est à La Haye (Pays-Bas).\n• Le Conseil de tutelle est composé de six(15) membres élus par l'Assemblée générale. Son rôle est de contrôler l'administration des territoires placés sous mandat des Nations Unies : anciens territoires sous mandat de la SDN, le Timor-Oriental (ex-province indonésienne en 2002), le Kosovo (ex-province serbe en 1999).\n• Les organismes spécialisés à caractère social, culturel et humanitaire : UNESCO (Paris, 1946) — Organisation des Nations Unies pour l'Éducation, la Science et la Culture ; FAO (Rome, 1945) — Food and Agricultural Organisation ; OMS (Genève, 1948) — Organisation mondiale de la santé ; OIT (Genève, 1946) — Organisation internationale du travail ; HCR (Genève, 1950) — Haut-Commissariat des Nations Unies pour les réfugiés ; HCDH (Genève, 1993) — Haut-Commissariat des Nations Unies aux droits de l'homme.\n• Les organismes à caractère technique : AIEA (Vienne, 1957) — Agence internationale de l'énergie atomique ; OACI (Montréal, 1947) — Organisation de l'aviation civile internationale ; UPU (Berne, 1874) — Union postale universelle.\n• Les organismes à caractère économique : FMI (Washington, 1944) — Fonds monétaire international ; Banque mondiale (Washington, 1944) ; GATT (1947, Genève) — General Agreement on Trade and Tarif — devenu CNUCED (Conférence des Nations Unies pour le commerce et le développement) en 1964.",
+      "keyRule": "Six organes principaux au total : Assemblée générale, Conseil de sécurité, Secrétariat général, Conseil économique et social, Cour internationale de justice, Conseil de tutelle — plus les organismes spécialisés (UNESCO, FAO, OMS, FMI, Banque mondiale…).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer les organismes spécialisés",
+        "statement": "Classe chaque organisme dans sa catégorie : UNESCO, FAO, OMS, OIT, HCR, HCDH, AIEA, OACI, UPU, FMI, Banque mondiale, GATT. Catégories : social, culturel et humanitaire ; technique ; économique.",
+        "methodSteps": [
+          "Social, culturel et humanitaire : UNESCO (éducation, science, culture), FAO (alimentation, agriculture), OMS (santé), OIT (travail), HCR (réfugiés), HCDH (droits de l'homme).",
+          "Technique : AIEA (énergie atomique), OACI (aviation civile), UPU (poste).",
+          "Économique : FMI et Banque mondiale (finances, Washington, 1944), GATT (commerce, devenu CNUCED en 1964)."
+        ],
+        "conclusion": "Trois familles d'organismes spécialisés : les organismes sociaux, culturels et humanitaires (UNESCO, FAO, OMS…), les organismes techniques (AIEA, OACI, UPU) et les organismes économiques (FMI, Banque mondiale, GATT)."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Le Conseil économique et social",
+          "stepTheme": "Le Conseil économique et social",
+          "stepBadge": "Le Conseil économique et social",
+          "paragraphText": "• Le Conseil économique et social est l'organe de coordination de toutes les activités ayant trait à la démocratie sociale et aux questions économiques.\n• Il est composé de cinquante-quatre États élus par l'Assemblée générale pour trois ans et renouvelé par tiers tous les ans.\n• Il est divisé en plusieurs commissions (droits de l'homme, lutte contre la drogue, établissement de statistiques, etc.).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p04_q1",
+            "type": "mcq",
+            "prompt": "Quel est le rôle du Conseil économique et social ?",
+            "options": [
+              "Juger les différends entre États",
+              "Coordonner les activités liées à la démocratie sociale et aux questions économiques",
+              "Contrôler les territoires sous tutelle",
+              "Voter le budget de l'ONU"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le Conseil économique et social coordonne toutes les activités ayant trait à la démocratie sociale et aux questions économiques."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "La Cour internationale de justice",
+          "stepTheme": "La Cour internationale de justice",
+          "stepBadge": "La Cour internationale de justice",
+          "paragraphText": "• La Cour internationale de justice est l'organe judiciaire de l'ONU.\n• Elle se compose de quinze juges élus par l'Assemblée générale pour un mandat de neuf ans et renouvelée par tiers tous les trois ans.\n• Elle règle les questions d'ordre juridique entre les États. Son siège est à La Haye (Pays-Bas).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p04_q2",
+            "type": "mcq",
+            "prompt": "Où siège la Cour internationale de justice, et de combien de juges est-elle composée ?",
+            "options": [
+              "À New York, 5 juges",
+              "À La Haye, 15 juges élus pour 9 ans",
+              "À Genève, 54 juges",
+              "À Paris, 10 juges"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "La Cour internationale de justice siège à La Haye (Pays-Bas) et se compose de quinze juges élus pour un mandat de neuf ans."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Le Conseil de tutelle",
+          "stepTheme": "Le Conseil de tutelle",
+          "stepBadge": "Le Conseil de tutelle",
+          "paragraphText": "• Le Conseil de tutelle est composé de six(15) membres élus par l'Assemblée générale.\n• Son rôle est de contrôler l'administration des territoires placés sous mandat des Nations Unies : anciens territoires sous mandat de la SDN, le Timor-Oriental (ex-province indonésienne en 2002), le Kosovo (ex-province serbe en 1999).",
+          "konanTip": "Le document source imprime « six(15) membres » : c'est une coquille du manuel d'origine, reproduite telle quelle.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p04_q3",
+            "type": "mcq",
+            "prompt": "Quel est le rôle du Conseil de tutelle ?",
+            "options": [
+              "Contrôler l'administration des territoires placés sous mandat des Nations Unies",
+              "Élire le secrétaire général",
+              "Coordonner la lutte contre la drogue",
+              "Voter les résolutions du Conseil de sécurité"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Conseil de tutelle contrôle l'administration des territoires placés sous mandat des Nations Unies, comme le Timor-Oriental et le Kosovo."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "Les organismes sociaux, culturels et humanitaires",
+          "stepTheme": "Les organismes sociaux, culturels et humanitaires",
+          "stepBadge": "Les organismes sociaux, culturels et humanitaires",
+          "paragraphText": "• UNESCO (Paris, 1946) : éducation, science et culture.\n• FAO (Rome, 1945) : alimentation et agriculture.\n• OMS (Genève, 1948) : santé ; OIT (Genève, 1946) : travail ; HCR (Genève, 1950) : réfugiés ; HCDH (Genève, 1993) : droits de l'homme.\n• Le fonctionnement de l'ONU repose sur cet ensemble d'organes et d'institutions : c'est le système des Nations Unies.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p04_q4",
+            "type": "mcq",
+            "prompt": "Laquelle de ces institutions est un organisme spécialisé de l'ONU à caractère social, culturel et humanitaire ?",
+            "options": [
+              "L'AIEA",
+              "L'UNESCO, dont le siège est à Paris",
+              "Le GATT",
+              "L'UPU"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'UNESCO (Organisation des Nations Unies pour l'éducation, la science et la culture), dont le siège est à Paris, est un organisme à caractère social, culturel et humanitaire. L'AIEA et l'UPU sont techniques, le GATT est économique."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "propriete",
+          "stepTitle": "Les organismes techniques et économiques",
+          "stepTheme": "Les organismes techniques et économiques",
+          "stepBadge": "Les organismes techniques et économiques",
+          "paragraphText": "• Organismes à caractère technique : AIEA (Vienne, 1957, énergie atomique), OACI (Montréal, 1947, aviation civile), UPU (Berne, 1874, poste).\n• Organismes à caractère économique : FMI (Washington, 1944, Fonds monétaire international) et Banque mondiale (Washington, 1944), GATT (1947, Genève) devenu CNUCED en 1964.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p04_q5",
+            "type": "mcq",
+            "prompt": "Lequel de ces organismes est à caractère économique ?",
+            "options": [
+              "L'OMS",
+              "L'UNESCO",
+              "Le FMI, créé à Washington en 1944",
+              "L'OACI"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Le FMI (Fonds monétaire international), créé à Washington en 1944, est un organisme à caractère économique. L'OMS et l'UNESCO sont sociaux et humanitaires, l'OACI est technique."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Retenir les sièges et les dates",
+          "stepTheme": "Retenir les sièges et les dates",
+          "stepBadge": "Retenir les sièges et les dates",
+          "paragraphText": "• Astuce de révision : retiens les sièges par association — Paris pour la culture (UNESCO), Rome pour l'alimentation (FAO), Genève pour la santé et les droits (OMS, OIT, HCR, HCDH), Vienne pour l'atome (AIEA), Washington pour l'argent (FMI, Banque mondiale).\n• Les dates à connaître : UPU 1874 (la plus ancienne), FMI et Banque mondiale 1944, FAO 1945, UNESCO et OIT 1946, OACI 1947, OMS 1948, HCR 1950, AIEA 1957, HCDH 1993.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p04_q6",
+            "type": "mcq",
+            "prompt": "Où se trouve le siège de l'UNESCO ?",
+            "options": [
+              "À Genève",
+              "À Rome",
+              "À Paris",
+              "À Vienne"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Le siège de l'UNESCO (Organisation des Nations Unies pour l'éducation, la science et la culture) est à Paris."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p04_q1",
+          "type": "mcq",
+          "prompt": "Quel est le rôle du Conseil économique et social ?",
+          "options": [
+            "Juger les différends entre États",
+            "Coordonner les activités liées à la démocratie sociale et aux questions économiques",
+            "Contrôler les territoires sous tutelle",
+            "Voter le budget de l'ONU"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le Conseil économique et social coordonne toutes les activités ayant trait à la démocratie sociale et aux questions économiques."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p04_q2",
+          "type": "mcq",
+          "prompt": "Où siège la Cour internationale de justice, et de combien de juges est-elle composée ?",
+          "options": [
+            "À New York, 5 juges",
+            "À La Haye, 15 juges élus pour 9 ans",
+            "À Genève, 54 juges",
+            "À Paris, 10 juges"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La Cour internationale de justice siège à La Haye (Pays-Bas) et se compose de quinze juges élus pour un mandat de neuf ans."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p04_q3",
+          "type": "mcq",
+          "prompt": "Quel est le rôle du Conseil de tutelle ?",
+          "options": [
+            "Contrôler l'administration des territoires placés sous mandat des Nations Unies",
+            "Élire le secrétaire général",
+            "Coordonner la lutte contre la drogue",
+            "Voter les résolutions du Conseil de sécurité"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Conseil de tutelle contrôle l'administration des territoires placés sous mandat des Nations Unies, comme le Timor-Oriental et le Kosovo."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p04_q4",
+          "type": "mcq",
+          "prompt": "Laquelle de ces institutions est un organisme spécialisé de l'ONU à caractère social, culturel et humanitaire ?",
+          "options": [
+            "L'AIEA",
+            "L'UNESCO, dont le siège est à Paris",
+            "Le GATT",
+            "L'UPU"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'UNESCO (Organisation des Nations Unies pour l'éducation, la science et la culture), dont le siège est à Paris, est un organisme à caractère social, culturel et humanitaire. L'AIEA et l'UPU sont techniques, le GATT est économique."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p04_q5",
+          "type": "mcq",
+          "prompt": "Lequel de ces organismes est à caractère économique ?",
+          "options": [
+            "L'OMS",
+            "L'UNESCO",
+            "Le FMI, créé à Washington en 1944",
+            "L'OACI"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le FMI (Fonds monétaire international), créé à Washington en 1944, est un organisme à caractère économique. L'OMS et l'UNESCO sont sociaux et humanitaires, l'OACI est technique."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p04_q6",
+          "type": "mcq",
+          "prompt": "Où se trouve le siège de l'UNESCO ?",
+          "options": [
+            "À Genève",
+            "À Rome",
+            "À Paris",
+            "À Vienne"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le siège de l'UNESCO (Organisation des Nations Unies pour l'éducation, la science et la culture) est à Paris."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p05",
+      "order": 5,
+      "title": "Les succès de l'ONU",
+      "summary": "Maintien de la paix, droits de l'homme, démocratie, progrès économique, social et humanitaire : les réussites de l'organisation.",
+      "conceptExplanation": "Le bilan de l'ONU comprend des succès dans plusieurs domaines.\n• Le maintien de la paix et de la sécurité internationale. La prévention des conflits : le parrainage d'accords internationaux sur le désarmement et la dénucléarisation, le contrôle avec l'AIEA du nucléaire, les médiations ou actions diplomatiques du secrétaire général sur recommandations de l'Assemblée générale et selon les résolutions du Conseil de sécurité, la supervision des processus électoraux. Le règlement des conflits : les pressions du Conseil de sécurité sur les belligérants (prises de résolutions contraignantes, menace de sanction). Exemples : la Côte d'Ivoire (2002), le Liberia (2001). L'envoi des forces d'interposition ou d'intervention (les casques bleus) : la Corée (1950), l'Égypte (1956), le Congo (1961), Cuba (1962), le Koweït (1990), la Côte d'Ivoire 2003. L'ONU obtient le prix Nobel de la paix en 1988.\n• Les actions relatives aux droits de l'homme. La législation et l'application des droits de l'homme : la Déclaration universelle des droits de l'homme le 10 décembre 1948, les actions pour l'indépendance des États africains, la lutte contre les tortures et l'esclavage, l'institution d'un Tribunal pénal international (TPI) pour le Rwanda et le Burundi, et de la CPI. La CPI a jugé des responsables de violations des droits de l'homme (Slobodan Milosevic, Radovan Karadzic, Charles Taylor, Jean-Pierre Bemba). La promotion de la démocratie : l'ONU apporte une assistance technique et envoie des observateurs aux États en période électorale. Exemples : Guinée (2010), Côte d'Ivoire (2010).\n• Les actions pour le progrès économique, social et humanitaire. La lutte contre la pauvreté et le sous-développement : l'ONU intervient par le biais des institutions financières et techniques (FMI, Banque mondiale, PNUD, ONUDI). Les actions de progrès social : assistance financière et matérielle dans l'éducation et la culture avec l'UNICEF et l'UNESCO, les actions de l'OMS dans le domaine de la santé, la lutte contre le réchauffement climatique (la conférence de Rio en 1992). L'action humanitaire sous toutes ses formes : l'intervention des organismes spécialisés en cas de guerre, de catastrophe naturelle, de famine.",
+      "keyRule": "Les succès de l'ONU : la paix (prévention et règlement des conflits, casques bleus), les droits de l'homme (DUDH 1948, CPI), la démocratie (observateurs électoraux) et le progrès économique, social et humanitaire.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer les succès et les échecs de l'ONU",
+        "statement": "Classe dans le tableau les succès et échecs suivants de l'ONU : 1. Persistance de la pauvreté dans le monde. 2. Diffusion du droit international humanitaire (DIH). 3. Octroi de subventions aux pays touchés par la pandémie de Covid-19. 4. Persistance de la faim dans le monde. 5. Soutien aux réfugiés dans le monde. 6. Appui aux cantines scolaires (PAM) en Côte d'Ivoire. 7. Utilisation abusive du droit de véto.",
+        "methodSteps": [
+          "Succès : 2. Diffusion du droit international humanitaire (DIH) — une avancée du droit.",
+          "Succès : 3. Octroi de subventions aux pays touchés par la pandémie de Covid-19 — une aide concrète.",
+          "Succès : 5. Soutien aux réfugiés dans le monde et 6. Appui aux cantines scolaires (PAM) en Côte d'Ivoire — l'action humanitaire.",
+          "Échecs : 1. Persistance de la pauvreté dans le monde et 4. Persistance de la faim dans le monde — les insuffisances économiques et humanitaires.",
+          "Échec : 7. Utilisation abusive du droit de véto — un problème institutionnel."
+        ],
+        "conclusion": "Succès : diffusion du DIH, subventions Covid-19, soutien aux réfugiés, cantines scolaires du PAM. Échecs : persistance de la pauvreté et de la faim, usage abusif du véto."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "La prévention des conflits",
+          "stepTheme": "La prévention des conflits",
+          "stepBadge": "La prévention des conflits",
+          "paragraphText": "• Premier succès : la prévention des conflits.\n• Le parrainage d'accords internationaux sur le désarmement et la dénucléarisation, le contrôle du nucléaire avec l'AIEA.\n• Les médiations ou actions diplomatiques du secrétaire général, sur recommandations de l'Assemblée générale et selon les résolutions du Conseil de sécurité, et la supervision des processus électoraux.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p05_q1",
+            "type": "mcq",
+            "prompt": "Comment l'ONU prévient-elle les conflits ?",
+            "options": [
+              "En envoyant des casques bleus dans tous les pays",
+              "Par le parrainage d'accords de désarmement et de dénucléarisation, le contrôle du nucléaire par l'AIEA, les médiations et la supervision des élections",
+              "En excluant les États en conflit",
+              "En interdisant toute armée nationale"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'ONU prévient les conflits par le parrainage d'accords de désarmement et de dénucléarisation, le contrôle du nucléaire par l'AIEA, les médiations du secrétaire général et la supervision des processus électoraux."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Le règlement des conflits et les casques bleus",
+          "stepTheme": "Le règlement des conflits et les casques bleus",
+          "stepBadge": "Le règlement des conflits et les casques bleus",
+          "paragraphText": "• Le règlement des conflits : les pressions du Conseil de sécurité sur les belligérants (prises de résolutions contraignantes, menace de sanction). Exemples : la Côte d'Ivoire (2002), le Liberia (2001).\n• L'envoi des forces d'interposition ou d'intervention (les casques bleus) : la Corée (1950), l'Égypte (1956), le Congo (1961), Cuba (1962), le Koweït (1990), la Côte d'Ivoire 2003.\n• L'ONU obtient le prix Nobel de la paix en 1988.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p05_q2",
+            "type": "mcq",
+            "prompt": "Dans quel pays les casques bleus sont-ils intervenus en 1950 ?",
+            "options": [
+              "En Corée",
+              "En Côte d'Ivoire",
+              "Au Koweït",
+              "Au Congo"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les casques bleus sont intervenus en Corée en 1950, puis en Égypte (1956), au Congo (1961), à Cuba (1962), au Koweït (1990) et en Côte d'Ivoire (2003)."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "Les droits de l'homme",
+          "stepTheme": "Les droits de l'homme",
+          "stepBadge": "Les droits de l'homme",
+          "paragraphText": "• La Déclaration universelle des droits de l'homme est adoptée le 10 décembre 1948.\n• Les actions pour l'indépendance des États africains, la lutte contre les tortures et l'esclavage.\n• L'institution d'un Tribunal pénal international (TPI) pour le Rwanda et le Burundi, et de la CPI, qui a jugé des responsables de violations des droits de l'homme (Slobodan Milosevic, Radovan Karadzic, Charles Taylor, Jean-Pierre Bemba).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p05_q3",
+            "type": "mcq",
+            "prompt": "Quand la Déclaration universelle des droits de l'homme est-elle adoptée ?",
+            "options": [
+              "Le 24 octobre 1945",
+              "Le 10 décembre 1948",
+              "Le 26 juin 1945",
+              "Le 1er janvier 1942"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "La Déclaration universelle des droits de l'homme est adoptée le 10 décembre 1948."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "La promotion de la démocratie",
+          "stepTheme": "La promotion de la démocratie",
+          "stepBadge": "La promotion de la démocratie",
+          "paragraphText": "• L'ONU apporte une assistance technique et envoie des observateurs aux États en période électorale.\n• Exemples : Guinée (2010), Côte d'Ivoire (2010).\n• C'est l'une des actions de l'ONU en faveur des droits de l'homme et de la démocratie.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p05_q4",
+            "type": "mcq",
+            "prompt": "Comment l'ONU promeut-elle la démocratie ?",
+            "options": [
+              "En imposant un régime politique aux États",
+              "En apportant une assistance technique et en envoyant des observateurs aux élections",
+              "En excluant les États non démocratiques",
+              "En nommant les présidents des États membres"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'ONU promeut la démocratie en apportant une assistance technique et en envoyant des observateurs aux États en période électorale, comme en Guinée et en Côte d'Ivoire en 2010."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Succès ou échec ? Le piège du classement",
+          "stepTheme": "Succès ou échec ? Le piège du classement",
+          "stepBadge": "Succès ou échec ? Le piège du classement",
+          "paragraphText": "• Piège d'examen : tout ce qui commence par « persistance » est un échec (persistance de la pauvreté, persistance de la faim), alors que les aides concrètes sont des succès.\n• Succès : la diffusion du droit international humanitaire, l'octroi de subventions aux pays touchés par la pandémie de Covid-19, le soutien aux réfugiés, l'appui aux cantines scolaires (PAM) en Côte d'Ivoire.\n• Échec : l'utilisation abusive du droit de véto, qui paralyse le Conseil de sécurité.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p05_q5",
+            "type": "mcq",
+            "prompt": "Lequel des éléments suivants est un succès de l'ONU ?",
+            "options": [
+              "La persistance de la pauvreté dans le monde",
+              "L'octroi de subventions aux pays touchés par la pandémie de Covid-19",
+              "L'utilisation abusive du droit de véto",
+              "La persistance de la faim dans le monde"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'octroi de subventions aux pays touchés par la pandémie de Covid-19 est un succès de l'action humanitaire de l'ONU. La persistance de la pauvreté et de la faim, ainsi que l'usage abusif du véto, sont des échecs."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Le prix Nobel de la paix 1988",
+          "stepTheme": "Le prix Nobel de la paix 1988",
+          "stepBadge": "Le prix Nobel de la paix 1988",
+          "paragraphText": "• En 1988, l'ONU obtient le prix Nobel de la paix pour son action en faveur du maintien de la paix.\n• C'est la reconnaissance internationale de ses succès dans le règlement des conflits.\n• Autres succès à retenir : la lutte contre la pauvreté et le sous-développement (FMI, Banque mondiale, PNUD, ONUDI), l'éducation et la culture (UNICEF, UNESCO), la santé (OMS), la lutte contre le réchauffement climatique (conférence de Rio en 1992) et l'action humanitaire en cas de guerre, de catastrophe naturelle ou de famine.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p05_q6",
+            "type": "mcq",
+            "prompt": "Quelle distinction l'ONU obtient-elle en 1988 ?",
+            "options": [
+              "Le prix Nobel de littérature",
+              "Le prix Nobel de la paix",
+              "Le prix Nobel d'économie",
+              "Le prix Nobel de chimie"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'ONU obtient le prix Nobel de la paix en 1988, en reconnaissance de son action pour le maintien de la paix."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p05_q1",
+          "type": "mcq",
+          "prompt": "Comment l'ONU prévient-elle les conflits ?",
+          "options": [
+            "En envoyant des casques bleus dans tous les pays",
+            "Par le parrainage d'accords de désarmement et de dénucléarisation, le contrôle du nucléaire par l'AIEA, les médiations et la supervision des élections",
+            "En excluant les États en conflit",
+            "En interdisant toute armée nationale"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'ONU prévient les conflits par le parrainage d'accords de désarmement et de dénucléarisation, le contrôle du nucléaire par l'AIEA, les médiations du secrétaire général et la supervision des processus électoraux."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p05_q2",
+          "type": "mcq",
+          "prompt": "Dans quel pays les casques bleus sont-ils intervenus en 1950 ?",
+          "options": [
+            "En Corée",
+            "En Côte d'Ivoire",
+            "Au Koweït",
+            "Au Congo"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les casques bleus sont intervenus en Corée en 1950, puis en Égypte (1956), au Congo (1961), à Cuba (1962), au Koweït (1990) et en Côte d'Ivoire (2003)."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p05_q3",
+          "type": "mcq",
+          "prompt": "Quand la Déclaration universelle des droits de l'homme est-elle adoptée ?",
+          "options": [
+            "Le 24 octobre 1945",
+            "Le 10 décembre 1948",
+            "Le 26 juin 1945",
+            "Le 1er janvier 1942"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "La Déclaration universelle des droits de l'homme est adoptée le 10 décembre 1948."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p05_q4",
+          "type": "mcq",
+          "prompt": "Comment l'ONU promeut-elle la démocratie ?",
+          "options": [
+            "En imposant un régime politique aux États",
+            "En apportant une assistance technique et en envoyant des observateurs aux élections",
+            "En excluant les États non démocratiques",
+            "En nommant les présidents des États membres"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'ONU promeut la démocratie en apportant une assistance technique et en envoyant des observateurs aux États en période électorale, comme en Guinée et en Côte d'Ivoire en 2010."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p05_q5",
+          "type": "mcq",
+          "prompt": "Lequel des éléments suivants est un succès de l'ONU ?",
+          "options": [
+            "La persistance de la pauvreté dans le monde",
+            "L'octroi de subventions aux pays touchés par la pandémie de Covid-19",
+            "L'utilisation abusive du droit de véto",
+            "La persistance de la faim dans le monde"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'octroi de subventions aux pays touchés par la pandémie de Covid-19 est un succès de l'action humanitaire de l'ONU. La persistance de la pauvreté et de la faim, ainsi que l'usage abusif du véto, sont des échecs."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p05_q6",
+          "type": "mcq",
+          "prompt": "Quelle distinction l'ONU obtient-elle en 1988 ?",
+          "options": [
+            "Le prix Nobel de littérature",
+            "Le prix Nobel de la paix",
+            "Le prix Nobel d'économie",
+            "Le prix Nobel de chimie"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'ONU obtient le prix Nobel de la paix en 1988, en reconnaissance de son action pour le maintien de la paix."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p06",
+      "order": 6,
+      "title": "Les limites de l'ONU",
+      "summary": "Précarité de la paix, problèmes institutionnels, échecs des casques bleus, insuffisances en matière de droits de l'homme et dans les domaines économique, social et humanitaire.",
+      "conceptExplanation": "Le bilan de l'ONU comporte aussi des limites.\n• La précarité de la paix et de la sécurité. Le non-respect des décisions de l'ONU : les attaques contre l'ONU et la contestation des résolutions (Irak, Côte d'Ivoire, Kosovo). Les problèmes institutionnels : l'usage abusif du droit de véto par les membres permanents du Conseil de sécurité, le retard des cotisations, l'absence de pouvoir du secrétaire général, la lenteur, la passivité de l'ONU, l'impuissance pendant la guerre froide, la toute-puissance des USA utilisant l'ONU à sa guise, l'importance des charges administratives, l'ampleur et les coûts des opérations de l'ONU dans le monde, le non-respect des principes de l'ONU. L'échec des casques bleus : la Somalie, la crise israélo-palestinienne. La persistance des conflits et le terrorisme international : la guerre israélo-palestinienne, l'Afghanistan, l'Ouest-africain.\n• Les insuffisances en matière de droits de l'homme. Le non-respect des droits de l'homme est fréquent, à travers l'oppression des libertés (liberté d'expression), le déficit en démocratie dans de nombreux pays, etc.\n• Les insuffisances dans les domaines économique, social et humanitaire. Au niveau économique : un écart de plus en plus grand entre pays riches et pays pauvres. Au niveau social : la pauvreté est grandissante. Au niveau humanitaire : l'insuffisance des secours de l'ONU face aux catastrophes, la famine, le réchauffement climatique, la pandémie du SIDA, le débordement avec la COVID.",
+      "keyRule": "Les limites de l'ONU : le véto abusif, l'impuissance face aux grandes puissances, l'échec des casques bleus (Somalie, crise israélo-palestinienne) et la persistance de la pauvreté, de la faim et des conflits.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Juger les propositions sur le bilan de l'ONU",
+        "statement": "Voici des propositions relatives au bilan de l'ONU depuis sa création. Dis lesquelles sont justes : 1. L'ONU n'a pas pu empêcher le génocide des Tutsi au Rwanda en 1994. 2. La faiblesse de l'ONU réside dans le fait qu'elle n'a pas de force armée. 3. L'usage du droit de véto par les cinq membres permanents est de plus en plus contesté à travers le monde. 4. L'ONU a réussi à s'interposer entre plusieurs forces belligérantes pour arrêter des conflits armés. 5. L'ONU n'agit que par l'adoption de résolutions, ce qui l'a rendue inefficace. 6. L'Afrique siège au Conseil de sécurité de l'ONU.",
+        "methodSteps": [
+          "1. Juste : la présence des casques bleus n'a pas pu empêcher le génocide rwandais de 1994.",
+          "2. Fausse : l'ONU dispose des casques bleus, sa force d'interposition et d'intervention armée, envoyée en Corée, en Égypte, au Congo, au Koweït ou en Côte d'Ivoire.",
+          "3. Juste : l'usage abusif du droit de véto est l'un des problèmes institutionnels majeurs de l'ONU.",
+          "4. Juste : l'ONU s'est interposée entre plusieurs forces belligérantes pour arrêter des conflits armés, comme en Corée en 1950 ou au Koweït en 1990.",
+          "5. Fausse : l'ONU n'agit pas que par des résolutions — elle envoie aussi des casques bleus, fournit une aide humanitaire et mène des actions de développement.",
+          "6. À nuancer : des États africains siègent comme membres non permanents du Conseil de sécurité, mais l'Afrique ne dispose d'aucun siège permanent — les dirigeants africains réclament d'ailleurs un poste de membre permanent pour le continent."
+        ],
+        "conclusion": "Le bilan est nuancé : des succès réels (interpositions, aide humanitaire) et des limites graves (Rwanda 1994, véto abusif, absence de siège permanent pour l'Afrique)."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Le non-respect des décisions de l'ONU",
+          "stepTheme": "Le non-respect des décisions de l'ONU",
+          "stepBadge": "Le non-respect des décisions de l'ONU",
+          "paragraphText": "• Première limite : la précarité de la paix et de la sécurité.\n• Le non-respect des décisions de l'ONU : les attaques contre l'ONU et la contestation des résolutions.\n• Exemples donnés par le cours : l'Irak, la Côte d'Ivoire, le Kosovo.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p06_q1",
+            "type": "mcq",
+            "prompt": "Quels exemples le cours donne-t-il du non-respect des décisions de l'ONU ?",
+            "options": [
+              "La Corée, l'Égypte et le Congo",
+              "L'Irak, la Côte d'Ivoire et le Kosovo",
+              "La Guinée, le Liberia et le Rwanda",
+              "La Somalie, l'Afghanistan et l'Ouest-africain"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le cours cite l'Irak, la Côte d'Ivoire et le Kosovo comme exemples d'attaques contre l'ONU et de contestation de ses résolutions."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Les problèmes institutionnels",
+          "stepTheme": "Les problèmes institutionnels",
+          "stepBadge": "Les problèmes institutionnels",
+          "paragraphText": "• L'usage abusif du droit de véto par les membres permanents du Conseil de sécurité.\n• Le retard des cotisations, l'absence de pouvoir du secrétaire général, la lenteur et la passivité de l'ONU.\n• L'impuissance pendant la guerre froide, la toute-puissance des USA utilisant l'ONU à sa guise, l'importance des charges administratives, l'ampleur et les coûts des opérations de l'ONU dans le monde, le non-respect des principes de l'ONU.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p06_q2",
+            "type": "mcq",
+            "prompt": "Lequel des éléments suivants est un problème institutionnel de l'ONU ?",
+            "options": [
+              "Le nombre trop élevé d'États membres",
+              "L'usage abusif du droit de véto par les membres permanents",
+              "Le siège de l'ONU à New York",
+              "Le nombre de langues officielles"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'usage abusif du droit de véto par les membres permanents du Conseil de sécurité est l'un des problèmes institutionnels majeurs de l'ONU, avec le retard des cotisations et l'absence de pouvoir du secrétaire général."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepTitle": "L'échec des casques bleus",
+          "stepTheme": "L'échec des casques bleus",
+          "stepBadge": "L'échec des casques bleus",
+          "paragraphText": "• Les casques bleus ont connu des succès, mais aussi des échecs.\n• Échecs cités par le cours : la Somalie et la crise israélo-palestinienne.\n• La présence des casques bleus n'a pas pu empêcher le génocide des Tutsi au Rwanda en 1994.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p06_q3",
+            "type": "mcq",
+            "prompt": "Dans quels cas les casques bleus ont-ils échoué, selon le cours ?",
+            "options": [
+              "En Corée et en Égypte",
+              "En Somalie et dans la crise israélo-palestinienne",
+              "Au Koweït et au Congo",
+              "En Côte d'Ivoire et au Liberia"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le cours cite la Somalie et la crise israélo-palestinienne comme des échecs des casques bleus. La Corée, l'Égypte, le Koweït et le Congo sont au contraire des exemples d'interventions réussies."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "methode",
+          "stepTitle": "La persistance des conflits et le terrorisme",
+          "stepTheme": "La persistance des conflits et le terrorisme",
+          "stepBadge": "La persistance des conflits et le terrorisme",
+          "paragraphText": "• Malgré l'action de l'ONU, les conflits persistent et le terrorisme international se développe.\n• Exemples : la guerre israélo-palestinienne, l'Afghanistan, l'Ouest-africain.\n• L'action de l'ONU dans le conflit israélo-arabe s'est faite par l'adoption de résolutions, sans parvenir à régler durablement le conflit.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p06_q4",
+            "type": "mcq",
+            "prompt": "Quels conflits persistent malgré l'action de l'ONU ?",
+            "options": [
+              "La guerre israélo-palestinienne, l'Afghanistan et l'Ouest-africain",
+              "La guerre de Corée et la guerre du Vietnam",
+              "La guerre du Golfe et la guerre des Balkans",
+              "La crise de Cuba et la crise de Suez"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le cours cite la guerre israélo-palestinienne, l'Afghanistan et l'Ouest-africain comme des conflits qui persistent malgré l'action de l'ONU."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "Les insuffisances en matière de droits de l'homme",
+          "stepTheme": "Les insuffisances en matière de droits de l'homme",
+          "stepBadge": "Les insuffisances en matière de droits de l'homme",
+          "paragraphText": "• Le non-respect des droits de l'homme est fréquent, malgré la Déclaration universelle de 1948.\n• L'oppression des libertés (liberté d'expression) et le déficit en démocratie dans de nombreux pays.\n• Piège : ne pas confondre les succès (la DUDH, la CPI) et les limites (le non-respect fréquent de ces droits sur le terrain).",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p06_q5",
+            "type": "mcq",
+            "prompt": "Quelle insuffisance l'ONU connaît-elle en matière de droits de l'homme ?",
+            "options": [
+              "L'absence de Déclaration universelle des droits de l'homme",
+              "Le non-respect fréquent des droits de l'homme et le déficit de démocratie dans de nombreux pays",
+              "L'absence de Cour internationale de justice",
+              "L'interdiction des observateurs électoraux"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Malgré la Déclaration universelle des droits de l'homme de 1948, leur non-respect est fréquent, avec l'oppression des libertés et un déficit de démocratie dans de nombreux pays."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "Les insuffisances économiques, sociales et humanitaires",
+          "stepTheme": "Les insuffisances économiques, sociales et humanitaires",
+          "stepBadge": "Les insuffisances économiques, sociales et humanitaires",
+          "paragraphText": "• Au niveau économique : un écart de plus en plus grand entre pays riches et pays pauvres.\n• Au niveau social : la pauvreté est grandissante.\n• Au niveau humanitaire : l'insuffisance des secours de l'ONU face aux catastrophes, la famine, le réchauffement climatique, la pandémie du SIDA et le débordement avec la COVID.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p06_q6",
+            "type": "mcq",
+            "prompt": "Que constate le cours au niveau économique ?",
+            "options": [
+              "Un écart de plus en plus grand entre pays riches et pays pauvres",
+              "La disparition de la pauvreté",
+              "L'égalité économique entre tous les États",
+              "La fin des famines dans le monde"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Au niveau économique, le cours constate un écart de plus en plus grand entre pays riches et pays pauvres, et une pauvreté grandissante au niveau social."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p06_q1",
+          "type": "mcq",
+          "prompt": "Quels exemples le cours donne-t-il du non-respect des décisions de l'ONU ?",
+          "options": [
+            "La Corée, l'Égypte et le Congo",
+            "L'Irak, la Côte d'Ivoire et le Kosovo",
+            "La Guinée, le Liberia et le Rwanda",
+            "La Somalie, l'Afghanistan et l'Ouest-africain"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le cours cite l'Irak, la Côte d'Ivoire et le Kosovo comme exemples d'attaques contre l'ONU et de contestation de ses résolutions."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p06_q2",
+          "type": "mcq",
+          "prompt": "Lequel des éléments suivants est un problème institutionnel de l'ONU ?",
+          "options": [
+            "Le nombre trop élevé d'États membres",
+            "L'usage abusif du droit de véto par les membres permanents",
+            "Le siège de l'ONU à New York",
+            "Le nombre de langues officielles"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'usage abusif du droit de véto par les membres permanents du Conseil de sécurité est l'un des problèmes institutionnels majeurs de l'ONU, avec le retard des cotisations et l'absence de pouvoir du secrétaire général."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p06_q3",
+          "type": "mcq",
+          "prompt": "Dans quels cas les casques bleus ont-ils échoué, selon le cours ?",
+          "options": [
+            "En Corée et en Égypte",
+            "En Somalie et dans la crise israélo-palestinienne",
+            "Au Koweït et au Congo",
+            "En Côte d'Ivoire et au Liberia"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le cours cite la Somalie et la crise israélo-palestinienne comme des échecs des casques bleus. La Corée, l'Égypte, le Koweït et le Congo sont au contraire des exemples d'interventions réussies."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p06_q4",
+          "type": "mcq",
+          "prompt": "Quels conflits persistent malgré l'action de l'ONU ?",
+          "options": [
+            "La guerre israélo-palestinienne, l'Afghanistan et l'Ouest-africain",
+            "La guerre de Corée et la guerre du Vietnam",
+            "La guerre du Golfe et la guerre des Balkans",
+            "La crise de Cuba et la crise de Suez"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cours cite la guerre israélo-palestinienne, l'Afghanistan et l'Ouest-africain comme des conflits qui persistent malgré l'action de l'ONU."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p06_q5",
+          "type": "mcq",
+          "prompt": "Quelle insuffisance l'ONU connaît-elle en matière de droits de l'homme ?",
+          "options": [
+            "L'absence de Déclaration universelle des droits de l'homme",
+            "Le non-respect fréquent des droits de l'homme et le déficit de démocratie dans de nombreux pays",
+            "L'absence de Cour internationale de justice",
+            "L'interdiction des observateurs électoraux"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Malgré la Déclaration universelle des droits de l'homme de 1948, leur non-respect est fréquent, avec l'oppression des libertés et un déficit de démocratie dans de nombreux pays."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p06_q6",
+          "type": "mcq",
+          "prompt": "Que constate le cours au niveau économique ?",
+          "options": [
+            "Un écart de plus en plus grand entre pays riches et pays pauvres",
+            "La disparition de la pauvreté",
+            "L'égalité économique entre tous les États",
+            "La fin des famines dans le monde"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Au niveau économique, le cours constate un écart de plus en plus grand entre pays riches et pays pauvres, et une pauvreté grandissante au niveau social."
+        }
+      ]
+    },
+    {
+      "id": "terminale_hg_histoire_t1_l01_onu_p07",
+      "order": 7,
+      "title": "Les réformes souhaitables et le bilan mitigé",
+      "summary": "Réformer le Conseil de sécurité, démocratiser le fonctionnement de l'ONU et prévenir les conflits : le bilan est mitigé, des réformes structurelles profondes sont demandées.",
+      "conceptExplanation": "Face aux limites constatées, le cours propose des réformes et des actions souhaitables.\n• Une réforme du Conseil de sécurité est indispensable, notamment l'usage du droit de véto.\n• Il est indispensable de démocratiser le fonctionnement de l'ONU par le renforcement des pouvoirs de l'Assemblée générale, plus représentative des membres, et du secrétariat, plus présent sur la scène internationale.\n• Il est souhaitable de mettre l'accent sur les missions de prévention des conflits, de s'ingérer dans les crises pour la protection des populations civiles et d'initier de grands projets de développement pour les pays pauvres.\nConclusion de la leçon : créée pour principalement préserver la paix et la sécurité mondiales au sortir de la Deuxième Guerre mondiale, l'ONU connaît des succès certains. Cependant, des problèmes demeurent. Alors, des voix s'élèvent pour demander des réformes structurelles profondes.\nC'est ce bilan mitigé qu'un officiel résume ainsi, lors du 74e anniversaire de l'ONU : « L'ONU est née de la volonté des vainqueurs de la seconde guerre mondiale. Après environ 75 ans d'existence, il faut avoir le courage de l'avouer, elle ne reflète plus la réalité du moment. Au-delà de cet aspect, le bilan de l'organisation est mitigé. De nombreux défis restent à relever. »",
+      "keyRule": "Bilan mitigé : des succès certains, des problèmes qui demeurent — la réponse du cours est la réforme (véto, Assemblée générale, prévention), pas la disparition de l'ONU.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Discuter le bilan mitigé de l'ONU",
+        "statement": "Situation d'évaluation : lors de la célébration du 74e anniversaire de l'ONU à New York, un officiel déclare : « L'ONU est née de la volonté des vainqueurs de la seconde guerre mondiale. Après environ 75 ans d'existence, il faut avoir le courage de l'avouer, elle ne reflète plus la réalité du moment. Au-delà de cet aspect, le bilan de l'organisation est mitigé. De nombreux défis restent à relever. » Consignes : 1. Dis de quel problème parle l'officiel. 2. Explique le passage : « l'ONU est née de la volonté des vainqueurs de la seconde guerre mondiale ». 3. Partages-tu le point de vue de l'auteur selon lequel « le bilan de l'ONU est mitigé » ? Justifie ta réponse.",
+        "methodSteps": [
+          "1. Le problème : la représentativité et le bilan de l'ONU après environ 75 ans d'existence — l'organisation ne refléterait plus la réalité du moment.",
+          "2. Explication : l'ONU a été créée par les Alliés vainqueurs de la Seconde Guerre mondiale (Roosevelt, Churchill, Staline) ; les cinq membres permanents du Conseil de sécurité, avec droit de véto, sont les grandes puissances de 1945, et ce sont elles qui ont écrit la Charte à San Francisco.",
+          "3. Point de vue : oui, le bilan est mitigé. Succès certains : maintien de la paix (casques bleus, Nobel de la paix 1988), droits de l'homme (DUDH 1948, CPI), aide humanitaire. Problèmes qui demeurent : usage abusif du véto, impuissance face à certaines crises (Rwanda 1994, crise israélo-palestinienne), persistance de la pauvreté et de la faim.",
+          "4. Conclusion de l'argumentation : c'est pourquoi des voix s'élèvent pour demander des réformes structurelles profondes, notamment du Conseil de sécurité."
+        ],
+        "conclusion": "Le bilan mitigé se justifie en deux temps : des succès certains d'un côté, des limites graves de l'autre — d'où la demande de réformes, et non la disparition de l'ONU."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepTitle": "Réformer le Conseil de sécurité",
+          "stepTheme": "Réformer le Conseil de sécurité",
+          "stepBadge": "Réformer le Conseil de sécurité",
+          "paragraphText": "• Une réforme du Conseil de sécurité est indispensable, notamment l'usage du droit de véto.\n• Le véto, utilisé de façon abusive par les membres permanents, paralyse souvent les décisions.\n• La question de l'élargissement du Conseil se pose aussi : des puissances comme l'Inde, le Brésil, le Mexique ou le Nigeria, ainsi que l'Afrique, réclament une place de membre permanent.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p07_q1",
+            "type": "mcq",
+            "prompt": "Quelle réforme du Conseil de sécurité le cours juge-t-il indispensable ?",
+            "options": [
+              "Supprimer le Conseil de sécurité",
+              "Réformer l'usage du droit de véto",
+              "Augmenter le nombre de membres permanents à 15",
+              "Transférer ses pouvoirs à l'Assemblée générale"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Une réforme du Conseil de sécurité est indispensable, notamment l'usage du droit de véto, dont l'usage abusif paralyse les décisions."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepTitle": "Démocratiser le fonctionnement de l'ONU",
+          "stepTheme": "Démocratiser le fonctionnement de l'ONU",
+          "stepBadge": "Démocratiser le fonctionnement de l'ONU",
+          "paragraphText": "• Il est indispensable de démocratiser le fonctionnement de l'ONU.\n• Pour cela, il faut renforcer les pouvoirs de l'Assemblée générale, plus représentative des membres, et du secrétariat, plus présent sur la scène internationale.\n• Aujourd'hui, l'Assemblée générale délibère mais ses décisions n'ont aucun caractère contraignant, et le secrétaire général n'a pas de pouvoir propre.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p07_q2",
+            "type": "mcq",
+            "prompt": "Comment démocratiser le fonctionnement de l'ONU, selon le cours ?",
+            "options": [
+              "En renforçant les pouvoirs de l'Assemblée générale et du secrétariat",
+              "En supprimant l'Assemblée générale",
+              "En donnant le véto à tous les États",
+              "En réduisant le nombre d'États membres"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Il faut démocratiser le fonctionnement de l'ONU en renforçant les pouvoirs de l'Assemblée générale, plus représentative des membres, et du secrétariat, plus présent sur la scène internationale."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "methode",
+          "stepTitle": "Prévenir les conflits et protéger les civils",
+          "stepTheme": "Prévenir les conflits et protéger les civils",
+          "stepBadge": "Prévenir les conflits et protéger les civils",
+          "paragraphText": "• Il est souhaitable de mettre l'accent sur les missions de prévention des conflits.\n• Il faut s'ingérer dans les crises pour la protection des populations civiles.\n• Il faut aussi initier de grands projets de développement pour les pays pauvres.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p07_q3",
+            "type": "mcq",
+            "prompt": "Sur quoi faut-il mettre l'accent, selon le cours ?",
+            "options": [
+              "Sur les missions de prévention des conflits et la protection des populations civiles",
+              "Sur l'augmentation des cotisations",
+              "Sur la création de nouvelles institutions",
+              "Sur la réduction du nombre de casques bleus"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Il faut mettre l'accent sur les missions de prévention des conflits, s'ingérer dans les crises pour la protection des populations civiles et initier de grands projets de développement pour les pays pauvres."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepTitle": "Le bilan mitigé",
+          "stepTheme": "Le bilan mitigé",
+          "stepBadge": "Le bilan mitigé",
+          "paragraphText": "• Conclusion de la leçon : créée pour principalement préserver la paix et la sécurité mondiales au sortir de la Deuxième Guerre mondiale, l'ONU connaît des succès certains.\n• Cependant, des problèmes demeurent.\n• Alors, des voix s'élèvent pour demander des réformes structurelles profondes.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p07_q4",
+            "type": "mcq",
+            "prompt": "Quel bilan le cours fait-il de l'ONU ?",
+            "options": [
+              "Un bilan entièrement positif",
+              "Un bilan entièrement négatif",
+              "Un bilan mitigé : des succès certains, mais des problèmes qui demeurent",
+              "Un bilan impossible à établir"
+            ],
+            "correctAnswerIndex": 2,
+            "explanation": "Le cours conclut à un bilan mitigé : l'ONU connaît des succès certains, mais des problèmes demeurent, d'où la demande de réformes structurelles profondes."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepTitle": "« L'ONU devrait disparaître » : le piège",
+          "stepTheme": "« L'ONU devrait disparaître » : le piège",
+          "stepBadge": "« L'ONU devrait disparaître » : le piège",
+          "paragraphText": "• Piège d'examen : face aux limites de l'ONU, certains disent qu'elle « aurait suffisamment montré ses limites et devait disparaître ».\n• La position du cours n'est pas la disparition : malgré ses limites, l'ONU a des succès réels (maintien de la paix, droits de l'homme, aide humanitaire) et doit être réformée, pas supprimée.\n• Pour argumenter : cite les succès (casques bleus, DUDH 1948, Nobel de la paix 1988, aide humanitaire) puis les limites (véto, Rwanda 1994, pauvreté persistante) et conclus par la réforme.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p07_q5",
+            "type": "mcq",
+            "prompt": "Que réponds-tu à l'opinion selon laquelle « l'ONU aurait suffisamment montré ses limites et devait disparaître » ?",
+            "options": [
+              "On est d'accord : l'ONU n'a servi à rien",
+              "On n'est pas d'accord : malgré ses limites, l'ONU a des succès réels et doit être réformée, pas supprimée",
+              "On est d'accord : les casques bleus n'ont jamais rien fait",
+              "On n'est pas d'accord : l'ONU n'a aucune limite"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "Le cours ne conclut pas à la disparition de l'ONU : malgré ses limites, elle a des succès certains (paix, droits de l'homme, aide humanitaire) et des voix s'élèvent pour demander des réformes structurelles profondes."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepTitle": "« Elle ne reflète plus la réalité du moment »",
+          "stepTheme": "« Elle ne reflète plus la réalité du moment »",
+          "stepBadge": "« Elle ne reflète plus la réalité du moment »",
+          "paragraphText": "• Lors du 74e anniversaire de l'ONU, un officiel déclare : « L'ONU est née de la volonté des vainqueurs de la seconde guerre mondiale. Après environ 75 ans d'existence, il faut avoir le courage de l'avouer, elle ne reflète plus la réalité du moment. »\n• Pourquoi ? Parce que les cinq membres permanents avec droit de véto sont les grandes puissances de 1945, alors que le monde a changé : de nouveaux pays (Inde, Brésil, Nigeria…) et l'Afrique demandent une place.\n• Le bilan reste mitigé et de nombreux défis restent à relever.",
+          "exercise": {
+            "id": "terminale_hg_histoire_t1_l01_onu_p07_q6",
+            "type": "mcq",
+            "prompt": "Pourquoi dit-on que l'ONU « ne reflète plus la réalité du moment » ?",
+            "options": [
+              "Parce que l'ONU n'a connu que des échecs",
+              "Parce que, malgré des succès certains, des problèmes demeurent et les membres permanents de 1945 ne représentent plus le monde d'aujourd'hui",
+              "Parce que l'ONU a trop d'États membres",
+              "Parce que le secrétaire général l'a demandé"
+            ],
+            "correctAnswerIndex": 1,
+            "explanation": "L'ONU est née de la volonté des vainqueurs de 1945 : ses cinq membres permanents sont les grandes puissances de l'époque, alors que le monde a changé. D'où un bilan mitigé et la demande de réformes structurelles profondes."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p07_q1",
+          "type": "mcq",
+          "prompt": "Quelle réforme du Conseil de sécurité le cours juge-t-il indispensable ?",
+          "options": [
+            "Supprimer le Conseil de sécurité",
+            "Réformer l'usage du droit de véto",
+            "Augmenter le nombre de membres permanents à 15",
+            "Transférer ses pouvoirs à l'Assemblée générale"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Une réforme du Conseil de sécurité est indispensable, notamment l'usage du droit de véto, dont l'usage abusif paralyse les décisions."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p07_q2",
+          "type": "mcq",
+          "prompt": "Comment démocratiser le fonctionnement de l'ONU, selon le cours ?",
+          "options": [
+            "En renforçant les pouvoirs de l'Assemblée générale et du secrétariat",
+            "En supprimant l'Assemblée générale",
+            "En donnant le véto à tous les États",
+            "En réduisant le nombre d'États membres"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Il faut démocratiser le fonctionnement de l'ONU en renforçant les pouvoirs de l'Assemblée générale, plus représentative des membres, et du secrétariat, plus présent sur la scène internationale."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p07_q3",
+          "type": "mcq",
+          "prompt": "Sur quoi faut-il mettre l'accent, selon le cours ?",
+          "options": [
+            "Sur les missions de prévention des conflits et la protection des populations civiles",
+            "Sur l'augmentation des cotisations",
+            "Sur la création de nouvelles institutions",
+            "Sur la réduction du nombre de casques bleus"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Il faut mettre l'accent sur les missions de prévention des conflits, s'ingérer dans les crises pour la protection des populations civiles et initier de grands projets de développement pour les pays pauvres."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p07_q4",
+          "type": "mcq",
+          "prompt": "Quel bilan le cours fait-il de l'ONU ?",
+          "options": [
+            "Un bilan entièrement positif",
+            "Un bilan entièrement négatif",
+            "Un bilan mitigé : des succès certains, mais des problèmes qui demeurent",
+            "Un bilan impossible à établir"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Le cours conclut à un bilan mitigé : l'ONU connaît des succès certains, mais des problèmes demeurent, d'où la demande de réformes structurelles profondes."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p07_q5",
+          "type": "mcq",
+          "prompt": "Que réponds-tu à l'opinion selon laquelle « l'ONU aurait suffisamment montré ses limites et devait disparaître » ?",
+          "options": [
+            "On est d'accord : l'ONU n'a servi à rien",
+            "On n'est pas d'accord : malgré ses limites, l'ONU a des succès réels et doit être réformée, pas supprimée",
+            "On est d'accord : les casques bleus n'ont jamais rien fait",
+            "On n'est pas d'accord : l'ONU n'a aucune limite"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Le cours ne conclut pas à la disparition de l'ONU : malgré ses limites, elle a des succès certains (paix, droits de l'homme, aide humanitaire) et des voix s'élèvent pour demander des réformes structurelles profondes."
+        },
+        {
+          "id": "terminale_hg_histoire_t1_l01_onu_p07_q6",
+          "type": "mcq",
+          "prompt": "Pourquoi dit-on que l'ONU « ne reflète plus la réalité du moment » ?",
+          "options": [
+            "Parce que l'ONU n'a connu que des échecs",
+            "Parce que, malgré des succès certains, des problèmes demeurent et les membres permanents de 1945 ne représentent plus le monde d'aujourd'hui",
+            "Parce que l'ONU a trop d'États membres",
+            "Parce que le secrétaire général l'a demandé"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "L'ONU est née de la volonté des vainqueurs de 1945 : ses cinq membres permanents sont les grandes puissances de l'époque, alors que le monde a changé. D'où un bilan mitigé et la demande de réformes structurelles profondes."
+        }
+      ]
+    }
+  ]
 };
-
