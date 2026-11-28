@@ -28,7 +28,7 @@ export interface KoneMoodInfo {
   battery: number;
   label: string;
   shortStatus: string;
-  /** Bulles pré-écrites affichées sur l'écran d'accueil (Gratuit, Pro et Plus) */
+  /** Bulles pré-écrites affichées selon son humeur (Gratuit, Pro et Plus) */
   bubbles: string[];
 }
 
@@ -154,11 +154,23 @@ function resolveSessionYmd(session: StudySession, currentWeekMonday?: string): s
   return null;
 }
 
+/** Convertit `YYYY-MM-DD` + `HH:MM` en timestamp local (ms). */
+function sessionEndLocalMs(ymd: string, endTime?: string): number | null {
+  const [y, m, d] = ymd.split('-').map(Number);
+  if (!y || !m || !d) return null;
+  const endMin = parseTimeToMinutes(endTime || '23:59');
+  if (!Number.isFinite(endMin)) return new Date(y, m - 1, d, 23, 59, 0, 0).getTime();
+  const hh = Math.floor(endMin / 60);
+  const mm = endMin % 60;
+  return new Date(y, m - 1, d, hh, mm, 0, 0).getTime();
+}
+
 export interface KoneBatterySnapshot {
   koneBattery?: number;
   koneBatteryUpdatedAt?: string;
   konePenalizedKeys?: string[];
   koneBaselineDate?: string;
+  koneBaselineAt?: string;
 }
 
 export interface KoneMissedSettlementResult {
@@ -168,6 +180,7 @@ export interface KoneMissedSettlementResult {
   koneBatteryUpdatedAt: string;
   konePenalizedKeys: string[];
   koneBaselineDate: string;
+  koneBaselineAt: string;
 }
 
 /**
@@ -183,13 +196,18 @@ export function settleKoneBatteryForMissedSessions(
   now: Date = new Date(),
 ): KoneMissedSettlementResult {
   const todayYmd = toLocalYmd(now);
+  const nowMs = now.getTime();
   const currentMinute = now.getHours() * 60 + now.getMinutes();
 
   const initialBattery = clampKoneBattery(snapshot.koneBattery, KONE_BATTERY_DEFAULT);
-  const hadBaseline = Boolean(snapshot.koneBaselineDate && /^\d{4}-\d{2}-\d{2}$/.test(snapshot.koneBaselineDate));
-  // À la toute première activation sur un compte existant, on pose la date du jour comme point de départ
-  // pour ne pas pénaliser rétroactivement des jours antérieurs à l'installation de la fonctionnalité.
-  const baselineDate = hadBaseline ? snapshot.koneBaselineDate! : todayYmd;
+  const hadBaselineDate = Boolean(snapshot.koneBaselineDate && /^\d{4}-\d{2}-\d{2}$/.test(snapshot.koneBaselineDate));
+  const baselineDate = hadBaselineDate ? snapshot.koneBaselineDate! : todayYmd;
+
+  const parsedBaselineAt = snapshot.koneBaselineAt ? Date.parse(snapshot.koneBaselineAt) : Number.NaN;
+  const hadBaselineAt = Number.isFinite(parsedBaselineAt);
+  const baselineAtIso = hadBaselineAt ? snapshot.koneBaselineAt! : now.toISOString();
+  const baselineAtMs = hadBaselineAt ? parsedBaselineAt : nowMs;
+
   const penalizedSet = new Set<string>(Array.isArray(snapshot.konePenalizedKeys) ? snapshot.konePenalizedKeys : []);
 
   const validSubjectIds = new Set(
@@ -205,13 +223,18 @@ export function settleKoneBatteryForMissedSessions(
 
     const sessionYmd = resolveSessionYmd(session, currentWeekMonday);
     if (!sessionYmd) continue;
-    // Ignorer les séances antérieures à la date d'activation initiale de la batterie
     if (sessionYmd < baselineDate) continue;
+
+    // Heure de fin d'origine (avant éventuel rattrapage) ou actuelle pour vérifier que la séance
+    // n'était pas DÉJÀ dans le passé au moment de l'activation du compte ou de l'import d'EDT.
+    const originalEndMs = sessionEndLocalMs(sessionYmd, session.originalEndTime || session.endTime);
+    if (originalEndMs !== null && originalEndMs <= baselineAtMs) continue;
+    const createdMs = session.createdAt ? Date.parse(session.createdAt) : Number.NaN;
+    if (Number.isFinite(createdMs) && originalEndMs !== null && originalEndMs <= createdMs) continue;
 
     const key = `${session.id}_${sessionYmd}`;
     if (penalizedSet.has(key)) continue;
 
-    // Ignorer une séance d'examen dont l'épreuve est déjà passée
     const matchingSubject = subjects.find((s) => s.id === session.subjectId);
     const examDate = matchingSubject?.examDate || session.examDate;
     if (examDate && examDate < sessionYmd) continue;
@@ -219,12 +242,8 @@ export function settleKoneBatteryForMissedSessions(
     let isDefinitivelyMissed = false;
 
     if (sessionYmd < todayYmd) {
-      // Jour passé sans que la séance ait été complétée
       isDefinitivelyMissed = true;
     } else if (sessionYmd === todayYmd) {
-      // Aujourd'hui : `evaluateDailyCatchup` a déjà tourné avant cet appel.
-      // Si l'heure de fin actuelle de la séance (ou de son unique rattrapage du soir) est dépassée
-      // et qu'elle n'est toujours pas complétée (ou marquée expirée), la séance est définitivement ratée.
       const endMin = parseTimeToMinutes(session.endTime);
       if (session.isExpired || (Number.isFinite(endMin) && currentMinute > endMin + 1)) {
         isDefinitivelyMissed = true;
@@ -240,7 +259,7 @@ export function settleKoneBatteryForMissedSessions(
   const nextBattery = newlyMissedCount > 0 ? drainKoneBattery(initialBattery, newlyMissedCount) : initialBattery;
   const nextKeys = Array.from(penalizedSet).slice(-MAX_PENALIZED_KEYS);
   const batteryUninitialized = typeof snapshot.koneBattery !== 'number';
-  const changed = newlyMissedCount > 0 || !hadBaseline || batteryUninitialized;
+  const changed = newlyMissedCount > 0 || !hadBaselineDate || !hadBaselineAt || batteryUninitialized;
 
   return {
     changed,
@@ -251,6 +270,7 @@ export function settleKoneBatteryForMissedSessions(
       : snapshot.koneBatteryUpdatedAt,
     konePenalizedKeys: nextKeys,
     koneBaselineDate: baselineDate,
+    koneBaselineAt: baselineAtIso,
   };
 }
 
@@ -296,10 +316,16 @@ export function mergeKoneBatteryState(
     .sort();
   const baselineDate = dates[0] || toLocalYmd(new Date());
 
+  const isoTimes = [local?.koneBaselineAt, cloud?.koneBaselineAt]
+    .filter((t): t is string => Boolean(t && Number.isFinite(Date.parse(t))))
+    .sort();
+  const baselineAt = isoTimes[0] || new Date().toISOString();
+
   return {
     koneBattery: battery,
     koneBatteryUpdatedAt: updatedAt,
     konePenalizedKeys: mergedKeys,
     koneBaselineDate: baselineDate,
+    koneBaselineAt: baselineAt,
   };
 }

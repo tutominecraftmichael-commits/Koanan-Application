@@ -110,6 +110,8 @@ export interface StudySession {
   subjectId: string;
   dayOfWeek: DayOfWeek;
   date: string;
+  /** Horodatage ISO de création de la séance (évite de pénaliser un créneau déjà passé le jour même d'un import d'EDT) */
+  createdAt?: string;
   startTime: string;
   endTime: string;
   durationMinutes: number;

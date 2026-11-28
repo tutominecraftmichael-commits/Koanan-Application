@@ -65,6 +65,7 @@ export interface AppState {
   koneBatteryUpdatedAt?: string;
   konePenalizedKeys?: string[];
   koneBaselineDate?: string;
+  koneBaselineAt?: string;
 }
 
 /** Valeur posée par défaut avant que l'élève n'indique sa vraie classe : ne doit jamais écraser une vraie classe. */
@@ -131,6 +132,7 @@ export function createEmptyUserState(
     koneBatteryUpdatedAt: user.koneBatteryUpdatedAt || new Date().toISOString(),
     konePenalizedKeys: [],
     koneBaselineDate: toLocalYmd(new Date()),
+    koneBaselineAt: new Date().toISOString(),
     privacyPolicyAccepted: user.privacyPolicyAccepted ?? false,
     privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt,
     userAccount: {
@@ -202,6 +204,7 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
     koneBatteryUpdatedAt: new Date().toISOString(),
     konePenalizedKeys: [],
     koneBaselineDate: toLocalYmd(new Date()),
+    koneBaselineAt: new Date().toISOString(),
     userAccount: {
       name: 'Alexandre Étudiant (Compte Démo)',
       email: 'alexandre.universite@etudiant.univ.fr',
@@ -337,6 +340,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           koneBatteryUpdatedAt: parsed.koneBatteryUpdatedAt || parsed.userAccount?.koneBatteryUpdatedAt || baseEmptyState.koneBatteryUpdatedAt,
           konePenalizedKeys: Array.isArray(parsed.konePenalizedKeys) ? parsed.konePenalizedKeys : [],
           koneBaselineDate: parsed.koneBaselineDate || baseEmptyState.koneBaselineDate,
+          koneBaselineAt: parsed.koneBaselineAt || baseEmptyState.koneBaselineAt,
           privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
           privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
           userAccount: parsed.userAccount ? {
@@ -457,6 +461,7 @@ export async function saveUserState(uid: string, state: AppState): Promise<void>
         koneBatteryUpdatedAt: sanitizedState.koneBatteryUpdatedAt || sanitizedState.userAccount?.koneBatteryUpdatedAt || new Date().toISOString(),
         konePenalizedKeys: Array.isArray(sanitizedState.konePenalizedKeys) ? sanitizedState.konePenalizedKeys : [],
         ...(sanitizedState.koneBaselineDate ? { koneBaselineDate: sanitizedState.koneBaselineDate } : {}),
+        ...(sanitizedState.koneBaselineAt ? { koneBaselineAt: sanitizedState.koneBaselineAt } : {}),
         ...(sanitizedState.gamification ? { gamification: sanitizedState.gamification } : {}),
         ...(sanitizedState.nameChangedAt ? { nameChangedAt: sanitizedState.nameChangedAt } : {}),
       });

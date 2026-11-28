@@ -10,27 +10,33 @@
 .dark .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #1c3554 0%, #13243b 70%, #0f1d31 100%); }
 
 /* ---------- Batterie & Humeur de KONÉ (couleurs de fond, teinte peluche et anneau) ---------- */
+/* Le filtre de teinte est posé sur .kp-body pour que la peluche ET le masque facial SVG partagent
+   exactement la même transformation colorimétrique (aucune démarcation de couleur). */
 /* 6 % à 49 % : Orange / Agacé */
 .kp--tier-annoyed .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #fff7ed 0%, #fed7aa 72%, #fdba74 100%); }
 .dark .kp--tier-annoyed .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #5c280e 0%, #3b1808 72%, #291005 100%); }
-.kp--tier-annoyed .kp-frame { filter: hue-rotate(185deg) saturate(1.35) brightness(1.01); }
+.kp--tier-annoyed .kp-body { filter: hue-rotate(185deg) saturate(1.35) brightness(1.01); }
 .kp--tier-annoyed.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #fff, 0 8px 22px rgba(249, 115, 22, 0.4); }
 .dark .kp--tier-annoyed.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #0f172a, 0 0 0 5px rgba(251, 146, 60, 0.65), 0 10px 26px rgba(0, 0, 0, 0.5); }
 
 /* 1 % à 5 % : Rouge / Très fâché */
 .kp--tier-angry .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #fef2f2 0%, #fecaca 72%, #fca5a5 100%); }
 .dark .kp--tier-angry .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #63171b 0%, #3f0e12 72%, #2a080b 100%); }
-.kp--tier-angry .kp-frame { filter: hue-rotate(155deg) saturate(1.58) brightness(0.97); }
+.kp--tier-angry .kp-body { filter: hue-rotate(155deg) saturate(1.58) brightness(0.97); }
 .kp--tier-angry.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #fff, 0 8px 22px rgba(239, 68, 68, 0.45); }
 .dark .kp--tier-angry.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #0f172a, 0 0 0 5px rgba(248, 113, 113, 0.72), 0 10px 26px rgba(0, 0, 0, 0.55); }
 
 /* 0 % : Rouge foncé / En grève (boude, tourne le dos + cadenas) */
 .kp--tier-strike .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #fee2e2 0%, #f87171 55%, #991b1b 100%); }
 .dark .kp--tier-strike .kp-stage--bust { background: radial-gradient(circle at 50% 35%, #450a0a 0%, #2b0606 72%, #1a0303 100%); }
-.kp--tier-strike .kp-frame { filter: hue-rotate(155deg) saturate(1.5) brightness(0.74) contrast(1.08); }
-.kp--tier-strike .kp-body { animation-duration: 5.2s; }
+.kp--tier-strike .kp-body { filter: hue-rotate(155deg) saturate(1.5) brightness(0.74) contrast(1.08); animation-duration: 5.2s; }
 .kp--tier-strike.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #fff, 0 8px 22px rgba(153, 27, 27, 0.55); }
 .dark .kp--tier-strike.kp--ringed .kp-stage--bust { box-shadow: 0 0 0 3px #0f172a, 0 0 0 5px rgba(185, 28, 28, 0.8), 0 10px 26px rgba(0, 0, 0, 0.65); }
+
+/* Mini-avatar dans les bulles de discussion (TutorChat) */
+.kp-chat-avatar--annoyed { filter: hue-rotate(185deg) saturate(1.35); }
+.kp-chat-avatar--angry { filter: hue-rotate(155deg) saturate(1.58); }
+.kp-chat-avatar--strike { filter: hue-rotate(155deg) saturate(1.5) brightness(0.74); }
 
 .kp-mood-overlay {
   position: absolute;

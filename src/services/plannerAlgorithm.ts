@@ -952,6 +952,7 @@ export function generateOptimizedStudyPlan(
           subjectId: subject.id,
           dayOfWeek: day,
           date: dateString,
+          createdAt: new Date().toISOString(),
           startTime: minutesToTimeString(startMin),
           endTime: minutesToTimeString(endMin),
           durationMinutes: actualDuration,

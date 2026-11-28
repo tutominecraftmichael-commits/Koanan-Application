@@ -740,32 +740,39 @@ export function App() {
             || s.examPrepMode !== baseSessions[idx]?.examPrepMode || s.title !== baseSessions[idx]?.title
         );
 
-        // Batterie KONÉ : baisse uniquement sur les séances du planning définitivement ratées (-30 % par séance ratée)
-        const batterySettlement = settleKoneBatteryForMissedSessions(
-          prev,
-          finalSessions,
-          validSubjects,
-          prev.currentWeekMonday,
-          new Date(),
-        );
+        // Batterie KONÉ : on attend l'arrivée du cloud (si connecté) avant de compter une séance ratée,
+        // pour ne jamais pénaliser à tort une séance déjà faite sur un autre téléphone/ordinateur.
+        const canSettleBattery = !needsCloud || cloudReadyRef.current || cloudGaveUp;
+        const batterySettlement = canSettleBattery
+          ? settleKoneBatteryForMissedSessions(
+              prev,
+              finalSessions,
+              validSubjects,
+              prev.currentWeekMonday,
+              new Date(),
+            )
+          : null;
 
-        if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots || batterySettlement.changed) {
+        if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots || batterySettlement?.changed) {
           // Mise à jour silencieuse de l'emploi du temps et de la batterie KONÉ
           const nextState: AppState = {
             ...prev,
             subjects: validSubjects,
             classSlots: cleanedSlots,
             studySessions: finalSessions,
-            koneBattery: batterySettlement.koneBattery,
-            koneBatteryUpdatedAt: batterySettlement.koneBatteryUpdatedAt,
-            konePenalizedKeys: batterySettlement.konePenalizedKeys,
-            koneBaselineDate: batterySettlement.koneBaselineDate,
-            ...(prev.userAccount ? {
-              userAccount: {
-                ...prev.userAccount,
-                koneBattery: batterySettlement.koneBattery,
-                koneBatteryUpdatedAt: batterySettlement.koneBatteryUpdatedAt,
-              },
+            ...(batterySettlement ? {
+              koneBattery: batterySettlement.koneBattery,
+              koneBatteryUpdatedAt: batterySettlement.koneBatteryUpdatedAt,
+              konePenalizedKeys: batterySettlement.konePenalizedKeys,
+              koneBaselineDate: batterySettlement.koneBaselineDate,
+              koneBaselineAt: batterySettlement.koneBaselineAt,
+              ...(prev.userAccount ? {
+                userAccount: {
+                  ...prev.userAccount,
+                  koneBattery: batterySettlement.koneBattery,
+                  koneBatteryUpdatedAt: batterySettlement.koneBatteryUpdatedAt,
+                },
+              } : {}),
             } : {}),
           };
 

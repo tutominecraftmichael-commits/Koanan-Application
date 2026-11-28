@@ -188,6 +188,7 @@ export function checkAndPerformWeeklyRollover(currentState: AppState): {
     koneBatteryUpdatedAt: settledBattery.koneBatteryUpdatedAt,
     konePenalizedKeys: settledBattery.konePenalizedKeys,
     koneBaselineDate: settledBattery.koneBaselineDate,
+    koneBaselineAt: settledBattery.koneBaselineAt,
     ...(currentState.userAccount ? {
       userAccount: {
         ...currentState.userAccount,
