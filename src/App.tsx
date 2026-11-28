@@ -3046,22 +3046,6 @@ export function App() {
               onOpenPhotoCorrection={plusAccess && subscriptionAccount ? () => setActiveView('devoir-photo') : undefined}
               onOpenGoalPlan={plusAccess ? () => setActiveView('plan-objectif') : undefined}
               goalPlanLabel={studyGoalInfo(studyGoal)?.short}
-              koneBattery={clampKoneBattery(state.koneBattery, KONE_BATTERY_DEFAULT)}
-              onRechargeKone={() => {
-                if (gamificationEnabled && gradeHasGuidedCourses && (hasUnlimitedEnergy(exercisePlan) || energyNow(state.gamification).energy > 0)) {
-                  setIsExerciseOpen(true);
-                  return;
-                }
-                const todayIdx = (new Date().getDay() + 6) % 7;
-                const nextToday = state.studySessions.find((s) => !s.completed && s.dayOfWeek === todayIdx);
-                if (nextToday) {
-                  void handleStartFocusSession(nextToday);
-                  return;
-                }
-                setActiveView('planner');
-                showToast('Lance une mini-leçon ou un mini-jeu pour recharger la batterie de KONÉ (+25 %) !', 4500);
-              }}
-              onOpenKoneChat={tutorAvailable ? () => setTutorOpen({}) : undefined}
               // Tuile de la maquette : ligue (rang + division, élèves admis dans la ligue)
               leagueSummary={gamificationEnabled && gradeIsInLeague
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
@@ -3358,9 +3342,28 @@ export function App() {
       {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
-      {/* Peluche KONAN « Je ne comprends pas » : en bas à droite (les mini-jeux sont en bas à gauche) */}
-      {tutorAvailable && !tutorOpen && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
-        <TutorFab onOpen={() => setTutorOpen({})} battery={clampKoneBattery(state.koneBattery, KONE_BATTERY_DEFAULT)} />
+      {/* Peluche KONÉ + dessin de batterie juste au-dessus : visible en bas à droite pour Gratuit, Pro et Plus */}
+      {(state.userAccount?.isLoggedIn || state.isDemoMode) && !tutorOpen && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
+        <TutorFab
+          battery={clampKoneBattery(state.koneBattery, KONE_BATTERY_DEFAULT)}
+          canChat={tutorAvailable}
+          studentName={effectiveStudentName}
+          onOpen={tutorAvailable ? () => setTutorOpen({}) : undefined}
+          onRecharge={() => {
+            if (gamificationEnabled && gradeHasGuidedCourses && (hasUnlimitedEnergy(exercisePlan) || energyNow(state.gamification).energy > 0)) {
+              setIsExerciseOpen(true);
+              return;
+            }
+            const todayIdx = (new Date().getDay() + 6) % 7;
+            const nextToday = state.studySessions.find((s) => !s.completed && s.dayOfWeek === todayIdx);
+            if (nextToday) {
+              void handleStartFocusSession(nextToday);
+              return;
+            }
+            setActiveView('planner');
+            showToast('Lance une mini-leçon ou un mini-jeu pour recharger la batterie de KONÉ (+25 %) !', 4500);
+          }}
+        />
       )}
       {tutorOpen && tutorStatus && subscriptionAccount && (
         <Suspense fallback={null}>
