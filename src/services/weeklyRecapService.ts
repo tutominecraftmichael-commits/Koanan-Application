@@ -1,6 +1,7 @@
 import type { Subject, StudySession, StudyLog, WeeklySummary, WeeklySubjectStat, PlanTier } from '../types';
 import { getWeekDateRange, isDateInWeek } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
+import { settleKoneBatteryForMissedSessions } from '../lib/gamification/koneBattery';
 import type { AppState } from './storage';
 
 /**
@@ -161,6 +162,15 @@ export function checkAndPerformWeeklyRollover(currentState: AppState): {
     ? existingSummaries.map(w => w.id === pastWeekSummary.id ? pastWeekSummary : w)
     : [pastWeekSummary, ...existingSummaries];
 
+  // Avant d'effacer les séances de la semaine écoulée, comptabiliser les séances ratées sur la batterie KONÉ
+  const settledBattery = settleKoneBatteryForMissedSessions(
+    currentState,
+    sessions,
+    currentState.subjects,
+    previousWeekMonday,
+    now,
+  );
+
   // 3. Génération propre et neuve de la nouvelle semaine (toutes les séances réinitialisées à completed: false)
   const effectiveTier: PlanTier = currentState.planTier || currentState.userAccount?.planTier || 'free';
   const freshSessions = (currentState.subjects.length > 0 && currentState.classSlots.length > 0)
@@ -174,6 +184,17 @@ export function checkAndPerformWeeklyRollover(currentState: AppState): {
 
   const nextState: AppState = {
     ...currentState,
+    koneBattery: settledBattery.koneBattery,
+    koneBatteryUpdatedAt: settledBattery.koneBatteryUpdatedAt,
+    konePenalizedKeys: settledBattery.konePenalizedKeys,
+    koneBaselineDate: settledBattery.koneBaselineDate,
+    ...(currentState.userAccount ? {
+      userAccount: {
+        ...currentState.userAccount,
+        koneBattery: settledBattery.koneBattery,
+        koneBatteryUpdatedAt: settledBattery.koneBatteryUpdatedAt,
+      },
+    } : {}),
     currentWeekMonday: currentMondayStr,
     weeklySummaries: updatedSummaries,
     pendingWeeklyRecap: null,

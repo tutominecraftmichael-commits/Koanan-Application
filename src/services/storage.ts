@@ -1,6 +1,7 @@
 import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification, WeeklySummary, GamificationState } from '../types';
 import type { AvatarConfig } from '../lib/avatar/avatarCatalog';
 import { mergeGamification } from '../lib/gamification/gamification';
+import { KONE_BATTERY_DEFAULT, clampKoneBattery, mergeKoneBatteryState, toLocalYmd } from '../lib/gamification/koneBattery';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId, isNonAcademicSubject } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
@@ -59,6 +60,11 @@ export interface AppState {
   profileUpdatedAt?: string;
   /** Dernier changement de NOM : le suivant n'est possible que 3 mois plus tard. */
   nameChangedAt?: string;
+  /** Batterie & humeur de la mascotte KONÉ (0 à 100, par défaut 100) */
+  koneBattery?: number;
+  koneBatteryUpdatedAt?: string;
+  konePenalizedKeys?: string[];
+  koneBaselineDate?: string;
 }
 
 /** Valeur posée par défaut avant que l'élève n'indique sa vraie classe : ne doit jamais écraser une vraie classe. */
@@ -121,11 +127,17 @@ export function createEmptyUserState(
     academicLevel: user.academicLevel || 'Licence Universitaire',
     konanId: assignedKonanId,
     gold: 100,
+    koneBattery: clampKoneBattery(user.koneBattery, KONE_BATTERY_DEFAULT),
+    koneBatteryUpdatedAt: user.koneBatteryUpdatedAt || new Date().toISOString(),
+    konePenalizedKeys: [],
+    koneBaselineDate: toLocalYmd(new Date()),
     privacyPolicyAccepted: user.privacyPolicyAccepted ?? false,
     privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt,
     userAccount: {
       ...user,
       konanId: assignedKonanId,
+      koneBattery: clampKoneBattery(user.koneBattery, KONE_BATTERY_DEFAULT),
+      koneBatteryUpdatedAt: user.koneBatteryUpdatedAt || new Date().toISOString(),
       isDemo: false,
       isLoggedIn: user.isLoggedIn ?? false,
       planTier: user.planTier || 'free',
@@ -186,6 +198,10 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
     academicLevel: preset.level,
     planTier: 'free',
     konanId: 'KN-784201',
+    koneBattery: KONE_BATTERY_DEFAULT,
+    koneBatteryUpdatedAt: new Date().toISOString(),
+    konePenalizedKeys: [],
+    koneBaselineDate: toLocalYmd(new Date()),
     userAccount: {
       name: 'Alexandre Étudiant (Compte Démo)',
       email: 'alexandre.universite@etudiant.univ.fr',
@@ -317,12 +333,18 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           coachingSessionsRemaining: 0,
           planTier: resolvedPlanTier,
           isGroupGuest: false,
+          koneBattery: clampKoneBattery(parsed.koneBattery ?? parsed.userAccount?.koneBattery, KONE_BATTERY_DEFAULT),
+          koneBatteryUpdatedAt: parsed.koneBatteryUpdatedAt || parsed.userAccount?.koneBatteryUpdatedAt || baseEmptyState.koneBatteryUpdatedAt,
+          konePenalizedKeys: Array.isArray(parsed.konePenalizedKeys) ? parsed.konePenalizedKeys : [],
+          koneBaselineDate: parsed.koneBaselineDate || baseEmptyState.koneBaselineDate,
           privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
           privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
           userAccount: parsed.userAccount ? {
             ...user,
             ...parsed.userAccount,
             konanId: resolvedKonanId,
+            koneBattery: clampKoneBattery(parsed.koneBattery ?? parsed.userAccount?.koneBattery, KONE_BATTERY_DEFAULT),
+            koneBatteryUpdatedAt: parsed.koneBatteryUpdatedAt || parsed.userAccount?.koneBatteryUpdatedAt || baseEmptyState.koneBatteryUpdatedAt,
             planTier: resolvedPlanTier,
             isGroupGuest: false,
             academicGoal: undefined,
@@ -431,6 +453,10 @@ export async function saveUserState(uid: string, state: AppState): Promise<void>
         privacyPolicyAccepted: sanitizedState.privacyPolicyAccepted ?? sanitizedState.userAccount?.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: sanitizedState.privacyPolicyAcceptedAt ?? sanitizedState.userAccount?.privacyPolicyAcceptedAt,
         profileUpdatedAt: sanitizedState.profileUpdatedAt,
+        koneBattery: clampKoneBattery(sanitizedState.koneBattery ?? sanitizedState.userAccount?.koneBattery, KONE_BATTERY_DEFAULT),
+        koneBatteryUpdatedAt: sanitizedState.koneBatteryUpdatedAt || sanitizedState.userAccount?.koneBatteryUpdatedAt || new Date().toISOString(),
+        konePenalizedKeys: Array.isArray(sanitizedState.konePenalizedKeys) ? sanitizedState.konePenalizedKeys : [],
+        ...(sanitizedState.koneBaselineDate ? { koneBaselineDate: sanitizedState.koneBaselineDate } : {}),
         ...(sanitizedState.gamification ? { gamification: sanitizedState.gamification } : {}),
         ...(sanitizedState.nameChangedAt ? { nameChangedAt: sanitizedState.nameChangedAt } : {}),
       });
@@ -562,8 +588,10 @@ export async function fetchAndMergeCloudState(
       const assignedKonanId = cloudData.konanId || currentState.konanId || currentState.userAccount?.konanId || generateKonanId(uid);
 
       const profile = mergeProfile(currentState, cloudData);
+      const mergedBattery = mergeKoneBatteryState(currentState, cloudData);
       const merged: AppState = {
         ...currentState,
+        ...mergedBattery,
         studentName: profile.studentName,
         academicLevel: profile.academicLevel,
         profileUpdatedAt: profile.profileUpdatedAt,
@@ -598,6 +626,8 @@ export async function fetchAndMergeCloudState(
           academicLevel: profile.academicLevel,
           customAvatar: profile.customAvatar,
           konanId: assignedKonanId,
+          koneBattery: mergedBattery.koneBattery,
+          koneBatteryUpdatedAt: mergedBattery.koneBatteryUpdatedAt,
           invitedIds: [],
           invitedEmails: [],
           academicGoal: undefined,
@@ -631,8 +661,10 @@ export async function fetchAndMergeCloudState(
     if (cloudData && (cloudData.studentName || cloudData.academicLevel || cloudData.planTier)) {
       const resolvedCloudTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
       const profile = mergeProfile(currentState, cloudData);
+      const mergedBattery = mergeKoneBatteryState(currentState, cloudData);
       const merged: AppState = {
         ...currentState,
+        ...mergedBattery,
         studentName: profile.studentName,
         academicLevel: profile.academicLevel,
         profileUpdatedAt: profile.profileUpdatedAt,
@@ -653,6 +685,8 @@ export async function fetchAndMergeCloudState(
           name: profile.studentName,
           academicLevel: profile.academicLevel,
           customAvatar: profile.customAvatar,
+          koneBattery: mergedBattery.koneBattery,
+          koneBatteryUpdatedAt: mergedBattery.koneBatteryUpdatedAt,
           isGroupGuest: false,
           academicGoal: undefined,
           invitedIds: [],

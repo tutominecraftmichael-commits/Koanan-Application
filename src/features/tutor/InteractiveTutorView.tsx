@@ -84,6 +84,8 @@ export interface InteractiveTutorViewProps {
   canExplain?: boolean;
   /** Mode « Je ne comprends pas » (KONAN Pro) : ouvre la discussion avec KONAN sur l'étape affichée. */
   onNotUnderstood?: (context: TutorContext) => void;
+  /** Appelé dès qu'une mini-leçon (point du cours) est validée : recharge la batterie de KONÉ (+25 %). */
+  onMiniLessonCompleted?: (pointId: string) => void;
 }
 
 /** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
@@ -353,6 +355,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   onSessionCompleted,
   canExplain = false,
   onNotUnderstood,
+  onMiniLessonCompleted,
 }) => {
   // Feynman à la demande (Pro) : mini-leçons déjà expliquées à KONAN pendant cette séance
   const [explainedPointIds, setExplainedPointIds] = useState<Set<string>>(() => new Set());
@@ -896,6 +899,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         totalFirstTryCorrect - recordedCountsRef.current.correct
       );
       recordedCountsRef.current = { answered: totalExercisesAnswered, correct: totalFirstTryCorrect };
+      onMiniLessonCompleted?.(currentItem.point.id);
     }
   };
 

@@ -7,6 +7,7 @@ import {
   loadUserState,
   saveUserState,
   loadDemoState,
+  saveDemoState,
   createEmptyUserState,
   createInitialStateFromPreset,
   setActiveSession,
@@ -95,6 +96,12 @@ import { getDisplayAvatar } from './lib/avatar';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
 import { TutorFab } from './features/tutor/TutorFab';
+import {
+  clampKoneBattery,
+  KONE_BATTERY_DEFAULT,
+  rechargeKoneBattery,
+  settleKoneBatteryForMissedSessions,
+} from './lib/gamification/koneBattery';
 import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
@@ -658,7 +665,23 @@ export function App() {
       setState(prev => {
         // Strict guard: Never trigger reorganization toasts when user is logged out
         if (!prev.userAccount?.isLoggedIn && !prev.isDemoMode) return prev;
-        if (!prev.studySessions || prev.studySessions.length === 0) return prev;
+        if (!prev.studySessions || prev.studySessions.length === 0) {
+          // Garantir que le champ koneBattery (défaut 100) est toujours initialisé sur tous les profils
+          if (typeof prev.koneBattery !== 'number') {
+            const nowIso = new Date().toISOString();
+            const initialized: AppState = {
+              ...prev,
+              koneBattery: KONE_BATTERY_DEFAULT,
+              koneBatteryUpdatedAt: nowIso,
+              ...(prev.userAccount ? { userAccount: { ...prev.userAccount, koneBattery: KONE_BATTERY_DEFAULT, koneBatteryUpdatedAt: nowIso } } : {}),
+            };
+            if (prev.userAccount?.googleId && !prev.isDemoMode) {
+              saveUserState(prev.userAccount.googleId, initialized);
+            }
+            return initialized;
+          }
+          return prev;
+        }
 
         // RÈGLE STRICTE : Purger immédiatement les matières et sessions non académiques parasites (EPS, Sport, devoirs, etc.)
         const hasInvalidSubject = prev.subjects.some(s => isNonAcademicSubject(s.name));
@@ -717,17 +740,39 @@ export function App() {
             || s.examPrepMode !== baseSessions[idx]?.examPrepMode || s.title !== baseSessions[idx]?.title
         );
 
-        if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
-          // Mise à jour silencieuse de l'emploi du temps sans spammer l'utilisateur à l'ouverture
+        // Batterie KONÉ : baisse uniquement sur les séances du planning définitivement ratées (-30 % par séance ratée)
+        const batterySettlement = settleKoneBatteryForMissedSessions(
+          prev,
+          finalSessions,
+          validSubjects,
+          prev.currentWeekMonday,
+          new Date(),
+        );
+
+        if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots || batterySettlement.changed) {
+          // Mise à jour silencieuse de l'emploi du temps et de la batterie KONÉ
           const nextState: AppState = {
             ...prev,
             subjects: validSubjects,
             classSlots: cleanedSlots,
             studySessions: finalSessions,
+            koneBattery: batterySettlement.koneBattery,
+            koneBatteryUpdatedAt: batterySettlement.koneBatteryUpdatedAt,
+            konePenalizedKeys: batterySettlement.konePenalizedKeys,
+            koneBaselineDate: batterySettlement.koneBaselineDate,
+            ...(prev.userAccount ? {
+              userAccount: {
+                ...prev.userAccount,
+                koneBattery: batterySettlement.koneBattery,
+                koneBatteryUpdatedAt: batterySettlement.koneBatteryUpdatedAt,
+              },
+            } : {}),
           };
 
           if (prev.userAccount?.googleId && !prev.isDemoMode) {
             saveUserState(prev.userAccount.googleId, nextState);
+          } else if (prev.isDemoMode) {
+            saveDemoState(nextState);
           }
 
           return nextState;
@@ -847,10 +892,45 @@ export function App() {
     updateGamification((prev) => spendEnergy(prev.gamification, exercisePlan));
     return true;
   };
+  const handleRechargeKoneBattery = useCallback((activityLabel: string) => {
+    let gainedToast: string | null = null;
+    setState((prev) => {
+      const before = clampKoneBattery(prev.koneBattery, KONE_BATTERY_DEFAULT);
+      const after = rechargeKoneBattery(before, 1);
+      if (after === before && typeof prev.koneBattery === 'number') return prev;
+      const nowIso = new Date().toISOString();
+      if (after > before) {
+        gainedToast = `⚡ Batterie de KONÉ : ${after} % (+${after - before} % grâce à ta ${activityLabel}) !`;
+      }
+      const next: AppState = {
+        ...prev,
+        koneBattery: after,
+        koneBatteryUpdatedAt: nowIso,
+        ...(prev.userAccount ? {
+          userAccount: {
+            ...prev.userAccount,
+            koneBattery: after,
+            koneBatteryUpdatedAt: nowIso,
+          },
+        } : {}),
+      };
+      if (next.userAccount?.googleId && !next.isDemoMode) {
+        saveUserState(next.userAccount.googleId, next);
+      } else if (next.isDemoMode) {
+        saveDemoState(next);
+      }
+      return next;
+    });
+    if (gainedToast) showToast(gainedToast, 4500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleFinishSeries = (mistakes: number, startedAt: Date, total: number): number => {
     const now = new Date();
     const preview = finishSeries(state.gamification, mistakes, startedAt, now, total);
     updateGamification((prev) => finishSeries(prev.gamification, mistakes, startedAt, now, total).gamification);
+    // +25 % de batterie KONÉ pour chaque mini-jeu / série d'exercices terminée
+    handleRechargeKoneBattery('série de mini-jeu');
     return preview.gained;
   };
   const handleLoseSeries = useCallback((reason: string) => {
@@ -2614,6 +2694,9 @@ export function App() {
 
     setFocusSession(null);
     setActiveView('dashboard');
+    if (!gradeHasGuidedCourses) {
+      handleRechargeKoneBattery('séance de révision');
+    }
   };
 
   const handleContinueNewCycle = () => {
@@ -2963,6 +3046,22 @@ export function App() {
               onOpenPhotoCorrection={plusAccess && subscriptionAccount ? () => setActiveView('devoir-photo') : undefined}
               onOpenGoalPlan={plusAccess ? () => setActiveView('plan-objectif') : undefined}
               goalPlanLabel={studyGoalInfo(studyGoal)?.short}
+              koneBattery={clampKoneBattery(state.koneBattery, KONE_BATTERY_DEFAULT)}
+              onRechargeKone={() => {
+                if (gamificationEnabled && gradeHasGuidedCourses && (hasUnlimitedEnergy(exercisePlan) || energyNow(state.gamification).energy > 0)) {
+                  setIsExerciseOpen(true);
+                  return;
+                }
+                const todayIdx = (new Date().getDay() + 6) % 7;
+                const nextToday = state.studySessions.find((s) => !s.completed && s.dayOfWeek === todayIdx);
+                if (nextToday) {
+                  void handleStartFocusSession(nextToday);
+                  return;
+                }
+                setActiveView('planner');
+                showToast('Lance une mini-leçon ou un mini-jeu pour recharger la batterie de KONÉ (+25 %) !', 4500);
+              }}
+              onOpenKoneChat={tutorAvailable ? () => setTutorOpen({}) : undefined}
               // Tuile de la maquette : ligue (rang + division, élèves admis dans la ligue)
               leagueSummary={gamificationEnabled && gradeIsInLeague
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
@@ -3129,6 +3228,7 @@ export function App() {
             canExplain={(effectivePlanTier === 'pro' || effectivePlanTier === 'plus') && Boolean(state.userAccount?.isLoggedIn) && !state.isDemoMode}
             // « Je ne comprends pas » dans la leçon : KONAN part de cette notion et de ce que dit le cours
             onNotUnderstood={tutorAvailable ? (context) => setTutorOpen({ context }) : undefined}
+            onMiniLessonCompleted={() => handleRechargeKoneBattery('mini-leçon')}
           />
         )}
 
@@ -3260,7 +3360,7 @@ export function App() {
       )}
       {/* Peluche KONAN « Je ne comprends pas » : en bas à droite (les mini-jeux sont en bas à gauche) */}
       {tutorAvailable && !tutorOpen && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
-        <TutorFab onOpen={() => setTutorOpen({})} />
+        <TutorFab onOpen={() => setTutorOpen({})} battery={clampKoneBattery(state.koneBattery, KONE_BATTERY_DEFAULT)} />
       )}
       {tutorOpen && tutorStatus && subscriptionAccount && (
         <Suspense fallback={null}>
@@ -3274,6 +3374,27 @@ export function App() {
             limit={tutorStatus.limit}
             voiceRemaining={tutorStatus.voiceRemaining}
             goalLabel={studyGoalInfo(studyGoal)?.short}
+            koneBattery={clampKoneBattery(state.koneBattery, KONE_BATTERY_DEFAULT)}
+            koneBatteryUpdatedAt={state.koneBatteryUpdatedAt}
+            onCalmKone={() => {
+              setTutorOpen(null);
+              if (activeView === 'tutor') {
+                showToast('Termine cette mini-leçon pour calmer KONÉ (+25 % de batterie) !', 4500);
+                return;
+              }
+              if (gamificationEnabled && gradeHasGuidedCourses && (hasUnlimitedEnergy(exercisePlan) || energyNow(state.gamification).energy > 0)) {
+                setIsExerciseOpen(true);
+                return;
+              }
+              const todayIdx = (new Date().getDay() + 6) % 7;
+              const nextToday = state.studySessions.find((s) => !s.completed && s.dayOfWeek === todayIdx);
+              if (nextToday) {
+                void handleStartFocusSession(nextToday);
+                return;
+              }
+              setActiveView('planner');
+              showToast('Lance une mini-leçon ou une séance pour calmer KONÉ (+25 %) !', 4500);
+            }}
             onRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, remaining: n } : s))}
             onVoiceRemainingChange={(n) => setTutorStatus((s) => (s ? { ...s, voiceRemaining: n } : s))}
             plus={tutorStatus.plus}

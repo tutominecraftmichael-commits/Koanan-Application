@@ -224,6 +224,9 @@ export interface UserAccount {
   privacyPolicyAccepted?: boolean;
   privacyPolicyAcceptedAt?: string;
   pdfImportsCount?: number; // Nombre d'extractions/imports d'EDT via PDF effectuées
+  /** Batterie & humeur de la mascotte KONÉ (0 à 100, par défaut 100) */
+  koneBattery?: number;
+  koneBatteryUpdatedAt?: string;
   fcmToken?: string;
   fcmTokenUpdatedAt?: string;
   lastSyncedAt: string;

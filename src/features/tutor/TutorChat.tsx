@@ -6,8 +6,14 @@
  * Lisible en mode jour ET en mode nuit.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square, Camera, Mic } from 'lucide-react';
+import { X, Send, RotateCcw, Sparkles, Lock, Volume2, VolumeX, Loader2, Square, Camera, Mic, BatteryCharging, Zap } from 'lucide-react';
 import { KonanPlush, type PlushMood } from '../../components/common/KonanPlush';
+import {
+  clampKoneBattery,
+  getKoneMoodInfo,
+  KONE_BATTERY_DEFAULT,
+  KONE_STRIKE_MESSAGE,
+} from '../../lib/gamification/koneBattery';
 import { MathRenderer } from '../../components/common/MathRenderer';
 import { prepareExercisePhoto, sendTutorMessage, speakTutor, splitForVoice, type TutorContext, type TutorError, type TutorMessage, type TutorPiece } from '../../services/tutorApi';
 import { getReviewMap } from '../../lib/curriculum/reviewMemory';
@@ -42,6 +48,7 @@ const ERRORS: Record<TutorError, string> = {
   PHOTO_DAILY_LIMIT: 'Tu as envoyé toutes tes photos d’aujourd’hui. Écris l’énoncé à la place, ou reviens demain.',
   BAD_PIECE: 'KONE n’a pas pu ouvrir ce fichier. Reprends une photo, ou réenregistre ta question.',
   PIECE_TOO_LARGE: 'C’est trop lourd à envoyer. Reprends la photo, ou parle moins d’une minute.',
+  KONE_ON_STRIKE: KONE_STRIKE_MESSAGE,
 };
 
 // Question à l'oral (KONAN Plus) : une minute au plus, comme l'explication Feynman
@@ -153,6 +160,11 @@ export interface TutorChatProps {
   onPhotoRemainingChange?: (n: number) => void;
   onRemainingChange: (n: number) => void;
   onVoiceRemainingChange?: (n: number) => void;
+  /** Batterie de KONÉ (0 à 100, par défaut 100) */
+  koneBattery?: number;
+  koneBatteryUpdatedAt?: string;
+  /** Redirige immédiatement vers les mini-leçons / mini-jeux pour remonter la batterie */
+  onCalmKone?: () => void;
   onSubscribe?: () => void;
   onClose: () => void;
 }
@@ -186,8 +198,12 @@ function recentMistakes(uid: string): TutorContext['erreurs'] {
 
 export const TutorChat: React.FC<TutorChatProps> = ({
   uid, classe, prenom, context, paid, remaining, limit, voiceRemaining = null, goalLabel,
-  plus = false, photoRemaining = null, onPhotoRemainingChange, onRemainingChange, onVoiceRemainingChange, onSubscribe, onClose,
+  plus = false, photoRemaining = null, onPhotoRemainingChange, onRemainingChange, onVoiceRemainingChange,
+  koneBattery = KONE_BATTERY_DEFAULT, koneBatteryUpdatedAt, onCalmKone, onSubscribe, onClose,
 }) => {
+  const batteryPct = clampKoneBattery(koneBattery, KONE_BATTERY_DEFAULT);
+  const moodInfo = getKoneMoodInfo(batteryPct, prenom);
+  const onStrike = paid && batteryPct <= 0;
   const [state, setState] = useState<Stored>(() => {
     const stored = readStored(uid);
     // Venu d'une autre leçon : nouvelle discussion sur cette notion
@@ -391,14 +407,16 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   const notion = lastKonan?.notion || state.context.notion;
   const outOfMessages = remaining !== null && remaining <= 0;
   const recording = recSeconds !== null;
-  const canWrite = paid && !outOfMessages && !sending && !recording;
-  const mood: PlushMood = sending ? 'think' : recording ? 'listen' : flash || (speakingId ? 'talk' : typing && input.trim() ? 'listen' : 'idle');
+  const canWrite = paid && !onStrike && !outOfMessages && !sending && !recording;
+  const mood: PlushMood = onStrike ? 'idle' : sending ? 'think' : recording ? 'listen' : flash || (speakingId ? 'talk' : typing && input.trim() ? 'listen' : 'idle');
 
   /**
    * Envoie un message. KONAN Plus : avec une photo de l'exercice ou une question à l'oral (`piece`), envoyée
    * une seule fois ; KONE renvoie l'énoncé lu (ou ce qu'il a entendu), gardé dans la discussion à la place.
    */
   const send = async (raw: string, piece: TutorPiece | null = null, thumb?: string) => {
+    // Grève totale (0 %) : AUCUN appel à l'API IA
+    if (onStrike) return;
     const typed = raw.replace(/\s+$/g, '').slice(0, MAX_INPUT).trim();
     if ((!typed && !piece) || !canWrite) return;
     // Hors ligne : on ne fait pas semblant d'envoyer, le message reste dans la zone de saisie
@@ -420,13 +438,15 @@ export const TutorChat: React.FC<TutorChatProps> = ({
     setPendingPhoto(null);
     setError(null);
     setSending(true);
-    // « KONE se souvient » : prénom, pays et dernières erreurs des cours accompagnent chaque message
+    // « KONE se souvient » : prénom, pays, batterie d'humeur et dernières erreurs accompagnent chaque message
     const res = await sendTutorMessage(messages, {
       ...state.context,
       classe,
       prenom,
       country: getStudentCountry() || undefined,
       erreurs: recentMistakes(uid),
+      koneBattery: batteryPct,
+      koneBatteryUpdatedAt,
     }, piece);
     if (typeof res.photoRemaining === 'number') onPhotoRemainingChange?.(res.photoRemaining);
     if (!res.ok) {
@@ -590,20 +610,48 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   return (
     <div className="fixed inset-0 z-[95] bg-slate-900/40 dark:bg-black/60 flex sm:items-center sm:justify-center sm:p-4 animate-in fade-in duration-150" role="dialog" aria-modal="true" aria-label="Je ne comprends pas : discussion avec KONE">
       <div className="flex flex-col w-full min-w-0 h-full sm:h-[min(820px,92vh)] sm:max-w-2xl bg-white dark:bg-[#0B1120] sm:rounded-3xl sm:border sm:border-slate-200 dark:sm:border-slate-800 shadow-2xl overflow-hidden">
-        {/* En-tête : KONE + jauge de compréhension */}
-        <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-slate-200 dark:border-slate-800 bg-sky-50 dark:bg-slate-900/80 space-y-2.5">
+        {/* En-tête : KONÉ + batterie d'humeur + jauge de compréhension */}
+        <div className={`shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-slate-200 dark:border-slate-800 space-y-2.5 ${
+          moodInfo.tier === 'strike'
+            ? 'bg-red-950/[0.08] dark:bg-red-950/45'
+            : moodInfo.tier === 'angry'
+              ? 'bg-red-50 dark:bg-red-950/25'
+              : moodInfo.tier === 'annoyed'
+                ? 'bg-orange-50 dark:bg-orange-950/20'
+                : 'bg-sky-50 dark:bg-slate-900/80'
+        }`}>
           <div className="flex items-center gap-3">
-            <KonanPlush variant="bust" size={54} mood={mood} talkLevel={talkLevel} />
+            <KonanPlush variant="bust" size={54} mood={mood} battery={batteryPct} talkLevel={talkLevel} />
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">Je ne comprends pas</p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">KONE t’explique jusqu’à ce que tu comprennes</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-[15px] font-black text-slate-900 dark:text-white leading-tight">KONÉ</p>
+                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-extrabold border ${
+                  moodInfo.tier === 'strike'
+                    ? 'bg-red-900 text-red-50 border-red-700'
+                    : moodInfo.tier === 'angry'
+                      ? 'bg-red-100 text-red-900 border-red-300 dark:bg-red-500/20 dark:text-red-200 dark:border-red-400/40'
+                      : moodInfo.tier === 'annoyed'
+                        ? 'bg-orange-100 text-orange-900 border-orange-300 dark:bg-orange-500/20 dark:text-orange-200 dark:border-orange-400/40'
+                        : 'bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-200 dark:border-sky-400/30'
+                }`}>
+                  {moodInfo.tier === 'strike' ? <Lock className="w-3 h-3" /> : <Zap className="w-3 h-3 fill-current" />}
+                  {batteryPct} % · {moodInfo.label}
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                {moodInfo.tier === 'strike'
+                  ? 'En grève — fais une mini-leçon pour débloquer le chat'
+                  : moodInfo.tier === 'angry'
+                    ? 'Service minimum — recharge KONÉ avec une mini-leçon (+25 %)'
+                    : 'KONÉ t’explique jusqu’à ce que tu comprennes'}
+              </p>
               {goalLabel && (
-                <p className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-black text-amber-800 bg-amber-100 dark:text-amber-200 dark:bg-amber-400/15" title="KONE adapte son ton et son exigence à ton objectif">
+                <p className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-black text-amber-800 bg-amber-100 dark:text-amber-200 dark:bg-amber-400/15" title="KONÉ adapte son ton et son exigence à ton objectif">
                   🎯 Objectif : {goalLabel}
                 </p>
               )}
             </div>
-            {paid && (
+            {paid && !onStrike && (
               <button
                 type="button"
                 onClick={toggleVoice}
@@ -615,7 +663,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({
                 {voiceOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
               </button>
             )}
-            {state.messages.length > 0 && (
+            {state.messages.length > 0 && !onStrike && (
               <button type="button" onClick={restart} title="Nouvelle discussion" aria-label="Nouvelle discussion" className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 cursor-pointer">
                 <RotateCcw className="w-[18px] h-[18px]" />
               </button>
@@ -624,26 +672,35 @@ export const TutorChat: React.FC<TutorChatProps> = ({
               <X className="w-5 h-5" />
             </button>
           </div>
-          {paid && state.messages.length > 0 && <Gauge niveau={niveau} notion={notion} />}
+          {paid && !onStrike && state.messages.length > 0 && <Gauge niveau={niveau} notion={notion} />}
         </div>
 
         {/* Discussion */}
         <div className="flex-1 overflow-y-auto px-3 sm:px-5 py-4 space-y-3 overscroll-contain">
-          {/* Accueil : la peluche entière dit bonjour */}
-          {state.messages.length === 0 && (
+          {/* Accueil : la peluche entière s'adapte à son humeur */}
+          {(state.messages.length === 0 || onStrike) && (
             <div className="flex justify-center pt-2 pb-3">
-              <KonanPlush variant="body" size={150} mood={mood} talkLevel={talkLevel} enter waves />
+              <KonanPlush variant="body" size={150} mood={mood} battery={batteryPct} talkLevel={talkLevel} enter waves={moodInfo.tier === 'happy'} />
             </div>
           )}
-          <div className="flex items-end gap-2">
-            <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
-            <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
-              {state.context.notion
-                ? <>{prenom ? `${prenom}, tu` : 'Tu'} bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
-                : <>Salut{prenom ? ` ${prenom}` : ''} ! Moi, c’est <strong>KONE</strong>, le meilleur ami de KONAN. Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>}
-              {plus && <> Tu peux aussi <strong>prendre en photo ton exercice</strong> 📷 ou <strong>me parler</strong> 🎤.</>}
+
+          {!onStrike && (
+            <div className="flex items-end gap-2">
+              <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className="w-7 h-7 rounded-full shrink-0" />
+              <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
+                {moodInfo.tier === 'angry' ? (
+                  <>Fais court pardon{prenom ? ` ${prenom}` : ''}, je suis très fâché ({batteryPct} % de batterie) parce que tu as raté plusieurs séances… Dis vite ce qui bloque, ou va faire tes mini-leçons pour me recharger.</>
+                ) : moodInfo.tier === 'annoyed' ? (
+                  <>Bon{prenom ? ` ${prenom}` : ''}, ma batterie a baissé à {batteryPct} % avec tes séances ratées… Dis-moi quand même ce que tu ne comprends pas{state.context.notion ? <> sur <strong>« {state.context.notion} »</strong></> : ''}, je vais t’expliquer (mais pense à me recharger après !).</>
+                ) : state.context.notion ? (
+                  <>{prenom ? `${prenom}, tu` : 'Tu'} bloques sur <strong>« {state.context.notion} »</strong> ? Pas de souci, on va y arriver ensemble. Dis-moi ce que tu ne comprends pas : un mot, une étape, l’exemple…</>
+                ) : (
+                  <>Salut{prenom ? ` ${prenom}` : ''} ! Moi, c’est <strong>KONÉ</strong>, le meilleur ami de KONAN. Dis-moi la matière et ce qui te bloque, par exemple : <em>« Je ne comprends pas les vecteurs »</em>. Je t’explique, puis je te pose une petite question pour vérifier.</>
+                )}
+                {plus && moodInfo.tier !== 'angry' && <> Tu peux aussi <strong>prendre en photo ton exercice</strong> 📷 ou <strong>me parler</strong> 🎤.</>}
+              </div>
             </div>
-          </div>
+          )}
 
           {state.messages.map((m) => (
             m.role === 'eleve' ? (
@@ -699,7 +756,30 @@ export const TutorChat: React.FC<TutorChatProps> = ({
             </div>
           )}
 
-          {!online && error !== OFFLINE_TEXT && (
+          {onStrike && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-red-50 dark:bg-red-950/60 border-2 border-red-800/50 dark:border-red-700/70 space-y-3.5 shadow-sm">
+              <div className="flex items-start gap-2.5">
+                <span className="w-8 h-8 rounded-full bg-red-900 text-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <Lock className="w-4 h-4" />
+                </span>
+                <p className="text-sm sm:text-[15px] font-bold text-red-950 dark:text-red-100 leading-relaxed">
+                  {KONE_STRIKE_MESSAGE}
+                </p>
+              </div>
+              {onCalmKone && (
+                <button
+                  type="button"
+                  onClick={onCalmKone}
+                  className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-gradient-to-r from-red-800 to-rose-700 hover:from-red-700 hover:to-rose-600 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-[0.99]"
+                >
+                  <BatteryCharging className="w-5 h-5" />
+                  <span>Calmer KONÉ (Faire une mini-leçon)</span>
+                </button>
+              )}
+            </div>
+          )}
+
+          {!online && error !== OFFLINE_TEXT && !onStrike && (
             <p className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm font-semibold" role="status">
               Tu es hors ligne : KONE a besoin d’Internet pour te répondre. Tes cours déjà ouverts restent disponibles.
             </p>
@@ -724,6 +804,13 @@ export const TutorChat: React.FC<TutorChatProps> = ({
                   <Sparkles className="w-4 h-4" /> M’abonner à KONAN Pro
                 </button>
               )}
+            </div>
+          ) : onStrike ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5 px-4 py-3 rounded-2xl border-2 border-red-800/40 dark:border-red-800/60 bg-red-100/50 dark:bg-red-950/40 text-red-900 dark:text-red-200 opacity-85 cursor-not-allowed select-none">
+                <Lock className="w-4 h-4 shrink-0" />
+                <span className="text-sm font-bold truncate">Chat verrouillé — KONÉ est en grève (0 %)</span>
+              </div>
             </div>
           ) : (
             <>

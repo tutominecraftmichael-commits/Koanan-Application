@@ -40,6 +40,9 @@ export interface TutorContext {
   prenom?: string;
   /** Dernières erreurs dans les cours : KONAN trouve plus vite ce qui bloque */
   erreurs?: Array<{ matiere?: string; question: string; reponse?: string }>;
+  /** Niveau de batterie de KONÉ (0 à 100) pour adapter son humeur côté serveur */
+  koneBattery?: number;
+  koneBatteryUpdatedAt?: string;
 }
 
 export interface TutorStatus {
@@ -53,13 +56,16 @@ export interface TutorStatus {
   plus: boolean;
   photoLimit: number;
   photoRemaining: number;
+  /** Batterie de KONÉ (0 à 100) lue sur le profil Firestore */
+  koneBattery?: number;
 }
 
 export type TutorError =
   | 'PAID_PRO_REQUIRED' | 'DAILY_LIMIT' | 'TUTOR_BUSY' | 'AI_UNAVAILABLE' | 'TUTOR_OFF'
   | 'UNAUTHORIZED' | 'TOKEN_EXPIRED' | 'EMPTY_MESSAGE' | 'NETWORK' | 'UNKNOWN'
   | 'VOICE_DAILY_LIMIT' | 'VOICE_UNAVAILABLE'
-  | 'PLUS_REQUIRED' | 'PHOTO_DAILY_LIMIT' | 'BAD_PIECE' | 'PIECE_TOO_LARGE';
+  | 'PLUS_REQUIRED' | 'PHOTO_DAILY_LIMIT' | 'BAD_PIECE' | 'PIECE_TOO_LARGE'
+  | 'KONE_ON_STRIKE';
 
 async function call(body: Record<string, unknown>): Promise<{ ok: boolean; json: any }> {
   const user = auth?.currentUser;
@@ -89,6 +95,7 @@ export async function getTutorStatus(): Promise<TutorStatus | null> {
       plus: json.plus === true,
       photoLimit: Number(json.photoLimit) || 0,
       photoRemaining: Number(json.photoRemaining) || 0,
+      ...(typeof json.koneBattery === 'number' ? { koneBattery: Math.max(0, Math.min(100, Math.round(json.koneBattery))) } : {}),
     };
   } catch {
     return null;

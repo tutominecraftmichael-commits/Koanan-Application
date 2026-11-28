@@ -746,24 +746,37 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
       const existing = await loadUserStateFromCloud(uid);
       if (existing && existing.subjects && existing.subjects.length > 0) {
         console.warn('Prevented accidental overwrite of cloud state by empty local state');
-        // Le planning du compte est protégé, mais un nom, une classe ou une photo modifiés plus
+        // Le planning du compte est protégé, mais un nom, une classe, la batterie KONÉ ou une photo modifiés plus
         // récemment sur ce téléphone sont quand même enregistrés (jamais perdus à la reconnexion).
         const localTime = Date.parse(sanitized.profileUpdatedAt || '') || 0;
         const cloudTime = Date.parse(existing.profileUpdatedAt || '') || 0;
-        if (localTime > cloudTime) {
-          const profileOnly = JSON.parse(JSON.stringify({
-            konanId: sanitized.konanId || sanitized.userAccount?.konanId,
-            studentName: sanitized.studentName,
-            academicLevel: sanitized.academicLevel,
-            profileUpdatedAt: sanitized.profileUpdatedAt,
-            userAccount: {
-              konanId: sanitized.userAccount?.konanId || sanitized.konanId,
-              name: sanitized.userAccount?.name,
-              academicLevel: sanitized.userAccount?.academicLevel,
-              customAvatar: sanitized.userAccount?.customAvatar,
-            },
-          }));
-          await setDoc(userRef, { ...profileOnly, lastSyncedAt: new Date().toISOString() }, { merge: true });
+        const localBatteryTime = Date.parse(sanitized.koneBatteryUpdatedAt || '') || 0;
+        const cloudBatteryTime = Date.parse(existing.koneBatteryUpdatedAt || '') || 0;
+        const batteryMissingInCloud = typeof existing.koneBattery !== 'number';
+        if (localTime > cloudTime || localBatteryTime > cloudBatteryTime || batteryMissingInCloud) {
+          const patch: Record<string, unknown> = { lastSyncedAt: new Date().toISOString() };
+          if (localTime > cloudTime) {
+            Object.assign(patch, JSON.parse(JSON.stringify({
+              konanId: sanitized.konanId || sanitized.userAccount?.konanId,
+              studentName: sanitized.studentName,
+              academicLevel: sanitized.academicLevel,
+              profileUpdatedAt: sanitized.profileUpdatedAt,
+              userAccount: {
+                konanId: sanitized.userAccount?.konanId || sanitized.konanId,
+                name: sanitized.userAccount?.name,
+                academicLevel: sanitized.userAccount?.academicLevel,
+                customAvatar: sanitized.userAccount?.customAvatar,
+                koneBattery: typeof sanitized.koneBattery === 'number' ? sanitized.koneBattery : 100,
+              },
+            })));
+          }
+          if (localBatteryTime >= cloudBatteryTime || batteryMissingInCloud) {
+            patch.koneBattery = typeof sanitized.koneBattery === 'number' ? sanitized.koneBattery : (typeof existing.koneBattery === 'number' ? existing.koneBattery : 100);
+            patch.koneBatteryUpdatedAt = sanitized.koneBatteryUpdatedAt || existing.koneBatteryUpdatedAt || new Date().toISOString();
+            if (Array.isArray(sanitized.konePenalizedKeys)) patch.konePenalizedKeys = sanitized.konePenalizedKeys;
+            if (sanitized.koneBaselineDate) patch.koneBaselineDate = sanitized.koneBaselineDate;
+          }
+          await setDoc(userRef, patch, { merge: true });
         }
         return { success: false, error: 'BLOCKED_OVERWRITE_PROTECTION' };
       }

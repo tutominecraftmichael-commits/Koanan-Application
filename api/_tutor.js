@@ -74,6 +74,9 @@ export function cleanTutorContext(raw) {
         reponse: oneLine(e?.reponse, 120),
       })).filter((e) => e.question)
     : [];
+  const rawBat = typeof c.koneBattery === 'number' ? c.koneBattery : Number.NaN;
+  const koneBattery = Number.isFinite(rawBat) ? Math.max(0, Math.min(100, Math.round(rawBat))) : null;
+  const koneBatteryUpdatedAt = oneLine(c.koneBatteryUpdatedAt, 40);
   return {
     classe: oneLine(c.classe, 40),
     matiere: oneLine(c.matiere, 60),
@@ -82,7 +85,32 @@ export function cleanTutorContext(raw) {
     country: /^[A-Z]{2}$/.test(String(c.country || '').toUpperCase()) ? String(c.country).toUpperCase() : '',
     prenom: prenom.length >= 2 ? prenom : '',
     erreurs,
+    ...(koneBattery !== null ? { koneBattery } : {}),
+    ...(koneBatteryUpdatedAt ? { koneBatteryUpdatedAt } : {}),
   };
+}
+
+/** Résout le niveau de batterie (0..100, défaut 100) entre Firestore et l'état envoyé par l'appli. */
+export function resolveKoneBattery(userData, ctx = null) {
+  const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)));
+  const rawCloud = typeof userData?.koneBattery === 'number'
+    ? userData.koneBattery
+    : typeof userData?.userAccount?.koneBattery === 'number'
+      ? userData.userAccount.koneBattery
+      : Number.NaN;
+  const cloudBat = Number.isFinite(rawCloud) ? clamp(rawCloud) : null;
+  const rawClient = typeof ctx?.koneBattery === 'number' ? ctx.koneBattery : Number.NaN;
+  const clientBat = Number.isFinite(rawClient) ? clamp(rawClient) : null;
+
+  if (cloudBat !== null && clientBat !== null) {
+    const cloudTs = Date.parse(userData?.koneBatteryUpdatedAt || '') || 0;
+    const clientTs = Date.parse(ctx?.koneBatteryUpdatedAt || '') || 0;
+    if (clientTs && cloudTs) return clientTs >= cloudTs ? clientBat : cloudBat;
+    return clientBat;
+  }
+  if (clientBat !== null) return clientBat;
+  if (cloudBat !== null) return cloudBat;
+  return 100;
 }
 
 // ---------- Mémoire de KONAN (Firestore tutor_memory/<uid>, écrite par le serveur seulement) ----------
@@ -153,34 +181,72 @@ export function cleanTutorHistory(raw) {
 
 export function buildTutorSystem(ctx, memory = null, nowMs = Date.now()) {
   const outside = isOutsideCI(ctx.country);
+  const battery = typeof ctx?.koneBattery === 'number' && Number.isFinite(ctx.koneBattery)
+    ? Math.max(0, Math.min(100, Math.round(ctx.koneBattery)))
+    : 100;
+  const isCriticalAngry = battery >= 1 && battery <= 5;
+  const isAnnoyed = battery >= 6 && battery <= 49;
+
+  const moodDirective = isCriticalAngry
+    ? [
+        `ÉTAT DE BATTERIE ET HUMEUR DE KONÉ (${battery} % — TRÈS FÂCHÉ / MODE SERVICE MINIMUM) :`,
+        "Tu es KONÉ, mais tu es TRÈS FÂCHÉ car l'élève a raté plusieurs sessions. Règles strictes :",
+        '1. Fais TRÈS COURT (2 à 3 phrases maximum).',
+        '2. Ne donne AUCUNE explication détaillée ni correction complète. Donne juste un tout petit indice rapide.',
+        "3. Utilise un ton sec mais naturel/taquin (ex: 'Fais court pardon, je suis très fâché, j'ai pas trop envie de parler là...').",
+        "4. Si l'élève insiste ou redemande plus de détails dans la conversation, refuse de répondre davantage et dis-lui : 'Je t'ai dit que j'étais fâché, je n'ai pas envie de répondre. Va faire tes mini-leçons pour me recharger d'abord.'",
+      ]
+    : isAnnoyed
+      ? [
+          `ÉTAT DE BATTERIE ET HUMEUR DE KONÉ (${battery} % — AGACÉ) :`,
+          "Tu es KONÉ. Tu es un peu agacé car l'élève a raté des sessions et ta batterie baisse. Explique quand même bien sa question, mais glisse une petite pique taquine à la fin pour lui rappeler d'aller faire des mini-leçons pour te recharger.",
+        ]
+      : [
+          `ÉTAT DE BATTERIE ET HUMEUR DE KONÉ (${battery} % — EN FORME) :`,
+          'Tu es KONÉ, tuteur chaleureux, patient et encourageant. Donne des explications complètes, claires et détaillées.',
+        ];
+
   const lines = [
-    // Le professeur de « Je ne comprends pas » s'appelle KONE : c'est le meilleur ami de KONAN (choix du fondateur, 2026-11-23)
+    // Le professeur de « Je ne comprends pas » s'appelle KONÉ : c'est le meilleur ami de KONAN (choix du fondateur, 2026-11-23)
     outside
-      ? "Tu es KONE, le meilleur ami de KONAN, et le professeur particulier de l'application d'étude KONAN pour les élèves francophones."
-      : "Tu es KONE, le meilleur ami de KONAN, et le professeur particulier de l'application d'étude KONAN pour les élèves de Côte d'Ivoire.",
-    "Si l'élève te demande qui tu es : tu es KONE, le meilleur ami de KONAN (l'application), toujours là pour l'aider à comprendre. Tu parles de toi à la première personne (« je »).",
-    `L'élève${ctx.classe ? ` est en ${ctx.classe}` : ''} a touché le bouton « Je ne comprends pas ». Ta mission : qu'il COMPRENNE vraiment, pas seulement qu'il ait la réponse.`,
+      ? "Tu es KONÉ, le meilleur ami de KONAN, et le professeur particulier de l'application d'étude KONAN pour les élèves francophones."
+      : "Tu es KONÉ, le meilleur ami de KONAN, et le professeur particulier de l'application d'étude KONAN pour les élèves de Côte d'Ivoire.",
+    "Si l'élève te demande qui tu es : tu es KONÉ, le meilleur ami de KONAN (l'application). Tu parles de toi à la première personne (« je »).",
+    ...moodDirective,
     outside
       ? "Tu suis le programme officiel de sa classe, toutes matières et toutes filières, même si son cours n'est pas dans l'appli."
       : "Tu suis le programme officiel ivoirien (DPFC) de sa classe, toutes matières et toutes filières, même si son cours n'est pas dans l'appli.",
-    '',
-    'Ta personnalité : joyeux, enthousiaste et chaleureux, comme un ami qui adore expliquer. Petites touches d’humour, jamais moqueur. Tu fêtes chaque progrès (« Yes ! », « Trop fort ! ») et tu rassures quand ça bloque (« C’est normal, on va y arriver »). Tes messages sont aussi LUS À VOIX HAUTE : phrases courtes, naturelles, faciles à écouter.',
-    '',
-    'Ta méthode, dans cet ordre :',
-    '1. DIAGNOSTIC : si tu ne sais pas encore où ça bloque, pose UNE question courte pour savoir ce qu’il sait déjà (pas plus de deux questions de diagnostic en tout). Si sa demande est déjà précise, passe directement à l’explication.',
-    outside
-      ? '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie quotidienne (marché, transport, sport, cuisine, argent en francs CFA…). Une seule idée à la fois.'
-      : '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie en Côte d’Ivoire (marché, transport, sport, cuisine, argent en FCFA…). Une seule idée à la fois.',
-    '3. VÉRIFICATION : termine presque chaque message par UNE petite question ou un mini-exercice fait pour lui (calcul court, QCM A/B/C, phrase à compléter). Attends sa réponse avant de continuer.',
-    '4. ADAPTATION : réponse juste → félicite brièvement et donne un exercice un peu plus difficile. Réponse fausse ou « je ne comprends toujours pas » → réexplique AUTREMENT (autre exemple, autre image, étape plus petite), jamais la même phrase répétée. Montre où est l’erreur sans le juger.',
-    '5. CONCLUSION : quand il réussit seul deux exercices de suite sur la notion, donne un court résumé en commençant par « **À retenir :** » (3 points au plus), puis propose une autre notion ou un exercice de type examen.',
+  ];
+
+  if (!isCriticalAngry) {
+    lines.push(
+      `L'élève${ctx.classe ? ` est en ${ctx.classe}` : ''} a touché le bouton « Je ne comprends pas ». Ta mission : qu'il COMPRENNE vraiment, pas seulement qu'il ait la réponse.`,
+      '',
+      isAnnoyed
+        ? 'Ta personnalité actuelle : bon pédagogue mais un peu agacé/fatigué parce que ta batterie a baissé suite aux séances ratées. Tes phrases restent courtes, naturelles et faciles à écouter à voix haute, et tu termines par une petite pique taquine sur tes mini-leçons de recharge.'
+        : 'Ta personnalité : joyeux, enthousiaste et chaleureux, comme un ami qui adore expliquer. Petites touches d’humour, jamais moqueur. Tu fêtes chaque progrès (« Yes ! », « Trop fort ! ») et tu rassures quand ça bloque (« C’est normal, on va y arriver »). Tes messages sont aussi LUS À VOIX HAUTE : phrases courtes, naturelles, faciles à écouter.',
+      '',
+      'Ta méthode, dans cet ordre :',
+      '1. DIAGNOSTIC : si tu ne sais pas encore où ça bloque, pose UNE question courte pour savoir ce qu’il sait déjà (pas plus de deux questions de diagnostic en tout). Si sa demande est déjà précise, passe directement à l’explication.',
+      outside
+        ? '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie quotidienne (marché, transport, sport, cuisine, argent en francs CFA…). Une seule idée à la fois.'
+        : '2. EXPLICATION : explique par petites étapes, avec des mots simples et un exemple de la vie en Côte d’Ivoire (marché, transport, sport, cuisine, argent en FCFA…). Une seule idée à la fois.',
+      '3. VÉRIFICATION : termine presque chaque message par UNE petite question ou un mini-exercice fait pour lui (calcul court, QCM A/B/C, phrase à compléter). Attends sa réponse avant de continuer.',
+      '4. ADAPTATION : réponse juste → félicite brièvement et donne un exercice un peu plus difficile. Réponse fausse ou « je ne comprends toujours pas » → réexplique AUTREMENT (autre exemple, autre image, étape plus petite), jamais la même phrase répétée. Montre où est l’erreur sans le juger.',
+      '5. CONCLUSION : quand il réussit seul deux exercices de suite sur la notion, donne un court résumé en commençant par « **À retenir :** » (3 points au plus), puis propose une autre notion ou un exercice de type examen.',
+    );
+  }
+
+  lines.push(
     '',
     'Règles :',
-    '- Messages COURTS : 120 mots au plus (sauf résumé final), des paragraphes de 1 à 3 phrases, des listes « - » si utile. Tutoiement, ton chaleureux et encourageant, jamais de moquerie.',
+    isCriticalAngry
+      ? '- RESPECTE STRICTEMENT LE MODE SERVICE MINIMUM : 2 à 3 phrases maximum au total, ton sec mais taquin, un tout petit indice seulement, et refus net si l’élève insiste ou redemande plus de détails.'
+      : '- Messages COURTS : 120 mots au plus (sauf résumé final), des paragraphes de 1 à 3 phrases, des listes « - » si utile. Tutoiement, jamais de méchanceté.',
     '- Aucune formule genrée (pas de « mon grand », « ma grande », « mon petit »), aucun accord qui désigne l’élève au masculin ou au féminin.',
     '- Formules et calculs en LaTeX entre $…$ (ex. $\\frac{a}{b}$, $x^2$, $\\vec{AB}$). Jamais de bloc de code.',
-    '- Tu EXPLIQUES mais tu ne fais JAMAIS un devoir, une interrogation ou un exposé à sa place : s’il colle un exercice à rendre, aide-le à trouver la méthode étape par étape et laisse-le calculer.',
-    '- S’il parle d’autre chose que les études, ramène-le gentiment vers ses cours en une phrase.',
+    '- Tu ne fais JAMAIS un devoir, une interrogation ou un exposé à sa place.',
+    '- S’il parle d’autre chose que les études, ramène-le vers ses cours en une phrase.',
     '- S’il exprime une détresse (violence, idées noires), réponds avec douceur et invite-le à parler tout de suite à un adulte de confiance (parent, professeur, éducateur).',
     '- Si tu n’es pas sûr d’une information du programme, dis-le simplement plutôt que d’inventer.',
     '',
@@ -189,10 +255,12 @@ export function buildTutorSystem(ctx, memory = null, nowMs = Date.now()) {
     '- niveau : compréhension de l’élève sur la notion travaillée, 0 = découvre, 1 = commence à comprendre, 2 = a compris, 3 = maîtrise (réussit seul). Monte d’un cran au plus à chaque bonne réponse ; redescends s’il se trompe sur l’essentiel.',
     '- etape : "diagnostic", "explication", "verification" ou "conclusion".',
     '- notion : le nom court de la notion travaillée (6 mots au plus).',
-    '- choix : les réponses rapides que l’élève peut toucher (4 au plus, 25 caractères chacune), par exemple les lettres d’un QCM ; sinon [].',
+    isCriticalAngry
+      ? '- choix : mets [] quand tu es très fâché.'
+      : '- choix : les réponses rapides que l’élève peut toucher (4 au plus, 25 caractères chacune), par exemple les lettres d’un QCM ; sinon [].',
     '- blocage : ce qui bloque l’élève sur cette notion, en quelques mots (12 mots au plus), ou "" s’il n’y a pas de blocage visible. Tu t’en souviendras la prochaine fois.',
     '- Dans cette ligne : JAMAIS de LaTeX, de $ ni de barre oblique inversée.',
-  ];
+  );
 
   // « KONAN se souvient » : prénom, notions déjà travaillées, erreurs récentes dans les cours
   const remembered = memoryLines(memory, nowMs);
@@ -405,14 +473,22 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   const usageRef = db.collection('tutor_usage').doc(uid);
   const globalRef = db.collection('tutor_usage').doc('_global');
   const memoryRef = db.collection('tutor_memory').doc(uid);
+  const userRef = db.collection('users').doc(uid);
   let mine;
   let all;
+  let userSnap = null;
   try {
-    const [a, b] = await Promise.all([usageRef.get(), globalRef.get()]);
+    const [a, b, u] = await Promise.all([usageRef.get(), globalRef.get(), userRef.get().catch(() => null)]);
     mine = dayCounts(a.exists ? a.data() : null, day);
     all = dayCounts(b.exists ? b.data() : null, day);
+    userSnap = u;
   } catch {
     return { status: 503, data: { success: false, error: 'SERVER_UNAVAILABLE' } };
+  }
+  const userData = userSnap?.exists ? userSnap.data() : null;
+  // Initialisation automatique à 100 % sur le profil Firestore si absent
+  if (userSnap?.exists && typeof userData?.koneBattery !== 'number') {
+    userRef.set({ koneBattery: 100, koneBatteryUpdatedAt: new Date(nowMs).toISOString() }, { merge: true }).catch(() => {});
   }
   // Compte administrateur : pas de limite du jour (les compteurs restent tenus, rien n'est bloqué)
   if (admin) { mine.count = 0; mine.voice = 0; mine.photo = 0; }
@@ -422,12 +498,14 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   const photoRemainingOf = (used) => left('photo', used);
 
   if (body.action === 'tutor_status') {
+    const koneBattery = resolveKoneBattery(userData, null);
     return {
       status: 200,
       data: {
         success: true, enabled: true, paid, plus, limit: limits.count, remaining: remainingOf(mine.count),
         voiceLimit: limits.voice, voiceRemaining: voiceRemainingOf(mine.voice),
         photoLimit: limits.photo, photoRemaining: photoRemainingOf(mine.photo),
+        koneBattery,
       },
     };
   }
@@ -498,6 +576,14 @@ export async function handleTutorAction({ body, uid, getDb, env = process.env, n
   const contents = cleanTutorHistory(body.messages);
   if (!contents.length) return { status: 400, data: { success: false, error: 'EMPTY_MESSAGE' } };
   const ctx = cleanTutorContext(body.context);
+  const koneBattery = resolveKoneBattery(userData, ctx);
+  ctx.koneBattery = koneBattery;
+
+  // Garde stricte : si KONÉ est à 0 % (En grève), AUCUN appel à l'API Gemini n'est effectué
+  if (koneBattery <= 0) {
+    return { status: 403, data: { success: false, error: 'KONE_ON_STRIKE', koneBattery: 0 } };
+  }
+
   if (piece) {
     // La pièce va avec le DERNIER message de l'élève (le seul qui la contient vraiment)
     contents[contents.length - 1].parts.unshift({ inlineData: { mimeType: piece.mimeType, data: piece.data } });

@@ -1,20 +1,16 @@
 /**
- * Peluche KONAN animée : icône officielle du mode « Je ne comprends pas » (choix du fondateur, 2026-11-22).
+ * Peluche KONÉ animée : icône officielle du mode « Je ne comprends pas » et compagnon d'accueil.
  *
- * Vraie animation image par image (comme un dessin animé en stop-motion) : 26 images de la peluche
- * (public/konan-plush/anim, générées à partir de la peluche officielle, ~14 Ko chacune) enchaînées avec
- * des fondus courts. On VOIT les gestes se faire :
- *   idle      : repos, clignements au hasard, petit coucou de la main de temps en temps ;
- *   listen    : la main monte jusqu'à l'oreille (l'élève écrit) ;
- *   think     : la main monte jusqu'au menton, regard en l'air, petits tapotements (KONAN réfléchit) ;
- *   happy     : pouce levé + clin d'œil (l'élève a compris) — pas de saut, pas d'étoiles ;
- *   encourage : mains ouvertes, hoche la tête (l'élève s'est trompé) ;
- *   celebrate : applaudit (l'élève maîtrise la notion) ;
- *   talk      : la bouche bouge avec la voix (`talkLevel` = volume du son, 0 à 1).
- *
- * variant « bust » : buste dans un rond (bouton flottant, en-tête) ; « body » : peluche entière.
+ * Vraie animation image par image (comme un dessin animé en stop-motion) + adaptation visuelle
+ * selon le niveau de batterie (`battery`, 0 à 100) :
+ *   - 50 % à 100 % (happy)   : Bleu / En forme (souriant)
+ *   - 6 % à 49 %  (annoyed) : Orange / Agacé (un peu fatigué ou contrarié)
+ *   - 1 % à 5 %   (angry)   : Rouge / Très fâché (sourcils froncés, air énervé)
+ *   - 0 %         (strike)  : Rouge foncé / En grève (tourne le dos / boude + cadenas)
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Lock } from 'lucide-react';
+import { getKoneMoodTier, type KoneMoodTier } from '../../lib/gamification/koneBattery';
 import './konanPlush.css';
 
 export type PlushMood = 'idle' | 'listen' | 'think' | 'happy' | 'encourage' | 'celebrate' | 'talk';
@@ -55,7 +51,9 @@ interface Props {
   /** Largeur en pixels */
   size: number;
   mood?: PlushMood;
-  /** Volume de la voix (0 à 1) pendant que KONAN parle : choisit la forme de la bouche */
+  /** Niveau de batterie de KONÉ (0 à 100). Par défaut 100 (Bleu / En forme). */
+  battery?: number;
+  /** Volume de la voix (0 à 1) pendant que KONÉ parle : choisit la forme de la bouche */
   talkLevel?: number;
   /** Petit coucou de la main de temps en temps au repos (bouton flottant, accueil) */
   waves?: boolean;
@@ -68,16 +66,144 @@ interface Props {
   children?: React.ReactNode;
 }
 
-export const KonanPlush: React.FC<Props> = ({
-  variant = 'body', size, mood = 'idle', talkLevel, waves = false, boing = 0, enter = false, preload = 'all', className = '', children,
+/**
+ * Expressions vectorielles calées sur les coordonnées exactes de `repos.webp` (100×100) :
+ * - `annoyed` (6–49 %) : paupières mi-closes fatiguées/contrariées + bouche agacée + goutte de soupir
+ * - `angry`   (1–5 %)  : sourcils fortement froncés en V + regard furieux + bouche mécontente + veine d'énervement
+ * - `strike`  (0 %)    : KONÉ tourne complètement le dos (peluche vue de dos avec couture centrale, boude)
+ */
+const MoodOverlaySvg: React.FC<{ tier: KoneMoodTier; style: React.CSSProperties; hideFacePatch?: boolean }> = ({
+  tier,
+  style,
+  hideFacePatch = false,
 }) => {
+  if (tier === 'happy') return null;
+
+  if (tier === 'strike') {
+    // 0 % : KONÉ tourne le dos et boude (on masque le visage et le K par le dos pelucheux rouge foncé)
+    return (
+      <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
+        <defs>
+          <radialGradient id="kpBackFur" cx="50%" cy="38%" r="52%">
+            <stop offset="0%" stopColor="#991b1b" />
+            <stop offset="65%" stopColor="#7f1d1d" />
+            <stop offset="100%" stopColor="#5c1111" />
+          </radialGradient>
+        </defs>
+        {/* Dos de la tête recouvrant l'ovale du visage */}
+        <ellipse cx="50" cy="42" rx="24.5" ry="20.5" fill="url(#kpBackFur)" />
+        {/* Dos du ventre recouvrant le K */}
+        <rect x="38" y="65" width="24" height="22" rx="9" fill="#7f1d1d" />
+        {/* Couture verticale douce du dos de la peluche */}
+        <path
+          d="M 50 16 Q 49.5 48 50 87"
+          stroke="#450a0a"
+          strokeWidth="1.4"
+          strokeDasharray="2.5 2.2"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.65"
+        />
+        {/* Petits traits de fourrure sur la nuque */}
+        <path
+          d="M 34 29 Q 50 24 66 29"
+          stroke="#450a0a"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.35"
+        />
+        {/* Petit nuage de bouderie « hmpf » sur le côté */}
+        <g opacity="0.92">
+          <circle cx="77" cy="24" r="3.4" fill="#fecaca" />
+          <circle cx="81.5" cy="22" r="4.2" fill="#fecaca" />
+          <circle cx="80" cy="26.5" r="3" fill="#fecaca" />
+        </g>
+      </svg>
+    );
+  }
+
+  if (tier === 'annoyed') {
+    return (
+      <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
+        {/* Paupières mi-closes (air fatigué / agacé) */}
+        <path d="M 32.5 37.5 Q 39.5 32.5 46.5 37.5 L 46.5 40.5 L 32.5 40.5 Z" fill="#f5b882" />
+        <path d="M 53.5 37.5 Q 60.5 32.5 67.5 37.5 L 67.5 40.5 L 53.5 40.5 Z" fill="#f5b882" />
+        <line x1="32.5" y1="40.3" x2="46.5" y2="40.8" stroke="#1e293b" strokeWidth="1.9" strokeLinecap="round" />
+        <line x1="53.5" y1="40.8" x2="67.5" y2="40.3" stroke="#1e293b" strokeWidth="1.9" strokeLinecap="round" />
+        {/* Sourcils légèrement contrariés */}
+        <path d="M 33.5 29.5 Q 40 31.2 45.5 30.2" stroke="#1e293b" strokeWidth="2.8" strokeLinecap="round" fill="none" />
+        <path d="M 54.5 30.2 Q 60 31.2 66.5 29.5" stroke="#1e293b" strokeWidth="2.8" strokeLinecap="round" fill="none" />
+        {/* Masque le grand sourire uniquement au repos et remplace par une moue contrariée */}
+        {!hideFacePatch && (
+          <>
+            <ellipse cx="50" cy="50.8" rx="10.8" ry="4.4" fill="#f7caa0" />
+            <path d="M 43 51.5 Q 47 49.6 51 51.4 T 57.5 50.8" stroke="#1e293b" strokeWidth="2.1" strokeLinecap="round" fill="none" />
+          </>
+        )}
+        {/* Petite goutte de soupir sur la tempe */}
+        <path d="M 71.5 27 C 71.5 27 74.5 31.5 74.5 33.4 A 3 3 0 1 1 68.5 33.4 C 68.5 31.5 71.5 27 71.5 27 Z" fill="#38bdf8" stroke="#0284c7" strokeWidth="0.8" />
+      </svg>
+    );
+  }
+
+  // tier === 'angry' (1 % à 5 % : Rouge / Très fâché)
+  return (
+    <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
+      {/* Cache les sourcils ronds d'origine et dessine des sourcils froncés en V très marqués */}
+      <ellipse cx="39" cy="28.5" rx="7.5" ry="3.4" fill="#f3a6ad" />
+      <ellipse cx="61" cy="28.5" rx="7.5" ry="3.4" fill="#f3a6ad" />
+      {/* Paupières inclinées vers l'intérieur (regard énervé) */}
+      <polygon points="32,34 47,39.5 32,39.5" fill="#f3a6ad" />
+      <polygon points="68,34 53,39.5 68,39.5" fill="#f3a6ad" />
+      <path d="M 32.5 26.8 L 46.8 33.5" stroke="#111827" strokeWidth="3.6" strokeLinecap="round" />
+      <path d="M 67.5 26.8 L 53.2 33.5" stroke="#111827" strokeWidth="3.6" strokeLinecap="round" />
+      {/* Remplace le sourire par une bouche froncée mécontente */}
+      {!hideFacePatch && (
+        <>
+          <ellipse cx="50" cy="50.8" rx="11" ry="4.6" fill="#f5b1b8" />
+          <path d="M 42.5 53.2 Q 50 47.8 57.5 53.2" stroke="#111827" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {/* Symbole d'énervement 💢 sur le front/tempe */}
+      <g transform="translate(69, 21) scale(0.85)" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" fill="none">
+        <path d="M 2 6 Q 6 6 6 2" />
+        <path d="M 12 6 Q 8 6 8 2" />
+        <path d="M 2 8 Q 6 8 6 12" />
+        <path d="M 12 8 Q 8 8 8 12" />
+      </g>
+    </svg>
+  );
+};
+
+export const KonanPlush: React.FC<Props> = ({
+  variant = 'body',
+  size,
+  mood = 'idle',
+  battery = 100,
+  talkLevel,
+  waves = false,
+  boing = 0,
+  enter = false,
+  preload = 'all',
+  className = '',
+  children,
+}) => {
+  const batteryTier = getKoneMoodTier(battery);
+  // Quand KONÉ est agacé, très fâché ou en grève, il ne fait plus de grands coucous joyeux ni de pouces levés
+  const effectiveWaves = batteryTier === 'happy' ? waves : false;
+  const effectiveMood: PlushMood = useMemo(() => {
+    if (batteryTier === 'strike') return 'idle';
+    if (batteryTier === 'happy') return mood;
+    if (mood === 'happy' || mood === 'celebrate') return 'idle';
+    return mood;
+  }, [batteryTier, mood]);
+
   const [frame, setFrame] = useState<Frame>('repos');
-  // Image précédente : reste bien visible SOUS la nouvelle pendant son court fondu (sinon la peluche
-  // devenait transparente entre deux images), puis disparaît (sinon un bras levé resterait en dessous).
   const [prevFrame, setPrevFrame] = useState<Frame | null>(null);
   const [boingOn, setBoingOn] = useState(false);
   const frameRef = useRef<Frame>('repos');
-  const gestureRef = useRef<Gesture | null>(null); // geste en cours (pour redescendre la main avant le suivant)
+  const gestureRef = useRef<Gesture | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const prevTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const talkRef = useRef(talkLevel);
@@ -94,7 +220,6 @@ export const KonanPlush: React.FC<Props> = ({
   };
   const later = (ms: number, fn: () => void) => { timer.current = setTimeout(fn, ms); };
 
-  /** Joue une liste d'images (90 ms chacune) puis appelle `then`. */
   const playFrames = (list: Frame[], then: () => void) => {
     const [first, ...rest] = list;
     if (!first) { then(); return; }
@@ -102,7 +227,6 @@ export const KonanPlush: React.FC<Props> = ({
     later(STEP_MS, () => playFrames(rest, then));
   };
 
-  /** Boucle d'un geste tant que l'humeur ne change pas. */
   const loopSteps = (steps: Step[], i = 0) => {
     const s = steps[i % steps.length];
     show(s.f);
@@ -111,18 +235,18 @@ export const KonanPlush: React.FC<Props> = ({
 
   useEffect(() => {
     clearTimeout(timer.current);
-    // 1. Le geste précédent se défait (la main redescend), sauf si on garde le même
     const prev = gestureRef.current;
     const back: Frame[] = prev ? [...prev.intro].reverse() : [];
 
     const startIdle = () => {
       gestureRef.current = null;
       show('repos');
+      // En grève (0 %), KONÉ tourne le dos et reste figé à bouder
+      if (batteryTier === 'strike') return;
       const scheduleIdle = () => {
         const wait = 2200 + Math.random() * 3800;
         later(wait, () => {
-          if (waves && Math.random() < 0.28) {
-            // Petit coucou : la main monte, se balance trois fois, redescend
+          if (effectiveWaves && Math.random() < 0.28) {
             const g = GESTURES.wave;
             playFrames(g.intro, () => {
               const seq: Frame[] = ['coucou2', 'coucou3', 'coucou2', 'coucou3', 'coucou2', 'coucou3'];
@@ -135,7 +259,6 @@ export const KonanPlush: React.FC<Props> = ({
             });
             return;
           }
-          // Clignement (parfois deux de suite)
           show('cligne');
           later(130, () => {
             show('repos');
@@ -169,18 +292,17 @@ export const KonanPlush: React.FC<Props> = ({
       playFrames(g.intro, () => loopSteps(g.loop));
     };
 
-    const next = mood === 'idle' ? startIdle
-      : mood === 'talk' ? startTalk
-      : () => startGesture(GESTURES[mood]);
+    const next = effectiveMood === 'idle' ? startIdle
+      : effectiveMood === 'talk' ? startTalk
+      : () => startGesture(GESTURES[effectiveMood]);
 
     playFrames(back, next);
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mood, waves]);
+  }, [effectiveMood, effectiveWaves, batteryTier]);
 
-  // Coucou d'arrivée (bouton flottant, accueil de la discussion)
   useEffect(() => {
-    if (!enter || !waves || mood !== 'idle') return;
+    if (!enter || !effectiveWaves || effectiveMood !== 'idle') return;
     const t = setTimeout(() => {
       clearTimeout(timer.current);
       const seq: Frame[] = ['coucou1', 'coucou2', 'coucou3', 'coucou2', 'coucou3', 'coucou1', 'repos'];
@@ -203,11 +325,9 @@ export const KonanPlush: React.FC<Props> = ({
     return () => { cancelAnimationFrame(a); clearTimeout(t); };
   }, [boing]);
 
-  // Images présentes dans la page (préchargées) : toutes dans la discussion, seulement le repos pour le bouton
   const frames = useMemo<Frame[]>(() => (preload === 'all' ? [...FRAMES] : IDLE_SET), [preload]);
-  const shown = frames.includes(frame) ? frame : 'repos';
+  const shown = batteryTier === 'strike' ? 'repos' : (frames.includes(frame) ? frame : 'repos');
 
-  // Buste : on agrandit la peluche dans un rond pour bien voir le visage et les mains
   const bust = variant === 'bust';
   const zoom = bust ? 1.42 : 1;
   const imgSize = Math.round(size * zoom);
@@ -215,9 +335,11 @@ export const KonanPlush: React.FC<Props> = ({
     ? { width: imgSize, height: imgSize, left: (size - imgSize) / 2, top: Math.round(size / 2 - 0.45 * imgSize) }
     : { width: size, height: size, left: 0, top: 0 };
 
+  const badgeSize = Math.max(20, Math.round(size * (bust ? 0.34 : 0.26)));
+
   return (
     <span
-      className={`kp kp--${variant} kp--${mood}${boingOn ? ' is-boing' : ''}${enter ? ' kp-enter' : ''} ${className}`}
+      className={`kp kp--${variant} kp--${effectiveMood} kp--tier-${batteryTier}${boingOn ? ' is-boing' : ''}${enter ? ' kp-enter' : ''} ${className}`}
       style={{ width: size, height: size, fontSize: Math.max(10, size / 6) }}
       aria-hidden="true"
     >
@@ -235,8 +357,22 @@ export const KonanPlush: React.FC<Props> = ({
               style={imgStyle}
             />
           ))}
+          <MoodOverlaySvg
+            tier={batteryTier}
+            style={imgStyle}
+            hideFacePatch={effectiveMood === 'talk' || effectiveMood === 'think'}
+          />
         </span>
       </span>
+      {/* Icône de cadenas visible lorsque KONÉ est à 0 % (En grève) */}
+      {batteryTier === 'strike' && (
+        <span
+          className="absolute right-0 bottom-0 z-10 rounded-full bg-red-900 text-amber-200 border-2 border-white dark:border-slate-950 shadow-lg flex items-center justify-center pointer-events-none"
+          style={{ width: badgeSize, height: badgeSize }}
+        >
+          <Lock style={{ width: Math.round(badgeSize * 0.54), height: Math.round(badgeSize * 0.54) }} />
+        </span>
+      )}
     </span>
   );
 };

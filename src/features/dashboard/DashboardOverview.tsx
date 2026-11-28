@@ -15,6 +15,7 @@ import { getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes } from '.
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { WhatsAppCommunityCard } from '../../components/common/WhatsAppCommunityCard';
+import { KoneBatteryCard } from '../../components/common/KoneBatteryCard';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { 
@@ -71,6 +72,10 @@ export interface DashboardOverviewProps {
   /** KONAN Plus : « Mon plan pour l'objectif » (absent = carte cachée) */
   onOpenGoalPlan?: () => void;
   goalPlanLabel?: string;
+  /** Batterie & Humeur de la mascotte KONÉ (0 à 100, affichée pour Gratuit, Pro et Plus) */
+  koneBattery?: number;
+  onRechargeKone?: () => void;
+  onOpenKoneChat?: () => void;
 }
 
 /** Pastille de la méthode, comme la maquette (« Pomodoro · 25 + 5 »). */
@@ -128,6 +133,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenPhotoCorrection,
   onOpenGoalPlan,
   goalPlanLabel,
+  koneBattery = 100,
+  onRechargeKone,
+  onOpenKoneChat,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel, preferences?.country);
@@ -247,6 +255,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             />
           </button>
         </div>
+
+        {/* Mascotte KONÉ & Barre de Batterie (visible pour TOUS les élèves : Gratuit, Pro et Plus) */}
+        <KoneBatteryCard
+          battery={koneBattery}
+          studentName={studentName}
+          planTier={planTier}
+          onRechargeKone={onRechargeKone}
+          onOpenChat={onOpenKoneChat}
+        />
 
         {isCycleCompletedToday ? (
           <div className="p-4 rounded-[22px] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 flex items-center gap-3">
