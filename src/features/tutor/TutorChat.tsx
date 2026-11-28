@@ -686,7 +686,12 @@ export const TutorChat: React.FC<TutorChatProps> = ({
 
           {!onStrike && (
             <div className="flex items-end gap-2">
-              <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className={`w-7 h-7 rounded-full shrink-0 kp-chat-avatar--${moodInfo.tier}`} />
+              <img
+                src={moodInfo.tier === 'happy' ? '/konan-plush/face.webp' : `/konan-plush/moods/${moodInfo.tier}.png`}
+                alt=""
+                aria-hidden="true"
+                className="w-7 h-7 rounded-full shrink-0 object-cover object-top bg-slate-100 dark:bg-slate-800"
+              />
               <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md bg-slate-100 dark:bg-slate-800/80 text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
                 {moodInfo.tier === 'angry' ? (
                   <>Fais court pardon{prenom ? ` ${prenom}` : ''}, je suis très fâché ({batteryPct} % de batterie) parce que tu as raté plusieurs séances… Dis vite ce qui bloque, ou va faire tes mini-leçons pour me recharger.</>
@@ -721,7 +726,12 @@ export const TutorChat: React.FC<TutorChatProps> = ({
               </div>
             ) : (
               <div key={m.id} className="flex items-end gap-2">
-                <img src="/konan-plush/face.webp" alt="" aria-hidden="true" className={`w-7 h-7 rounded-full shrink-0 kp-chat-avatar--${moodInfo.tier}`} />
+                <img
+                src={moodInfo.tier === 'happy' ? '/konan-plush/face.webp' : `/konan-plush/moods/${moodInfo.tier}.png`}
+                alt=""
+                aria-hidden="true"
+                className="w-7 h-7 rounded-full shrink-0 object-cover object-top bg-slate-100 dark:bg-slate-800"
+              />
                 <div className={`max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md text-sm leading-relaxed break-words text-slate-800 dark:text-slate-100 ${
                   m.etape === 'conclusion' ? 'bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800/80'
                 } ${speakingId === m.id ? 'ring-2 ring-sky-400/70' : ''}`}>

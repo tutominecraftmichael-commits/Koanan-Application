@@ -1,12 +1,11 @@
 /**
- * Peluche KONÉ animée : icône officielle du mode « Je ne comprends pas » et compagnon d'accueil.
+ * Peluche KONÉ animée : icône officielle du mode « Je ne comprends pas » et compagnon flottant.
  *
- * Vraie animation image par image (comme un dessin animé en stop-motion) + adaptation visuelle
- * selon le niveau de batterie (`battery`, 0 à 100) :
- *   - 50 % à 100 % (happy)   : Bleu / En forme (souriant)
- *   - 6 % à 49 %  (annoyed) : Orange / Agacé (un peu fatigué ou contrarié)
- *   - 1 % à 5 %   (angry)   : Rouge / Très fâché (sourcils froncés, air énervé)
- *   - 0 %         (strike)  : Rouge foncé / En grève (tourne le dos / boude + cadenas)
+ * Vraie animation image par image (stop-motion) + rendus 3D studio officiels selon la batterie (`battery`, 0 à 100) :
+ *   - 50 % à 100 % (happy)   : Bleu / En forme (souriant, `public/konan-plush/anim/*.webp`)
+ *   - 6 % à 49 %  (annoyed) : Orange / Agacé (`public/konan-plush/moods/annoyed.png`)
+ *   - 1 % à 5 %   (angry)   : Rouge / Très fâché (`public/konan-plush/moods/angry.png`)
+ *   - 0 %         (strike)  : Rouge foncé / En grève, tourne le dos (`public/konan-plush/moods/strike.png` + cadenas)
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Lock } from 'lucide-react';
@@ -28,10 +27,15 @@ const FRAMES = [
 type Frame = typeof FRAMES[number];
 const src = (f: Frame) => `/konan-plush/anim/${f}.webp`;
 
+const STUDIO_MOOD_SRC: Record<Exclude<KoneMoodTier, 'happy'>, string> = {
+  annoyed: '/konan-plush/moods/annoyed.png',
+  angry: '/konan-plush/moods/angry.png',
+  strike: '/konan-plush/moods/strike.png',
+};
+
 interface Step { f: Frame; ms: number }
 interface Gesture { intro: Frame[]; loop: Step[] }
 
-/** Images intermédiaires : ~90 ms chacune (la main qui monte). Boucle : la pose tenue et ses petites variations. */
 const GESTURES: Record<'listen' | 'think' | 'happy' | 'encourage' | 'celebrate' | 'wave', Gesture> = {
   listen: { intro: ['ecoute1', 'ecoute2'], loop: [{ f: 'ecoute3', ms: 1600 }, { f: 'ecoute4', ms: 1800 }] },
   think: {
@@ -66,132 +70,6 @@ interface Props {
   children?: React.ReactNode;
 }
 
-/**
- * Expressions vectorielles calées sur les coordonnées exactes de `repos.webp` (100×100).
- * Utilise les teintes bleu ciel d'origine de `repos.webp` (`#a5d8f6` peau visage, `#78c0ec` peluche)
- * car ce SVG est placé à l'intérieur de `.kp-body` et subit exactement le même `filter: hue-rotate(...)`
- * que l'image : la fusion de teinte est ainsi 100 % invisible et naturelle !
- */
-const MoodOverlaySvg: React.FC<{ tier: KoneMoodTier; style: React.CSSProperties; hideFacePatch?: boolean }> = ({
-  tier,
-  style,
-  hideFacePatch = false,
-}) => {
-  if (tier === 'happy') return null;
-
-  if (tier === 'strike') {
-    // 0 % : KONÉ tourne complètement le dos (peluche vue de dos avec couture centrale, boude)
-    return (
-      <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
-        <defs>
-          <radialGradient id="kpBackFurNative" cx="50%" cy="38%" r="54%">
-            <stop offset="0%" stopColor="#8bcaf1" />
-            <stop offset="68%" stopColor="#72bce9" />
-            <stop offset="100%" stopColor="#5daae0" />
-          </radialGradient>
-        </defs>
-        {/* Dos de la tête recouvrant l'ovale du visage */}
-        <ellipse cx="50" cy="42" rx="24.5" ry="20.5" fill="url(#kpBackFurNative)" />
-        {/* Dos du ventre recouvrant le K */}
-        <rect x="38" y="65" width="24" height="22" rx="9" fill="#6cb7e6" />
-        {/* Couture verticale douce du dos de la peluche */}
-        <path
-          d="M 50 16 Q 49.5 48 50 87"
-          stroke="#1e3a5f"
-          strokeWidth="1.4"
-          strokeDasharray="2.5 2.2"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.55"
-        />
-        {/* Petits traits de fourrure sur la nuque */}
-        <path
-          d="M 34 29 Q 50 24 66 29"
-          stroke="#1e3a5f"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.32"
-        />
-      </svg>
-    );
-  }
-
-  if (tier === 'annoyed') {
-    return (
-      <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
-        {/* Paupières mi-closes (même bleu visage #a2d5f5, transformé en orange par .kp-body) */}
-        <path d="M 32.5 37.5 Q 39.5 32.2 46.5 37.5 L 46.5 40.5 L 32.5 40.5 Z" fill="#a2d5f5" />
-        <path d="M 53.5 37.5 Q 60.5 32.2 67.5 37.5 L 67.5 40.5 L 53.5 40.5 Z" fill="#a2d5f5" />
-        <line x1="32.5" y1="40.3" x2="46.5" y2="40.8" stroke="#111827" strokeWidth="2.0" strokeLinecap="round" />
-        <line x1="53.5" y1="40.8" x2="67.5" y2="40.3" stroke="#111827" strokeWidth="2.0" strokeLinecap="round" />
-        {/* Masque le grand sourire au repos et trace une moue contrariée */}
-        {!hideFacePatch && (
-          <>
-            <ellipse cx="50" cy="50.8" rx="10.5" ry="4.3" fill="#a2d5f5" />
-            <path d="M 43 51.6 Q 47 49.5 51 51.4 T 57.5 50.8" stroke="#111827" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-          </>
-        )}
-      </svg>
-    );
-  }
-
-  // tier === 'angry' (1 % à 5 % : Rouge / Très fâché)
-  return (
-    <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
-      {/* Cache les sourcils ronds d'origine avec la couleur exacte de la peau de KONÉ */}
-      <ellipse cx="39" cy="28.6" rx="7.6" ry="3.5" fill="#a2d5f5" />
-      <ellipse cx="61" cy="28.6" rx="7.6" ry="3.5" fill="#a2d5f5" />
-      {/* Paupières inclinées vers l'intérieur (regard énervé) */}
-      <polygon points="32,34 47,39.6 32,39.6" fill="#a2d5f5" />
-      <polygon points="68,34 53,39.6 68,39.6" fill="#a2d5f5" />
-      {/* Gros sourcils froncés en V */}
-      <path d="M 32.5 26.8 L 46.8 33.6" stroke="#111827" strokeWidth="3.6" strokeLinecap="round" />
-      <path d="M 67.5 26.8 L 53.2 33.6" stroke="#111827" strokeWidth="3.6" strokeLinecap="round" />
-      {/* Remplace le sourire par une bouche froncée mécontente */}
-      {!hideFacePatch && (
-        <>
-          <ellipse cx="50" cy="50.8" rx="10.8" ry="4.5" fill="#a2d5f5" />
-          <path d="M 42.5 53.3 Q 50 47.6 57.5 53.3" stroke="#111827" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        </>
-      )}
-    </svg>
-  );
-};
-
-/** Petits symboles d'expression hors filtre de teinte (goutte bleue, veine rouge 💢, nuage de bouderie). */
-const MoodAccentSvg: React.FC<{ tier: KoneMoodTier; style: React.CSSProperties }> = ({ tier, style }) => {
-  if (tier === 'happy') return null;
-  if (tier === 'annoyed') {
-    return (
-      <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
-        <path d="M 72 27 C 72 27 75 31.5 75 33.4 A 3 3 0 1 1 69 33.4 C 69 31.5 72 27 72 27 Z" fill="#38bdf8" stroke="#0284c7" strokeWidth="0.9" />
-      </svg>
-    );
-  }
-  if (tier === 'angry') {
-    return (
-      <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
-        <g transform="translate(68.5, 20.5) scale(0.9)" stroke="#ef4444" strokeWidth="2.3" strokeLinecap="round" fill="none">
-          <path d="M 2 6 Q 6 6 6 2" />
-          <path d="M 12 6 Q 8 6 8 2" />
-          <path d="M 2 8 Q 6 8 6 12" />
-          <path d="M 12 8 Q 8 8 8 12" />
-        </g>
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 100 100" className="kp-mood-overlay" style={style} aria-hidden="true">
-      <g opacity="0.92">
-        <circle cx="76.5" cy="24" r="3.2" fill="#fecaca" />
-        <circle cx="81" cy="22" r="4.0" fill="#fecaca" />
-        <circle cx="79.5" cy="26.5" r="2.8" fill="#fecaca" />
-      </g>
-    </svg>
-  );
-};
-
 export const KonanPlush: React.FC<Props> = ({
   variant = 'body',
   size,
@@ -206,12 +84,11 @@ export const KonanPlush: React.FC<Props> = ({
   children,
 }) => {
   const batteryTier = getKoneMoodTier(battery);
-  // Quand KONÉ est agacé, très fâché ou en grève, il ne fait plus de grands coucous joyeux ni de pouces levés
   const effectiveWaves = batteryTier === 'happy' ? waves : false;
   const effectiveMood: PlushMood = useMemo(() => {
     if (batteryTier === 'strike') return 'idle';
     if (batteryTier === 'happy') return mood;
-    if (mood === 'happy' || mood === 'celebrate') return 'idle';
+    if (mood === 'happy' || mood === 'celebrate' || mood === 'encourage') return 'idle';
     return mood;
   }, [batteryTier, mood]);
 
@@ -257,8 +134,8 @@ export const KonanPlush: React.FC<Props> = ({
     const startIdle = () => {
       gestureRef.current = null;
       show('repos');
-      // En grève (0 %), KONÉ tourne le dos et reste figé à bouder
-      if (batteryTier === 'strike') return;
+      // Pour les humeurs non-bleues (Agacé, Très fâché, En grève), on affiche le rendu 3D studio dédié au repos
+      if (batteryTier !== 'happy') return;
       const scheduleIdle = () => {
         const wait = 2200 + Math.random() * 3800;
         later(wait, () => {
@@ -342,7 +219,8 @@ export const KonanPlush: React.FC<Props> = ({
   }, [boing]);
 
   const frames = useMemo<Frame[]>(() => (preload === 'all' ? [...FRAMES] : IDLE_SET), [preload]);
-  const shown = batteryTier === 'strike' ? 'repos' : (frames.includes(frame) ? frame : 'repos');
+  const shown = frames.includes(frame) ? frame : 'repos';
+  const showStudioMoodImage = batteryTier !== 'happy' && (batteryTier === 'strike' || effectiveMood === 'idle');
 
   const bust = variant === 'bust';
   const zoom = bust ? 1.42 : 1;
@@ -362,24 +240,29 @@ export const KonanPlush: React.FC<Props> = ({
       {children}
       <span className={`kp-stage${bust ? ' kp-stage--bust' : ''}`}>
         <span className="kp-body">
-          {frames.map((f) => (
+          {showStudioMoodImage ? (
             <img
-              key={f}
-              className={`kp-frame${f === shown ? ' is-on' : f === prevFrame ? ' is-prev' : ''}`}
-              src={src(f)}
+              className="kp-frame is-on"
+              src={STUDIO_MOOD_SRC[batteryTier]}
               alt=""
               draggable={false}
               decoding="async"
               style={imgStyle}
             />
-          ))}
-          <MoodOverlaySvg
-            tier={batteryTier}
-            style={imgStyle}
-            hideFacePatch={effectiveMood === 'talk' || effectiveMood === 'think'}
-          />
+          ) : (
+            frames.map((f) => (
+              <img
+                key={f}
+                className={`kp-frame${batteryTier !== 'happy' ? ' kp-frame--gesture' : ''}${f === shown ? ' is-on' : f === prevFrame ? ' is-prev' : ''}`}
+                src={src(f)}
+                alt=""
+                draggable={false}
+                decoding="async"
+                style={imgStyle}
+              />
+            ))
+          )}
         </span>
-        <MoodAccentSvg tier={batteryTier} style={imgStyle} />
       </span>
       {/* Icône de cadenas visible lorsque KONÉ est à 0 % (En grève) */}
       {batteryTier === 'strike' && (
