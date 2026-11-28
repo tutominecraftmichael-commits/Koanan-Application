@@ -1273,7 +1273,7 @@ export function App() {
   const handleSetAdminTier = async (tier: 'pro' | 'plus') => {
     const r = await setAdminTier(tier);
     if (!r.success) {
-      showToast(r.error === 'GOOGLE_REQUIRED' ? 'Reconnecte-toi avec ton compte Google administrateur, puis réessaie.' : 'Le changement de mode n’a pas marché. Réessaie dans un instant.');
+      showToast('error' in r && r.error === 'GOOGLE_REQUIRED' ? 'Reconnecte-toi avec ton compte Google administrateur, puis réessaie.' : 'Le changement de mode n’a pas marché. Réessaie dans un instant.');
       return;
     }
     await refreshSubscription();

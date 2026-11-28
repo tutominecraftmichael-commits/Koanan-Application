@@ -142,7 +142,7 @@ export async function saveStudyGoal(goal: StudyGoal): Promise<{ success: true; g
 
 // ---------- Administrateur ----------
 /** « Mode Pro » / « Mode Plus » du compte administrateur (sans paiement). */
-export async function setAdminTier(tier: PaidTier): Promise<{ success: true; tier: PaidTier } | { success: false; error: string }> {
+export async function setAdminTier(tier: PaidTier): Promise<{ success: true; tier: PaidTier; error?: undefined } | { success: false; error: string; tier?: undefined }> {
   const authorization = await getAdminAuthorizationHeader();
   if (!authorization || authorization.slice(7).split('.').length !== 3) return { success: false, error: 'GOOGLE_REQUIRED' };
   try {
